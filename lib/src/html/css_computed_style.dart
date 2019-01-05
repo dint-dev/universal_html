@@ -25,7 +25,8 @@ class _ComputedStyle extends CssStyleDeclaration {
             int bestPriority = 0;
             for (var parsedSelector in rule._parsedSelectors) {
               final selector = parsedSelector.selector;
-              if (_element._matchesSelector(
+              if (_matchesSelector(
+                  _element,
                   selector,
                   selector.simpleSelectorSequences.length - 1,
                   _pseudoElement)) {

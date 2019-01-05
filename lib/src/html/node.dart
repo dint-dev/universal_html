@@ -438,7 +438,6 @@ abstract class _ElementOrDocument implements Node, ParentNode {
     if (node is Document) {
       throw new ArgumentError.value(node);
     }
-    final thisOwnerDocument = this.ownerDocument;
     if (before != null && !identical(before._parent, this)) {
       throw new ArgumentError.value(before, "before");
     }
@@ -503,7 +502,7 @@ abstract class _ElementOrDocument implements Node, ParentNode {
     final selectorGroup = css.parseSelectorGroup(input);
     final result = <Element>[];
     this._forEachTreeElement((element) {
-      if (element._matchesSelectorGroup(selectorGroup, null)) {
+      if (_matchesSelectorGroup(element, selectorGroup, null)) {
         result.add(element);
       }
     });

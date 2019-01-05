@@ -64,14 +64,14 @@ void main() {
         return element;
       });
 
-      final styles = new List<CssStyleDeclaration>.from(elements.map((e) {
+      final elementStyles = new List<CssStyleDeclaration>.from(elements.map((e) {
         return e.getComputedStyle();
       }));
 
       // Values
-      expect(styles[0].fontFamily, equals("v0"));
-      expect(styles[1].fontFamily, equals("v1"));
-      expect(styles[2].fontFamily, equals("v2"));
+      expect(elementStyles[0].fontFamily, equals("v0"));
+      expect(elementStyles[1].fontFamily, equals("v1"));
+      expect(elementStyles[2].fontFamily, equals("v2"));
     });
 
     group("'matches':", () {

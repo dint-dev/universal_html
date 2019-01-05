@@ -125,7 +125,7 @@ abstract class Document extends Node
     }
     if (node is Element && this._firstElementChild != null) {
       throw new DomException._failedToExecute(DomException.HIERARCHY_REQUEST,
-          "Document", "insertBefore", "Only one element on document allowed.");
+          "Document", "insertBefore", "Only one element is allowed inside document node.");
     }
     super.insertBefore(node, before);
   }

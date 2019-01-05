@@ -1,16 +1,19 @@
 # Overview
 This package is a pure Dart implemention of a subset of _dart:html_.
+The package works in all platforms (VM, Flutter, and browser).
 
 Typical use cases are:
   * Parsing/scraping HTML in the server/Flutter + browser.
   * Generating HTML in the server/Flutter + browser.
 
-This package works in all platforms (VM, Flutter, and browser). We test that the APIs behave identically to _dart:html_ code running in Chrome. There are some failing tests.
+We test that the APIs behave identically to _dart:html_ code running in Chrome.
+There are some failing tests.
 
-Behind the scenes, parsing is done with [html](https://github.com/dartlang/html) and [csslib](https://github.com/dartlang/csslib).
+For parsing, we use:
+  * [html](https://github.com/dartlang/html)
+  * [csslib](https://github.com/dartlang/csslib)
 
-## Available APIs
-The following APIs are available:
+## Features
   * DOM
     * Node classes (`Node`, `Element`, `CheckboxInputElement`, etc.)
     * Printing (`element.outerHtml`, etc.)
@@ -18,9 +21,8 @@ The following APIs are available:
     * Queries (`document.querySelector`, `node.matchesSelector`)
     * Event handlers
   * Some `window`, `navigator` and other APIs.
-
-We declare other APIs of _dart:html_, but they either throw `UnimplementedError` or fail
-silently when used in non-browser environment.
+  * We declare other APIs of _dart:html_, but they either throw `UnimplementedError` or fail
+    silently when used in non-browser environment.
 
 # Example: Hello world
 In `pubspec.yaml`:

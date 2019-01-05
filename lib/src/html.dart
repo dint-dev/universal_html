@@ -27,6 +27,7 @@ part 'html/canvas.dart';
 part 'html/console.dart';
 part 'html/css.dart';
 part 'html/css_computed_style.dart';
+part 'html/css_selectors.dart';
 part 'html/data_transfer.dart';
 part 'html/document.dart';
 part 'html/dom_exception.dart';

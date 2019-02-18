@@ -5,9 +5,9 @@ import 'helpers.dart';
 
 void main() {
   test("Cloning DOM", () {
-    final original = new DivElement();
+    final original = DivElement();
     for (var tagName in tagNames) {
-      original.append(new Element.tag(tagName));
+      original.append(Element.tag(tagName));
     }
     final clone = original.clone(true) as Element;
     expect(clone.outerHtml, equals(original.outerHtml));
@@ -15,18 +15,18 @@ void main() {
   });
 
   test("Adopting DOM", () {
-    final original = new DivElement();
+    final original = DivElement();
     for (var tagName in tagNames) {
-      original.append(new Element.tag(tagName));
+      original.append(Element.tag(tagName));
     }
-    final document = new DomParser().parseFromString("", "text/html");
+    final document = DomParser().parseFromString("", "text/html");
     final clone = document.adoptNode(original) as Element;
     expect(clone.outerHtml, equals(original.outerHtml));
     expectSaneTree(clone);
   });
 }
 
-const tagNames = const [
+const tagNames = [
   'A',
   'ABBR',
   'ACRONYM',

@@ -35,9 +35,9 @@ void main() {
     }
 
     test("propagation", () {
-      final e2 = new DivElement();
-      final e1 = new DivElement()..append(e2);
-      final e0 = new DivElement()..append(e1);
+      final e2 = DivElement();
+      final e1 = DivElement()..append(e2);
+      final e0 = DivElement()..append(e1);
 
       // Collect order of steps here
       final steps = registerStepListeners([e0, e1, e2], expectedTarget: e2);

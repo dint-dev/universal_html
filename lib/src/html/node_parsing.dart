@@ -14,7 +14,7 @@ class DomParser {
       case "image/svg+xml":
         return const _NodeParserDriver().parseSvgDocument(input);
       default:
-        throw new ArgumentError.value(type, "type");
+        throw ArgumentError.value(type, "type");
     }
   }
 }
@@ -63,19 +63,19 @@ class _NodeParserDriver extends NodeParserDriver {
           final tag = input.localName;
           switch (tag) {
             case "input":
-              result = new InputElementBase._fromType(
+              result = InputElementBase._fromType(
                   ownerDocument, input.attributes["type"]);
               break;
             default:
-              result = new Element._tag(ownerDocument, input.localName);
+              result = Element._tag(ownerDocument, input.localName);
               break;
           }
           break;
         case _typeXml:
-          return new _XmlElement._tag(ownerDocument, input.localName);
+          return _XmlElement._tag(ownerDocument, input.localName);
         case _typeSvg:
           // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-          return new SvgElement.tagWithDocument(ownerDocument, input.localName);
+          return SvgElement.tagWithDocument(ownerDocument, input.localName);
       }
 
       // Set attributes
@@ -87,7 +87,7 @@ class _NodeParserDriver extends NodeParserDriver {
           } else if (name is String) {
             result.setAttribute(name, value);
           } else {
-            throw new UnimplementedError();
+            throw UnimplementedError();
           }
         });
       }
@@ -112,18 +112,18 @@ class _NodeParserDriver extends NodeParserDriver {
       }
       return result;
     } else if (input is html_parsing.Text) {
-      return new Text(input.data);
+      return Text(input.data);
     } else if (input is html_parsing.Comment) {
       // An ugly workaround for CDATA, which is seems to be parsed as comments.
       final data = input.data;
       if (data.startsWith("[CDATA[") && data.endsWith("]]")) {
-        return new Text(
+        return Text(
             data.substring("[CDATA[".length, data.length - "]]".length));
       }
-      return new Comment(data);
+      return Comment(data);
     } else if (input is html_parsing.Document) {
       final Document result =
-          _typeHtml == type ? new HtmlDocument._() : new XmlDocument._();
+          _typeHtml == type ? HtmlDocument._() : XmlDocument._();
       Node previous;
       for (var child in input.nodes) {
         final current = _convertParsed(result, child, type);
@@ -141,7 +141,7 @@ class _NodeParserDriver extends NodeParserDriver {
       }
       return result;
     } else if (input is html_parsing.DocumentFragment) {
-      final result = new DocumentFragment._(ownerDocument);
+      final result = DocumentFragment._(ownerDocument);
       Node previous;
       for (var child in input.nodes) {
         final current = _convertParsed(ownerDocument, child, type);
@@ -167,23 +167,23 @@ class _NodeParserDriver extends NodeParserDriver {
   DocumentFragment parseFragmentWithHtml(Document ownerDocument, String html,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
     if (html == null) {
-      throw new ArgumentError.notNull();
+      throw ArgumentError.notNull();
     }
     if (treeSanitizer == null) {
       if (validator == null) {
         if (_defaultValidator == null) {
-          _defaultValidator = new NodeValidatorBuilder.common();
+          _defaultValidator = NodeValidatorBuilder.common();
         }
         validator = _defaultValidator;
       }
       if (_defaultSanitizer == null) {
-        _defaultSanitizer = new _ValidatingTreeSanitizer(validator);
+        _defaultSanitizer = _ValidatingTreeSanitizer(validator);
       } else {
         _defaultSanitizer.validator = validator;
       }
       treeSanitizer = _defaultSanitizer;
     } else if (validator != null) {
-      throw new ArgumentError(
+      throw ArgumentError(
           'validator can only be passed if treeSanitizer is null');
     }
     final fragment =
@@ -200,23 +200,23 @@ class _NodeParserDriver extends NodeParserDriver {
   DocumentFragment parseFragmentWithSvg(Document ownerDocument, String html,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
     if (html == null) {
-      throw new ArgumentError.notNull();
+      throw ArgumentError.notNull();
     }
     if (treeSanitizer == null) {
       if (validator == null) {
         if (_defaultValidator == null) {
-          _defaultValidator = new NodeValidatorBuilder.common();
+          _defaultValidator = NodeValidatorBuilder.common();
         }
         validator = _defaultValidator;
       }
       if (_defaultSanitizer == null) {
-        _defaultSanitizer = new _ValidatingTreeSanitizer(validator);
+        _defaultSanitizer = _ValidatingTreeSanitizer(validator);
       } else {
         _defaultSanitizer.validator = validator;
       }
       treeSanitizer = _defaultSanitizer;
     } else if (validator != null) {
-      throw new ArgumentError(
+      throw ArgumentError(
           'validator can only be passed if treeSanitizer is null');
     }
     final fragment = _convertParsed(
@@ -237,5 +237,5 @@ class _XmlElement extends Element {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new _XmlElement._tag(ownerDocument, tagName);
+      _XmlElement._tag(ownerDocument, tagName);
 }

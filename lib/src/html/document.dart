@@ -29,20 +29,20 @@ abstract class _DocumentOrFragment implements Node, _ElementOrDocument {
 abstract class Document extends Node
     with _ElementOrDocument, DocumentOrShadowRoot, _DocumentOrFragment {
   static const EventStreamProvider<Event> readyStateChangeEvent =
-      const EventStreamProvider<Event>("readystatechange");
+      EventStreamProvider<Event>("readystatechange");
 
   static const EventStreamProvider<SecurityPolicyViolationEvent>
       securityPolicyViolationEvent =
-      const EventStreamProvider<SecurityPolicyViolationEvent>(
+      EventStreamProvider<SecurityPolicyViolationEvent>(
           "securitypolicyviolation");
 
   static const EventStreamProvider<Event> selectionChangeEvent =
-      const EventStreamProvider<Event>("selectionchange");
+      EventStreamProvider<Event>("selectionchange");
 
   final String contentType;
 
   factory Document() {
-    return new XmlDocument._();
+    return XmlDocument._();
   }
 
   Document._(this.contentType) : super._document();
@@ -71,16 +71,16 @@ abstract class Document extends Node
   }
 
   DocumentFragment createDocumentFragment() {
-    return new DocumentFragment._(this);
+    return DocumentFragment._(this);
   }
 
   Element createElement(String tagName, [String typeExtension]) {
-    return new Element._tag(this, tagName, typeExtension);
+    return Element._tag(this, tagName, typeExtension);
   }
 
   Element createElementNS(String namespaceUri, String qualifiedName,
       [String typeExtension]) {
-    return new Element._tagNS(this, namespaceUri, qualifiedName, typeExtension);
+    return Element._tagNS(this, namespaceUri, qualifiedName, typeExtension);
   }
 
   List<Node> getElementsByClassName(String classNames) {
@@ -120,12 +120,15 @@ abstract class Document extends Node
   @override
   void insertBefore(Node node, Node before) {
     if (node is! Element && node is! _DocumentType) {
-      throw new DomException._mayNotBeInsertedInside(
+      throw DomException._mayNotBeInsertedInside(
           "Document", "insertBefore", node, this);
     }
     if (node is Element && this._firstElementChild != null) {
-      throw new DomException._failedToExecute(DomException.HIERARCHY_REQUEST,
-          "Document", "insertBefore", "Only one element is allowed inside document node.");
+      throw DomException._failedToExecute(
+          DomException.HIERARCHY_REQUEST,
+          "Document",
+          "insertBefore",
+          "Only one element is allowed inside document node.");
     }
     super.insertBefore(node, before);
   }
@@ -157,7 +160,7 @@ class DocumentFragment extends Node
   DocumentFragment._(Document ownerDocument) : super._(ownerDocument);
 
   String get innerHtml {
-    final sb = new StringBuffer();
+    final sb = StringBuffer();
     final flags = _getPrintingFlags(this);
     Node next = this._firstChild;
     while (next != null) {
@@ -195,7 +198,7 @@ class DomImplementation {
 
   XmlDocument createDocument(
       String namespaceURI, String qualifiedName, _DocumentType doctype) {
-    final result = new XmlDocument._();
+    final result = XmlDocument._();
     if (doctype != null) {
       result.append(doctype.cloneWithOwnerDocument(result, true));
     }
@@ -208,16 +211,16 @@ class DomImplementation {
 
   _DocumentType createDocumentType(
       String qualifiedName, String publicId, String systemId) {
-    return new _DocumentType(null, null);
+    return _DocumentType(null, null);
   }
 
   HtmlDocument createHtmlDocument([String title]) {
-    return new HtmlDocument._normal();
+    return HtmlDocument._normal();
   }
 }
 
 class HtmlDocument extends Document {
-  HtmlDocument._({String contentType: "text/html"}) : super._(contentType);
+  HtmlDocument._({String contentType = "text/html"}) : super._(contentType);
 
   /// Returns document:
   ///   <doctype html>
@@ -226,13 +229,13 @@ class HtmlDocument extends Document {
   ///   <body></body>
   ///   </html>
   factory HtmlDocument._normal() {
-    final result = new HtmlDocument._();
-    final docType = new _DocumentType(result, "html");
+    final result = HtmlDocument._();
+    final docType = _DocumentType(result, "html");
     result.append(docType);
-    final html = new HtmlHtmlElement._(result);
+    final html = HtmlHtmlElement._(result);
     result.append(html);
-    html.append(new HeadElement._(result));
-    html.append(new BodyElement._(result));
+    html.append(HeadElement._(result));
+    html.append(BodyElement._(result));
     return result;
   }
 
@@ -310,7 +313,7 @@ class HtmlDocument extends Document {
 }
 
 class XmlDocument extends Document {
-  XmlDocument._({String contentType: "application/xml"})
+  XmlDocument._({String contentType = "application/xml"})
       : super._(contentType) {}
 
   @override

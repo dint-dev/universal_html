@@ -7,45 +7,45 @@ abstract class NodeParserDriver {
 
   /// A helper for building parsers.
   static Comment newTrustedComment(Document ownerDocument, String text) {
-    return new Comment._(ownerDocument, text);
+    return Comment._(ownerDocument, text);
   }
 
   /// A helper for building parsers.
   static Node newTrustedDocumentType(Document ownerDocument, String name) {
-    return new _DocumentType(ownerDocument, name);
+    return _DocumentType(ownerDocument, name);
   }
 
   /// A helper for building parsers.
   static Element newTrustedHtmlElement(Document ownerDocument, String tagName) {
-    return new Element._tag(ownerDocument, tagName);
+    return Element._tag(ownerDocument, tagName);
   }
 
   /// A helper for building parsers.
   static Element newTrustedHtmlElementNS(
       Document ownerDocument, String namespace, String tagName) {
-    return new Element._tagNS(ownerDocument, namespace, tagName);
+    return Element._tagNS(ownerDocument, namespace, tagName);
   }
 
   /// A helper for building parsers.
   static Element newTrustedHtmlInputElement(
       Document ownerDocument, String type) {
-    return new InputElementBase._fromType(ownerDocument, type);
+    return InputElementBase._fromType(ownerDocument, type);
   }
 
   /// A helper for building parsers.
   static Text newTrustedText(Document ownerDocument, String text) {
-    return new Text._(ownerDocument, text);
+    return Text._(ownerDocument, text);
   }
 
   /// A helper for building parsers.
   static Element newTrustedXmlElement(Document ownerDocument, String tagName) {
-    return new _XmlElement._tag(ownerDocument, tagName);
+    return _XmlElement._tag(ownerDocument, tagName);
   }
 
   /// A helper for building parsers.
   static Element newTrustedXmlElementNS(
       Document ownerDocument, String namespace, String tagName) {
-    return new UnknownElement._(ownerDocument, namespace, tagName);
+    return UnknownElement._(ownerDocument, namespace, tagName);
   }
 
   DocumentFragment parseFragmentWithHtml(Document ownerDocument, String html,
@@ -64,7 +64,7 @@ abstract class NodeParserDriver {
 }
 
 class HtmlDriver {
-  static final ZoneLocal<HtmlDriver> zoneLocal = new ZoneLocal<HtmlDriver>()
+  static final ZoneLocal<HtmlDriver> zoneLocal = ZoneLocal<HtmlDriver>()
     ..root = HtmlDriver();
 
   static HtmlDriver get current => zoneLocal.current;
@@ -85,7 +85,7 @@ class HtmlDriver {
 }
 
 class HtmlIsolate {
-  static final ZoneLocal<HtmlIsolate> zoneLocal = new ZoneLocal<HtmlIsolate>()
+  static final ZoneLocal<HtmlIsolate> zoneLocal = ZoneLocal<HtmlIsolate>()
     ..root = HtmlIsolate();
 
   static HtmlIsolate get current => zoneLocal.current;
@@ -102,7 +102,7 @@ class HtmlIsolate {
   HtmlDocument get document {
     var document = this._document;
     if (document == null) {
-      this._document = document = new HtmlDocument._normal();
+      this._document = document = HtmlDocument._normal();
     }
     return document;
   }
@@ -110,7 +110,7 @@ class HtmlIsolate {
   Window get window {
     var window = this._window;
     if (window == null) {
-      this._window = window = new Window._();
+      this._window = window = Window._();
     }
     return window;
   }

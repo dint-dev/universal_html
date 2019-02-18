@@ -93,163 +93,163 @@ class CssClassSet extends SetBase<String> {
   }
 
   @override
-  Set<String> toSet() => new Set<String>.from(_all);
+  Set<String> toSet() => Set<String>.from(_all);
 }
 
 abstract class Element extends Node
     with ChildNode, NonDocumentTypeChildNode, ParentNode, _ElementOrDocument {
   static const EventStreamProvider<Event> abortEvent =
-      const EventStreamProvider<Event>("abort");
+      EventStreamProvider<Event>("abort");
 
   static const EventStreamProvider<Event> beforeCopyEvent =
-      const EventStreamProvider<Event>("beforecopy");
+      EventStreamProvider<Event>("beforecopy");
 
   static const EventStreamProvider<Event> beforePasteEvent =
-      const EventStreamProvider<Event>("beforepaste");
+      EventStreamProvider<Event>("beforepaste");
 
   static const EventStreamProvider<Event> blurEvent =
-      const EventStreamProvider<Event>("blur");
+      EventStreamProvider<Event>("blur");
 
   static const EventStreamProvider<Event> canPlayEvent =
-      const EventStreamProvider<Event>("canplay");
+      EventStreamProvider<Event>("canplay");
 
   static const EventStreamProvider<Event> changeEvent =
-      const EventStreamProvider<Event>("change");
+      EventStreamProvider<Event>("change");
 
   static const EventStreamProvider<MouseEvent> clickEvent =
-      const EventStreamProvider<MouseEvent>("click");
+      EventStreamProvider<MouseEvent>("click");
 
   static const EventStreamProvider<Event> contextMenuEvent =
-      const EventStreamProvider<Event>("contextmenu");
+      EventStreamProvider<Event>("contextmenu");
 
   static const EventStreamProvider<ClipboardEvent> copyEvent =
-      const EventStreamProvider<ClipboardEvent>("copy");
+      EventStreamProvider<ClipboardEvent>("copy");
 
   static const EventStreamProvider<ClipboardEvent> cutEvent =
-      const EventStreamProvider<ClipboardEvent>("cut");
+      EventStreamProvider<ClipboardEvent>("cut");
 
   static const EventStreamProvider<MouseEvent> doubleClickEvent =
-      const EventStreamProvider<MouseEvent>("doubleclick");
+      EventStreamProvider<MouseEvent>("doubleclick");
 
   static const EventStreamProvider<MouseEvent> dragEvent =
-      const EventStreamProvider<MouseEvent>("drag");
+      EventStreamProvider<MouseEvent>("drag");
 
   static const EventStreamProvider<MouseEvent> dragEndEvent =
-      const EventStreamProvider<MouseEvent>("dragend");
+      EventStreamProvider<MouseEvent>("dragend");
 
   static const EventStreamProvider<MouseEvent> dragEnterEvent =
-      const EventStreamProvider<MouseEvent>("dragenter");
+      EventStreamProvider<MouseEvent>("dragenter");
 
   static const EventStreamProvider<MouseEvent> dragLeaveEvent =
-      const EventStreamProvider<MouseEvent>("dragleave");
+      EventStreamProvider<MouseEvent>("dragleave");
 
   static const EventStreamProvider<MouseEvent> dragOverEvent =
-      const EventStreamProvider<MouseEvent>("dragover");
+      EventStreamProvider<MouseEvent>("dragover");
 
   static const EventStreamProvider<MouseEvent> dragStartEvent =
-      const EventStreamProvider<MouseEvent>("dragstart");
+      EventStreamProvider<MouseEvent>("dragstart");
 
   static const EventStreamProvider<MouseEvent> dropEvent =
-      const EventStreamProvider<MouseEvent>("dropevent");
+      EventStreamProvider<MouseEvent>("dropevent");
 
   static const EventStreamProvider<Event> fullscreenChangeEvent =
-      const EventStreamProvider<MouseEvent>("fullscreenchange");
+      EventStreamProvider<MouseEvent>("fullscreenchange");
 
   static const EventStreamProvider<Event> fullscreenErrorEvent =
-      const EventStreamProvider<MouseEvent>("fullscreenerror");
+      EventStreamProvider<MouseEvent>("fullscreenerror");
 
   static const EventStreamProvider<Event> errorEvent =
-      const EventStreamProvider<Event>("error");
+      EventStreamProvider<Event>("error");
 
   static const EventStreamProvider<Event> focusEvent =
-      const EventStreamProvider<Event>("focus");
+      EventStreamProvider<Event>("focus");
 
   static const EventStreamProvider<Event> inputEvent =
-      const EventStreamProvider<Event>("input");
+      EventStreamProvider<Event>("input");
 
   static const EventStreamProvider<KeyboardEvent> keyDownEvent =
-      const EventStreamProvider<KeyboardEvent>("keydown");
+      EventStreamProvider<KeyboardEvent>("keydown");
 
   static const EventStreamProvider<KeyboardEvent> keyUpEvent =
-      const EventStreamProvider<KeyboardEvent>("keyup");
+      EventStreamProvider<KeyboardEvent>("keyup");
 
   static const EventStreamProvider<KeyboardEvent> keyPressEvent =
-      const EventStreamProvider<KeyboardEvent>("keypress");
+      EventStreamProvider<KeyboardEvent>("keypress");
 
   static const EventStreamProvider<Event> loadEvent =
-      const EventStreamProvider<Event>("load");
+      EventStreamProvider<Event>("load");
 
   static const EventStreamProvider<MouseEvent> mouseDownEvent =
-      const EventStreamProvider<MouseEvent>("mousedown");
+      EventStreamProvider<MouseEvent>("mousedown");
 
   static const EventStreamProvider<MouseEvent> mouseEnterEvent =
-      const EventStreamProvider<MouseEvent>("mouseenter");
+      EventStreamProvider<MouseEvent>("mouseenter");
 
   static const EventStreamProvider<MouseEvent> mouseLeaveEvent =
-      const EventStreamProvider<MouseEvent>("mouseleave");
+      EventStreamProvider<MouseEvent>("mouseleave");
 
   static const EventStreamProvider<MouseEvent> mouseMoveEvent =
-      const EventStreamProvider<MouseEvent>("mousemove");
+      EventStreamProvider<MouseEvent>("mousemove");
 
   static const EventStreamProvider<MouseEvent> mouseOverEvent =
-      const EventStreamProvider<MouseEvent>("mouseover");
+      EventStreamProvider<MouseEvent>("mouseover");
 
   static const EventStreamProvider<MouseEvent> mouseUpEvent =
-      const EventStreamProvider<MouseEvent>("mouseup");
+      EventStreamProvider<MouseEvent>("mouseup");
 
   static const EventStreamProvider<Event> playEvent =
-      const EventStreamProvider<Event>("play");
+      EventStreamProvider<Event>("play");
 
   static const EventStreamProvider<MouseEvent> playingEvent =
-      const EventStreamProvider<MouseEvent>("playing");
+      EventStreamProvider<MouseEvent>("playing");
 
   static const EventStreamProvider<MouseEvent> resetEvent =
-      const EventStreamProvider<MouseEvent>("reset");
+      EventStreamProvider<MouseEvent>("reset");
 
   static const EventStreamProvider<Event> scrollEvent =
-      const EventStreamProvider<Event>("scroll");
+      EventStreamProvider<Event>("scroll");
 
   static const EventStreamProvider<Event> selectEvent =
-      const EventStreamProvider<Event>("select");
+      EventStreamProvider<Event>("select");
 
   static const EventStreamProvider<MouseEvent> resizeEvent =
-      const EventStreamProvider<MouseEvent>("resize");
+      EventStreamProvider<MouseEvent>("resize");
 
   static const EventStreamProvider<TouchEvent> touchCancelEvent =
-      const EventStreamProvider<TouchEvent>("touchcancel");
+      EventStreamProvider<TouchEvent>("touchcancel");
 
   static const EventStreamProvider<TouchEvent> touchEndEvent =
-      const EventStreamProvider<TouchEvent>("touchend");
+      EventStreamProvider<TouchEvent>("touchend");
 
   static const EventStreamProvider<TouchEvent> touchEnterEvent =
-      const EventStreamProvider<TouchEvent>("touchenter");
+      EventStreamProvider<TouchEvent>("touchenter");
 
   static const EventStreamProvider<TouchEvent> touchLeaveEvent =
-      const EventStreamProvider<TouchEvent>("touchleave");
+      EventStreamProvider<TouchEvent>("touchleave");
 
   static const EventStreamProvider<TouchEvent> touchMoveEvent =
-      const EventStreamProvider<TouchEvent>("touchmove");
+      EventStreamProvider<TouchEvent>("touchmove");
 
   static const EventStreamProvider<TouchEvent> touchStartEvent =
-      const EventStreamProvider<TouchEvent>("touchstart");
+      EventStreamProvider<TouchEvent>("touchstart");
 
   static const EventStreamProvider<Event> submitEvent =
-      const EventStreamProvider<Event>("submit");
+      EventStreamProvider<Event>("submit");
 
   static const EventStreamProvider<MouseEvent> volumeChangeEvent =
-      const EventStreamProvider<MouseEvent>("volumechange");
+      EventStreamProvider<MouseEvent>("volumechange");
 
   static const EventStreamProvider<MouseEvent> waitingEvent =
-      const EventStreamProvider<MouseEvent>("waiting");
+      EventStreamProvider<MouseEvent>("waiting");
 
   static const EventStreamProvider<MouseEvent> wheelEvent =
-      const EventStreamProvider<MouseEvent>("wheelevent");
+      EventStreamProvider<MouseEvent>("wheelevent");
 
   static final _normalizedElementNameRegExp =
-      new RegExp(r"^[a-z_\:][a-z0-9_\-\:]*$");
+      RegExp(r"^[a-z_\:][a-z0-9_\-\:]*$");
 
   static final _normalizedAttributeNameRegExp =
-      new RegExp(r"^[a-z_\:][a-z0-9_\-\:]*$");
+      RegExp(r"^[a-z_\:][a-z0-9_\-\:]*$");
 
   final String _lowerCaseTagName;
 
@@ -276,27 +276,25 @@ abstract class Element extends Node
   Element.constructor(Document document, String tagName)
       : this._(document, tagName);
 
-  /**
-   * Creates an HTML element from a valid fragment of HTML.
-   *
-   *     var element = new Element.html('<div class="foo">content</div>');
-   *
-   * The HTML fragment should contain only one single root element, any
-   * leading or trailing text nodes will be removed.
-   *
-   * The HTML fragment is parsed as if it occurred within the context of a
-   * `<body>` tag, this means that special elements such as `<caption>` which
-   * must be parsed within the scope of a `<table>` element will be dropped. Use
-   * [createFragment] to parse contextual HTML fragments.
-   *
-   * Unless a validator is provided this will perform the default validation
-   * and remove all scriptable elements and attributes.
-   *
-   * See also:
-   *
-   * * [NodeValidator]
-   *
-   */
+  /// Creates an HTML element from a valid fragment of HTML.
+  ///
+  ///     var element = new Element.html('<div class="foo">content</div>');
+  ///
+  /// The HTML fragment should contain only one single root element, any
+  /// leading or trailing text nodes will be removed.
+  ///
+  /// The HTML fragment is parsed as if it occurred within the context of a
+  /// `<body>` tag, this means that special elements such as `<caption>` which
+  /// must be parsed within the scope of a `<table>` element will be dropped. Use
+  /// [createFragment] to parse contextual HTML fragments.
+  ///
+  /// Unless a validator is provided this will perform the default validation
+  /// and remove all scriptable elements and attributes.
+  ///
+  /// See also:
+  ///
+  /// * [NodeValidator]
+  ///
   factory Element.html(String html,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
     final fragment = const _NodeParserDriver().parseFragmentWithHtml(
@@ -327,110 +325,110 @@ abstract class Element extends Node
     final normalizedName = name.toLowerCase();
     switch (normalizedName) {
       case "a":
-        return new AnchorElement._(ownerDocument);
+        return AnchorElement._(ownerDocument);
       case "audio":
-        return new AudioElement._(ownerDocument);
+        return AudioElement._(ownerDocument);
       case "body":
-        return new BodyElement._(ownerDocument);
+        return BodyElement._(ownerDocument);
       case "br":
-        return new BRElement._(ownerDocument);
+        return BRElement._(ownerDocument);
       case "button":
-        return new ButtonElement._(ownerDocument);
+        return ButtonElement._(ownerDocument);
       case "canvas":
-        return new CanvasElement._(ownerDocument);
+        return CanvasElement._(ownerDocument);
       case "caption":
-        return new TableCaptionElement._(ownerDocument);
+        return TableCaptionElement._(ownerDocument);
       case "datalist":
-        return new DataListElement._(ownerDocument);
+        return DataListElement._(ownerDocument);
       case "div":
-        return new DivElement._(ownerDocument);
+        return DivElement._(ownerDocument);
       case "fieldset":
-        return new FieldSetElement._(ownerDocument);
+        return FieldSetElement._(ownerDocument);
       case "form":
-        return new FormElement._(ownerDocument);
+        return FormElement._(ownerDocument);
       case "head":
-        return new HeadElement._(ownerDocument);
+        return HeadElement._(ownerDocument);
       case "h1":
-        return new HeadingElement._(ownerDocument, "h1");
+        return HeadingElement._(ownerDocument, "h1");
       case "h2":
-        return new HeadingElement._(ownerDocument, "h2");
+        return HeadingElement._(ownerDocument, "h2");
       case "h3":
-        return new HeadingElement._(ownerDocument, "h3");
+        return HeadingElement._(ownerDocument, "h3");
       case "h4":
-        return new HeadingElement._(ownerDocument, "h4");
+        return HeadingElement._(ownerDocument, "h4");
       case "h5":
-        return new HeadingElement._(ownerDocument, "h5");
+        return HeadingElement._(ownerDocument, "h5");
       case "h6":
-        return new HeadingElement._(ownerDocument, "h6");
+        return HeadingElement._(ownerDocument, "h6");
       case "hr":
-        return new HRElement._(ownerDocument);
+        return HRElement._(ownerDocument);
       case "iframe":
-        return new IFrameElement._(ownerDocument);
+        return IFrameElement._(ownerDocument);
       case "img":
-        return new ImageElement._(ownerDocument);
+        return ImageElement._(ownerDocument);
       case "input":
-        return new InputElementBase._(ownerDocument, null);
+        return InputElementBase._(ownerDocument, null);
       case "label":
-        return new LabelElement._(ownerDocument);
+        return LabelElement._(ownerDocument);
       case "legend":
-        return new LegendElement._(ownerDocument);
+        return LegendElement._(ownerDocument);
       case "li":
-        return new LIElement._(ownerDocument);
+        return LIElement._(ownerDocument);
       case "link":
-        return new LinkElement._(ownerDocument);
+        return LinkElement._(ownerDocument);
       case "meta":
-        return new MetaElement._(ownerDocument);
+        return MetaElement._(ownerDocument);
       case "ol":
-        return new OListElement._(ownerDocument);
+        return OListElement._(ownerDocument);
       case "option":
-        return new OptionElement._(ownerDocument);
+        return OptionElement._(ownerDocument);
       case "optgroup":
-        return new OptGroupElement._(ownerDocument);
+        return OptGroupElement._(ownerDocument);
       case "p":
-        return new ParagraphElement._(ownerDocument);
+        return ParagraphElement._(ownerDocument);
       case "picture":
-        return new PictureElement._(ownerDocument);
+        return PictureElement._(ownerDocument);
       case "pre":
-        return new PreElement._(ownerDocument);
+        return PreElement._(ownerDocument);
       case "select":
-        return new SelectElement._(ownerDocument);
+        return SelectElement._(ownerDocument);
       case "script":
-        return new ScriptElement._(ownerDocument);
+        return ScriptElement._(ownerDocument);
       case "slot":
-        return new SlotElement._(ownerDocument);
+        return SlotElement._(ownerDocument);
       case "source":
-        return new SourceElement._(ownerDocument);
+        return SourceElement._(ownerDocument);
       case "span":
-        return new SpanElement._(ownerDocument);
+        return SpanElement._(ownerDocument);
       case "style":
-        return new StyleElement._(ownerDocument);
+        return StyleElement._(ownerDocument);
       case "table":
-        return new TableElement._(ownerDocument);
+        return TableElement._(ownerDocument);
       case "tbody":
-        return new TableSectionElement._(ownerDocument, "tbody");
+        return TableSectionElement._(ownerDocument, "tbody");
       case "td":
-        return new TableCellElement._(ownerDocument);
+        return TableCellElement._(ownerDocument);
       case "tfoot":
-        return new TableSectionElement._(ownerDocument, "tfoot");
+        return TableSectionElement._(ownerDocument, "tfoot");
       case "thead":
-        return new TableSectionElement._(ownerDocument, "thead");
+        return TableSectionElement._(ownerDocument, "thead");
       case "template":
-        return new TemplateElement._(ownerDocument);
+        return TemplateElement._(ownerDocument);
       case "textarea":
-        return new TextAreaElement._(ownerDocument);
+        return TextAreaElement._(ownerDocument);
       case "title":
-        return new TitleElement._(ownerDocument);
+        return TitleElement._(ownerDocument);
       case "tr":
-        return new TableRowElement._(ownerDocument);
+        return TableRowElement._(ownerDocument);
       case "track":
-        return new TrackElement._(ownerDocument);
+        return TrackElement._(ownerDocument);
       case "ul":
-        return new UListElement._(ownerDocument);
+        return UListElement._(ownerDocument);
       case "video":
-        return new VideoElement._(ownerDocument);
+        return VideoElement._(ownerDocument);
       default:
         if (!Element._normalizedElementNameRegExp.hasMatch(normalizedName)) {
-          throw new ArgumentError.value(name);
+          throw ArgumentError.value(name);
         }
         return UnknownElement._(ownerDocument, null, normalizedName);
     }
@@ -441,7 +439,7 @@ abstract class Element extends Node
       [String typeExtension]) {
     final normalizedName = name.toLowerCase();
     if (!Element._normalizedElementNameRegExp.hasMatch(normalizedName)) {
-      throw new ArgumentError.value(name);
+      throw ArgumentError.value(name);
     }
     return UnknownElement._(ownerDocument, namespaceUri, normalizedName);
   }
@@ -459,12 +457,12 @@ abstract class Element extends Node
   /// Returns a modifiable map of attributes.
   Map<String, String> get attributes {
     return _attributesFullViewOrNull ??
-        (_attributesFullViewOrNull = new _Attributes(this));
+        (_attributesFullViewOrNull = _Attributes(this));
   }
 
   List<Element> get children => _ElementChildren(this);
 
-  CssClassSet get classes => new CssClassSet._(this);
+  CssClassSet get classes => CssClassSet._(this);
 
   String get className => getAttribute("class");
 
@@ -473,7 +471,7 @@ abstract class Element extends Node
   }
 
   Rectangle<int> get client =>
-      new Rectangle(clientLeft, clientTop, clientWidth, clientHeight);
+      Rectangle(clientLeft, clientTop, clientWidth, clientHeight);
 
   /// Returns 0 outside browser.tagWithoutValidation
   int get clientHeight => 0;
@@ -506,7 +504,7 @@ abstract class Element extends Node
   }
 
   String get innerHtml {
-    final sb = new StringBuffer();
+    final sb = StringBuffer();
     final flags = _getPrintingFlags(this);
     Node next = this.firstChild;
     while (next != null) {
@@ -526,7 +524,7 @@ abstract class Element extends Node
   int get nodeType => Node.ELEMENT_NODE;
 
   Rectangle<int> get offset =>
-      new Rectangle(offsetLeft, offsetTop, offsetWidth, offsetHeight);
+      Rectangle(offsetLeft, offsetTop, offsetWidth, offsetHeight);
 
   /// Returns 0 outside browser.
   int get offsetHeight => 0;
@@ -616,7 +614,7 @@ abstract class Element extends Node
       touchStartEvent.forElement(this);
 
   String get outerHtml {
-    final sb = new StringBuffer();
+    final sb = StringBuffer();
     final flags = _getPrintingFlags(this);
     _printNode(sb, flags, this);
     return sb.toString();
@@ -640,14 +638,15 @@ abstract class Element extends Node
   }
 
   CssStyleDeclaration getComputedStyle([String pseudoElement]) {
-    return new _ComputedStyle._(this, pseudoElement);
+    return _ComputedStyle._(this, pseudoElement);
   }
 
   CssStyleDeclaration get style => _getOrCreateStyle();
+
   _CssStyleDeclaration _getOrCreateStyle() {
     _CssStyleDeclaration result = this._style;
     if (result == null) {
-      result = new _CssStyleDeclaration._();
+      result = _CssStyleDeclaration._();
       final value = this._attributesWithoutLatestValues["style"];
       if (value != null) {
         result._parse(value);
@@ -681,10 +680,8 @@ abstract class Element extends Node
     return Animation();
   }
 
-  /**
-   * Parses the specified text as HTML and adds the resulting node after the
-   * last child of this element.
-   */
+  /// Parses the specified text as HTML and adds the resulting node after the
+  /// last child of this element.
   void appendHtml(String text,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
     final fragment = const _NodeParserDriver().parseFragmentWithHtml(
@@ -701,15 +698,15 @@ abstract class Element extends Node
   }
 
   void appendText(String value) {
-    this.insertBefore(new Text(value), null);
+    this.insertBefore(Text(value), null);
   }
 
   void blur() {
-    dispatchEvent(new FocusEvent("blur"));
+    dispatchEvent(FocusEvent("blur"));
   }
 
   void click() {
-    dispatchEvent(new MouseEvent("click"));
+    dispatchEvent(MouseEvent("click"));
   }
 
   @override
@@ -738,7 +735,7 @@ abstract class Element extends Node
   }
 
   void focus() {
-    dispatchEvent(new FocusEvent("focus"));
+    dispatchEvent(FocusEvent("focus"));
   }
 
   String getAttribute(String name) {
@@ -774,7 +771,6 @@ abstract class Element extends Node
     return result;
   }
 
-
   bool matches(String selectors) {
     return _matches(this, selectors, null);
   }
@@ -808,7 +804,7 @@ abstract class Element extends Node
 
     // Validate name
     if (!_normalizedAttributeNameRegExp.hasMatch(normalizedName)) {
-      throw new ArgumentError.value(
+      throw ArgumentError.value(
           name, "name", "Attribute name has invalid characters");
     }
 
@@ -819,11 +815,11 @@ abstract class Element extends Node
   void setAttributeNS(String namespace, String name, String value) {
     if (namespace == null ||
         !Element._normalizedAttributeNameRegExp.hasMatch(namespace)) {
-      throw new ArgumentError.value(namespace, "namespace");
+      throw ArgumentError.value(namespace, "namespace");
     }
     if (name == null ||
         !Element._normalizedAttributeNameRegExp.hasMatch(name)) {
-      throw new ArgumentError.value(name, "name");
+      throw ArgumentError.value(name, "name");
     }
     var namespaces = this._namedspacedAttributes;
     if (value == null) {
@@ -924,9 +920,9 @@ abstract class Element extends Node
 }
 
 class ScrollAlignment {
-  static const ScrollAlignment BOTTOM = const ScrollAlignment._("BOTTOM");
-  static const ScrollAlignment CENTER = const ScrollAlignment._("CENTER");
-  static const ScrollAlignment TOP = const ScrollAlignment._("TOP");
+  static const ScrollAlignment BOTTOM = ScrollAlignment._("BOTTOM");
+  static const ScrollAlignment CENTER = ScrollAlignment._("CENTER");
+  static const ScrollAlignment TOP = ScrollAlignment._("TOP");
   final String _name;
 
   const ScrollAlignment._(this._name);
@@ -1028,7 +1024,7 @@ class _ElementChildren extends ListBase<Element> {
       }
       node = node.nextNode;
     }
-    throw new ArgumentError.value(index);
+    throw ArgumentError.value(index);
   }
 
   @override
@@ -1056,7 +1052,7 @@ class _ElementIterator extends Iterator<Element> {
     }
     if (!identical(_parent, current)) {
       // TODO: Implementation that handles modifications like 'dart:html' does.
-      throw new StateError("DOM tree was modified during iteration");
+      throw StateError("DOM tree was modified during iteration");
     }
     final next = current.nextElementSibling;
     if (next == null) {

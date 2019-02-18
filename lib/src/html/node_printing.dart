@@ -59,7 +59,7 @@ void _printNode(StringBuffer sb, int flags, Node node) {
       // To be safe, escape value.
       final value = node.nodeValue;
       if (value.contains("-->")) {
-        throw new StateError("Comment contains '-->': '${value}'");
+        throw StateError("Comment contains '-->': '${value}'");
       }
 
       sb.write("<!--");
@@ -92,7 +92,7 @@ void _printNode(StringBuffer sb, int flags, Node node) {
       break;
 
     default:
-      throw new UnimplementedError();
+      throw UnimplementedError();
   }
 }
 
@@ -129,7 +129,7 @@ void _printAttribute(
     // TODO: Validate mutations (like browsers do) so nothing needs to be done here.
     if (!(Element._normalizedAttributeNameRegExp.hasMatch(name) &&
         Element._normalizedAttributeNameRegExp.hasMatch(name))) {
-      throw new StateError(
+      throw StateError(
         "Invalid namespaced attribute: '${namespace}:${name}'",
       );
     }

@@ -4,16 +4,16 @@ typedef void VoidCallback();
 
 abstract class RtcDataChannel extends EventTarget {
   static const EventStreamProvider<Event> closeEvent =
-      const EventStreamProvider<Event>("close");
+      EventStreamProvider<Event>("close");
 
   static const EventStreamProvider<Event> errorEvent =
-      const EventStreamProvider<Event>("error");
+      EventStreamProvider<Event>("error");
 
   static const EventStreamProvider<MessageEvent> messageEvent =
-      const EventStreamProvider<MessageEvent>("message");
+      EventStreamProvider<MessageEvent>("message");
 
   static const EventStreamProvider<Event> openEvent =
-      const EventStreamProvider<Event>("open");
+      EventStreamProvider<Event>("open");
 
   Stream<Event> get onClose;
 
@@ -50,23 +50,23 @@ abstract class RtcDtmfSender {}
 
 abstract class RtcPeerConnection extends EventTarget {
   static const EventStreamProvider<MediaStreamEvent> addStreamEvent =
-      const EventStreamProvider<MediaStreamEvent>("addstream");
+      EventStreamProvider<MediaStreamEvent>("addstream");
 
   static const EventStreamProvider<RtcDataChannelEvent> dataChannelEvent =
-      const EventStreamProvider<RtcDataChannelEvent>("datachannel");
+      EventStreamProvider<RtcDataChannelEvent>("datachannel");
 
   static const EventStreamProvider<RtcPeerConnectionIceEvent>
       iceCandidateEvent =
-      const EventStreamProvider<RtcPeerConnectionIceEvent>("icecandidate");
+      EventStreamProvider<RtcPeerConnectionIceEvent>("icecandidate");
 
   static const EventStreamProvider<Event> iceConnectionStateChangeEvent =
-      const EventStreamProvider<Event>("iceconnectionstatechange");
+      EventStreamProvider<Event>("iceconnectionstatechange");
 
   static const EventStreamProvider<MediaStreamEvent> removeStreamEvent =
-      const EventStreamProvider<MediaStreamEvent>("removestream");
+      EventStreamProvider<MediaStreamEvent>("removestream");
 
   static const EventStreamProvider<Event> signalingStateChangeEvent =
-      const EventStreamProvider<Event>("signalignstatechange");
+      EventStreamProvider<Event>("signalignstatechange");
 
   String get iceConnectionState => null;
 

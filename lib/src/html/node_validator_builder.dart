@@ -33,150 +33,132 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html;
 
-/**
- * Class which helps construct standard node validation policies.
- *
- * By default this will not accept anything, but the 'allow*' functions can be
- * used to expand what types of elements or attributes are allowed.
- *
- * All allow functions are additive- elements will be accepted if they are
- * accepted by any specific rule.
- *
- * It is important to remember that sanitization is not just intended to prevent
- * cross-site scripting attacks, but also to prevent information from being
- * displayed in unexpected ways. For example something displaying basic
- * formatted text may not expect `<video>` tags to appear. In this case an
- * empty NodeValidatorBuilder with just [allowTextElements] might be
- * appropriate.
- */
+/// Class which helps construct standard node validation policies.
+///
+/// By default this will not accept anything, but the 'allow*' functions can be
+/// used to expand what types of elements or attributes are allowed.
+///
+/// All allow functions are additive- elements will be accepted if they are
+/// accepted by any specific rule.
+///
+/// It is important to remember that sanitization is not just intended to prevent
+/// cross-site scripting attacks, but also to prevent information from being
+/// displayed in unexpected ways. For example something displaying basic
+/// formatted text may not expect `<video>` tags to appear. In this case an
+/// empty NodeValidatorBuilder with just [allowTextElements] might be
+/// appropriate.
 class NodeValidatorBuilder implements NodeValidator {
   final List<NodeValidator> _validators = <NodeValidator>[];
 
   NodeValidatorBuilder() {}
 
-  /**
-   * Creates a new NodeValidatorBuilder which accepts common constructs.
-   *
-   * By default this will accept HTML5 elements and attributes with the default
-   * [UriPolicy] and templating elements.
-   *
-   * Notable syntax which is filtered:
-   *
-   * * Only known-good HTML5 elements and attributes are allowed.
-   * * All URLs must be same-origin, use [allowNavigation] and [allowImages] to
-   * specify additional URI policies.
-   * * Inline-styles are not allowed.
-   * * Custom element tags are disallowed, use [allowCustomElement].
-   * * Custom tags extensions are disallowed, use [allowTagExtension].
-   * * SVG Elements are not allowed, use [allowSvg].
-   *
-   * For scenarios where the HTML should only contain formatted text
-   * [allowTextElements] is more appropriate.
-   *
-   * Use [allowSvg] to allow SVG elements.
-   */
+  /// Creates a new NodeValidatorBuilder which accepts common constructs.
+  ///
+  /// By default this will accept HTML5 elements and attributes with the default
+  /// [UriPolicy] and templating elements.
+  ///
+  /// Notable syntax which is filtered:
+  ///
+  /// * Only known-good HTML5 elements and attributes are allowed.
+  /// * All URLs must be same-origin, use [allowNavigation] and [allowImages] to
+  /// specify additional URI policies.
+  /// * Inline-styles are not allowed.
+  /// * Custom element tags are disallowed, use [allowCustomElement].
+  /// * Custom tags extensions are disallowed, use [allowTagExtension].
+  /// * SVG Elements are not allowed, use [allowSvg].
+  ///
+  /// For scenarios where the HTML should only contain formatted text
+  /// [allowTextElements] is more appropriate.
+  ///
+  /// Use [allowSvg] to allow SVG elements.
   NodeValidatorBuilder.common() {
     allowHtml5();
     allowTemplating();
   }
 
-  /**
-   * Allows navigation elements- Form and Anchor tags, along with common
-   * attributes.
-   *
-   * The UriPolicy can be used to restrict the locations the navigation elements
-   * are allowed to direct to. By default this will use the default [UriPolicy].
-   */
+  /// Allows navigation elements- Form and Anchor tags, along with common
+  /// attributes.
+  ///
+  /// The UriPolicy can be used to restrict the locations the navigation elements
+  /// are allowed to direct to. By default this will use the default [UriPolicy].
   void allowNavigation([UriPolicy uriPolicy]) {
     if (uriPolicy == null) {
-      uriPolicy = new UriPolicy();
+      uriPolicy = UriPolicy();
     }
-    add(new _SimpleNodeValidator.allowNavigation(uriPolicy));
+    add(_SimpleNodeValidator.allowNavigation(uriPolicy));
   }
 
-  /**
-   * Allows image elements.
-   *
-   * The UriPolicy can be used to restrict the locations the images may be
-   * loaded from. By default this will use the default [UriPolicy].
-   */
+  /// Allows image elements.
+  ///
+  /// The UriPolicy can be used to restrict the locations the images may be
+  /// loaded from. By default this will use the default [UriPolicy].
   void allowImages([UriPolicy uriPolicy]) {
     if (uriPolicy == null) {
-      uriPolicy = new UriPolicy();
+      uriPolicy = UriPolicy();
     }
-    add(new _SimpleNodeValidator.allowImages(uriPolicy));
+    add(_SimpleNodeValidator.allowImages(uriPolicy));
   }
 
-  /**
-   * Allow basic text elements.
-   *
-   * This allows a subset of HTML5 elements, specifically just these tags and
-   * no attributes.
-   *
-   * * B
-   * * BLOCKQUOTE
-   * * BR
-   * * EM
-   * * H1
-   * * H2
-   * * H3
-   * * H4
-   * * H5
-   * * H6
-   * * HR
-   * * I
-   * * LI
-   * * OL
-   * * P
-   * * SPAN
-   * * UL
-   */
+  /// Allow basic text elements.
+  ///
+  /// This allows a subset of HTML5 elements, specifically just these tags and
+  /// no attributes.
+  ///
+  /// * B
+  /// * BLOCKQUOTE
+  /// * BR
+  /// * EM
+  /// * H1
+  /// * H2
+  /// * H3
+  /// * H4
+  /// * H5
+  /// * H6
+  /// * HR
+  /// * I
+  /// * LI
+  /// * OL
+  /// * P
+  /// * SPAN
+  /// * UL
   void allowTextElements() {
-    add(new _SimpleNodeValidator.allowTextElements());
+    add(_SimpleNodeValidator.allowTextElements());
   }
 
-  /**
-   * Allow inline styles on elements.
-   *
-   * If [tagName] is not specified then this allows inline styles on all
-   * elements. Otherwise tagName limits the styles to the specified elements.
-   */
+  /// Allow inline styles on elements.
+  ///
+  /// If [tagName] is not specified then this allows inline styles on all
+  /// elements. Otherwise tagName limits the styles to the specified elements.
   void allowInlineStyles({String tagName}) {
     if (tagName == null) {
       tagName = '*';
     } else {
       tagName = tagName.toUpperCase();
     }
-    add(new _SimpleNodeValidator(null, allowedAttributes: ['$tagName::style']));
+    add(_SimpleNodeValidator(null, allowedAttributes: ['$tagName::style']));
   }
 
-  /**
-   * Allow common safe HTML5 elements and attributes.
-   *
-   * This list is based off of the Caja whitelists at:
-   * https://code.google.com/p/google-caja/wiki/CajaWhitelists.
-   *
-   * Common things which are not allowed are script elements, style attributes
-   * and any script handlers.
-   */
+  /// Allow common safe HTML5 elements and attributes.
+  ///
+  /// This list is based off of the Caja whitelists at:
+  /// https://code.google.com/p/google-caja/wiki/CajaWhitelists.
+  ///
+  /// Common things which are not allowed are script elements, style attributes
+  /// and any script handlers.
   void allowHtml5({UriPolicy uriPolicy}) {
-    add(new _Html5NodeValidator(uriPolicy: uriPolicy));
+    add(_Html5NodeValidator(uriPolicy: uriPolicy));
   }
 
-  /**
-   * Allow SVG elements and attributes except for known bad ones.
-   */
+  /// Allow SVG elements and attributes except for known bad ones.
   void allowSvg() {
-    add(new _SvgNodeValidator());
+    add(_SvgNodeValidator());
   }
 
-  /**
-   * Allow custom elements with the specified tag name and specified attributes.
-   *
-   * This will allow the elements as custom tags (such as <x-foo></x-foo>),
-   * but will not allow tag extensions. Use [allowTagExtension] to allow
-   * tag extensions.
-   */
+  /// Allow custom elements with the specified tag name and specified attributes.
+  ///
+  /// This will allow the elements as custom tags (such as <x-foo></x-foo>),
+  /// but will not allow tag extensions. Use [allowTagExtension] to allow
+  /// tag extensions.
   void allowCustomElement(String tagName,
       {UriPolicy uriPolicy,
       Iterable<String> attributes,
@@ -187,21 +169,19 @@ class NodeValidatorBuilder implements NodeValidator {
     var uriAttrs = uriAttributes
         ?.map<String>((name) => '$tagNameUpper::${name.toLowerCase()}');
     if (uriPolicy == null) {
-      uriPolicy = new UriPolicy();
+      uriPolicy = UriPolicy();
     }
 
-    add(new _CustomElementNodeValidator(
+    add(_CustomElementNodeValidator(
         uriPolicy, [tagNameUpper], attrs, uriAttrs, false, true));
   }
 
-  /**
-   * Allow custom tag extensions with the specified type name and specified
-   * attributes.
-   *
-   * This will allow tag extensions (such as <div is="x-foo"></div>),
-   * but will not allow custom tags. Use [allowCustomElement] to allow
-   * custom tags.
-   */
+  /// Allow custom tag extensions with the specified type name and specified
+  /// attributes.
+  ///
+  /// This will allow tag extensions (such as <div is="x-foo"></div>),
+  /// but will not allow custom tags. Use [allowCustomElement] to allow
+  /// custom tags.
   void allowTagExtension(String tagName, String baseName,
       {UriPolicy uriPolicy,
       Iterable<String> attributes,
@@ -213,11 +193,11 @@ class NodeValidatorBuilder implements NodeValidator {
     var uriAttrs = uriAttributes
         ?.map<String>((name) => '$baseNameUpper::${name.toLowerCase()}');
     if (uriPolicy == null) {
-      uriPolicy = new UriPolicy();
+      uriPolicy = UriPolicy();
     }
 
-    add(new _CustomElementNodeValidator(uriPolicy,
-        [tagNameUpper, baseNameUpper], attrs, uriAttrs, true, false));
+    add(_CustomElementNodeValidator(uriPolicy, [tagNameUpper, baseNameUpper],
+        attrs, uriAttrs, true, false));
   }
 
   void allowElement(String tagName,
@@ -230,23 +210,19 @@ class NodeValidatorBuilder implements NodeValidator {
         uriAttributes: uriAttributes);
   }
 
-  /**
-   * Allow templating elements (such as <template> and template-related
-   * attributes.
-   *
-   * This still requires other validators to allow regular attributes to be
-   * bound (such as [allowHtml5]).
-   */
+  /// Allow templating elements (such as <template> and template-related
+  /// attributes.
+  ///
+  /// This still requires other validators to allow regular attributes to be
+  /// bound (such as [allowHtml5]).
   void allowTemplating() {
-    add(new _TemplatingNodeValidator());
+    add(_TemplatingNodeValidator());
   }
 
-  /**
-   * Add an additional validator to the current list of validators.
-   *
-   * Elements and attributes will be accepted if they are accepted by any
-   * validators.
-   */
+  /// Add an additional validator to the current list of validators.
+  ///
+  /// Elements and attributes will be accepted if they are accepted by any
+  /// validators.
   void add(NodeValidator validator) {
     _validators.add(validator);
   }
@@ -262,13 +238,13 @@ class NodeValidatorBuilder implements NodeValidator {
 }
 
 class _SimpleNodeValidator implements NodeValidator {
-  final Set<String> allowedElements = new Set<String>();
-  final Set<String> allowedAttributes = new Set<String>();
-  final Set<String> allowedUriAttributes = new Set<String>();
+  final Set<String> allowedElements = Set<String>();
+  final Set<String> allowedAttributes = Set<String>();
+  final Set<String> allowedUriAttributes = Set<String>();
   final UriPolicy uriPolicy;
 
   factory _SimpleNodeValidator.allowNavigation(UriPolicy uriPolicy) {
-    return new _SimpleNodeValidator(uriPolicy, allowedElements: const [
+    return _SimpleNodeValidator(uriPolicy, allowedElements: const [
       'A',
       'FORM'
     ], allowedAttributes: const [
@@ -294,7 +270,7 @@ class _SimpleNodeValidator implements NodeValidator {
   }
 
   factory _SimpleNodeValidator.allowImages(UriPolicy uriPolicy) {
-    return new _SimpleNodeValidator(uriPolicy, allowedElements: const [
+    return _SimpleNodeValidator(uriPolicy, allowedElements: const [
       'IMG'
     ], allowedAttributes: const [
       'IMG::align',
@@ -313,7 +289,7 @@ class _SimpleNodeValidator implements NodeValidator {
   }
 
   factory _SimpleNodeValidator.allowTextElements() {
-    return new _SimpleNodeValidator(null, allowedElements: const [
+    return _SimpleNodeValidator(null, allowedElements: const [
       'B',
       'BLOCKQUOTE',
       'BR',
@@ -334,11 +310,9 @@ class _SimpleNodeValidator implements NodeValidator {
     ]);
   }
 
-  /**
-   * Elements must be uppercased tag names. For example `'IMG'`.
-   * Attributes must be uppercased tag name followed by :: followed by
-   * lowercase attribute name. For example `'IMG:src'`.
-   */
+  /// Elements must be uppercased tag names. For example `'IMG'`.
+  /// Attributes must be uppercased tag name followed by :: followed by
+  /// lowercase attribute name. For example `'IMG:src'`.
   _SimpleNodeValidator(this.uriPolicy,
       {Iterable<String> allowedElements,
       Iterable<String> allowedAttributes,
@@ -422,7 +396,7 @@ class _CustomElementNodeValidator extends _SimpleNodeValidator {
 }
 
 class _TemplatingNodeValidator extends _SimpleNodeValidator {
-  static const _TEMPLATE_ATTRS = const <String>[
+  static const _TEMPLATE_ATTRS = <String>[
     'bind',
     'if',
     'ref',
@@ -433,7 +407,7 @@ class _TemplatingNodeValidator extends _SimpleNodeValidator {
   final Set<String> _templateAttrs;
 
   _TemplatingNodeValidator()
-      : _templateAttrs = new Set<String>.from(_TEMPLATE_ATTRS),
+      : _templateAttrs = Set<String>.from(_TEMPLATE_ATTRS),
         super(null,
             allowedElements: ['TEMPLATE'],
             allowedAttributes:

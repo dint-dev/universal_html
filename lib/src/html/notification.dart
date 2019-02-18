@@ -10,10 +10,10 @@ class Notification extends EventTarget {
   final String dir;
   final String icon;
   final String lang;
-  final Stream<Event> onClick = new Stream<Event>.empty();
-  final Stream<Event> onClose = new Stream<Event>.empty();
-  final Stream<Event> onError = new Stream<Event>.empty();
-  final Stream<Event> onShow = new Stream<Event>.empty();
+  final Stream<Event> onClick = Stream<Event>.empty();
+  final Stream<Event> onClose = Stream<Event>.empty();
+  final Stream<Event> onError = Stream<Event>.empty();
+  final Stream<Event> onShow = Stream<Event>.empty();
   final String tag;
   final String title;
 

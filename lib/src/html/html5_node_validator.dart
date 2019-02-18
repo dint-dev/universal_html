@@ -33,18 +33,16 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html;
 
-/**
- * A Dart DOM validator generated from Caja whitelists.
- *
- * This contains a whitelist of known HTML tagNames and attributes and will only
- * accept known good values.
- *
- * See also:
- *
- * * <https://code.google.com/p/google-caja/wiki/CajaWhitelists>
- */
+/// A Dart DOM validator generated from Caja whitelists.
+///
+/// This contains a whitelist of known HTML tagNames and attributes and will only
+/// accept known good values.
+///
+/// See also:
+///
+/// * <https://code.google.com/p/google-caja/wiki/CajaWhitelists>
 class _Html5NodeValidator implements NodeValidator {
-  static final Set<String> _allowedElements = new Set.from([
+  static final Set<String> _allowedElements = Set.from([
     'A',
     'ABBR',
     'ACRONYM',
@@ -147,7 +145,7 @@ class _Html5NodeValidator implements NodeValidator {
     'WBR',
   ]);
 
-  static const _standardAttributes = const <String>[
+  static const _standardAttributes = <String>[
     '*::class',
     '*::dir',
     '*::draggable',
@@ -412,7 +410,7 @@ class _Html5NodeValidator implements NodeValidator {
     'VIDEO::width',
   ];
 
-  static const _uriAttributes = const <String>[
+  static const _uriAttributes = <String>[
     'A::href',
     'AREA::href',
     'BLOCKQUOTE::cite',
@@ -431,12 +429,10 @@ class _Html5NodeValidator implements NodeValidator {
 
   static final Map<String, Function> _attributeValidators = {};
 
-  /**
-   * All known URI attributes will be validated against the UriPolicy, if
-   * [uriPolicy] is null then a default UriPolicy will be used.
-   */
+  /// All known URI attributes will be validated against the UriPolicy, if
+  /// [uriPolicy] is null then a default UriPolicy will be used.
   _Html5NodeValidator({UriPolicy uriPolicy})
-      : uriPolicy = uriPolicy != null ? uriPolicy : new UriPolicy() {
+      : uriPolicy = uriPolicy != null ? uriPolicy : UriPolicy() {
     if (_attributeValidators.isEmpty) {
       for (var attr in _standardAttributes) {
         _attributeValidators[attr] = _standardAttributeValidator;

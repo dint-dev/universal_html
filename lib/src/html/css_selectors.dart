@@ -2,11 +2,11 @@ part of universal_html;
 
 bool _matches(Element element, String selector, String pseudoElement) {
   if (selector == null) {
-    throw new ArgumentError.notNull(selector);
+    throw ArgumentError.notNull(selector);
   }
   final selectorGroup = css.parseSelectorGroup(selector);
   if (selectorGroup == null) {
-    throw new ArgumentError("The selector is blank.");
+    throw ArgumentError("The selector is blank.");
   }
   return _matchesSelectorGroup(element, selectorGroup, null);
 }
@@ -15,7 +15,7 @@ bool _matchesSelector(
     Element element, css.Selector selector, int index, String pseudoElement) {
   final simpleSelectorSequences = selector.simpleSelectorSequences;
   if (simpleSelectorSequences.isEmpty) {
-    throw new ArgumentError();
+    throw ArgumentError();
   }
   final simpleSelectorSequence = simpleSelectorSequences[index];
   if (!_matchesSimpleSelector(
@@ -99,7 +99,7 @@ bool _matchesSelector(
       return _matchesSelector(previous, selector, index, pseudoElement);
 
     default:
-      throw new UnsupportedError(
+      throw UnsupportedError(
           "Unsupported combinator ${combinator} in '${simpleSelectorSequence.span.text}'");
   }
 }
@@ -114,11 +114,11 @@ bool _matchesSelector(
 bool _matchesSelectorGroup(
     Element element, css.SelectorGroup selectorGroup, String pseudoElement) {
   if (selectorGroup == null) {
-    throw new ArgumentError.notNull();
+    throw ArgumentError.notNull();
   }
   final selectors = selectorGroup.selectors;
   if (selectors.isEmpty) {
-    throw new ArgumentError();
+    throw ArgumentError();
   }
   for (var selector in selectors) {
     if (_matchesSelector(element, selector,
@@ -181,7 +181,7 @@ bool _matchesSimpleSelector(
         if (selector is css.PseudoClassFunctionSelector) {
           return _matchesNthChildSelector(element, selector);
         } else {
-          throw new ArgumentError(selector);
+          throw ArgumentError(selector);
         }
     }
   } else if (selector is css.PseudoElementSelector) {
@@ -245,7 +245,7 @@ bool _matchesSimpleSelector(
         return true;
     }
   }
-  throw new _UnsupportedCssSelectorException(selector.span.text);
+  throw _UnsupportedCssSelectorException(selector.span.text);
 }
 
 bool _matchesNthChildSelector(
@@ -291,7 +291,7 @@ bool _matchesNthChildSelector(
             return index % 2 == 1;
         }
       }
-      throw new _UnsupportedCssSelectorException(selector.span.text);
+      throw _UnsupportedCssSelectorException(selector.span.text);
 
     case 2:
       //
@@ -317,13 +317,16 @@ bool _matchesNthChildSelector(
       final rem = (term2.value as num).toInt();
       return (index % mod) == (rem - 1);
     default:
-      throw new _UnsupportedCssSelectorException(selector.span.text);
+      throw _UnsupportedCssSelectorException(selector.span.text);
   }
 }
 
 class _UnsupportedCssSelectorException implements Exception {
   final String selector;
+
   _UnsupportedCssSelectorException(this.selector);
+
   @override
-  String toString() => "Unsupported (possibly valid) CSS selector: '${selector}'";
+  String toString() =>
+      "Unsupported (possibly valid) CSS selector: '${selector}'";
 }

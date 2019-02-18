@@ -16,7 +16,7 @@ abstract class ChildNode implements Node {}
 class Comment extends CharacterData {
   factory Comment(String value) {
     if (value.contains("-->")) {
-      throw new ArgumentError();
+      throw ArgumentError();
     }
     return Comment._(null, value);
   }
@@ -86,14 +86,14 @@ abstract class Node extends EventTarget {
   Node get previousNode => _previousNode;
 
   String get text {
-    final sb = new StringBuffer();
+    final sb = StringBuffer();
     _buildText(sb);
     return sb.toString();
   }
 
   set text(String newValue) {
     _clearChildren();
-    append(new Text(newValue));
+    append(Text(newValue));
   }
 
   Element get _firstElementChild {
@@ -131,7 +131,7 @@ abstract class Node extends EventTarget {
       case DOCUMENT_FRAGMENT_NODE:
         return "documentfragment";
       default:
-        throw new UnimplementedError();
+        throw UnimplementedError();
     }
   }
 
@@ -335,7 +335,7 @@ abstract class ParentNode implements Node {
 
 class Text extends CharacterData {
   factory Text(String value) {
-    return new Text._(null, value);
+    return Text._(null, value);
   }
 
   Text._(Document ownerDocument, String value) : super._(ownerDocument, value);
@@ -377,7 +377,7 @@ class _ChildNodeIterator extends Iterator<Node> {
       return true;
     } else {
       if (!identical(current.parentNode, _parent)) {
-        throw new StateError("DOM tree was modified during iteration");
+        throw StateError("DOM tree was modified during iteration");
       }
       final next = current.nextNode;
       if (next == null) {
@@ -402,7 +402,7 @@ class _DocumentType extends Node {
 
   @override
   Node cloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      new _DocumentType(ownerDocument, this._value);
+      _DocumentType(ownerDocument, this._value);
 }
 
 /// Mixin for [Element] and [Document].
@@ -436,10 +436,10 @@ abstract class _ElementOrDocument implements Node, ParentNode {
   @override
   void insertBefore(Node node, Node before) {
     if (node is Document) {
-      throw new ArgumentError.value(node);
+      throw ArgumentError.value(node);
     }
     if (before != null && !identical(before._parent, this)) {
-      throw new ArgumentError.value(before, "before");
+      throw ArgumentError.value(before, "before");
     }
 
     // Remove from old parent
@@ -497,7 +497,7 @@ abstract class _ElementOrDocument implements Node, ParentNode {
 
   List<Element> querySelectorAll<T extends Element>(String input) {
     if (input == null) {
-      throw new ArgumentError.notNull(input);
+      throw ArgumentError.notNull(input);
     }
     final selectorGroup = css.parseSelectorGroup(input);
     final result = <Element>[];

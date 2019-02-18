@@ -16,7 +16,7 @@ class History {
   int get length => _stack.length;
 
   String get scrollRestoration {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   dynamic get state => _state;
@@ -58,7 +58,7 @@ class History {
   void _set(_HistoryState state) {
     this._state = state.data;
     window.location.replace(state.url);
-    window.dispatchEvent(new PopStateEvent(state: state.data));
+    window.dispatchEvent(PopStateEvent(state: state.data));
   }
 
   static String _resolve(String url) {
@@ -106,19 +106,19 @@ class Location extends Object with _UrlBase {
 
 class Url extends _UrlBase {
   static String createObjectUrl(dynamic blob_OR_source_OR_stream) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   static String createObjectUrlFromBlob(Blob blob) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   static String createObjectUrlFromSource(MediaSource source) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   static String createObjectUrlFromStream(MediaStream stream) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   static void revokeObjectUrl(String url) {}
@@ -151,7 +151,7 @@ abstract class _UrlBase {
 
   String get origin => _uri?.origin;
 
-  String get password => throw new UnimplementedError();
+  String get password => throw UnimplementedError();
 
   String get pathname => _uri?.path ?? "";
 
@@ -170,7 +170,7 @@ abstract class _UrlBase {
 
   String get search => _uri?.query ?? "";
 
-  String get username => throw new UnimplementedError();
+  String get username => throw UnimplementedError();
 
   Uri get _uri;
 }

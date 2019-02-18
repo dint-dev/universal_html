@@ -4,19 +4,19 @@ class Permissions {
   Permissions._();
 
   Future query(Map permission) async {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Future request(Map permissions) async {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Future<PermissionStatus> requestAll(List<Map> permissions) async {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Future revoke(Map permission) async {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 }
 

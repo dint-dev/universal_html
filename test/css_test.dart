@@ -42,7 +42,7 @@ void main() {
             <e2 id="e2" class="c0 c1 c2"></e2>
           </div>
       """;
-      final fragment = new DocumentFragment.html(
+      final fragment = DocumentFragment.html(
         source,
         treeSanitizer: NodeTreeSanitizer.trusted,
       );
@@ -55,7 +55,7 @@ void main() {
       expect(firstDiv.querySelectorAll("e2"), hasLength(greaterThan(0)));
       document.body.append(firstDiv);
 
-      final elements = new List<Element>.generate(3, (i) {
+      final elements = List<Element>.generate(3, (i) {
         final id = "e$i";
         final element = document.querySelector("#$id");
         if (element == null) {
@@ -64,7 +64,7 @@ void main() {
         return element;
       });
 
-      final elementStyles = new List<CssStyleDeclaration>.from(elements.map((e) {
+      final elementStyles = List<CssStyleDeclaration>.from(elements.map((e) {
         return e.getComputedStyle();
       }));
 
@@ -134,7 +134,7 @@ void main() {
       test(':first-child', () {
         final e = DivElement()
           ..id = "e0"
-          ..append(new DivElement()..id = "e1")
+          ..append(DivElement()..id = "e1")
           ..append(DivElement()..id = "e2");
         expectMatches(e.firstChild, ':first-child', isTrue);
         expectMatches(e.lastChild, ':first-child', isFalse);
@@ -142,7 +142,7 @@ void main() {
       test(':last-child', () {
         final e = DivElement()
           ..id = "e0"
-          ..append(new DivElement()..id = "e1")
+          ..append(DivElement()..id = "e1")
           ..append(DivElement()..id = "e2");
         expectMatches(e.firstChild, ':last-child', isFalse);
         expectMatches(e.lastChild, ':last-child', isTrue);
@@ -150,7 +150,7 @@ void main() {
       test(':nth-child(2)', () {
         final e = DivElement()
           ..id = "root"
-          ..append(new DivElement()..id = "child0")
+          ..append(DivElement()..id = "child0")
           ..append(DivElement()..id = "child1");
         expectMatches(e.childNodes[0], ':nth-child(1)', isTrue);
         expectMatches(e.childNodes[0], ':nth-child(2)', isFalse);
@@ -161,7 +161,7 @@ void main() {
       test(':nth-child(2n)', () {
         final e = DivElement()
           ..id = "root"
-          ..append(new DivElement()..id = "child0")
+          ..append(DivElement()..id = "child0")
           ..append(DivElement()..id = "child1")
           ..append(DivElement()..id = "child2")
           ..append(DivElement()..id = "child3");
@@ -173,7 +173,7 @@ void main() {
       test(':nth-child(2n+1)', () {
         final e = DivElement()
           ..id = "root"
-          ..append(new DivElement()..id = "child0")
+          ..append(DivElement()..id = "child0")
           ..append(DivElement()..id = "child1")
           ..append(DivElement()..id = "child2")
           ..append(DivElement()..id = "child3");

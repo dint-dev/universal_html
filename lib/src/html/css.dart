@@ -10,7 +10,7 @@ abstract class CssRule {}
 
 class _CssStyleDeclaration extends CssStyleDeclaration {
   /// Regular expression for values that will be printed without quotes.
-  static final _noQuotesRegExp = new RegExp(r"^[a-zA-Z0-9]+$");
+  static final _noQuotesRegExp = RegExp(r"^[a-zA-Z0-9]+$");
 
   final LinkedHashMap<String, String> _map = LinkedHashMap<String, String>();
   String _source;
@@ -43,7 +43,7 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
     if (map.isEmpty) {
       return null;
     }
-    final sb = new StringBuffer();
+    final sb = StringBuffer();
     map.forEach((name, value) {
       sb.write(name);
       sb.write(': ');
@@ -64,7 +64,7 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
   }
 
   CssStyleDeclaration _clone() {
-    final result = new _CssStyleDeclaration._();
+    final result = _CssStyleDeclaration._();
     result._source = this._source;
     result._sourceIsLatest = this._sourceIsLatest;
     final resultMap = result._map;
@@ -709,22 +709,23 @@ class CssStyleRule extends CssRule {
   final String selectorText;
   final _CssStyleDeclaration _style;
   final List<_PriotizedSelector> _parsedSelectors;
+
   CssStyleDeclaration get style => _style;
 
   factory CssStyleRule._(CssStyleSheet parentStyleSheet, css.RuleSet node) {
     final selectorText = node.selectorGroup.span.text;
     final List<_PriotizedSelector> priotizedSelectors = <_PriotizedSelector>[];
     for (var selector in node.selectorGroup.selectors) {
-      priotizedSelectors.add(new _PriotizedSelector(selector));
+      priotizedSelectors.add(_PriotizedSelector(selector));
     }
-    final styleDeclaration = new _CssStyleDeclaration._();
+    final styleDeclaration = _CssStyleDeclaration._();
     for (var declaration in node.declarationGroup.declarations) {
       if (declaration is css.Declaration) {
         styleDeclaration.setProperty(
             declaration.property, declaration.expression.span.text);
       }
     }
-    return new CssStyleRule._constructor(
+    return CssStyleRule._constructor(
       parentStyleSheet,
       selectorText,
       styleDeclaration,
@@ -750,7 +751,7 @@ class CssStyleSheet extends StyleSheet {
   void insertRule(int index) {
     cssRules.insert(
       index,
-      new CssStyleRule._constructor(this, "", new _CssStyleDeclaration._(), []),
+      CssStyleRule._constructor(this, "", _CssStyleDeclaration._(), []),
     );
   }
 
@@ -814,7 +815,7 @@ class _PriotizedSelector {
     } else if (selector is css.IdSelector) {
       return 4;
     } else {
-      throw new UnsupportedError(
+      throw UnsupportedError(
         "Unsupported selector: '${selector.span.text}'",
       );
     }

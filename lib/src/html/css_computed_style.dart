@@ -40,7 +40,7 @@ class _ComputedStyle extends CssStyleDeclaration {
               if (rules == null) {
                 rules = <_PriotizedCssStyleRule>[];
               }
-              rules.add(new _PriotizedCssStyleRule(bestPriority, rule));
+              rules.add(_PriotizedCssStyleRule(bestPriority, rule));
             }
           }
         }
@@ -64,12 +64,12 @@ class _ComputedStyle extends CssStyleDeclaration {
 
   @override
   void _setPropertyWithValidName(String name, String value) {
-    throw new UnsupportedError("Computed style can't be modified.");
+    throw UnsupportedError("Computed style can't be modified.");
   }
 
   @override
   void removeProperty(String name) {
-    throw new UnsupportedError("Computed style can't be modified.");
+    throw UnsupportedError("Computed style can't be modified.");
   }
 
   @override
@@ -82,5 +82,6 @@ class _ComputedStyle extends CssStyleDeclaration {
 class _PriotizedCssStyleRule {
   final int priority;
   final CssStyleRule rule;
+
   _PriotizedCssStyleRule(this.priority, this.rule);
 }

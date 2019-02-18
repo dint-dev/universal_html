@@ -33,14 +33,12 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html;
 
-/**
- * Defines the keycode values for keys that are returned by
- * KeyboardEvent.keyCode.
- *
- * Important note: There is substantial divergence in how different browsers
- * handle keycodes and their variants in different locales/keyboard layouts. We
- * provide these constants to help make code processing keys more readable.
- */
+/// Defines the keycode values for keys that are returned by
+/// KeyboardEvent.keyCode.
+///
+/// Important note: There is substantial divergence in how different browsers
+/// handle keycodes and their variants in different locales/keyboard layouts. We
+/// provide these constants to help make code processing keys more readable.
 abstract class KeyCode {
   // These constant names were borrowed from Closure's Keycode enumeration
   // class.
@@ -50,7 +48,7 @@ abstract class KeyCode {
   static const int BACKSPACE = 8;
   static const int TAB = 9;
 
-  /** NUM_CENTER is also NUMLOCK for FF and Safari on Mac. */
+  /// NUM_CENTER is also NUMLOCK for FF and Safari on Mac.
   static const int NUM_CENTER = 12;
   static const int ENTER = 13;
   static const int SHIFT = 16;
@@ -94,10 +92,8 @@ abstract class KeyCode {
   static const int FF_SEMICOLON = 59;
   static const int FF_EQUALS = 61;
 
-  /**
-   * CAUTION: The question mark is for US-keyboard layouts. It varies
-   * for other locales and keyboard layouts.
-   */
+  /// CAUTION: The question mark is for US-keyboard layouts. It varies
+  /// for other locales and keyboard layouts.
   static const int QUESTION_MARK = 63;
   static const int A = 65;
   static const int B = 66;
@@ -163,89 +159,63 @@ abstract class KeyCode {
   static const int FIRST_MEDIA_KEY = 166;
   static const int LAST_MEDIA_KEY = 183;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int SEMICOLON = 186;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int DASH = 189;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int EQUALS = 187;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int COMMA = 188;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int PERIOD = 190;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int SLASH = 191;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int APOSTROPHE = 192;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int TILDE = 192;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int SINGLE_QUOTE = 222;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int OPEN_SQUARE_BRACKET = 219;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int BACKSLASH = 220;
 
-  /**
-   * CAUTION: This constant requires localization for other locales and keyboard
-   * layouts.
-   */
+  /// CAUTION: This constant requires localization for other locales and keyboard
+  /// layouts.
   static const int CLOSE_SQUARE_BRACKET = 221;
   static const int WIN_KEY = 224;
   static const int MAC_FF_META = 224;
   static const int WIN_IME = 229;
 
-  /** A sentinel value if the keycode could not be determined. */
+  /// A sentinel value if the keycode could not be determined.
   static const int UNKNOWN = -1;
 
-  /**
-   * Returns true if the keyCode produces a (US keyboard) character.
-   * Note: This does not (yet) cover characters on non-US keyboards (Russian,
-   * Hebrew, etc.).
-   */
+  /// Returns true if the keyCode produces a (US keyboard) character.
+  /// Note: This does not (yet) cover characters on non-US keyboards (Russian,
+  /// Hebrew, etc.).
   static bool isCharacterKey(int keyCode) {
     if ((keyCode >= ZERO && keyCode <= NINE) ||
         (keyCode >= NUM_ZERO && keyCode <= NUM_MULTIPLY) ||

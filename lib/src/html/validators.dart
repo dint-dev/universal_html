@@ -33,118 +33,92 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html;
 
-/**
- * Interface used to validate that only accepted elements and attributes are
- * allowed while parsing HTML strings into DOM nodes.
- *
- * In general, customization of validation behavior should be done via the
- * [NodeValidatorBuilder] class to mitigate the chances of incorrectly
- * implementing validation rules.
- */
+/// Interface used to validate that only accepted elements and attributes are
+/// allowed while parsing HTML strings into DOM nodes.
+///
+/// In general, customization of validation behavior should be done via the
+/// [NodeValidatorBuilder] class to mitigate the chances of incorrectly
+/// implementing validation rules.
 abstract class NodeValidator {
-  /**
-   * Construct a default NodeValidator which only accepts whitelisted HTML5
-   * elements and attributes.
-   *
-   * If a uriPolicy is not specified then the default uriPolicy will be used.
-   */
+  /// Construct a default NodeValidator which only accepts whitelisted HTML5
+  /// elements and attributes.
+  ///
+  /// If a uriPolicy is not specified then the default uriPolicy will be used.
   factory NodeValidator({UriPolicy uriPolicy}) =>
-      new _Html5NodeValidator(uriPolicy: uriPolicy);
+      _Html5NodeValidator(uriPolicy: uriPolicy);
 
   factory NodeValidator.throws(NodeValidator base) =>
-      new _ThrowsNodeValidator(base);
+      _ThrowsNodeValidator(base);
 
-  /**
-   * Returns true if the tagName is an accepted type.
-   */
+  /// Returns true if the tagName is an accepted type.
   bool allowsElement(Element element);
 
-  /**
-   * Returns true if the attribute is allowed.
-   *
-   * The attributeName parameter will always be in lowercase.
-   *
-   * See [allowsElement] for format of tagName.
-   */
+  /// Returns true if the attribute is allowed.
+  ///
+  /// The attributeName parameter will always be in lowercase.
+  ///
+  /// See [allowsElement] for format of tagName.
   bool allowsAttribute(Element element, String attributeName, String value);
 }
 
-/**
- * Performs sanitization of a node tree after construction to ensure that it
- * does not contain any disallowed elements or attributes.
- *
- * In general custom implementations of this class should not be necessary and
- * all validation customization should be done in custom NodeValidators, but
- * custom implementations of this class can be created to perform more complex
- * tree sanitization.
- */
+/// Performs sanitization of a node tree after construction to ensure that it
+/// does not contain any disallowed elements or attributes.
+///
+/// In general custom implementations of this class should not be necessary and
+/// all validation customization should be done in custom NodeValidators, but
+/// custom implementations of this class can be created to perform more complex
+/// tree sanitization.
 abstract class NodeTreeSanitizer {
-  /**
-   * Constructs a default tree sanitizer which will remove all elements and
-   * attributes which are not allowed by the provided validator.
-   */
+  /// Constructs a default tree sanitizer which will remove all elements and
+  /// attributes which are not allowed by the provided validator.
   factory NodeTreeSanitizer(NodeValidator validator) =>
-      new _ValidatingTreeSanitizer(validator);
+      _ValidatingTreeSanitizer(validator);
 
-  /**
-   * Called with the root of the tree which is to be sanitized.
-   *
-   * This method needs to walk the entire tree and either remove elements and
-   * attributes which are not recognized as safe or throw an exception which
-   * will mark the entire tree as unsafe.
-   */
+  /// Called with the root of the tree which is to be sanitized.
+  ///
+  /// This method needs to walk the entire tree and either remove elements and
+  /// attributes which are not recognized as safe or throw an exception which
+  /// will mark the entire tree as unsafe.
   void sanitizeTree(Node node);
 
-  /**
-   * A sanitizer for trees that we trust. It does no validation and allows
-   * any elements. It is also more efficient, since it can pass the text
-   * directly through to the underlying APIs without creating a document
-   * fragment to be sanitized.
-   */
-  static const trusted = const _TrustedHtmlTreeSanitizer();
+  /// A sanitizer for trees that we trust. It does no validation and allows
+  /// any elements. It is also more efficient, since it can pass the text
+  /// directly through to the underlying APIs without creating a document
+  /// fragment to be sanitized.
+  static const trusted = _TrustedHtmlTreeSanitizer();
 }
 
-/**
- * A sanitizer for trees that we trust. It does no validation and allows
- * any elements.
- */
+/// A sanitizer for trees that we trust. It does no validation and allows
+/// any elements.
 class _TrustedHtmlTreeSanitizer implements NodeTreeSanitizer {
   const _TrustedHtmlTreeSanitizer();
 
   sanitizeTree(Node node) {}
 }
 
-/**
- * Defines the policy for what types of uris are allowed for particular
- * attribute values.
- *
- * This can be used to provide custom rules such as allowing all http:// URIs
- * for image attributes but only same-origin URIs for anchor tags.
- */
+/// Defines the policy for what types of uris are allowed for particular
+/// attribute values.
+///
+/// This can be used to provide custom rules such as allowing all http:// URIs
+/// for image attributes but only same-origin URIs for anchor tags.
 abstract class UriPolicy {
-  /**
-   * Constructs the default UriPolicy which is to only allow Uris to the same
-   * origin as the application was launched from.
-   *
-   * This will block all ftp: mailto: URIs. It will also block accessing
-   * https://example.com if the app is running from http://example.com.
-   */
-  factory UriPolicy() => new _SameOriginUriPolicy();
+  /// Constructs the default UriPolicy which is to only allow Uris to the same
+  /// origin as the application was launched from.
+  ///
+  /// This will block all ftp: mailto: URIs. It will also block accessing
+  /// https://example.com if the app is running from http://example.com.
+  factory UriPolicy() => _SameOriginUriPolicy();
 
-  /**
-   * Checks if the uri is allowed on the specified attribute.
-   *
-   * The uri provided may or may not be a relative path.
-   */
+  /// Checks if the uri is allowed on the specified attribute.
+  ///
+  /// The uri provided may or may not be a relative path.
   bool allowsUri(String uri);
 }
 
-/**
- * Allows URIs to the same origin as the current application was loaded from
- * (such as https://example.com:80).
- */
+/// Allows URIs to the same origin as the current application was loaded from
+/// (such as https://example.com:80).
 class _SameOriginUriPolicy implements UriPolicy {
-  final AnchorElement _hiddenAnchor = new AnchorElement();
+  final AnchorElement _hiddenAnchor = AnchorElement();
   final Location _loc = window.location;
 
   bool allowsUri(String uri) {
@@ -166,24 +140,22 @@ class _ThrowsNodeValidator implements NodeValidator {
 
   bool allowsElement(Element element) {
     if (!validator.allowsElement(element)) {
-      throw new ArgumentError(Element._safeTagName(element));
+      throw ArgumentError(Element._safeTagName(element));
     }
     return true;
   }
 
   bool allowsAttribute(Element element, String attributeName, String value) {
     if (!validator.allowsAttribute(element, attributeName, value)) {
-      throw new ArgumentError(
+      throw ArgumentError(
           '${Element._safeTagName(element)}[$attributeName="$value"]');
     }
     return true;
   }
 }
 
-/**
- * Standard tree sanitizer which validates a node tree against the provided
- * validator and removes any nodes or attributes which are not allowed.
- */
+/// Standard tree sanitizer which validates a node tree against the provided
+/// validator and removes any nodes or attributes which are not allowed.
 class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
   NodeValidator validator;
 

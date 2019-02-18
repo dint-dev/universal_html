@@ -30,7 +30,7 @@ void main() {
       test("works with no attributes", () {
         final input = Element.tag("a")
           ..appendText("a")
-          ..append(new Comment("b"))
+          ..append(Comment("b"))
           ..appendText("c");
         final expected = "a<!--b-->c";
         expect(input.innerHtml, equals(expected));

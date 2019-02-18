@@ -6,7 +6,7 @@ void temporarilyRemoveChildrenFromDocument({Node root}) {
   root ??= document;
 
   // Remove nodes
-  final nodes = new List<Node>.from(root.childNodes);
+  final nodes = List<Node>.from(root.childNodes);
   for (var node in nodes) {
     node.remove();
   }

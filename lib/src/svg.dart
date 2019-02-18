@@ -1,40 +1,51 @@
 library universal_svg;
 
-import 'html.dart';
 import 'package:meta/meta.dart';
+
+import 'html.dart';
 
 // Declared because this is needed by 'html.dart'.
 abstract class Matrix {
   Matrix flipX();
+
   Matrix flipY();
+
   Matrix inverse();
+
   Matrix multiply(Matrix secondMatrix);
+
   Matrix rotate(num angle);
+
   Matrix rotateFromVector(num x, num y);
+
   Matrix scale(num scaleFactor);
+
   Matrix scaleNonUniform(num scaleFactorX, num scaleFactorY);
+
   Matrix skewX(num angle);
+
   Matrix skewY(num angle);
+
   Matrix translate(num x, num y);
 }
 
 class SvgElement extends Element {
   factory SvgElement.svg(String svg,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   factory SvgElement.tag(String tag) {
-    return new SvgElement.tagWithDocument(null, tag);
+    return SvgElement.tagWithDocument(null, tag);
   }
 
   @visibleForTesting
   factory SvgElement.tagWithDocument(Document document, String tag) {
     switch (tag) {
       case "script":
-        return new ScriptElement();
+        return ScriptElement();
       default:
-        return new SvgElement._(document, tag);
+        return SvgElement._(document, tag);
     }
   }
 
@@ -47,7 +58,7 @@ class SvgElement extends Element {
   @override
   Element cloneWithOwnerDocument(Document document, bool deep) {
     // Create a new instance of the same class
-    final clone = new SvgElement.tag(tagName);
+    final clone = SvgElement.tag(tagName);
 
     // Clone attributes
     this.attributes.forEach((name, value) {

@@ -62,7 +62,7 @@ abstract class Event {
   final num timeStamp;
 
   @visibleForTesting
-  Event.constructor(this.type, {this.bubbles: true, this.cancelable: false})
+  Event.constructor(this.type, {this.bubbles = true, this.cancelable = false})
       : assert(type != null && type.length > 0),
         this.timeStamp = DateTime.now().microsecondsSinceEpoch;
 
@@ -100,12 +100,12 @@ class EventStreamProvider<T extends Event> {
 
   const EventStreamProvider(this._type);
 
-  ElementStream<T> forElement(Element e, {bool useCapture: false}) {
+  ElementStream<T> forElement(Element e, {bool useCapture = false}) {
     assert(useCapture != null);
-    return ElementStream._<T>(e, this, useCapture);
+    return ElementStream<T>._(e, this, useCapture);
   }
 
-  Stream<T> forTarget(EventTarget e, {bool useCapture: false}) {
+  Stream<T> forTarget(EventTarget e, {bool useCapture = false}) {
     assert(useCapture != null);
     return _EventStream<T>(e, this._type, useCapture);
   }
@@ -129,7 +129,7 @@ abstract class EventTarget {
 
   bool dispatchEvent(Event event) {
     if (event._eventPhase != Event._INITIAL_PHASE) {
-      throw new ArgumentError("Event.eventPhase is not 0");
+      throw ArgumentError("Event.eventPhase is not 0");
     }
     event._eventPhase = Event.AT_TARGET;
     event._target = this;
@@ -224,7 +224,7 @@ class _EventStream<T extends Event> extends Stream<T> {
   @override
   StreamSubscription<T> listen(void onData(T event),
       {Function onError, void onDone(), bool cancelOnError}) {
-    final controller = new StreamController<T>();
+    final controller = StreamController<T>();
     final listener = (Event event) {
       controller.add(event);
     };

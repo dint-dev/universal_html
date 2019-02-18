@@ -32,10 +32,10 @@ abstract class Selection {
 
 class Window extends EventTarget with WindowBase {
   static const EventStreamProvider<MessageEvent> messageEvent =
-      const EventStreamProvider<MessageEvent>("message");
+      EventStreamProvider<MessageEvent>("message");
 
   static const EventStreamProvider<PopStateEvent> popStateEvent =
-      const EventStreamProvider<PopStateEvent>("popstate");
+      EventStreamProvider<PopStateEvent>("popstate");
 
   Navigator _navigator;
 
@@ -60,7 +60,7 @@ class Window extends EventTarget with WindowBase {
 
   bool get closed => _closed;
 
-  Console get console => _console ?? (_console = new Console._());
+  Console get console => _console ?? (_console = Console._());
 
   CustomElementRegistry get customElements => null;
 
@@ -69,7 +69,7 @@ class Window extends EventTarget with WindowBase {
   int get innerWidth => 1;
 
   Future<num> get animationFrame {
-    final completer = new Completer<num>.sync();
+    final completer = Completer<num>.sync();
     requestAnimationFrame((num value) {
       completer.complete(value);
     });
@@ -78,14 +78,13 @@ class Window extends EventTarget with WindowBase {
 
   int get innerHeight => 1;
 
-  History get history => _history ?? (_history = new History._());
+  History get history => _history ?? (_history = History._());
 
-  Storage get localStorage =>
-      _localStorage ?? (_localStorage = new Storage._());
+  Storage get localStorage => _localStorage ?? (_localStorage = Storage._());
 
-  Location get location => _location ?? (_location = new Location._());
+  Location get location => _location ?? (_location = Location._());
 
-  Navigator get navigator => _navigator ?? (_navigator = new Navigator._());
+  Navigator get navigator => _navigator ?? (_navigator = Navigator._());
 
   Stream<MessageEvent> get onMessage => Window.messageEvent.forTarget(this);
 
@@ -94,7 +93,7 @@ class Window extends EventTarget with WindowBase {
   int get orientation => 0;
 
   Storage get sessionStorage =>
-      _sessionStorage ?? (_sessionStorage = new Storage._());
+      _sessionStorage ?? (_sessionStorage = Storage._());
 
   void alert([String message]) {}
 
@@ -103,7 +102,7 @@ class Window extends EventTarget with WindowBase {
   }
 
   void confirm([String message]) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Selection getSelection() {
@@ -112,24 +111,24 @@ class Window extends EventTarget with WindowBase {
 
   void postMessage(dynamic message, String targetOrigin,
       [List<Object> transfer]) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
-  Future<FileSystem> requestFileSystem(int size, {bool persistent: false}) {
-    throw new UnimplementedError();
+  Future<FileSystem> requestFileSystem(int size, {bool persistent = false}) {
+    throw UnimplementedError();
   }
 
   int requestIdleCallback(IdleRequestCallback callback, [Map options]) {
-    new Timer(const Duration(microseconds: 1), () {
-      final idleDeadline = new IdleDeadline._(
-          DateTime.now().add(const Duration(microseconds: 10)));
+    Timer(const Duration(microseconds: 1), () {
+      final idleDeadline =
+          IdleDeadline._(DateTime.now().add(const Duration(microseconds: 10)));
       callback(idleDeadline);
     });
     return 0;
   }
 
   void requestAnimationFrame(FrameRequestCallback callback) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   void scroll([dynamic options_OR_x, dynamic y, Map scrollOptions]) {}

@@ -106,7 +106,7 @@ abstract class MediaStreamTrack extends EventTarget {
 
 abstract class MediaStreamTrackEvent extends Event {
   factory MediaStreamTrackEvent(String type, Map eventInitDict) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   MediaStreamTrack get track;

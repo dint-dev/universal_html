@@ -40,7 +40,7 @@ class AnchorElement extends HtmlElement with _UrlBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new AnchorElement._(ownerDocument);
+      AnchorElement._(ownerDocument);
 }
 
 class AudioElement extends MediaElement {
@@ -49,8 +49,7 @@ class AudioElement extends MediaElement {
   AudioElement._(Document ownerDocument) : super._(ownerDocument, "audio");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new AudioElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => AudioElement._(ownerDocument);
 }
 
 class BodyElement extends HtmlElement {
@@ -59,8 +58,7 @@ class BodyElement extends HtmlElement {
   BodyElement._(Document ownerDocument) : super._(ownerDocument, "body");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new BodyElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => BodyElement._(ownerDocument);
 }
 
 class BRElement extends HtmlElement {
@@ -69,8 +67,7 @@ class BRElement extends HtmlElement {
   BRElement._(Document ownerDocument) : super._(ownerDocument, "br");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new BRElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => BRElement._(ownerDocument);
 }
 
 class ButtonElement extends HtmlElement {
@@ -80,7 +77,7 @@ class ButtonElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new ButtonElement._(ownerDocument);
+      ButtonElement._(ownerDocument);
 }
 
 class ButtonInputElement extends InputElementBase {
@@ -91,7 +88,7 @@ class ButtonInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new ButtonInputElement._(ownerDocument);
+      ButtonInputElement._(ownerDocument);
 }
 
 class CanvasElement extends HtmlElement {
@@ -109,7 +106,7 @@ class CanvasElement extends HtmlElement {
   CanvasElement._(Document ownerDocument) : super._(ownerDocument, "canvas");
 
   CanvasRenderingContext2D get context2D {
-    return _context2D ??= new CanvasRenderingContext2D._(this);
+    return _context2D ??= CanvasRenderingContext2D._(this);
   }
 
   int get height => _getAttributeInt("height");
@@ -117,24 +114,24 @@ class CanvasElement extends HtmlElement {
   int get width => _getAttributeInt("width");
 
   MediaStream captureStream([num frameRate]) {
-    throw new CanvasRenderingContext2D._(this);
+    throw CanvasRenderingContext2D._(this);
   }
 
   void toBlob(BlobCallback callback, String type, [Object arguments]) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   String toDataUrl([String type = 'image/png', num quality]) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   OffscreenCanvas transferControlToOffscreen() {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new CanvasElement._(ownerDocument);
+      CanvasElement._(ownerDocument);
 }
 
 class CheckboxInputElement extends InputElementBase {
@@ -157,7 +154,7 @@ class CheckboxInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new CheckboxInputElement._(ownerDocument);
+      CheckboxInputElement._(ownerDocument);
 }
 
 class DataListElement extends HtmlElement {
@@ -168,7 +165,7 @@ class DataListElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new DataListElement._(ownerDocument);
+      DataListElement._(ownerDocument);
 }
 
 class DateInputElement extends InputElementBase {
@@ -192,7 +189,7 @@ class DateInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new DateInputElement._(ownerDocument);
+      DateInputElement._(ownerDocument);
 }
 
 class DateTimeLocalInputElement extends InputElementBase {
@@ -217,7 +214,7 @@ class DateTimeLocalInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new DateTimeLocalInputElement._(ownerDocument);
+      DateTimeLocalInputElement._(ownerDocument);
 }
 
 class DetailsElement extends HtmlElement {
@@ -227,7 +224,7 @@ class DetailsElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new DetailsElement._(ownerDocument);
+      DetailsElement._(ownerDocument);
 }
 
 class DivElement extends HtmlElement {
@@ -236,8 +233,7 @@ class DivElement extends HtmlElement {
   DivElement._(Document ownerDocument) : super._(ownerDocument, "div");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new DivElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => DivElement._(ownerDocument);
 }
 
 class DListElement extends HtmlElement {
@@ -246,8 +242,7 @@ class DListElement extends HtmlElement {
   DListElement._(Document ownerDocument) : super._(ownerDocument, "dl");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new DListElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => DListElement._(ownerDocument);
 }
 
 class EmailInputElement extends TextInputElementBase {
@@ -257,7 +252,7 @@ class EmailInputElement extends TextInputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new EmailInputElement._(ownerDocument);
+      EmailInputElement._(ownerDocument);
 }
 
 class FieldSetElement extends HtmlElement {
@@ -268,7 +263,7 @@ class FieldSetElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new FieldSetElement._(ownerDocument);
+      FieldSetElement._(ownerDocument);
 }
 
 class FileUploadInputElement extends InputElementBase {
@@ -293,7 +288,7 @@ class FileUploadInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new FileUploadInputElement._(ownerDocument);
+      FileUploadInputElement._(ownerDocument);
 }
 
 class FormElement extends HtmlElement {
@@ -326,8 +321,7 @@ class FormElement extends HtmlElement {
   }
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new FormElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => FormElement._(ownerDocument);
 }
 
 class HeadElement extends HtmlElement {
@@ -336,8 +330,7 @@ class HeadElement extends HtmlElement {
   HeadElement._(Document ownerDocument) : super._(ownerDocument, "head");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new HeadElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => HeadElement._(ownerDocument);
 }
 
 class HeadingElement extends HtmlElement {
@@ -358,7 +351,7 @@ class HeadingElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new HeadingElement._(ownerDocument, _lowerCaseTagName);
+      HeadingElement._(ownerDocument, _lowerCaseTagName);
 }
 
 class HiddenInputElement extends InputElementBase {
@@ -369,7 +362,7 @@ class HiddenInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new HiddenInputElement._(ownerDocument);
+      HiddenInputElement._(ownerDocument);
 }
 
 class HRElement extends HtmlElement {
@@ -378,8 +371,7 @@ class HRElement extends HtmlElement {
   HRElement._(Document ownerDocument) : super._(ownerDocument, "hr");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new HRElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => HRElement._(ownerDocument);
 }
 
 abstract class HtmlElement extends Element implements NoncedElement {
@@ -394,26 +386,28 @@ abstract class HtmlElement extends Element implements NoncedElement {
 }
 
 class HtmlHtmlElement extends HtmlElement {
-  factory HtmlHtmlElement() => new HtmlHtmlElement._(null);
+  factory HtmlHtmlElement() => HtmlHtmlElement._(null);
 
   HtmlHtmlElement._(Document ownerDocument) : super._(ownerDocument, "html");
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new HtmlHtmlElement._(ownerDocument);
+      HtmlHtmlElement._(ownerDocument);
 }
 
 class IFrameElement extends HtmlElement {
-  factory IFrameElement() => new IFrameElement._(null);
+  factory IFrameElement() => IFrameElement._(null);
 
   IFrameElement._(Document ownerDocument) : super._(ownerDocument, "iframe");
 
   bool get allowfullscreen => _getAttributeBool("allowfullscreen");
+
   set allowfullscreen(bool value) {
     _setAttributeBool("allowfullscreen", value);
   }
 
   bool get allowpaymentrequest => _getAttributeBool("allowpaymentrequest");
+
   set allowpaymentrequest(bool value) {
     _setAttributeBool("allowpaymentrequest", value);
   }
@@ -421,38 +415,44 @@ class IFrameElement extends HtmlElement {
   WindowBase get contentWidget => null;
 
   String get csp => _getAttribute("csp");
+
   set csp(String value) {
     _setAttribute("csp", value);
   }
 
   int get height => _getAttributeInt("height");
+
   set height(int value) {
     _setAttributeInt("height", value);
   }
 
   String get name => _getAttribute("name");
+
   set name(String value) {
     _setAttribute("name", value);
   }
 
   String get sandbox => _getAttribute("sandbox");
+
   set sandbox(String value) {
     _setAttribute("sandbox", value);
   }
 
   String get src => _getAttribute("src");
+
   set src(String value) {
     _setAttribute("src", value);
   }
 
   int get width => _getAttributeInt("width");
+
   set width(int value) {
     _setAttributeInt("width", value);
   }
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new IFrameElement._(ownerDocument);
+      IFrameElement._(ownerDocument);
 }
 
 class ImageButtonInputElement extends InputElementBase {
@@ -487,7 +487,7 @@ class ImageButtonInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new ImageButtonInputElement._(ownerDocument);
+      ImageButtonInputElement._(ownerDocument);
 }
 
 class ImageElement extends HtmlElement {
@@ -543,11 +543,10 @@ class ImageElement extends HtmlElement {
     _setAttributeInt("width", value);
   }
 
-  Future decode() => throw new UnimplementedError();
+  Future decode() => throw UnimplementedError();
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new ImageElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => ImageElement._(ownerDocument);
 }
 
 class InputElementBase extends HtmlElement {
@@ -561,39 +560,39 @@ class InputElementBase extends HtmlElement {
   factory InputElementBase._fromType(Document ownerDocument, String type) {
     switch (type) {
       case "button":
-        return new ButtonInputElement._(ownerDocument);
+        return ButtonInputElement._(ownerDocument);
       case "checkbox":
-        return new CheckboxInputElement._(ownerDocument);
+        return CheckboxInputElement._(ownerDocument);
       case "date":
-        return new DateInputElement._(ownerDocument);
+        return DateInputElement._(ownerDocument);
       case "datetime-local":
-        return new DateTimeLocalInputElement._(ownerDocument);
+        return DateTimeLocalInputElement._(ownerDocument);
       case "email":
-        return new EmailInputElement._(ownerDocument);
+        return EmailInputElement._(ownerDocument);
       case "hidden":
-        return new HiddenInputElement._(ownerDocument);
+        return HiddenInputElement._(ownerDocument);
       case "image":
-        return new ImageButtonInputElement._(ownerDocument);
+        return ImageButtonInputElement._(ownerDocument);
       case "number":
-        return new NumberInputElement._(ownerDocument);
+        return NumberInputElement._(ownerDocument);
       case "password":
-        return new PasswordInputElement._(ownerDocument);
+        return PasswordInputElement._(ownerDocument);
       case "submit":
-        return new SubmitButtonInputElement._(ownerDocument);
+        return SubmitButtonInputElement._(ownerDocument);
       case "telephone":
-        return new TelephoneInputElement._(ownerDocument);
+        return TelephoneInputElement._(ownerDocument);
       case "text":
-        return new TextInputElement._(ownerDocument);
+        return TextInputElement._(ownerDocument);
       case "time":
-        return new TimeInputElement._(ownerDocument);
+        return TimeInputElement._(ownerDocument);
       case "radio":
-        return new RadioButtonInputElement._(ownerDocument);
+        return RadioButtonInputElement._(ownerDocument);
       case "reset":
-        return new ResetButtonInputElement._(ownerDocument);
+        return ResetButtonInputElement._(ownerDocument);
       case "url":
-        return new UrlInputElement._(ownerDocument);
+        return UrlInputElement._(ownerDocument);
       default:
-        return new InputElementBase._(ownerDocument, null);
+        return InputElementBase._(ownerDocument, null);
     }
   }
 
@@ -642,7 +641,7 @@ class InputElementBase extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new InputElementBase._(ownerDocument, null);
+      InputElementBase._(ownerDocument, null);
 }
 
 class LabelElement extends HtmlElement {
@@ -657,8 +656,7 @@ class LabelElement extends HtmlElement {
   }
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new LabelElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => LabelElement._(ownerDocument);
 }
 
 class LegendElement extends HtmlElement {
@@ -668,7 +666,7 @@ class LegendElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new LegendElement._(ownerDocument);
+      LegendElement._(ownerDocument);
 }
 
 class LIElement extends HtmlElement {
@@ -677,8 +675,7 @@ class LIElement extends HtmlElement {
   LIElement._(Document ownerDocument) : super._(ownerDocument, "li");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new LIElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => LIElement._(ownerDocument);
 }
 
 class LinkElement extends HtmlElement {
@@ -687,8 +684,7 @@ class LinkElement extends HtmlElement {
   LinkElement._(Document ownerDocument) : super._(ownerDocument, "link");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new LinkElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => LinkElement._(ownerDocument);
 }
 
 abstract class MediaElement extends HtmlElement {
@@ -740,15 +736,15 @@ abstract class MediaElement extends HtmlElement {
   }
 
   TextTrack addTextTrack(String kind, [String label, String language]) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   String canPlayType(String type, [String keySystem]) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   MediaStream captureStream() {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   void load() {}
@@ -756,15 +752,15 @@ abstract class MediaElement extends HtmlElement {
   void pause() {}
 
   Future play() {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Future setMediaKeys(MediaKeys mediaKeys) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Future setSinkId(String sinkId) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 }
 
@@ -786,8 +782,7 @@ class MetaElement extends HtmlElement {
   }
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new MetaElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => MetaElement._(ownerDocument);
 }
 
 abstract class NoncedElement {
@@ -822,7 +817,7 @@ class NumberInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new NumberInputElement._(ownerDocument);
+      NumberInputElement._(ownerDocument);
 }
 
 class OListElement extends HtmlElement {
@@ -831,8 +826,7 @@ class OListElement extends HtmlElement {
   OListElement._(Document ownerDocument) : super._(ownerDocument, "ol");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new OListElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => OListElement._(ownerDocument);
 }
 
 class OptGroupElement extends HtmlElement {
@@ -843,11 +837,11 @@ class OptGroupElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new OptGroupElement._(ownerDocument);
+      OptGroupElement._(ownerDocument);
 }
 
 class OptionElement extends HtmlElement {
-  OptionElement({String data: '', String value: '', bool selected: false})
+  OptionElement({String data = '', String value = '', bool selected = false})
       : super._(null, "option") {
     if (data.isNotEmpty) {
       appendText(data);
@@ -882,7 +876,7 @@ class OptionElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new OptionElement._(ownerDocument);
+      OptionElement._(ownerDocument);
 }
 
 class ParagraphElement extends HtmlElement {
@@ -892,7 +886,7 @@ class ParagraphElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new ParagraphElement._(ownerDocument);
+      ParagraphElement._(ownerDocument);
 }
 
 class PasswordInputElement extends TextInputElementBase {
@@ -903,7 +897,7 @@ class PasswordInputElement extends TextInputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new PasswordInputElement._(ownerDocument);
+      PasswordInputElement._(ownerDocument);
 }
 
 class PictureElement extends HtmlElement {
@@ -913,7 +907,7 @@ class PictureElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new PictureElement._(ownerDocument);
+      PictureElement._(ownerDocument);
 }
 
 class PreElement extends HtmlElement {
@@ -922,8 +916,7 @@ class PreElement extends HtmlElement {
   PreElement._(Document ownerDocument) : super._(ownerDocument, "pre");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new PreElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => PreElement._(ownerDocument);
 }
 
 class ProgressElement extends HtmlElement {
@@ -948,7 +941,7 @@ class ProgressElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new ProgressElement._(ownerDocument);
+      ProgressElement._(ownerDocument);
 }
 
 class RadioButtonInputElement extends InputElementBase {
@@ -971,7 +964,7 @@ class RadioButtonInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new RadioButtonInputElement._(ownerDocument);
+      RadioButtonInputElement._(ownerDocument);
 }
 
 class ResetButtonInputElement extends InputElementBase {
@@ -982,7 +975,7 @@ class ResetButtonInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new ResetButtonInputElement._(ownerDocument);
+      ResetButtonInputElement._(ownerDocument);
 }
 
 class ScriptElement extends HtmlElement {
@@ -1034,7 +1027,7 @@ class ScriptElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new ScriptElement._(ownerDocument);
+      ScriptElement._(ownerDocument);
 }
 
 class SearchInputElement extends TextInputElementBase {
@@ -1045,7 +1038,7 @@ class SearchInputElement extends TextInputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new SearchInputElement._(ownerDocument);
+      SearchInputElement._(ownerDocument);
 }
 
 class SelectElement extends HtmlElement {
@@ -1082,7 +1075,7 @@ class SelectElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new SelectElement._(ownerDocument);
+      SelectElement._(ownerDocument);
 }
 
 class SlotElement extends HtmlElement {
@@ -1091,8 +1084,7 @@ class SlotElement extends HtmlElement {
   SlotElement._(Document ownerDocument) : super._(ownerDocument, "slot");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new SlotElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => SlotElement._(ownerDocument);
 }
 
 class SourceElement extends HtmlElement {
@@ -1132,7 +1124,7 @@ class SourceElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new SourceElement._(ownerDocument);
+      SourceElement._(ownerDocument);
 }
 
 class SpanElement extends HtmlElement {
@@ -1141,12 +1133,12 @@ class SpanElement extends HtmlElement {
   SpanElement._(Document ownerDocument) : super._(ownerDocument, "span");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new SpanElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => SpanElement._(ownerDocument);
 }
 
 class StyleElement extends HtmlElement {
   factory StyleElement() => StyleElement._(null);
+
   StyleElement._(Document ownerDocument) : super._(ownerDocument, "style");
 
   StyleSheet get sheet {
@@ -1154,9 +1146,9 @@ class StyleElement extends HtmlElement {
     if (type == null || type == "" || type == "text/css") {
       final text = this.text;
       final parsed = css.parse(text);
-      final styleSheet = new CssStyleSheet._();
+      final styleSheet = CssStyleSheet._();
       for (var node in parsed.topLevels) {
-        final styleRule = new CssStyleRule._(styleSheet, node);
+        final styleRule = CssStyleRule._(styleSheet, node);
         if (styleRule != null) {
           styleSheet.cssRules.add(styleRule);
         }
@@ -1173,8 +1165,7 @@ class StyleElement extends HtmlElement {
   }
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new StyleElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => StyleElement._(ownerDocument);
 }
 
 class SubmitButtonInputElement extends InputElementBase {
@@ -1185,7 +1176,7 @@ class SubmitButtonInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new SubmitButtonInputElement._(ownerDocument);
+      SubmitButtonInputElement._(ownerDocument);
 }
 
 class TableCaptionElement extends HtmlElement {
@@ -1196,7 +1187,7 @@ class TableCaptionElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new TableCaptionElement._(ownerDocument);
+      TableCaptionElement._(ownerDocument);
 }
 
 class TableCellElement extends HtmlElement {
@@ -1224,7 +1215,7 @@ class TableCellElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new TableCellElement._(ownerDocument);
+      TableCellElement._(ownerDocument);
 }
 
 class TableElement extends HtmlElement {
@@ -1284,8 +1275,7 @@ class TableElement extends HtmlElement {
   }
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new TableElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => TableElement._(ownerDocument);
 }
 
 class TableRowElement extends HtmlElement {
@@ -1295,7 +1285,7 @@ class TableRowElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new TableRowElement._(ownerDocument);
+      TableRowElement._(ownerDocument);
 }
 
 class TableSectionElement extends HtmlElement {
@@ -1306,7 +1296,7 @@ class TableSectionElement extends HtmlElement {
       this.childNodes.where((item) => item is TableRowElement).toList();
 
   TableRowElement addRow() {
-    final row = new TableRowElement();
+    final row = TableRowElement();
     this.append(row);
     return row;
   }
@@ -1334,14 +1324,14 @@ class TableSectionElement extends HtmlElement {
         }
       }
     }
-    final row = new TableRowElement();
+    final row = TableRowElement();
     this.insertBefore(row, before);
     return row;
   }
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new TableSectionElement._(ownerDocument, _lowerCaseTagName);
+      TableSectionElement._(ownerDocument, _lowerCaseTagName);
 }
 
 class TelephoneInputElement extends TextInputElementBase {
@@ -1363,7 +1353,7 @@ class TemplateElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new TemplateElement._(ownerDocument);
+      TemplateElement._(ownerDocument);
 }
 
 class TextAreaElement extends HtmlElement {
@@ -1422,7 +1412,7 @@ class TextAreaElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new TextAreaElement._(ownerDocument);
+      TextAreaElement._(ownerDocument);
 }
 
 class TextInputElement extends TextInputElementBase {
@@ -1432,7 +1422,7 @@ class TextInputElement extends TextInputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new TextInputElement._(ownerDocument);
+      TextInputElement._(ownerDocument);
 }
 
 abstract class TextInputElementBase extends InputElementBase {
@@ -1502,7 +1492,7 @@ abstract class TextInputElementBase extends InputElementBase {
     if (regExp != null && pattern == regExp.pattern) {
       return regExp;
     }
-    regExp = new RegExp(pattern);
+    regExp = RegExp(pattern);
     _patternRegExp = regExp;
     return regExp;
   }
@@ -1529,7 +1519,7 @@ class TimeInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new TimeInputElement._(ownerDocument);
+      TimeInputElement._(ownerDocument);
 }
 
 class TitleElement extends HtmlElement {
@@ -1538,8 +1528,7 @@ class TitleElement extends HtmlElement {
   TitleElement._(Document ownerDocument) : super._(ownerDocument, "title");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new TitleElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => TitleElement._(ownerDocument);
 }
 
 class TrackElement extends HtmlElement {
@@ -1566,8 +1555,7 @@ class TrackElement extends HtmlElement {
   }
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new TrackElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => TrackElement._(ownerDocument);
 }
 
 class UListElement extends HtmlElement {
@@ -1576,8 +1564,7 @@ class UListElement extends HtmlElement {
   UListElement._(Document ownerDocument) : super._(ownerDocument, "ul");
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new UListElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => UListElement._(ownerDocument);
 }
 
 class UnknownElement extends HtmlElement {
@@ -1589,7 +1576,7 @@ class UnknownElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new UnknownElement._(ownerDocument, namespaceUri, _lowerCaseTagName);
+      UnknownElement._(ownerDocument, namespaceUri, _lowerCaseTagName);
 }
 
 class UrlInputElement extends TextInputElementBase {
@@ -1599,7 +1586,7 @@ class UrlInputElement extends TextInputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      new UrlInputElement._(ownerDocument);
+      UrlInputElement._(ownerDocument);
 }
 
 abstract class ValidityState {
@@ -1648,10 +1635,9 @@ class VideoElement extends MediaElement {
   void exitFullscreen() {}
 
   VideoPlaybackQuality getVideoPlaybackQuality() {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   @override
-  Element _newInstance(Document ownerDocument) =>
-      new VideoElement._(ownerDocument);
+  Element _newInstance(Document ownerDocument) => VideoElement._(ownerDocument);
 }

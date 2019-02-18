@@ -56,7 +56,7 @@ void main() {
       expectSaneDocument(document);
 
       // Insert
-      final n0_n2 = new Element.tag("div");
+      final n0_n2 = Element.tag("div");
       n0.append(n0_n2);
 
       // Document:
@@ -78,7 +78,7 @@ void main() {
       expectSaneDocument(document);
 
       // Insert
-      final n0_n0 = new Element.tag("div");
+      final n0_n0 = Element.tag("div");
       n0.insertBefore(n0_n0, n0_n2);
 
       // Document:
@@ -96,7 +96,7 @@ void main() {
       expectSaneDocument(document);
 
       // Insert
-      final n0_n1 = new Element.tag("div");
+      final n0_n1 = Element.tag("div");
       n0.insertBefore(n0_n1, n0_n2);
 
       // Document:
@@ -181,12 +181,12 @@ void main() {
 
       // Test that throws
       expectLater(() {
-        document.append(new Text("a"));
+        document.append(Text("a"));
       }, throwsA(anything));
 
       // Test the exception message
       try {
-        document.append(new Text("c"));
+        document.append(Text("c"));
       } catch (e) {
         expect(
             e.toString(),
@@ -200,16 +200,16 @@ void main() {
       temporarilyRemoveChildrenFromDocument();
 
       // First child
-      document.append(new HtmlHtmlElement());
+      document.append(HtmlHtmlElement());
 
       // Second child fails
       expectLater(() {
-        document.append(new HtmlHtmlElement());
+        document.append(HtmlHtmlElement());
       }, throwsA(anything));
 
       // Test the exception message
       try {
-        document.append(new HtmlHtmlElement());
+        document.append(HtmlHtmlElement());
       } catch (e) {
         expect(e.toString(), contains("Only one element on document allowed."));
       }
@@ -222,10 +222,10 @@ void main() {
     test("'getElementById(...)'", () {
       temporarilyRemoveChildrenFromDocument();
 
-      final n0 = new Element.tag("div")..id = "n0";
-      final n0_n0 = new Element.tag("div")..id = "n0_n0";
-      final n0_n1 = new Element.tag("div")..id = "n0_n1";
-      final n0_n2 = new Element.tag("div")..id = "n0_n2";
+      final n0 = Element.tag("div")..id = "n0";
+      final n0_n0 = Element.tag("div")..id = "n0_n0";
+      final n0_n1 = Element.tag("div")..id = "n0_n1";
+      final n0_n2 = Element.tag("div")..id = "n0_n2";
       n0.append(n0_n0);
       n0.append(n0_n1);
       n0.append(n0_n2);

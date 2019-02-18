@@ -8,7 +8,8 @@ void main() {
       if (contentType == null) {
         return document;
       } else {
-        final document = new DomParser().parseFromString("<html></html>", contentType);
+        final document =
+            DomParser().parseFromString("<html></html>", contentType);
         return document;
       }
     }
@@ -37,8 +38,8 @@ void main() {
           ..setAttributeNS("namespace", "name", "value2")
           ..appendText("a")
           ..append(Comment("b"))
-          ..append(new HeadingElement.h1())
-          ..append(new ImageElement());
+          ..append(HeadingElement.h1())
+          ..append(ImageElement());
         return document;
       }
 
@@ -98,8 +99,8 @@ void main() {
           ..setAttributeNS("namespace", "name", "value2")
           ..appendText("a")
           ..append(Comment("b"))
-          ..append(new DivElement())
-          ..append(new ImageElement()));
+          ..append(DivElement())
+          ..append(ImageElement()));
         return document;
       }
 
@@ -139,8 +140,8 @@ void main() {
             ..setAttributeNS("namespace", "name", "value2")
             ..appendText("a")
             ..append(Comment("b"))
-            ..append(new DivElement())
-            ..append(new ImageElement()),
+            ..append(DivElement())
+            ..append(ImageElement()),
         );
         return document;
       }

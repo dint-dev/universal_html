@@ -7,7 +7,7 @@ class Navigator {
   @visibleForTesting
   Navigator.constructor();
 
-  final Permissions permission = new Permissions._();
+  final Permissions permission = Permissions._();
 
   Geolocation get geoLocation => null;
 
@@ -41,7 +41,7 @@ class Navigator {
   }
 
   Future<MediaStream> getUserMedia(
-      {dynamic audio: false, dynamic video: false}) {
+      {dynamic audio = false, dynamic video = false}) {
     return Future.error(UnimplementedError());
   }
 

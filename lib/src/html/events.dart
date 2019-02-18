@@ -40,7 +40,7 @@ class HashChangeEvent extends Event {
   final String newUrl;
 
   HashChangeEvent(String type,
-      {bool canBubble: true, bool cancelable: true, this.oldUrl, this.newUrl})
+      {bool canBubble = true, bool cancelable = true, this.oldUrl, this.newUrl})
       : super.constructor(type);
 
   bool get supported => true;
@@ -62,14 +62,14 @@ class KeyboardEvent extends UIEvent {
   KeyboardEvent(
     String type, {
     this.view,
-    this.canBubble: true,
-    this.cancelable: true,
+    this.canBubble = true,
+    this.cancelable = true,
     this.location,
     this.keyLocation,
-    this.ctrlKey: false,
-    this.altKey: false,
-    this.shiftKey: false,
-    this.metaKey: false,
+    this.ctrlKey = false,
+    this.altKey = false,
+    this.shiftKey = false,
+    this.metaKey = false,
   }) : super(type);
 }
 
@@ -81,15 +81,15 @@ class KeyEvent extends KeyboardEvent {
   KeyEvent(
     String type, {
     Window view,
-    bool canBubble: true,
-    bool cancelable: true,
-    this.keyCode: 0,
-    this.charCode: 0,
-    int keyLocation: 1,
-    bool ctrlKey: false,
-    bool altKey: false,
-    bool shiftKey: false,
-    bool metaKey: false,
+    bool canBubble = true,
+    bool cancelable = true,
+    this.keyCode = 0,
+    this.charCode = 0,
+    int keyLocation = 1,
+    bool ctrlKey = false,
+    bool altKey = false,
+    bool shiftKey = false,
+    bool metaKey = false,
     this.currentTarget,
   }) : super(
           type,
@@ -135,16 +135,16 @@ class MouseEvent extends UIEvent {
 
   MouseEvent(String type,
       {this.view,
-      this.detail: 0,
-      this.clientX: 0,
-      this.clientY: 0,
-      this.button: 0,
-      this.canBubble: true,
-      this.cancelable: true,
-      this.ctrlKey: false,
-      this.altKey: false,
-      this.shiftKey: false,
-      this.metaKey: false,
+      this.detail = 0,
+      this.clientX = 0,
+      this.clientY = 0,
+      this.button = 0,
+      this.canBubble = true,
+      this.cancelable = true,
+      this.ctrlKey = false,
+      this.altKey = false,
+      this.shiftKey = false,
+      this.metaKey = false,
       this.relatedTarget})
       : super(type);
 }
@@ -202,14 +202,14 @@ class TouchEvent extends UIEvent {
     List<Touch> changedTouches,
     String type, {
     Window view,
-    int screenX: 0,
-    int screenY: 0,
-    int clientX: 0,
-    int clientY: 0,
-    bool ctrlKey: false,
-    bool altKey: false,
-    bool shiftKey: false,
-    bool metaKey: false,
+    int screenX = 0,
+    int screenY = 0,
+    int clientX = 0,
+    int clientY = 0,
+    bool ctrlKey = false,
+    bool altKey = false,
+    bool shiftKey = false,
+    bool metaKey = false,
   }) : super("touch") {}
 }
 

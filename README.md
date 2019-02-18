@@ -1,10 +1,11 @@
-# Overview
+[![Pub Package](https://img.shields.io/pub/v/universal_html.svg)](https://pub.dartlang.org/packages/universal_html)
+# Introduction
 This package is a pure Dart implemention of a subset of _dart:html_.
 The package works in all platforms (VM, Flutter, and browser).
 
-Licensed under the [MIT license](LICENSE).
+The project is licensed under the [MIT license](LICENSE).
 
-The project welcomes new contributors:
+## Development
   * Star the project at [github.com/terrier989/dart-universal_html](https://github.com/terrier989/dart-universal_html).
   * Report issues at the [Github issue tracker](https://github.com/terrier989/dart-universal_html/issues).
   * Share contributions by creating a pull request.

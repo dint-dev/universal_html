@@ -272,10 +272,6 @@ abstract class Element extends Node
   /// Contains namespaced attributes.
   Map<String, Map<String, String>> _namedspacedAttributes;
 
-  @visibleForTesting
-  Element.constructor(Document document, String tagName)
-      : this._(document, tagName);
-
   /// Creates an HTML element from a valid fragment of HTML.
   ///
   ///     var element = new Element.html('<div class="foo">content</div>');
@@ -297,7 +293,7 @@ abstract class Element extends Node
   ///
   factory Element.html(String html,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    final fragment = const _NodeParserDriver().parseFragmentWithHtml(
+    final fragment = const _DomParserHandler().parseFragmentWithHtml(
       document,
       html.trim(),
       validator: validator,
@@ -308,24 +304,19 @@ abstract class Element extends Node
     return element;
   }
 
-  /// Creates a new element with the tag name.
-  /// If the name is invalid, throws an error or exception.
-  factory Element.tag(String name, [String typeExtension]) {
-    return Element._tag(null, name, typeExtension);
-  }
+  /// IMPORTANT: Not part of 'dart:html'.
+  Element.internal(Document document, String tagName)
+      : this._(document, tagName);
 
-  /// Internal constructor that does not normalize or validate element name.
-  /// Used by Element subclasses such as [AnchorElement].
-  Element._(Document ownerDocument, String nodeName)
-      : this._lowerCaseTagName = nodeName,
-        super._(ownerDocument);
-
-  factory Element._tag(Document ownerDocument, String name,
+  /// IMPORTANT: Not part 'dart:html'.
+  factory Element.internalTag(Document ownerDocument, String name,
       [String typeExtension]) {
     final normalizedName = name.toLowerCase();
     switch (normalizedName) {
       case "a":
         return AnchorElement._(ownerDocument);
+      case "area":
+        return AreaElement._(ownerDocument);
       case "audio":
         return AudioElement._(ownerDocument);
       case "body":
@@ -428,21 +419,40 @@ abstract class Element extends Node
         return VideoElement._(ownerDocument);
       default:
         if (!Element._normalizedElementNameRegExp.hasMatch(normalizedName)) {
-          throw ArgumentError.value(name);
+          throw DomException._failedToExecute(
+            "ElementNameException",
+            "Element",
+            "tag",
+            "'$name' is an invalid element name.",
+          );
         }
-        return UnknownElement._(ownerDocument, null, normalizedName);
+        return UnknownElement.internal(ownerDocument, null, normalizedName);
     }
   }
 
-  factory Element._tagNS(
+  /// IMPORTANT: Not part 'dart:html'.
+  factory Element.internalTagNS(
       Document ownerDocument, String namespaceUri, String name,
       [String typeExtension]) {
     final normalizedName = name.toLowerCase();
     if (!Element._normalizedElementNameRegExp.hasMatch(normalizedName)) {
       throw ArgumentError.value(name);
     }
-    return UnknownElement._(ownerDocument, namespaceUri, normalizedName);
+    return UnknownElement.internal(ownerDocument, namespaceUri, normalizedName);
   }
+
+  /// Creates a new element with the tag name.
+  /// If the name is invalid, throws an error or exception.
+  factory Element.tag(String name, [String typeExtension]) {
+    return Element.internalTag(null, name, typeExtension);
+  }
+
+  /// Internal constructor that does not normalize or validate element name.
+  /// Used by Element subclasses such as [AnchorElement].
+  Element._(Document ownerDocument, String nodeName)
+      : assert(nodeName.toLowerCase() == nodeName),
+        this._lowerCaseTagName = nodeName,
+        super._(ownerDocument);
 
   /// Returns read-only list of attribute names.
   List<String> get attributeNames {
@@ -637,24 +647,7 @@ abstract class Element extends Node
     _setAttributeBool("spellcheck", value);
   }
 
-  CssStyleDeclaration getComputedStyle([String pseudoElement]) {
-    return _ComputedStyle._(this, pseudoElement);
-  }
-
   CssStyleDeclaration get style => _getOrCreateStyle();
-
-  _CssStyleDeclaration _getOrCreateStyle() {
-    _CssStyleDeclaration result = this._style;
-    if (result == null) {
-      result = _CssStyleDeclaration._();
-      final value = this._attributesWithoutLatestValues["style"];
-      if (value != null) {
-        result._parse(value);
-      }
-      this._style = result;
-    }
-    return result;
-  }
 
   int get tabIndex => _getAttributeInt("tabindex");
 
@@ -684,7 +677,7 @@ abstract class Element extends Node
   /// last child of this element.
   void appendHtml(String text,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    final fragment = const _NodeParserDriver().parseFragmentWithHtml(
+    final fragment = const _DomParserHandler().parseFragmentWithHtml(
         ownerDocument, text,
         validator: validator, treeSanitizer: treeSanitizer);
     while (true) {
@@ -707,31 +700,6 @@ abstract class Element extends Node
 
   void click() {
     dispatchEvent(MouseEvent("click"));
-  }
-
-  @override
-  Element cloneWithOwnerDocument(Document ownerDocument, bool deep) {
-    // Create a new instance of the same class
-    final clone = _newInstance(ownerDocument);
-
-    // Clone attributes
-    final attributes = this._attributesPartialViewOrNull;
-    if (attributes != null) {
-      final cloneAttributes = clone._attributesWithoutLatestValues;
-      attributes.forEach((k, v) {
-        cloneAttributes[k] = v;
-      });
-    }
-
-    // Clone style
-    clone._style = this._style?._clone();
-
-    // Clone children
-    if (deep != false) {
-      Node._cloneChildrenFrom(ownerDocument, clone, this);
-    }
-
-    return clone;
   }
 
   void focus() {
@@ -758,6 +726,10 @@ abstract class Element extends Node
     return attributes[name];
   }
 
+  CssStyleDeclaration getComputedStyle([String pseudoElement]) {
+    return _ComputedStyle._(this, pseudoElement);
+  }
+
   Map<String, String> getNamespacedAttributes(String namespace) {
     var namespaces = this._namedspacedAttributes;
     if (namespaces == null) {
@@ -769,6 +741,31 @@ abstract class Element extends Node
       namespaces[namespace] = result = <String, String>{};
     }
     return result;
+  }
+
+  @override
+  Element internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
+    // Create a new instance of the same class
+    final clone = _newInstance(ownerDocument);
+
+    // Clone attributes
+    final attributes = this._attributesPartialViewOrNull;
+    if (attributes != null) {
+      final cloneAttributes = clone._attributesWithoutLatestValues;
+      attributes.forEach((k, v) {
+        cloneAttributes[k] = v;
+      });
+    }
+
+    // Clone style
+    clone._style = this._style?._clone();
+
+    // Clone children
+    if (deep != false) {
+      Node._cloneChildrenFrom(ownerDocument, clone, this);
+    }
+
+    return clone;
   }
 
   bool matches(String selectors) {
@@ -804,8 +801,12 @@ abstract class Element extends Node
 
     // Validate name
     if (!_normalizedAttributeNameRegExp.hasMatch(normalizedName)) {
-      throw ArgumentError.value(
-          name, "name", "Attribute name has invalid characters");
+      throw DomException._failedToExecute(
+        "InvalidCharacterError",
+        "setAttribute",
+        "node",
+        "'$name' is not a valid attribute name.",
+      );
     }
 
     // Use internal method
@@ -829,6 +830,15 @@ abstract class Element extends Node
     } else {
       getNamespacedAttributes(namespace)[name] = value;
     }
+  }
+
+  @override
+  String toString() {
+    final id = this.id;
+    if (id == null) {
+      return '<$tagName ...>...</$tagName>';
+    }
+    return '<$tagName id="$id" ...>...</$tagName>';
   }
 
   String _getAttribute(String name) {
@@ -858,6 +868,19 @@ abstract class Element extends Node
       return null;
     }
     return num.parse(s);
+  }
+
+  _CssStyleDeclaration _getOrCreateStyle() {
+    _CssStyleDeclaration result = this._style;
+    if (result == null) {
+      result = _CssStyleDeclaration._();
+      final value = this._attributesWithoutLatestValues["style"];
+      if (value != null) {
+        result._parse(value);
+      }
+      this._style = result;
+    }
+    return result;
   }
 
   Element _newInstance(Document document);

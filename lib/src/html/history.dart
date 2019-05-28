@@ -35,7 +35,7 @@ class History {
       // Fail silently
       return;
     }
-    _set(_stack[newIndex]);
+    _setStateAndDispatchEvent(_stack[newIndex]);
     _index = newIndex;
   }
 
@@ -44,7 +44,7 @@ class History {
     final state = _HistoryState(data, title, url);
     _stack.add(state);
     _index = _stack.length - 1;
-    _set(state);
+    _setStateAndDispatchEvent(state);
   }
 
   void replaceState(dynamic data, String title, String url) {
@@ -52,10 +52,10 @@ class History {
     final state = _HistoryState(data, title, url);
     _stack.removeLast();
     _stack.add(state);
-    _set(state);
+    _setStateAndDispatchEvent(state);
   }
 
-  void _set(_HistoryState state) {
+  void _setStateAndDispatchEvent(_HistoryState state) {
     this._state = state.data;
     window.location.replace(state.url);
     window.dispatchEvent(PopStateEvent(state: state.data));

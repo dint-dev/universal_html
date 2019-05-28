@@ -8,114 +8,6 @@ class CssImportRule extends CssRule {
 
 abstract class CssRule {}
 
-class _CssStyleDeclaration extends CssStyleDeclaration {
-  /// Regular expression for values that will be printed without quotes.
-  static final _noQuotesRegExp = RegExp(r"^[a-zA-Z0-9]+$");
-
-  final LinkedHashMap<String, String> _map = LinkedHashMap<String, String>();
-  String _source;
-  bool _sourceIsLatest = false;
-
-  _CssStyleDeclaration._() : super._();
-
-  @override
-  String getPropertyValue(String name) {
-    return this._map[name] ?? "";
-  }
-
-  @override
-  String item(int index) {
-    return _map.keys.skip(index).first;
-  }
-
-  @override
-  void removeProperty(String name) {
-    this._sourceIsLatest = false;
-    _map.remove(name);
-  }
-
-  @override
-  String toString() {
-    if (_sourceIsLatest) {
-      return _source;
-    }
-    final map = this._map;
-    if (map.isEmpty) {
-      return null;
-    }
-    final sb = StringBuffer();
-    map.forEach((name, value) {
-      sb.write(name);
-      sb.write(': ');
-      final quotes = !_noQuotesRegExp.hasMatch(value);
-      if (quotes) {
-        sb.write('"');
-      }
-      sb.write(value);
-      if (quotes) {
-        sb.write('"');
-      }
-      sb.write(";");
-    });
-    final source = sb.toString();
-    this._source = source;
-    this._sourceIsLatest = true;
-    return source;
-  }
-
-  CssStyleDeclaration _clone() {
-    final result = _CssStyleDeclaration._();
-    result._source = this._source;
-    result._sourceIsLatest = this._sourceIsLatest;
-    final resultMap = result._map;
-    this._map?.forEach((k, v) {
-      resultMap[k] = v;
-    });
-    return result;
-  }
-
-  @override
-  int get length => this._map.length;
-
-  void _parse(String source) {
-    this._source = source;
-    this._sourceIsLatest = true;
-    final map = this._map;
-    map.clear();
-    if (source == null) {
-      return;
-    }
-    int offset = 0;
-    while (offset < source.length) {
-      final endOfName = source.indexOf(":", offset);
-      if (endOfName < 0) {
-        return;
-      }
-      final name = source.substring(offset, endOfName).trim();
-      offset = endOfName + 1;
-      String value;
-      final endOfValue = source.indexOf(";", offset);
-      if (endOfValue < 0) {
-        value = source.substring(offset).trim();
-        offset = source.length;
-      } else {
-        value = source.substring(offset, endOfValue).trim();
-        offset = endOfValue + 1;
-      }
-      if (value.length > 2 && value.startsWith("\"") && value.endsWith('"')) {
-        value = value.substring(1, value.length - 1);
-      }
-      map[name] = value;
-    }
-  }
-
-  @override
-  void _setPropertyWithValidName(String name, String value) {
-    this._sourceIsLatest = false;
-    this._map[name] = (value ?? "");
-  }
-}
-
 abstract class CssStyleDeclaration {
   CssStyleDeclaration._();
 
@@ -697,11 +589,11 @@ abstract class CssStyleDeclaration {
     this._setPropertyWithValidName(name, value);
   }
 
-  void _setPropertyWithValidName(String name, String value);
-
   bool supportsProperty(String propertyName) => true;
 
   String toString();
+
+  void _setPropertyWithValidName(String name, String value);
 }
 
 class CssStyleRule extends CssRule {
@@ -709,8 +601,6 @@ class CssStyleRule extends CssRule {
   final String selectorText;
   final _CssStyleDeclaration _style;
   final List<_PriotizedSelector> _parsedSelectors;
-
-  CssStyleDeclaration get style => _style;
 
   factory CssStyleRule._(CssStyleSheet parentStyleSheet, css.RuleSet node) {
     final selectorText = node.selectorGroup.span.text;
@@ -739,6 +629,8 @@ class CssStyleRule extends CssRule {
     this._style,
     this._parsedSelectors,
   );
+
+  CssStyleDeclaration get style => _style;
 }
 
 class CssStyleSheet extends StyleSheet {
@@ -748,15 +640,15 @@ class CssStyleSheet extends StyleSheet {
 
   CssStyleSheet._({this.href, this.parentStyleSheet});
 
+  void deleteRule(int index) {
+    cssRules.removeAt(index);
+  }
+
   void insertRule(int index) {
     cssRules.insert(
       index,
       CssStyleRule._constructor(this, "", _CssStyleDeclaration._(), []),
     );
-  }
-
-  void deleteRule(int index) {
-    cssRules.removeAt(index);
   }
 }
 
@@ -767,6 +659,114 @@ class CssViewportRule extends CssRule {
 }
 
 abstract class StyleSheet {}
+
+class _CssStyleDeclaration extends CssStyleDeclaration {
+  /// Regular expression for values that will be printed without quotes.
+  static final _noQuotesRegExp = RegExp(r"^[a-zA-Z0-9]+$");
+
+  final LinkedHashMap<String, String> _map = LinkedHashMap<String, String>();
+  String _source;
+  bool _sourceIsLatest = false;
+
+  _CssStyleDeclaration._() : super._();
+
+  @override
+  int get length => this._map.length;
+
+  @override
+  String getPropertyValue(String name) {
+    return this._map[name] ?? "";
+  }
+
+  @override
+  String item(int index) {
+    return _map.keys.skip(index).first;
+  }
+
+  @override
+  void removeProperty(String name) {
+    this._sourceIsLatest = false;
+    _map.remove(name);
+  }
+
+  @override
+  String toString() {
+    if (_sourceIsLatest) {
+      return _source;
+    }
+    final map = this._map;
+    if (map.isEmpty) {
+      return null;
+    }
+    final sb = StringBuffer();
+    map.forEach((name, value) {
+      sb.write(name);
+      sb.write(': ');
+      final quotes = !_noQuotesRegExp.hasMatch(value);
+      if (quotes) {
+        sb.write('"');
+      }
+      sb.write(value);
+      if (quotes) {
+        sb.write('"');
+      }
+      sb.write(";");
+    });
+    final source = sb.toString();
+    this._source = source;
+    this._sourceIsLatest = true;
+    return source;
+  }
+
+  CssStyleDeclaration _clone() {
+    final result = _CssStyleDeclaration._();
+    result._source = this._source;
+    result._sourceIsLatest = this._sourceIsLatest;
+    final resultMap = result._map;
+    this._map?.forEach((k, v) {
+      resultMap[k] = v;
+    });
+    return result;
+  }
+
+  void _parse(String source) {
+    this._source = source;
+    this._sourceIsLatest = true;
+    final map = this._map;
+    map.clear();
+    if (source == null) {
+      return;
+    }
+    int offset = 0;
+    while (offset < source.length) {
+      final endOfName = source.indexOf(":", offset);
+      if (endOfName < 0) {
+        return;
+      }
+      final name = source.substring(offset, endOfName).trim();
+      offset = endOfName + 1;
+      String value;
+      final endOfValue = source.indexOf(";", offset);
+      if (endOfValue < 0) {
+        value = source.substring(offset).trim();
+        offset = source.length;
+      } else {
+        value = source.substring(offset, endOfValue).trim();
+        offset = endOfValue + 1;
+      }
+      if (value.length > 2 && value.startsWith("\"") && value.endsWith('"')) {
+        value = value.substring(1, value.length - 1);
+      }
+      map[name] = value;
+    }
+  }
+
+  @override
+  void _setPropertyWithValidName(String name, String value) {
+    this._sourceIsLatest = false;
+    this._map[name] = (value ?? "");
+  }
+}
 
 class _PriotizedSelector {
   final css.Selector selector;

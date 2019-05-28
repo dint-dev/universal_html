@@ -1,4 +1,4 @@
-library universal_html.html;
+/// Implements 'dart:html' in all platforms.
+library universal_html;
 
-export 'src/html.dart' if (dart.library.html) 'dart:html'
-    hide HtmlIsolate, HtmlDriver, NodeParserDriver, ZoneLocal;
+export 'src/html.dart' if (dart.library.html) 'dart:html';

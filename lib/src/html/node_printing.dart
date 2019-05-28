@@ -98,7 +98,7 @@ void _printNode(StringBuffer sb, int flags, Node node) {
 
 /// Empty elements from:
 /// https://developer.mozilla.org/en-US/docs/Glossary/empty_element
-final Set<String> _singleTagNamesInLowerCase = new Set<String>.from(const [
+final Set<String> _singleTagNamesInLowerCase = Set<String>.from(const [
   "area",
   "base",
   "br",

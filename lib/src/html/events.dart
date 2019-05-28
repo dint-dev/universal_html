@@ -4,7 +4,7 @@ class BlobEvent extends Event {
   final Blob blob;
   final num timecode;
 
-  BlobEvent(String type, {this.blob, this.timecode}) : super.constructor(type);
+  BlobEvent(String type, {this.blob, this.timecode}) : super.internalConstructor(type);
 }
 
 abstract class ClipboardEvent implements Event {
@@ -41,7 +41,7 @@ class HashChangeEvent extends Event {
 
   HashChangeEvent(String type,
       {bool canBubble = true, bool cancelable = true, this.oldUrl, this.newUrl})
-      : super.constructor(type);
+      : super.internalConstructor(type);
 
   bool get supported => true;
 }
@@ -116,7 +116,7 @@ class MessageEvent extends Event {
     this.origin,
     this.lastEventId,
     this.source,
-  }) : super.constructor(type);
+  }) : super.internalConstructor(type);
 }
 
 class MouseEvent extends UIEvent {
@@ -152,11 +152,11 @@ class MouseEvent extends UIEvent {
 class PopStateEvent extends Event {
   final Object state;
 
-  PopStateEvent({this.state}) : super.constructor("popstate");
+  PopStateEvent({this.state}) : super.internalConstructor("popstate");
 }
 
 class ProgressEvent extends Event {
-  ProgressEvent() : super.constructor("progress");
+  ProgressEvent() : super.internalConstructor("progress");
 }
 
 abstract class SecurityPolicyViolationEvent implements Event {
@@ -210,11 +210,11 @@ class TouchEvent extends UIEvent {
     bool altKey = false,
     bool shiftKey = false,
     bool metaKey = false,
-  }) : super("touch") {}
+  }) : super("touch");
 }
 
 abstract class UIEvent extends Event {
-  UIEvent(String type) : super.constructor(type);
+  UIEvent(String type) : super.internalConstructor(type);
 
   int get detail => null;
 

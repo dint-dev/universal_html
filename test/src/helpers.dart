@@ -45,23 +45,35 @@ void expectSaneTree(Node node,
   // 'previousNode.nextNode' or 'parentNode.firstChild'
   if (node.previousNode == null) {
     if (node.parent != null) {
-      expect(node.parent.firstChild, same(node),
-          reason: "'node.parentNode.firstNode' should be same as 'node'");
+      expect(
+        node.parent.firstChild,
+        same(node),
+        reason: "'node.parentNode.firstNode' should be same as 'node'",
+      );
     }
   } else {
-    expect(node.previousNode.nextNode, same(node),
-        reason: "'node.previousNode.nextNode' should be same as 'node'");
+    expect(
+      node.previousNode.nextNode,
+      same(node),
+      reason: "'node.previousNode.nextNode' should be same as 'node'",
+    );
   }
 
   // 'nextNode.previousNode' or 'parentNode.lastChild'
   if (node.nextNode == null) {
     if (node.parent != null) {
-      expect(node.parent.lastChild, same(node),
-          reason: "'node.parentNode.lastNode' should be same as 'node'");
+      expect(
+        node.parent.lastChild,
+        same(node),
+        reason: "'node.parentNode.lastNode' should be same as 'node'",
+      );
     }
   } else {
-    expect(node.nextNode.previousNode, same(node),
-        reason: "'node.nextNode.previousNode' should be same as 'node'");
+    expect(
+      node.nextNode.previousNode,
+      same(node),
+      reason: "'node.nextNode.previousNode' should be same as 'node'",
+    );
   }
 
   // Test that children are sane too.

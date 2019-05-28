@@ -1,8 +1,8 @@
 part of universal_html;
 
-Window get window => HtmlIsolate.current.window;
+Window get window => HtmlDriver.current.window;
 
-typedef void FrameRequestCallback(num highResTime);
+typedef FrameRequestCallback = void Function(num highResTime);
 
 abstract class CustomElementRegistry {
   void define(String name, Object constructor, [Map options]);
@@ -51,10 +51,8 @@ class Window extends EventTarget with WindowBase {
 
   bool _closed = false;
 
-  @visibleForTesting
-  Window.constructor();
-
-  factory Window._() => HtmlDriver.current.newWindow();
+  /// IMPORTANT: Not part 'dart:html'.
+  Window.internal();
 
   ApplicationCache get applicationCache => null;
 
@@ -138,7 +136,7 @@ class Window extends EventTarget with WindowBase {
   void scrollTo([dynamic options_OR_x, dynamic y, Map scrollOptions]) {}
 }
 
-typedef void IdleRequestCallback(IdleDeadline deadline);
+typedef IdleRequestCallback = void Function(IdleDeadline deadline);
 
 class IdleDeadline {
   final DateTime _deadline;

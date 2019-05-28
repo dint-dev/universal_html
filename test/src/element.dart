@@ -1,20 +1,33 @@
 import 'package:test/test.dart';
 import 'package:universal_html/html.dart';
 
+final throwsDomException = throwsA(isA<DomException>());
+
 void main() {
   group("Element:", () {
     test("'Element.tag' fails if the name is invalid", () {
       const invalidChars = ["<", ">", '"', " ", "&"];
       for (var c in invalidChars) {
-        try {
+        expect(() {
           Element.tag("${c}");
-          fail("Should have thrown");
-        } catch (e) {}
-        try {
+        }, throwsDomException);
+
+        expect(() {
           Element.tag("x${c}x");
-          fail("Should have thrown");
-        } catch (e) {}
+        }, throwsDomException);
       }
+    });
+
+    test("tagName", () {
+      expect(new DivElement().tagName, "DIV");
+      expect(new ImageElement().tagName, "IMG");
+      expect(new ParagraphElement().tagName, "P");
+    });
+
+    test("nodeName", () {
+      expect(new DivElement().nodeName, "DIV");
+      expect(new ImageElement().nodeName, "IMG");
+      expect(new ParagraphElement().nodeName, "P");
     });
 
     group("innerHtml:", () {
@@ -58,14 +71,14 @@ void main() {
           "wbr",
         ];
         for (var tag in tags) {
-          final element = Element.tag("aA");
-          expect(element.toString(), '<$tag>');
+          final element = Element.tag(tag);
+          expect(element.outerHtml, '<$tag>');
 
           element.setAttribute("k0", "v0");
-          expect(element.toString(), '<$tag k0="v0">');
+          expect(element.outerHtml, '<$tag k0="v0">');
 
           element.setAttribute("k1", "v1");
-          expect(element.toString(), '<$tag k0="v0" k1="v1">');
+          expect(element.outerHtml, '<$tag k0="v0" k1="v1">');
         }
       });
       test("uses lowerCase for element/attribute names", () {
@@ -156,14 +169,12 @@ void main() {
       test("'setAttribute' fails if the name is invalid", () {
         const invalidChars = ["<", ">", '"', " ", "&"];
         for (var c in invalidChars) {
-          try {
+          expect(() {
             Element.tag("x").setAttribute(c, "");
-            fail("Should have thrown");
-          } catch (e) {}
-          try {
+          }, throwsDomException);
+          expect(() {
             Element.tag("x").setAttribute("x${c}x", "");
-            fail("Should have thrown");
-          } catch (e) {}
+          }, throwsDomException);
         }
       });
     });

@@ -11,7 +11,7 @@ abstract class CanvasRenderingContext {}
 abstract class CanvasRenderingContext2D extends _CanvasRenderingContext2DBase {
   final CanvasElement canvas;
 
-  @visibleForTesting
+  @deprecated
   CanvasRenderingContext2D.constructor(this.canvas);
 
   factory CanvasRenderingContext2D._(CanvasElement element) =>

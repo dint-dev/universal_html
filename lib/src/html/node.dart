@@ -18,18 +18,19 @@ class Comment extends CharacterData {
     if (value.contains("-->")) {
       throw ArgumentError();
     }
-    return Comment._(null, value);
+    return Comment.internal(null, value);
   }
 
-  Comment._(Document ownerDocument, String value)
+  /// IMPORTANT: Not part of 'dart:hml'.
+  Comment.internal(Document ownerDocument, String value)
       : super._(ownerDocument, value);
 
   @override
   int get nodeType => Node.COMMENT_NODE;
 
   @override
-  Node cloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      Comment._(ownerDocument, nodeValue);
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
+      Comment.internal(ownerDocument, nodeValue);
 }
 
 abstract class Node extends EventTarget {
@@ -143,13 +144,13 @@ abstract class Node extends EventTarget {
   }
 
   Node clone(bool deep) {
-    final clone = cloneWithOwnerDocument(this.ownerDocument, deep);
+    final clone = internalCloneWithOwnerDocument(this.ownerDocument, deep);
     clone._parent = null;
     return clone;
   }
 
-  @visibleForTesting
-  Node cloneWithOwnerDocument(Document ownerDocument, bool deep);
+  @protected
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep);
 
   bool contains(Node node) {
     while (true) {
@@ -289,7 +290,7 @@ abstract class Node extends EventTarget {
     Node newPrevious;
     Node oldChild = oldParent._firstChild;
     while (oldChild != null) {
-      final newChild = oldChild.cloneWithOwnerDocument(ownerDocument, true);
+      final newChild = oldChild.internalCloneWithOwnerDocument(ownerDocument, true);
       newChild._parent = newParent;
       newChild._previousNode = newPrevious;
       if (newPrevious == null) {
@@ -335,10 +336,11 @@ abstract class ParentNode implements Node {
 
 class Text extends CharacterData {
   factory Text(String value) {
-    return Text._(null, value);
+    return Text.internal(null, value);
   }
 
-  Text._(Document ownerDocument, String value) : super._(ownerDocument, value);
+  /// IMPORTANT: Not part 'dart:html'.
+  Text.internal(Document ownerDocument, String value) : super._(ownerDocument, value);
 
   @override
   int get nodeType => Node.TEXT_NODE;
@@ -347,8 +349,8 @@ class Text extends CharacterData {
   String get text => nodeValue;
 
   @override
-  Node cloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      Text._(ownerDocument, nodeValue);
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
+      Text.internal(ownerDocument, nodeValue);
 
   @override
   void _buildText(StringBuffer sb) {
@@ -389,10 +391,12 @@ class _ChildNodeIterator extends Iterator<Node> {
   }
 }
 
-class _DocumentType extends Node {
+/// IMPORTANT: Not part 'dart:html'.
+class DocumentType extends Node {
   final String _value;
 
-  _DocumentType(Document ownerDocument, this._value) : super._(ownerDocument);
+  /// IMPORTANT: Not part 'dart:html'.
+  DocumentType.internal(Document ownerDocument, this._value) : super._(ownerDocument);
 
   @override
   String get nodeName => _value;
@@ -401,8 +405,8 @@ class _DocumentType extends Node {
   int get nodeType => Node.DOCUMENT_TYPE_NODE;
 
   @override
-  Node cloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      _DocumentType(ownerDocument, this._value);
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
+      DocumentType.internal(ownerDocument, this._value);
 }
 
 /// Mixin for [Element] and [Document].
@@ -447,46 +451,38 @@ abstract class _ElementOrDocument implements Node, ParentNode {
       node.remove();
     }
 
+    // Validate state
+    if (node.parentNode != null || node.previousNode != null && node.nextNode!=null) {
+      throw new StateError("Node is not detached.");
+    }
+
+    node._parent = this;
     if (before == null) {
       final oldLastChild = this._lastChild;
       if (oldLastChild == null) {
-        // Set first sibling
         this._firstChild = node;
       } else {
-        // Set next sibling of the previous sibling
         oldLastChild._nextNode = node;
-
-        // Set previous sibling
-        node._previousNode = oldLastChild;
       }
-
-      // Set last sibling
+      node._previousNode = oldLastChild;
       this._lastChild = node;
     } else {
       final previous = before._previousNode;
       if (previous == null) {
         // Set first sibling
         this._firstChild = node;
-
-        // Set previous sibling
-        node._previousNode = node;
       } else {
-        // Set next sibling of the previous sibling
         previous._nextNode = node;
-
-        // Set previous sibling
-        node._previousNode = node;
+        node._previousNode = previous;
       }
-
-      // Set next node
-      node._nextNode = node;
-
-      // Set previous node of the next node
+      node._nextNode = before;
       before._previousNode = node;
     }
 
-    // Set parent
-    node._parent = this;
+    // Validate state
+    if (this._firstChild==null || this._lastChild==null || node.parentNode == null) {
+      throw new StateError("Node is not attached.");
+    }
   }
 
   Element querySelector(String selectors) {

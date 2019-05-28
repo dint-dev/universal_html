@@ -3,8 +3,7 @@ part of universal_html;
 class Storage {
   factory Storage._() => HtmlDriver.current.newStorage();
 
-  @visibleForTesting
-  Storage.constructor();
+  Storage.internal();
 
   final Map<String, String> _map = <String, String>{};
 
@@ -46,5 +45,5 @@ class StorageEvent extends Event {
 
   StorageEvent(String type,
       {this.key, this.newValue, this.oldValue, this.storageArea, this.url})
-      : super.constructor(type);
+      : super.internalConstructor(type);
 }

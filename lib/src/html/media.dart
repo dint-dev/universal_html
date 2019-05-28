@@ -83,7 +83,7 @@ abstract class MediaSource extends EventTarget {
 abstract class MediaStream extends EventTarget {}
 
 class MediaStreamEvent extends Event {
-  MediaStreamEvent(String type) : super.constructor(type);
+  MediaStreamEvent(String type) : super.internalConstructor(type);
 }
 
 abstract class MediaStreamTrack extends EventTarget {

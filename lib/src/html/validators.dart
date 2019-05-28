@@ -136,7 +136,7 @@ class _SameOriginUriPolicy implements UriPolicy {
 class _ThrowsNodeValidator implements NodeValidator {
   final NodeValidator validator;
 
-  _ThrowsNodeValidator(this.validator) {}
+  _ThrowsNodeValidator(this.validator);
 
   bool allowsElement(Element element) {
     if (!validator.allowsElement(element)) {
@@ -159,7 +159,7 @@ class _ThrowsNodeValidator implements NodeValidator {
 class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
   NodeValidator validator;
 
-  _ValidatingTreeSanitizer(this.validator) {}
+  _ValidatingTreeSanitizer(this.validator);
 
   void sanitizeTree(Node node) {
     void walk(Node node, Node parent) {
@@ -228,11 +228,15 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
       corrupted = corruptedTest1
           ? true
           : Element._hasCorruptedAttributesAdditionalCheck(element);
-    } catch (e) {}
+    } catch (e) {
+      // Ignore
+    }
     var elementText = 'element unprintable';
     try {
       elementText = element.toString();
-    } catch (e) {}
+    } catch (e) {
+      // ignore error
+    }
     try {
       var elementTagName = Element._safeTagName(element);
       _sanitizeElement(element, parent, corrupted, elementText, elementTagName,

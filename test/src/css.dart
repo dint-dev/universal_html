@@ -3,75 +3,29 @@ import 'package:universal_html/html.dart';
 
 import 'helpers.dart';
 
+final throwsDomException = throwsA(isA<DomException>());
+
 void main() {
   group("CSS-related tests for Element:", () {
     test("computedStyle", () {
       temporarilyRemoveChildrenFromDocument(root: document.body);
 
-      final source = """
-          <div>
-            <style>
-            .c0{
-              font-family:"v0"
-            }
-            .c1{
-              font-family:"v1 by earlier style is incorrect"
-            }
-            </style>
-            <style>
-            .c1{
-              font-family:"v1 by first rule is incorrect";
-            }
-            .c1{
-              font-family:"v1";
-            }
-            </style>
-            <style>
-            e2{
-              font-family:"v2 by element rule is incorrect";
-            }
-            #e2{
-              font-family:"v2";
-            }
-            .c2{
-              font-family:"v2 by class rule is incorrect";
-            }
-            </style>
-            <e0 id="e0" class="c0"></e0>
-            <e1 id="e1" class="c0 c1"></e1>
-            <e2 id="e2" class="c0 c1 c2"></e2>
-          </div>
-      """;
-      final fragment = DocumentFragment.html(
-        source,
-        treeSanitizer: NodeTreeSanitizer.trusted,
-      );
+      final styleElement = new StyleElement()..appendText("""
+.exampleClass {
+  font-family: exampleFont
+}""");
+      addTearDown(() {
+        styleElement.remove();
+      });
+      document.head.insertBefore(styleElement, null);
 
-      final firstDiv = fragment.querySelector("div");
-      expect(firstDiv, isNotNull);
-      expect(firstDiv.querySelectorAll("style"), hasLength(greaterThan(2)));
-      expect(firstDiv.querySelectorAll("e0"), hasLength(greaterThan(0)));
-      expect(firstDiv.querySelectorAll("e1"), hasLength(greaterThan(0)));
-      expect(firstDiv.querySelectorAll("e2"), hasLength(greaterThan(0)));
-      document.body.append(firstDiv);
-
-      final elements = List<Element>.generate(3, (i) {
-        final id = "e$i";
-        final element = document.querySelector("#$id");
-        if (element == null) {
-          fail("Element '#$id' could not be found.");
-        }
-        return element;
+      final element = new DivElement()..className = "exampleClass";
+      document.body.insertBefore(element, null);
+      addTearDown(() {
+        element.remove();
       });
 
-      final elementStyles = List<CssStyleDeclaration>.from(elements.map((e) {
-        return e.getComputedStyle();
-      }));
-
-      // Values
-      expect(elementStyles[0].fontFamily, equals("v0"));
-      expect(elementStyles[1].fontFamily, equals("v1"));
-      expect(elementStyles[2].fontFamily, equals("v2"));
+      expect(element.getComputedStyle().fontFamily, "exampleFont");
     });
 
     group("'matches':", () {
@@ -84,12 +38,11 @@ void main() {
                 "Element: '${idOrOuterHtml}'\nSelector: '${selector}'\nTree: '${root.outerHtml}'");
       }
 
-      test("blank string throws error", () {
+      test("blank string throws DomException", () {
         final e = DivElement();
-        try {
+        expect(() {
           e.matches("");
-          fail("Should have thrown an error");
-        } catch (e) {}
+        }, throwsDomException);
       });
       test("element", () {
         final e = DivElement();

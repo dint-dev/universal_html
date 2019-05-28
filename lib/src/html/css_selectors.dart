@@ -4,9 +4,12 @@ bool _matches(Element element, String selector, String pseudoElement) {
   if (selector == null) {
     throw ArgumentError.notNull(selector);
   }
+  if (selector.isEmpty) {
+    throw DomException._("invalidSelector", "Selector can't be blank");
+  }
   final selectorGroup = css.parseSelectorGroup(selector);
   if (selectorGroup == null) {
-    throw ArgumentError("The selector is blank.");
+    throw DomException._("invalidSelector", "Selector could not be parsed: '$selector'");
   }
   return _matchesSelectorGroup(element, selectorGroup, null);
 }

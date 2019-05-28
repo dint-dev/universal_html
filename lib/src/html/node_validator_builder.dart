@@ -50,7 +50,7 @@ part of universal_html;
 class NodeValidatorBuilder implements NodeValidator {
   final List<NodeValidator> _validators = <NodeValidator>[];
 
-  NodeValidatorBuilder() {}
+  NodeValidatorBuilder();
 
   /// Creates a new NodeValidatorBuilder which accepts common constructs.
   ///
@@ -411,7 +411,7 @@ class _TemplatingNodeValidator extends _SimpleNodeValidator {
         super(null,
             allowedElements: ['TEMPLATE'],
             allowedAttributes:
-                _TEMPLATE_ATTRS.map((attr) => 'TEMPLATE::$attr')) {}
+                _TEMPLATE_ATTRS.map((attr) => 'TEMPLATE::$attr'));
 
   bool allowsAttribute(Element element, String attributeName, String value) {
     if (super.allowsAttribute(element, attributeName, value)) {

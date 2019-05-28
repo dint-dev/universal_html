@@ -1,13 +1,18 @@
 part of universal_html;
 
 class Navigator {
-  factory Navigator._() => HtmlDriver.current.newNavigator();
+  final Permissions permission = Permissions._();
 
   /// IMPORTANT: Not part of 'dart:html' API.
-  @visibleForTesting
-  Navigator.constructor();
+  Navigator.internal({this.languages=const ["en-US"], this.userAgent="", this.vendor="", this.vendorSub=""});
 
-  final Permissions permission = Permissions._();
+  factory Navigator._() => HtmlDriver.current.newNavigator();
+
+  String get appName => "";
+
+  String get appVersion => "";
+
+  int get deviceMemory => null;
 
   Geolocation get geoLocation => null;
 
@@ -16,23 +21,17 @@ class Navigator {
     return languages.isEmpty ? null : languages.first;
   }
 
-  String get appName => "";
-
-  String get appVersion => "";
-
-  int get deviceMemory => null;
-
-  List<String> get languages => const ["en-US"];
+  final List<String> languages;
 
   MediaDevices get mediaDevices => MediaDevices._();
 
   bool get onLine => false;
 
-  String get userAgent => "";
+  final String userAgent;
 
-  String get vendor => "";
+  final String vendor;
 
-  String get vendorSub => "";
+  final String vendorSub;
 
   void cancelKeyboardLock() {}
 

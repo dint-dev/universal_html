@@ -4,22 +4,33 @@ class DomParser {
   Document parseFromString(String input, String type) {
     switch (type) {
       case "text/html":
-        return const _NodeParserDriver().parseHtmlDocument(input);
+        return const _DomParserHandler().parseHtmlDocument(input);
       case "application/xhtml+xml":
-        return const _NodeParserDriver().parseHtmlDocument(input);
+        return const _DomParserHandler().parseHtmlDocument(input);
       case "text/xml":
-        return const _NodeParserDriver().parseXmlDocument(input);
+        return const _DomParserHandler().parseXmlDocument(input);
       case "application/xml":
-        return const _NodeParserDriver().parseXmlDocument(input);
+        return const _DomParserHandler().parseXmlDocument(input);
       case "image/svg+xml":
-        return const _NodeParserDriver().parseSvgDocument(input);
+        return const _DomParserHandler().parseSvgDocument(input);
       default:
         throw ArgumentError.value(type, "type");
     }
   }
 }
 
-class _NodeParserDriver extends NodeParserDriver {
+/// IMPORTANT: Not part 'dart:html'.
+class XmlElement extends Element {
+  /// IMPORTANT: Not part 'dart:html'.
+  XmlElement.internalTag(Document ownerDocument, String name)
+      : super._(ownerDocument, name);
+
+  @override
+  Element _newInstance(Document ownerDocument) =>
+      XmlElement.internalTag(ownerDocument, tagName);
+}
+
+class _DomParserHandler extends _DomParserHandlerBase {
   static NodeValidatorBuilder _defaultValidator;
   static _ValidatingTreeSanitizer _defaultSanitizer;
 
@@ -27,7 +38,73 @@ class _NodeParserDriver extends NodeParserDriver {
   static const int _typeXml = 1;
   static const int _typeSvg = 2;
 
-  const _NodeParserDriver();
+  const _DomParserHandler();
+
+  DocumentFragment parseFragmentWithHtml(Document ownerDocument, String html,
+      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
+    if (html == null) {
+      throw ArgumentError.notNull();
+    }
+    if (treeSanitizer == null) {
+      if (validator == null) {
+        if (_defaultValidator == null) {
+          _defaultValidator = NodeValidatorBuilder.common();
+        }
+        validator = _defaultValidator;
+      }
+      if (_defaultSanitizer == null) {
+        _defaultSanitizer = _ValidatingTreeSanitizer(validator);
+      } else {
+        _defaultSanitizer.validator = validator;
+      }
+      treeSanitizer = _defaultSanitizer;
+    } else if (validator != null) {
+      throw ArgumentError(
+          'validator can only be passed if treeSanitizer is null');
+    }
+    final fragment =
+        _convertParsed(null, html_parsing.parseFragment(html), _typeHtml);
+    assert(fragment is DocumentFragment);
+    var child = fragment.firstChild;
+    while (child != null) {
+      treeSanitizer.sanitizeTree(child);
+      child = child.nextNode;
+    }
+    return fragment;
+  }
+
+  DocumentFragment parseFragmentWithSvg(Document ownerDocument, String html,
+      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
+    if (html == null) {
+      throw ArgumentError.notNull();
+    }
+    if (treeSanitizer == null) {
+      if (validator == null) {
+        if (_defaultValidator == null) {
+          _defaultValidator = NodeValidatorBuilder.common();
+        }
+        validator = _defaultValidator;
+      }
+      if (_defaultSanitizer == null) {
+        _defaultSanitizer = _ValidatingTreeSanitizer(validator);
+      } else {
+        _defaultSanitizer.validator = validator;
+      }
+      treeSanitizer = _defaultSanitizer;
+    } else if (validator != null) {
+      throw ArgumentError(
+          'validator can only be passed if treeSanitizer is null');
+    }
+    final fragment = _convertParsed(
+        null, html_parsing.parseFragment(html, container: "svg"), _typeSvg);
+    assert(fragment is DocumentFragment);
+    var child = fragment.firstChild;
+    while (child != null) {
+      treeSanitizer.sanitizeTree(child);
+      child = child.nextNode;
+    }
+    return fragment;
+  }
 
   @override
   HtmlDocument parseHtmlDocument(String input) {
@@ -63,19 +140,25 @@ class _NodeParserDriver extends NodeParserDriver {
           final tag = input.localName;
           switch (tag) {
             case "input":
-              result = InputElementBase._fromType(
-                  ownerDocument, input.attributes["type"]);
+              result = InputElementBase.internalFromType(
+                ownerDocument,
+                input.attributes["type"],
+              );
               break;
             default:
-              result = Element._tag(ownerDocument, input.localName);
+              result = Element.internalTag(
+                ownerDocument,
+                input.localName,
+              );
               break;
           }
           break;
         case _typeXml:
-          return _XmlElement._tag(ownerDocument, input.localName);
+          return XmlElement.internalTag(ownerDocument, input.localName);
         case _typeSvg:
           // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-          return SvgElement.tagWithDocument(ownerDocument, input.localName);
+          return SvgElement.internalTagWithDocument(
+              ownerDocument, input.localName);
       }
 
       // Set attributes
@@ -158,84 +241,65 @@ class _NodeParserDriver extends NodeParserDriver {
       }
       return result;
     } else if (input is html_parsing.DocumentType) {
-      return _DocumentType(ownerDocument, input.name);
+      return DocumentType.internal(ownerDocument, input.name);
     } else {
       throw UnimplementedError();
     }
   }
-
-  DocumentFragment parseFragmentWithHtml(Document ownerDocument, String html,
-      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    if (html == null) {
-      throw ArgumentError.notNull();
-    }
-    if (treeSanitizer == null) {
-      if (validator == null) {
-        if (_defaultValidator == null) {
-          _defaultValidator = NodeValidatorBuilder.common();
-        }
-        validator = _defaultValidator;
-      }
-      if (_defaultSanitizer == null) {
-        _defaultSanitizer = _ValidatingTreeSanitizer(validator);
-      } else {
-        _defaultSanitizer.validator = validator;
-      }
-      treeSanitizer = _defaultSanitizer;
-    } else if (validator != null) {
-      throw ArgumentError(
-          'validator can only be passed if treeSanitizer is null');
-    }
-    final fragment =
-        _convertParsed(null, html_parsing.parseFragment(html), _typeHtml);
-    assert(fragment is DocumentFragment);
-    var child = fragment.firstChild;
-    while (child != null) {
-      treeSanitizer.sanitizeTree(child);
-      child = child.nextNode;
-    }
-    return fragment;
-  }
-
-  DocumentFragment parseFragmentWithSvg(Document ownerDocument, String html,
-      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    if (html == null) {
-      throw ArgumentError.notNull();
-    }
-    if (treeSanitizer == null) {
-      if (validator == null) {
-        if (_defaultValidator == null) {
-          _defaultValidator = NodeValidatorBuilder.common();
-        }
-        validator = _defaultValidator;
-      }
-      if (_defaultSanitizer == null) {
-        _defaultSanitizer = _ValidatingTreeSanitizer(validator);
-      } else {
-        _defaultSanitizer.validator = validator;
-      }
-      treeSanitizer = _defaultSanitizer;
-    } else if (validator != null) {
-      throw ArgumentError(
-          'validator can only be passed if treeSanitizer is null');
-    }
-    final fragment = _convertParsed(
-        null, html_parsing.parseFragment(html, container: "svg"), _typeSvg);
-    assert(fragment is DocumentFragment);
-    var child = fragment.firstChild;
-    while (child != null) {
-      treeSanitizer.sanitizeTree(child);
-      child = child.nextNode;
-    }
-    return fragment;
-  }
 }
 
-class _XmlElement extends Element {
-  _XmlElement._tag(Document ownerDocument, String name)
-      : super._(ownerDocument, name);
+abstract class _DomParserHandlerBase {
+  const _DomParserHandlerBase();
 
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      _XmlElement._tag(ownerDocument, tagName);
+  DocumentFragment parseFragmentWithHtml(Document ownerDocument, String html,
+      {NodeValidator validator, NodeTreeSanitizer treeSanitizer});
+
+  DocumentFragment parseFragmentWithSvg(Document ownerDocument, String html,
+      {NodeValidator validator, NodeTreeSanitizer treeSanitizer});
+
+  HtmlDocument parseHtmlDocument(String source);
+
+  XmlDocument parseSvgDocument(String source);
+
+  XmlDocument parseXhtmlDocument(String source);
+
+  XmlDocument parseXmlDocument(String source);
+
+  static Comment newTrustedComment(Document ownerDocument, String text) {
+    return Comment.internal(ownerDocument, text);
+  }
+
+  static Node newTrustedDocumentType(Document ownerDocument, String name) {
+    return DocumentType.internal(ownerDocument, name);
+  }
+
+  static Element newTrustedHtmlElement(Document ownerDocument, String tagName) {
+    return Element.internalTag(ownerDocument, tagName);
+  }
+
+  static Element newTrustedHtmlElementNS(
+      Document ownerDocument, String namespace, String tagName) {
+    return Element.internalTagNS(ownerDocument, namespace, tagName);
+  }
+
+  static Element newTrustedHtmlInputElement(
+      Document ownerDocument, String type) {
+    return InputElementBase.internalFromType(ownerDocument, type);
+  }
+
+  /// A helper for building parsers.
+  static Text newTrustedText(Document ownerDocument, String text) {
+    return Text.internal(ownerDocument, text);
+  }
+
+  /// A helper for building parsers.
+  static Element newTrustedXmlElement(Document ownerDocument, String tagName) {
+    return XmlElement.internalTag(ownerDocument, tagName);
+  }
+
+  /// A helper for building parsers.
+  static Element newTrustedXmlElementNS(
+      Document ownerDocument, String namespace, String tagName) {
+    return UnknownElement.internal(ownerDocument, namespace, tagName);
+  }
 }

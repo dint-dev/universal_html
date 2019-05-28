@@ -43,6 +43,15 @@ class AnchorElement extends HtmlElement with _UrlBase {
       AnchorElement._(ownerDocument);
 }
 
+class AreaElement extends MediaElement {
+  factory AreaElement() => AreaElement._(null);
+
+  AreaElement._(Document ownerDocument) : super._(ownerDocument, "area");
+
+  @override
+  Element _newInstance(Document ownerDocument) => AreaElement._(ownerDocument);
+}
+
 class AudioElement extends MediaElement {
   factory AudioElement() => AudioElement._(null);
 
@@ -552,12 +561,9 @@ class ImageElement extends HtmlElement {
 class InputElementBase extends HtmlElement {
   InputElementBase() : super._(null, "input");
 
-  InputElementBase._(Document ownerDocument, String type)
-      : super._(ownerDocument, "input") {
-    _setAttribute("type", type);
-  }
-
-  factory InputElementBase._fromType(Document ownerDocument, String type) {
+  /// IMPORTANT: Not part 'dart:html'.
+  factory InputElementBase.internalFromType(
+      Document ownerDocument, String type) {
     switch (type) {
       case "button":
         return ButtonInputElement._(ownerDocument);
@@ -594,6 +600,11 @@ class InputElementBase extends HtmlElement {
       default:
         return InputElementBase._(ownerDocument, null);
     }
+  }
+
+  InputElementBase._(Document ownerDocument, String type)
+      : super._(ownerDocument, "input") {
+    _setAttribute("type", type);
   }
 
   bool get autofocus => _getAttributeBool("autofocus");
@@ -1137,25 +1148,30 @@ class SpanElement extends HtmlElement {
 }
 
 class StyleElement extends HtmlElement {
+  StyleSheet _sheet;
+
   factory StyleElement() => StyleElement._(null);
 
   StyleElement._(Document ownerDocument) : super._(ownerDocument, "style");
-
   StyleSheet get sheet {
-    final type = this.type;
-    if (type == null || type == "" || type == "text/css") {
-      final text = this.text;
-      final parsed = css.parse(text);
-      final styleSheet = CssStyleSheet._();
-      for (var node in parsed.topLevels) {
-        final styleRule = CssStyleRule._(styleSheet, node);
-        if (styleRule != null) {
-          styleSheet.cssRules.add(styleRule);
-        }
-      }
-      return styleSheet;
+    if (_sheet != null) {
+      return _sheet;
     }
-    return null;
+    final type = this.type;
+    if (type != null && type != "" && type != "text/css") {
+      return null;
+    }
+    final text = this.text;
+    final parsed = css.parse(text);
+    final styleSheet = CssStyleSheet._();
+    for (var node in parsed.topLevels) {
+      final styleRule = CssStyleRule._(styleSheet, node);
+      if (styleRule != null) {
+        styleSheet.cssRules.add(styleRule);
+      }
+    }
+    this._sheet = styleSheet;
+    return styleSheet;
   }
 
   String get type => _getAttribute("type");
@@ -1245,18 +1261,18 @@ class TableElement extends HtmlElement {
   }
 
   void deleteCaption() =>
-      this.children.removeWhere((e) => e.tagName == "caption");
+      this.children.removeWhere((e) => e._lowerCaseTagName == "caption");
 
   void deleteRow(int index) {
     this.createTBody().deleteRow(index);
   }
 
   void deleteTFoot() {
-    this.children.removeWhere((e) => e.tagName == "tfoot");
+    this.children.removeWhere((e) => e._lowerCaseTagName == "tfoot");
   }
 
   void deleteTHead() {
-    this.children.removeWhere((e) => e.tagName == "tbody");
+    this.children.removeWhere((e) => e._lowerCaseTagName == "tbody");
   }
 
   TableRowElement insertRow(int index) {
@@ -1265,7 +1281,7 @@ class TableElement extends HtmlElement {
 
   Element _createUniqueChild<T extends Element>(String name, T f()) {
     final existing =
-        this.children.firstWhere((e) => e.tagName == name, orElse: () => null);
+        this.children.firstWhere((e) => e._lowerCaseTagName == name, orElse: () => null);
     if (existing != null) {
       return existing;
     }
@@ -1348,7 +1364,7 @@ class TemplateElement extends HtmlElement {
       : super._(ownerDocument, "template");
 
   Element get content => this.childNodes.firstWhere(
-      (child) => child is Element && child.tagName == "content",
+      (child) => child is Element && child._lowerCaseTagName == "content",
       orElse: () => null);
 
   @override
@@ -1571,12 +1587,13 @@ class UnknownElement extends HtmlElement {
   @override
   final String namespaceUri;
 
-  UnknownElement._(Document ownerDocument, this.namespaceUri, String tag)
+  /// IMPORTANT: Not part 'dart:html'.
+  UnknownElement.internal(Document ownerDocument, this.namespaceUri, String tag)
       : super._(ownerDocument, tag);
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      UnknownElement._(ownerDocument, namespaceUri, _lowerCaseTagName);
+      UnknownElement.internal(ownerDocument, namespaceUri, _lowerCaseTagName);
 }
 
 class UrlInputElement extends TextInputElementBase {

@@ -1,6 +1,6 @@
 part of universal_html;
 
-typedef void BlobCallback(Blob blob);
+typedef BlobCallback = void Function(Blob blob);
 
 abstract class Blob {
   factory Blob(List blobParts, [String type, String encoding]) =>

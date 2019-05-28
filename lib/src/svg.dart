@@ -1,7 +1,5 @@
 library universal_svg;
 
-import 'package:meta/meta.dart';
-
 import 'html.dart';
 
 // Declared because this is needed by 'html.dart'.
@@ -36,11 +34,10 @@ class SvgElement extends Element {
   }
 
   factory SvgElement.tag(String tag) {
-    return SvgElement.tagWithDocument(null, tag);
+    return SvgElement.internalTagWithDocument(null, tag);
   }
 
-  @visibleForTesting
-  factory SvgElement.tagWithDocument(Document document, String tag) {
+  factory SvgElement.internalTagWithDocument(Document document, String tag) {
     switch (tag) {
       case "script":
         return ScriptElement();
@@ -51,12 +48,12 @@ class SvgElement extends Element {
 
   SvgElement._(Document document, String tagName)
       // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-      : super.constructor(document, tagName);
+      : super.internal(document, tagName);
 
   // We need to reimplement this because superclass implementation depends
   // on implementing a private method.
   @override
-  Element cloneWithOwnerDocument(Document document, bool deep) {
+  Element internalCloneWithOwnerDocument(Document document, bool deep) {
     // Create a new instance of the same class
     final clone = SvgElement.tag(tagName);
 
@@ -69,7 +66,7 @@ class SvgElement extends Element {
     if (deep != false) {
       for (var childNode in this.childNodes) {
         // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-        clone.append(childNode.cloneWithOwnerDocument(document, deep));
+        clone.append(childNode.internalCloneWithOwnerDocument(document, deep));
       }
     }
 

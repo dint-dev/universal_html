@@ -1,6 +1,6 @@
 part of universal_html;
 
-typedef EventListener(Event event);
+typedef EventListener = Function(Event event);
 
 class ElementStream<T extends Event> extends Stream<T> {
   final Element _element;
@@ -61,9 +61,9 @@ abstract class Event {
 
   final num timeStamp;
 
-  @visibleForTesting
-  Event.constructor(this.type, {this.bubbles = true, this.cancelable = false})
-      : assert(type != null && type.length > 0),
+  Event.internalConstructor(this.type,
+      {this.bubbles = true, this.cancelable = false})
+      : assert(type != null && type.isNotEmpty),
         this.timeStamp = DateTime.now().microsecondsSinceEpoch;
 
   bool get composed => _composed;
@@ -116,33 +116,41 @@ class EventStreamProvider<T extends Event> {
 }
 
 abstract class EventTarget {
-  List<_AddedEventListener> _eventListeners;
+  List<_AddedEventListener> _listeners;
 
   EventTarget get _parentEventTarget => null;
 
   void addEventListener(String type, EventListener listener,
       [bool useCapture]) {
-    final eventListeners = this._eventListeners ?? (this._eventListeners = []);
-    eventListeners
-        .add(_AddedEventListener(type, listener, useCapture ?? false));
+    final eventListener = _AddedEventListener(
+      type,
+      listener,
+      useCapture ?? false,
+    );
+    final eventListeners = this._listeners ?? (this._listeners = []);
+    eventListeners.add(eventListener);
   }
 
   bool dispatchEvent(Event event) {
     if (event._eventPhase != Event._INITIAL_PHASE) {
-      throw ArgumentError("Event.eventPhase is not 0");
+      throw ArgumentError("Event.eventPhase is not Event._INITIAL_PHASE");
     }
     event._eventPhase = Event.AT_TARGET;
     event._target = this;
 
-    // Capturing
+    // Capturing phase
     event._eventPhase = Event.CAPTURING_PHASE;
-    _dispatchEventCapturing(event);
-    if (!event._stoppedPropagation) {
-      // Bubbling
-      if (event.bubbles) {
-        event._eventPhase = Event.BUBBLING_PHASE;
-        _dispatchEventBubbling(event);
-      }
+    _invokeCapturingListeners(event);
+
+    // Was the event stopped?
+    if (event._stoppedPropagation) {
+      return event._defaultPrevented;
+    }
+
+    // Bubbling phase
+    if (event.bubbles) {
+      event._eventPhase = Event.BUBBLING_PHASE;
+      _invokeBubblingListeners(event);
     }
 
     // Return
@@ -152,54 +160,99 @@ abstract class EventTarget {
   void removeEventListener(String type, EventListener listener,
       [bool useCapture]) {
     useCapture ??= false;
-    _eventListeners?.removeWhere((e) =>
+    _listeners?.removeWhere((e) =>
         e._type == type &&
         e._listener == listener &&
         e._useCapture == useCapture);
   }
 
-  void _dispatchEventBubbling(Event event) {
-    final eventListeners = this._eventListeners;
-    if (eventListeners != null) {
-      final eventType = event.type;
+  void _invokeBubblingListeners(Event event) {
+    // Does this target have event listeners?
+    final listeners = this._listeners;
+    if (listeners != null) {
+      // Set current target
       event._currentTarget = this;
-      for (var el in eventListeners) {
-        if (el._type == eventType && el._useCapture == false) {
-          el._listener(event);
-          if (event._stoppedImmediatePropagation) {
-            break;
-          }
-          if (event._stoppedPropagation) {
-            return;
-          }
+
+      // For each matching listener
+      final eventType = event.type;
+      for (var listener in listeners) {
+        // Does the event type match?
+        if (listener._type != eventType) {
+          continue;
+        }
+
+        // Is it a capturing listener?
+        if (listener._useCapture) {
+          continue;
+        }
+
+        // Call listener
+        listener._listener(event);
+
+        // Did the listener stop immediate propagation?
+        if (event._stoppedImmediatePropagation) {
+          break;
+        }
+
+        // Did the listener stop propagation?
+        if (event._stoppedPropagation) {
+          return;
         }
       }
     }
+
+    // Does the target have a parent?
     final parent = this._parentEventTarget;
     if (parent != null) {
-      parent._dispatchEventBubbling(event);
+      parent._invokeBubblingListeners(event);
     }
   }
 
-  void _dispatchEventCapturing(Event event) {
+  void _invokeCapturingListeners(Event event) {
+    // Call parent target
     final parent = this._parentEventTarget;
     if (parent != null) {
-      parent._dispatchEventCapturing(event);
+      parent._invokeCapturingListeners(event);
       if (event._stoppedPropagation) {
         return;
       }
     }
-    final eventListeners = this._eventListeners;
-    if (eventListeners != null && !event._stoppedPropagation) {
-      event._currentTarget = this;
-      final eventType = event.type;
-      for (var el in eventListeners) {
-        if (el._useCapture && el._type == eventType) {
-          el._listener(event);
-          if (event._stoppedImmediatePropagation || event._stoppedPropagation) {
-            return;
-          }
-        }
+
+    // Did a parent target stop propagation?
+    if (event._stoppedPropagation) {
+      return;
+    }
+
+    // Do we have listeners?
+    final listeners = this._listeners;
+    if (listeners == null) {
+      return;
+    }
+
+    // Set current target
+    event._currentTarget = this;
+
+    // For each listener
+    final eventType = event.type;
+    for (var listener in listeners) {
+      
+      // Is it a bubbling listener?
+      if (!listener._useCapture) {
+        // Yes, skip
+        continue;
+      }
+
+      // Is the even type the same?
+      if (listener._type != eventType) {
+        continue;
+      }
+
+      // Call it
+      listener._listener(event);
+
+      // Did the listener stop propagation?
+      if (event._stoppedImmediatePropagation || event._stoppedPropagation) {
+        return;
       }
     }
   }

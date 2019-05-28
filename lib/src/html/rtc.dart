@@ -1,6 +1,6 @@
 part of universal_html;
 
-typedef void VoidCallback();
+typedef VoidCallback = void Function();
 
 abstract class RtcDataChannel extends EventTarget {
   static const EventStreamProvider<Event> closeEvent =
@@ -41,7 +41,7 @@ abstract class RtcDataChannel extends EventTarget {
 }
 
 class RtcDataChannelEvent extends Event {
-  RtcDataChannelEvent(String type) : super.constructor(type);
+  RtcDataChannelEvent(String type) : super.internalConstructor(type);
 
   RtcDataChannel get channel => null;
 }
@@ -132,7 +132,7 @@ abstract class RtcPeerConnection extends EventTarget {
 abstract class RtcPeerConnectionErrorCallback {}
 
 class RtcPeerConnectionIceEvent extends Event {
-  RtcPeerConnectionIceEvent(String type) : super.constructor(type);
+  RtcPeerConnectionIceEvent(String type) : super.internalConstructor(type);
 }
 
 abstract class RtcRtpReceiver {}

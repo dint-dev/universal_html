@@ -38,6 +38,36 @@ void main() {
     });
 
     group("outerHtml:", () {
+      test("handles single tags like <br> and <img>", () {
+        /// Empty elements from:
+        /// https://developer.mozilla.org/en-US/docs/Glossary/empty_element
+        final tags = const [
+          "area",
+          "base",
+          "br",
+          "col",
+          "embed",
+          "hr",
+          "img",
+          "input",
+          "link",
+          "meta",
+          "param",
+          "source",
+          "track",
+          "wbr",
+        ];
+        for (var tag in tags) {
+          final element = Element.tag("aA");
+          expect(element.toString(), '<$tag>');
+
+          element.setAttribute("k0", "v0");
+          expect(element.toString(), '<$tag k0="v0">');
+
+          element.setAttribute("k1", "v1");
+          expect(element.toString(), '<$tag k0="v0" k1="v1">');
+        }
+      });
       test("uses lowerCase for element/attribute names", () {
         final input = Element.tag("aA")
           ..setAttribute("bB", "cC")

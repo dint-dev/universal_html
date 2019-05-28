@@ -96,6 +96,25 @@ void _printNode(StringBuffer sb, int flags, Node node) {
   }
 }
 
+/// Empty elements from:
+/// https://developer.mozilla.org/en-US/docs/Glossary/empty_element
+final Set<String> _singleTagNamesInLowerCase = new Set<String>.from(const [
+  "area",
+  "base",
+  "br",
+  "col",
+  "embed",
+  "hr",
+  "img",
+  "input",
+  "link",
+  "meta",
+  "param",
+  "source",
+  "track",
+  "wbr",
+]);
+
 void _printElement(StringBuffer sb, int flags, Element node) {
   sb.write("<");
   sb.write(node._lowerCaseTagName); // Already validated!
@@ -113,6 +132,9 @@ void _printElement(StringBuffer sb, int flags, Element node) {
     }
   }
   sb.write(">");
+  if (_singleTagNamesInLowerCase.contains(node._lowerCaseTagName)) {
+    return;
+  }
   _printChildren(sb, flags, node);
   sb.write("</");
   sb.write(node._lowerCaseTagName); // Already validated!

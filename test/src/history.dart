@@ -55,8 +55,6 @@ void main() {
       // Check state
       expect(history.state, equals(state0));
 
-      final hostName = location.hostname;
-      final port = location.port;
       expect(location.protocol, "http:");
       expect(location.origin, "http://localhost");
       expect(location.host, "localhost:80");

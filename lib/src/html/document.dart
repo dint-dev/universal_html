@@ -63,7 +63,8 @@ abstract class Document extends Node
 
   Element createElementNS(String namespaceUri, String qualifiedName,
       [String typeExtension]) {
-    return Element.internalTagNS(this, namespaceUri, qualifiedName, typeExtension);
+    return Element.internalTagNS(
+        this, namespaceUri, qualifiedName, typeExtension);
   }
 
   List<Node> getElementsByClassName(String classNames) {
@@ -113,11 +114,8 @@ abstract class Document extends Node
           "Document", "insertBefore", node, this);
     }
     if (node is Element && this._firstElementChild != null) {
-      throw DomException._failedToExecute(
-          DomException.HIERARCHY_REQUEST,
-          "Node",
-          "appendChild",
-          "Only one element on document allowed.");
+      throw DomException._failedToExecute(DomException.HIERARCHY_REQUEST,
+          "Node", "appendChild", "Only one element on document allowed.");
     }
     super.insertBefore(node, before);
   }
@@ -303,7 +301,8 @@ class HtmlDocument extends Document {
 
 class XmlDocument extends Document {
   XmlDocument._({String contentType = "application/xml"})
-      : assert(contentType!=null), super._(contentType);
+      : assert(contentType != null),
+        super._(contentType);
 
   List<StyleSheet> get styleSheets {
     // TODO: Fix style sheet search
@@ -312,7 +311,7 @@ class XmlDocument extends Document {
     for (var node in nodes) {
       if (node is StyleElement) {
         final sheet = node.sheet;
-        if (sheet!=null) {
+        if (sheet != null) {
           result.add(node.sheet);
         }
       }

@@ -2,8 +2,8 @@ import "package:universal_html/html.dart";
 
 void main() {
   // Create a DOM tree
-  final divElement = new DivElement();
-  divElement.append(new Element.tag("h1")
+  final divElement = DivElement();
+  divElement.append(Element.tag("h1")
     ..classes.add("greeting")
     ..appendText("Hello world!"));
 

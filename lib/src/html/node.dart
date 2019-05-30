@@ -290,7 +290,8 @@ abstract class Node extends EventTarget {
     Node newPrevious;
     Node oldChild = oldParent._firstChild;
     while (oldChild != null) {
-      final newChild = oldChild.internalCloneWithOwnerDocument(ownerDocument, true);
+      final newChild =
+          oldChild.internalCloneWithOwnerDocument(ownerDocument, true);
       newChild._parent = newParent;
       newChild._previousNode = newPrevious;
       if (newPrevious == null) {
@@ -340,7 +341,8 @@ class Text extends CharacterData {
   }
 
   /// IMPORTANT: Not part 'dart:html'.
-  Text.internal(Document ownerDocument, String value) : super._(ownerDocument, value);
+  Text.internal(Document ownerDocument, String value)
+      : super._(ownerDocument, value);
 
   @override
   int get nodeType => Node.TEXT_NODE;
@@ -396,7 +398,8 @@ class DocumentType extends Node {
   final String _value;
 
   /// IMPORTANT: Not part 'dart:html'.
-  DocumentType.internal(Document ownerDocument, this._value) : super._(ownerDocument);
+  DocumentType.internal(Document ownerDocument, this._value)
+      : super._(ownerDocument);
 
   @override
   String get nodeName => _value;
@@ -452,8 +455,9 @@ abstract class _ElementOrDocument implements Node, ParentNode {
     }
 
     // Validate state
-    if (node.parentNode != null || node.previousNode != null && node.nextNode!=null) {
-      throw new StateError("Node is not detached.");
+    if (node.parentNode != null ||
+        node.previousNode != null && node.nextNode != null) {
+      throw StateError("Node is not detached.");
     }
 
     node._parent = this;
@@ -480,8 +484,10 @@ abstract class _ElementOrDocument implements Node, ParentNode {
     }
 
     // Validate state
-    if (this._firstChild==null || this._lastChild==null || node.parentNode == null) {
-      throw new StateError("Node is not attached.");
+    if (this._firstChild == null ||
+        this._lastChild == null ||
+        node.parentNode == null) {
+      throw StateError("Node is not attached.");
     }
   }
 

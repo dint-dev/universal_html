@@ -10,7 +10,7 @@ void main() {
     test("computedStyle", () {
       temporarilyRemoveChildrenFromDocument(root: document.body);
 
-      final styleElement = new StyleElement()..appendText("""
+      final styleElement = StyleElement()..appendText("""
 .exampleClass {
   font-family: exampleFont
 }""");
@@ -19,7 +19,7 @@ void main() {
       });
       document.head.insertBefore(styleElement, null);
 
-      final element = new DivElement()..className = "exampleClass";
+      final element = DivElement()..className = "exampleClass";
       document.body.insertBefore(element, null);
       addTearDown(() {
         element.remove();

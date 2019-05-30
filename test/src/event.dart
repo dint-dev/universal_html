@@ -45,7 +45,7 @@ void main() {
       // Click
       e2.click();
 
-      await new Future.delayed(const Duration(milliseconds: 10));
+      await Future.delayed(const Duration(milliseconds: 10));
 
       // Expect
       expect(

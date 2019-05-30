@@ -1280,8 +1280,9 @@ class TableElement extends HtmlElement {
   }
 
   Element _createUniqueChild<T extends Element>(String name, T f()) {
-    final existing =
-        this.children.firstWhere((e) => e._lowerCaseTagName == name, orElse: () => null);
+    final existing = this
+        .children
+        .firstWhere((e) => e._lowerCaseTagName == name, orElse: () => null);
     if (existing != null) {
       return existing;
     }

@@ -4,7 +4,8 @@ class BlobEvent extends Event {
   final Blob blob;
   final num timecode;
 
-  BlobEvent(String type, {this.blob, this.timecode}) : super.internalConstructor(type);
+  BlobEvent(String type, {this.blob, this.timecode})
+      : super.internalConstructor(type);
 }
 
 abstract class ClipboardEvent implements Event {

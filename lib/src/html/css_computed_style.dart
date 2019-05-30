@@ -8,16 +8,16 @@ class _ComputedStyle extends CssStyleDeclaration {
 
   _ComputedStyle._(this._element, this._pseudoElement) : super._();
 
-  void _findStyleSheets(Node node, List<StyleSheet> result){
+  void _findStyleSheets(Node node, List<StyleSheet> result) {
     for (var child in node.childNodes) {
       if (child is StyleElement) {
         final sheet = child.sheet;
-        if (sheet!=null) {
+        if (sheet != null) {
           result.add(sheet);
         }
       }
     }
-    if (node.parent==null) {
+    if (node.parent == null) {
       for (var styleSheet in (node.ownerDocument as HtmlDocument).styleSheets) {
         if (!result.contains(styleSheet)) {
           result.add(styleSheet);
@@ -38,7 +38,6 @@ class _ComputedStyle extends CssStyleDeclaration {
     final sheets = <StyleSheet>[];
     _findStyleSheets(_element, sheets);
 
-
     final prioritizedRules = <_PriotizedCssStyleRule>[];
 
     for (final sheet in sheets) {
@@ -58,7 +57,6 @@ class _ComputedStyle extends CssStyleDeclaration {
                   selector,
                   selector.simpleSelectorSequences.length - 1,
                   _pseudoElement)) {
-
                 // Selector matches.
                 // Is the priority the highest so far?
                 final priority = parsedSelector.priority;
@@ -68,15 +66,17 @@ class _ComputedStyle extends CssStyleDeclaration {
               }
             }
             if (highestPriority > 0) {
-              prioritizedRules.add(_PriotizedCssStyleRule(highestPriority, rule));
+              prioritizedRules
+                  .add(_PriotizedCssStyleRule(highestPriority, rule));
             }
           }
         }
       }
     }
-    
+
     // Sort rules
-    prioritizedRules.sort((left, right) => -left.priority.compareTo(right.priority));
+    prioritizedRules
+        .sort((left, right) => -left.priority.compareTo(right.priority));
 
     // Create style
     final result = _element._getOrCreateStyle()._clone();
@@ -85,7 +85,7 @@ class _ComputedStyle extends CssStyleDeclaration {
     for (var prioritizedRule in prioritizedRules) {
       final style = prioritizedRule.rule.style;
       final length = style.length;
-      for (var i=0;i<length;i++) {
+      for (var i = 0; i < length; i++) {
         final name = style.item(i);
         result.setProperty(name, style.getPropertyValue(name));
       }

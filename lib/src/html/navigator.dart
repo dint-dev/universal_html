@@ -4,7 +4,11 @@ class Navigator {
   final Permissions permission = Permissions._();
 
   /// IMPORTANT: Not part of 'dart:html' API.
-  Navigator.internal({this.languages=const ["en-US"], this.userAgent="", this.vendor="", this.vendorSub=""});
+  Navigator.internal(
+      {this.languages = const ["en-US"],
+      this.userAgent = "",
+      this.vendor = "",
+      this.vendorSub = ""});
 
   factory Navigator._() => HtmlDriver.current.newNavigator();
 

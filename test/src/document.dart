@@ -245,7 +245,7 @@ void main() {
     });
 
     test("getElementsByTagName", () {
-      final parsed = new DomParser().parseFromString(
+      final parsed = DomParser().parseFromString(
         "<div><p></p></div>",
         "text/html",
       );
@@ -256,7 +256,7 @@ void main() {
 
     test("getElementsByName (HTML document)", () {
       // In HTML documents, getElementsByName should fail.
-      final parsed = new DomParser().parseFromString(
+      final parsed = DomParser().parseFromString(
         "<div><p></p></div>",
         "text/html",
       );

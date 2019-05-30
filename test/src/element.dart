@@ -19,15 +19,15 @@ void main() {
     });
 
     test("tagName", () {
-      expect(new DivElement().tagName, "DIV");
-      expect(new ImageElement().tagName, "IMG");
-      expect(new ParagraphElement().tagName, "P");
+      expect(DivElement().tagName, "DIV");
+      expect(ImageElement().tagName, "IMG");
+      expect(ParagraphElement().tagName, "P");
     });
 
     test("nodeName", () {
-      expect(new DivElement().nodeName, "DIV");
-      expect(new ImageElement().nodeName, "IMG");
-      expect(new ParagraphElement().nodeName, "P");
+      expect(DivElement().nodeName, "DIV");
+      expect(ImageElement().nodeName, "IMG");
+      expect(ParagraphElement().nodeName, "P");
     });
 
     group("innerHtml:", () {

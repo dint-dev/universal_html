@@ -9,7 +9,8 @@ import 'html.dart';
 /// Holds global state and controls various device-specific APIs such as
 /// [Geolocation].
 class HtmlDriver {
-  static final ZoneLocal<HtmlDriver> zoneLocal = ZoneLocal<HtmlDriver>(defaultValue: HtmlDriver());
+  static final ZoneLocal<HtmlDriver> zoneLocal =
+      ZoneLocal<HtmlDriver>(defaultValue: HtmlDriver());
 
   static HtmlDriver get current => zoneLocal.value;
 

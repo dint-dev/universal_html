@@ -235,7 +235,6 @@ abstract class EventTarget {
     // For each listener
     final eventType = event.type;
     for (var listener in listeners) {
-      
       // Is it a bubbling listener?
       if (!listener._useCapture) {
         // Yes, skip

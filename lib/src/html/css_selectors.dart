@@ -9,7 +9,8 @@ bool _matches(Element element, String selector, String pseudoElement) {
   }
   final selectorGroup = css.parseSelectorGroup(selector);
   if (selectorGroup == null) {
-    throw DomException._("invalidSelector", "Selector could not be parsed: '$selector'");
+    throw DomException._(
+        "invalidSelector", "Selector could not be parsed: '$selector'");
   }
   return _matchesSelectorGroup(element, selectorGroup, null);
 }

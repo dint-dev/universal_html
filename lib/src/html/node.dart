@@ -14,16 +14,16 @@ abstract class CharacterData extends Node
 abstract class ChildNode implements Node {}
 
 class Comment extends CharacterData {
-  factory Comment(String value) {
-    if (value.contains("-->")) {
-      throw ArgumentError();
+  factory Comment([String value]) {
+    if (value!=null && value.contains("-->")) {
+      throw ArgumentError.value(value);
     }
     return Comment.internal(null, value);
   }
 
   /// IMPORTANT: Not part of 'dart:hml'.
   Comment.internal(Document ownerDocument, String value)
-      : super._(ownerDocument, value);
+      : super._(ownerDocument, value ?? "");
 
   @override
   int get nodeType => Node.COMMENT_NODE;
@@ -59,6 +59,8 @@ abstract class Node extends EventTarget {
   Node._document() : this.ownerDocument = null;
 
   List<Node> get childNodes => _ChildNodeListLazy(this);
+
+  List<Node> get nodes => _ChildNodeListLazy(this);
 
   Node get firstChild => null;
 
@@ -139,8 +141,12 @@ abstract class Node extends EventTarget {
   @override
   EventTarget get _parentEventTarget => this.parent;
 
-  void append(Node node) {
+  Node append(Node node) {
     this.insertBefore(node, null);
+    if (node is DocumentFragment) {
+      return DocumentFragment();
+    }
+    return node;
   }
 
   Node clone(bool deep) {

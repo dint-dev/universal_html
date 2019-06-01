@@ -157,6 +157,17 @@ class DocumentFragment extends Node
     return sb.toString();
   }
 
+  set innerHtml(String value) {
+    while (firstChild != null) {
+      this.firstChild.remove();
+    }
+    final parsed = DomParser().parseFromString(value, "text/html");
+    final children = (parsed as HtmlDocument).body.children;
+    for (var child in children) {
+      append(child);
+    }
+  }
+
   @override
   int get nodeType => Node.DOCUMENT_FRAGMENT_NODE;
 

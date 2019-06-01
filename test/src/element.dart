@@ -40,6 +40,7 @@ void main() {
         final expected = "abc";
         expect(input.innerHtml, equals(expected));
       });
+
       test("works with no attributes", () {
         final input = Element.tag("a")
           ..appendText("a")
@@ -81,6 +82,7 @@ void main() {
           expect(element.outerHtml, '<$tag k0="v0" k1="v1">');
         }
       });
+
       test("uses lowerCase for element/attribute names", () {
         final input = Element.tag("aA")
           ..setAttribute("bB", "cC")
@@ -88,36 +90,43 @@ void main() {
         final expected = '<aa bb="cC">dD</aa>';
         expect(input.outerHtml, equals(expected));
       });
+
       test("prints element style, no quotes", () {
         final input = Element.tag("a")..style.fontSize = '1px';
         final expected = '<a style="font-size: 1px;"></a>';
         expect(input.outerHtml, equals(expected));
       });
+
       test("prints element style, quotes", () {
         final input = Element.tag("a")..style.fontFamily = 'Comic Sans';
         final expected = '<a style="font-family: &quot;Comic Sans&quot;;"></a>';
         expect(input.outerHtml, equals(expected));
       });
+
       test("escapes text", () {
         final input = Element.tag("a")..appendText('&<>"');
         final expected = '<a>&amp;&lt;&gt;"</a>';
         expect(input.outerHtml, equals(expected));
       });
+
       test("escapes element class", () {
         final input = Element.tag("a")..className = '&"';
         final expected = '<a class="&amp;&quot;"></a>';
         expect(input.outerHtml, equals(expected));
       });
+
       test("escapes element id", () {
         final input = Element.tag("a")..id = '&"';
         final expected = '<a id="&amp;&quot;"></a>';
         expect(input.outerHtml, equals(expected));
       });
+
       test("escapes attribute value", () {
         final input = Element.tag("sometag")..setAttribute("k", '&"<>');
         final expected = '<sometag k="&amp;&quot;<>"></sometag>';
         expect(input.outerHtml, equals(expected));
       });
+
       test("supports multiple attributes", () {
         final input = Element.tag("a")
           ..className = "x"
@@ -126,6 +135,7 @@ void main() {
         final expected = '<a class="x" id="y" href="z"></a>';
         expect(input.outerHtml, equals(expected));
       });
+
       test("supports multiple children", () {
         final input = Element.tag("sometag")
           ..appendText("a")
@@ -134,6 +144,7 @@ void main() {
         final expected = '<sometag>a<b>c</b><!--d--></sometag>';
         expect(input.outerHtml, equals(expected));
       });
+
       test("supports multiple attributes and multiple children", () {
         final input = Element.tag("sometag")
           ..className = "x"
@@ -148,8 +159,8 @@ void main() {
       });
     });
 
-    group("setAttribute:", () {
-      test("works", () {
+    group("Attributes", () {
+      test("setAttribute(...)", () {
         final e = Element.tag("e");
         e.setAttribute("k0", "v0");
         expect(e.getAttribute("k0"), equals("v0"));
@@ -166,7 +177,15 @@ void main() {
         expect(e.attributes["style"], isNull);
         expect(e.outerHtml, equals('<e k0="v0" k1="v1" k2="v2"></e>'));
       });
-      test("'setAttribute' fails if the name is invalid", () {
+
+      test("setAttribute(...), null value", () {
+        final e = Element.tag("e");
+        e.setAttribute("k0", null);
+        expect(e.getAttribute("k0"), "null");
+        expect(e.attributes["k0"], "null");
+      });
+
+      test("setAttribute(...) fails if the name is invalid", () {
         const invalidChars = ["<", ">", '"', " ", "&"];
         for (var c in invalidChars) {
           expect(() {
@@ -177,10 +196,20 @@ void main() {
           }, throwsDomException);
         }
       });
+
+      test("removeAttribute(...)", () {
+        final e = Element.tag("e");
+        e.setAttribute("k0", "v0");
+        e.setAttribute("removed", "removed_value");
+        expect(e.attributes.containsKey("removed"), isTrue);
+        e.removeAttribute("removed");
+        expect(e.getAttribute("removed"), null);
+        expect(e.attributes.containsKey("removed"), isFalse);
+      });
     });
 
     group("style:", () {
-      test("set(k,v) -> get(k) -> set(k,null)", () {
+      test("style.setProperty(..), null value", () {
         final e = Element.tag("a");
         final k = "color";
         final v = "blue";
@@ -192,7 +221,8 @@ void main() {
         expect(e.style.getPropertyValue(k), equals(""));
         expect(e.outerHtml, isNot(contains(v)));
       });
-      test("set(k,v) -> get(k) -> remove(k)", () {
+
+      test("style.removeProperty(...)", () {
         final e = Element.tag("a");
         final k = "color";
         final v = "blue";
@@ -204,28 +234,39 @@ void main() {
         expect(e.style.getPropertyValue(k), equals(""));
         expect(e.outerHtml, isNot(contains(v)));
       });
-      test("is returned by element.getAttribute", () {
+
+      test("style.setProperty(...), changes result of element.getAttribute", () {
         final e = Element.tag("a");
         e.style.setProperty("color", "blue");
         expect(e.getAttribute("style"), contains("blue"));
       });
-      test("is returned by element.attributes", () {
+
+      test("style.setProperty(...), changes result of element.attributes", () {
         final e = Element.tag("a");
         e.style.setProperty("color", "blue");
         expect(e.attributes["style"], contains("blue"));
       });
-      test("is returned by previously created element.attributes", () {
+
+      test("style.setProperty(...), changes result of element.attributes, obtained before setting style", () {
         final e = Element.tag("a");
         final attributes = e.attributes;
         e.style.setProperty("color", "blue");
         expect(attributes["style"], contains("blue"));
       });
-      test("is returned by element.outerHtml", () {
+
+      test("style.setProperty(...), changes result of element.outerHtml", () {
         final e = Element.tag("a");
         e.style.setProperty("color", "blue");
         expect(e.outerHtml, contains("blue"));
       });
-      test("can be modified with setAttribute(name,value)", () {
+
+      test("style.getProperty('font-size') returns non-quoted value when value is '90px'", () {
+        final e = Element.tag("a");
+        e.style.setProperty("font-size", "90px");
+        expect(e.style.getPropertyValue("font-size"), "90px");
+      });
+
+      test("element.setAttribute('style', value), changes element.style", () {
         final variations = const [
           "color: blue",
           "color:blue;",
@@ -238,19 +279,33 @@ void main() {
           expect(e.style.color, equals("blue"));
         }
       });
-      test("can be modified with attributes[name]=value", () {
-        final variations = const [
-          "color: blue",
-          "color:blue;",
-        ];
-        for (var variation in variations) {
+
+      test("element.attributes['style']='color: blue', changes element.style", () {
           final e = Element.tag("a");
-          e.attributes["style"] = variation;
-          expect(e.getAttribute("style"), equals(variation));
-          expect(e.attributes["style"], equals(variation));
-          expect(e.style.color, equals("blue"),
-              reason: "Variation: '${variation}'");
-        }
+          final value = "color: blue";
+          e.attributes["style"] = value;
+          expect(e.getAttribute("style"), value);
+          expect(e.attributes["style"], value);
+          expect(e.style.color, "blue");
+      });
+
+      test("element.attributes['style']='color: blue; font-size: 2em', changes element.style", () {
+        final e = Element.tag("a");
+        final value = "color: blue; font-size: 2em";
+        e.attributes["style"] = value;
+        expect(e.getAttribute("style"), value);
+        expect(e.attributes["style"], value);
+        expect(e.style.color, "blue");
+        expect(e.style.fontSize, "2em");
+      });
+
+      test("element.removeAttribute('style') removes style", () {
+        final e = Element.tag("e");
+        expect(e.style.getPropertyValue("font-family"), "");
+        e.style.setProperty("font-family", "Verdana");
+        expect(e.style.getPropertyValue("font-family"), 'Verdana');
+        e.removeAttribute("style");
+        expect(e.style.getPropertyValue("font-family"), "");
       });
     });
   });

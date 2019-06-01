@@ -455,7 +455,7 @@ abstract class Element extends Node
         super._(ownerDocument);
 
   /// Returns read-only list of attribute names.
-  List<String> get attributeNames {
+  List<String> get _attributeNames {
     final result = <String>[]..addAll(_attributesWithoutLatestValues.keys);
     final style = this._style;
     if (style != null && (style._sourceIsLatest || style._map.isNotEmpty)) {
@@ -783,6 +783,18 @@ abstract class Element extends Node
     return false;
   }
 
+  void removeAttribute(String name) {
+    _attributesWithoutLatestValues.remove(name);
+    switch (name) {
+      case "style":
+        this._style = null;
+    }
+  }
+
+  void removeAttributeNS(String namespace, String name) {
+    setAttributeNS(namespace, name, null);
+  }
+
   void requestFullscreen() {}
 
   void requestPointerLock() {}
@@ -887,29 +899,16 @@ abstract class Element extends Node
 
   /// Internal method that does not validate attribute name
   void _setAttribute(String name, String value) {
-    if (value == null) {
-      // Map update
-      _attributesWithoutLatestValues.remove(name);
+    value ??= "null";
 
-      // Field update for possible special case
-      switch (name) {
-        case "style":
-          final style = this._style;
-          if (style != null) {
-            style._parse(null);
-          }
-          break;
-      }
-    } else {
-      // Map update
-      _attributesWithoutLatestValues[name] = value;
+    // Map update
+    _attributesWithoutLatestValues[name] = value;
 
-      // Field update for possible special case
-      switch (name) {
-        case "style":
-          this._getOrCreateStyle()._parse(value);
-          break;
-      }
+    // Field update for possible special case
+    switch (name) {
+      case "style":
+        this._getOrCreateStyle()._parse(value);
+        break;
     }
   }
 
@@ -961,7 +960,7 @@ class _Attributes extends MapBase<String, String> {
 
   @override
   Iterable<String> get keys {
-    return _element.attributeNames;
+    return _element._attributeNames;
   }
 
   @override
@@ -976,7 +975,7 @@ class _Attributes extends MapBase<String, String> {
 
   @override
   void clear() {
-    for (var key in _element.attributeNames) {
+    for (var key in _element._attributeNames) {
       _element.setAttribute(key, null);
     }
   }

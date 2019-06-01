@@ -124,4 +124,15 @@ void main() {
       expect(e.text, equals('abc'));
     });
   });
+
+  group("Comment", () {
+    test("Comment()", () {
+      final node = Comment();
+      expect(node.nodeValue, "");
+    });
+    test("Comment('<text>')", () {
+      final node = Comment("<text>");
+      expect(node.nodeValue, "<text>");
+    });
+  });
 }

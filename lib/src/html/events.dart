@@ -54,6 +54,7 @@ class KeyboardEvent extends UIEvent {
   final bool canBubble;
   final bool cancelable;
   final int location;
+  final int keyCode;
   final int keyLocation;
   final bool ctrlKey;
   final bool altKey;
@@ -66,6 +67,7 @@ class KeyboardEvent extends UIEvent {
     this.canBubble = true,
     this.cancelable = true,
     this.location,
+    this.keyCode,
     this.keyLocation,
     this.ctrlKey = false,
     this.altKey = false,
@@ -75,7 +77,6 @@ class KeyboardEvent extends UIEvent {
 }
 
 class KeyEvent extends KeyboardEvent {
-  final int keyCode;
   final int charCode;
   final EventTarget currentTarget;
 
@@ -84,8 +85,8 @@ class KeyEvent extends KeyboardEvent {
     Window view,
     bool canBubble = true,
     bool cancelable = true,
-    this.keyCode = 0,
     this.charCode = 0,
+    int keyCode,
     int keyLocation = 1,
     bool ctrlKey = false,
     bool altKey = false,
@@ -97,6 +98,7 @@ class KeyEvent extends KeyboardEvent {
           view: view,
           canBubble: canBubble,
           cancelable: cancelable,
+          keyCode: keyCode,
           keyLocation: keyLocation,
           ctrlKey: ctrlKey,
           altKey: altKey,

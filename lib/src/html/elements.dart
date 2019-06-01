@@ -182,10 +182,10 @@ class DateInputElement extends InputElementBase {
 
   DateInputElement._(Document ownerDocument) : super._(ownerDocument, "date");
 
-  bool get readonly => _getAttributeBool("readonly");
+  bool get readOnly => _getAttributeBool("readOnly");
 
-  set readonly(bool value) {
-    _setAttributeBool("readonly", value);
+  set readOnly(bool value) {
+    _setAttributeBool("readOnly", value);
   }
 
   bool get required => _getAttributeBool("required");
@@ -201,16 +201,16 @@ class DateInputElement extends InputElementBase {
       DateInputElement._(ownerDocument);
 }
 
-class DateTimeLocalInputElement extends InputElementBase {
-  factory DateTimeLocalInputElement() => DateTimeLocalInputElement._(null);
+class LocalDateTimeInputElement extends InputElementBase {
+  factory LocalDateTimeInputElement() => LocalDateTimeInputElement._(null);
 
-  DateTimeLocalInputElement._(Document ownerDocument)
+  LocalDateTimeInputElement._(Document ownerDocument)
       : super._(ownerDocument, "datetime-local");
 
-  bool get readonly => _getAttributeBool("readonly");
+  bool get readOnly => _getAttributeBool("readOnly");
 
-  set readonly(bool value) {
-    _setAttributeBool("readonly", value);
+  set readOnly(bool value) {
+    _setAttributeBool("readOnly", value);
   }
 
   bool get required => _getAttributeBool("required");
@@ -223,7 +223,7 @@ class DateTimeLocalInputElement extends InputElementBase {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      DateTimeLocalInputElement._(ownerDocument);
+      LocalDateTimeInputElement._(ownerDocument);
 }
 
 class DetailsElement extends HtmlElement {
@@ -254,7 +254,8 @@ class DListElement extends HtmlElement {
   Element _newInstance(Document ownerDocument) => DListElement._(ownerDocument);
 }
 
-class EmailInputElement extends TextInputElementBase {
+class EmailInputElement extends TextInputElementBase
+    with _TextInputElementMixin {
   factory EmailInputElement() => EmailInputElement._(null);
 
   EmailInputElement._(Document ownerDocument) : super._(ownerDocument, "email");
@@ -572,7 +573,7 @@ class InputElementBase extends HtmlElement {
       case "date":
         return DateInputElement._(ownerDocument);
       case "datetime-local":
-        return DateTimeLocalInputElement._(ownerDocument);
+        return LocalDateTimeInputElement._(ownerDocument);
       case "email":
         return EmailInputElement._(ownerDocument);
       case "hidden":
@@ -604,7 +605,9 @@ class InputElementBase extends HtmlElement {
 
   InputElementBase._(Document ownerDocument, String type)
       : super._(ownerDocument, "input") {
-    _setAttribute("type", type);
+    if (type!=null) {
+      _setAttribute("type", type);
+    }
   }
 
   bool get autofocus => _getAttributeBool("autofocus");
@@ -814,10 +817,10 @@ class NumberInputElement extends InputElementBase {
     _setAttribute("placeholder", value);
   }
 
-  bool get readonly => _getAttributeBool("readonly");
+  bool get readOnly => _getAttributeBool("readOnly");
 
-  set readonly(bool value) {
-    _setAttributeBool("readonly", value);
+  set readOnly(bool value) {
+    _setAttributeBool("readOnly", value);
   }
 
   bool get required => _getAttributeBool("required");
@@ -900,7 +903,8 @@ class ParagraphElement extends HtmlElement {
       ParagraphElement._(ownerDocument);
 }
 
-class PasswordInputElement extends TextInputElementBase {
+class PasswordInputElement extends TextInputElementBase
+    with _TextInputElementMixin {
   factory PasswordInputElement() => PasswordInputElement._(null);
 
   PasswordInputElement._(Document ownerDocument)
@@ -1041,7 +1045,8 @@ class ScriptElement extends HtmlElement {
       ScriptElement._(ownerDocument);
 }
 
-class SearchInputElement extends TextInputElementBase {
+class SearchInputElement extends TextInputElementBase
+    with _TextInputElementMixin {
   factory SearchInputElement() => SearchInputElement._(null);
 
   SearchInputElement._(Document ownerDocument)
@@ -1351,7 +1356,8 @@ class TableSectionElement extends HtmlElement {
       TableSectionElement._(ownerDocument, _lowerCaseTagName);
 }
 
-class TelephoneInputElement extends TextInputElementBase {
+class TelephoneInputElement extends TextInputElementBase
+    with _TextInputElementMixin {
   factory TelephoneInputElement() => TelephoneInputElement._(null);
 
   TelephoneInputElement._(Document ownerDocument)
@@ -1432,7 +1438,8 @@ class TextAreaElement extends HtmlElement {
       TextAreaElement._(ownerDocument);
 }
 
-class TextInputElement extends TextInputElementBase {
+class TextInputElement extends TextInputElementBase
+    with _TextInputElementMixin {
   factory TextInputElement() => TextInputElement._(null);
 
   TextInputElement._(Document ownerDocument) : super._(ownerDocument, "text");
@@ -1480,6 +1487,16 @@ abstract class TextInputElementBase extends InputElementBase {
     _setAttributeBool("required", value);
   }
 
+  bool checkValidity();
+}
+
+abstract class _TextInputElementMixin implements InputElementBase {
+  RegExp _patternRegExp;
+
+  bool get required;
+  int get minLength;
+  String get pattern;
+
   @override
   bool checkValidity() => _checkValidity(value);
 
@@ -1520,10 +1537,10 @@ class TimeInputElement extends InputElementBase {
 
   TimeInputElement._(Document ownerDocument) : super._(ownerDocument, "time");
 
-  bool get readonly => _getAttributeBool("readonly");
+  bool get readOnly => _getAttributeBool("readOnly");
 
-  set readonly(bool value) {
-    _setAttributeBool("readonly", value);
+  set readOnly(bool value) {
+    _setAttributeBool("readOnly", value);
   }
 
   bool get required => _getAttributeBool("required");
@@ -1658,4 +1675,184 @@ class VideoElement extends MediaElement {
 
   @override
   Element _newInstance(Document ownerDocument) => VideoElement._(ownerDocument);
+}
+
+class WeekInputElement extends InputElementBase {
+  WeekInputElement() : this._(null);
+  WeekInputElement._(Document ownerDocument) : super._(ownerDocument, "week");
+}
+
+class MonthInputElement extends InputElementBase {
+  MonthInputElement() : this._(null);
+  MonthInputElement._(Document ownerDocument) : super._(ownerDocument, "month");
+}
+
+class RangeInputElement extends InputElementBase {
+  RangeInputElement() : this._(null);
+  RangeInputElement._(Document ownerDocument) : super._(ownerDocument, "range");
+}
+
+class InputElement extends HtmlElement
+    with _TextInputElementMixin
+    implements
+        HiddenInputElement,
+        SearchInputElement,
+        TextInputElement,
+        UrlInputElement,
+        TelephoneInputElement,
+        EmailInputElement,
+        PasswordInputElement,
+        DateInputElement,
+        MonthInputElement,
+        WeekInputElement,
+        TimeInputElement,
+        LocalDateTimeInputElement,
+        NumberInputElement,
+        RangeInputElement,
+        CheckboxInputElement,
+        RadioButtonInputElement,
+        FileUploadInputElement,
+        SubmitButtonInputElement,
+        ImageButtonInputElement,
+        ResetButtonInputElement,
+        ButtonInputElement {
+  factory InputElement({String type}) {
+    InputElement e = InputElement._(null);
+    e.type = type;
+    return e;
+  }
+
+  InputElement._(Document ownerDocument) : super._(ownerDocument, "input");
+
+  String accept;
+
+  String alt;
+
+  String autocapitalize;
+
+  String autocomplete;
+
+  bool autofocus;
+
+  String capture;
+
+  bool checked;
+
+  bool defaultChecked;
+
+  String defaultValue;
+
+  String dirName;
+
+  bool disabled;
+
+  List<File> files;
+
+  FormElement form;
+
+  String formAction;
+
+  String formEnctype;
+
+  String formMethod;
+
+  bool formNoValidate;
+
+  String formTarget;
+
+  int height;
+
+  bool incremental;
+
+  bool indeterminate;
+
+  List<Node> labels;
+
+  HtmlElement list;
+
+  String max;
+
+  int maxLength;
+
+  String min;
+
+  int minLength;
+
+  bool multiple;
+
+  String name;
+
+  String pattern;
+
+  String placeholder;
+
+  bool readOnly;
+
+  bool required;
+
+  String selectionDirection;
+
+  int selectionEnd;
+
+  int selectionStart;
+
+  int size;
+
+  String src;
+
+  String step;
+
+  String type;
+
+  String validationMessage;
+
+  ValidityState validity;
+
+  String value;
+
+  DateTime get valueAsDate {
+    throw UnimplementedError();
+  }
+
+  set valueAsDate(DateTime value) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Element _newInstance(Document ownerDocument) => InputElement._(ownerDocument);
+
+  num valueAsNumber;
+
+  @SupportedBrowser(SupportedBrowser.CHROME)
+  @SupportedBrowser(SupportedBrowser.SAFARI)
+  List<Entry> entries;
+
+  @SupportedBrowser(SupportedBrowser.CHROME)
+  @SupportedBrowser(SupportedBrowser.SAFARI)
+  bool directory;
+
+  int width;
+
+  bool willValidate;
+
+  bool checkValidity() {
+    throw UnimplementedError();
+  }
+
+  bool reportValidity() {
+    throw UnimplementedError();
+  }
+
+  void select() {}
+
+  void setCustomValidity(String error) {}
+
+  void setRangeText(String replacement,
+      {int start, int end, String selectionMode}) {}
+
+  void setSelectionRange(int start, int end, [String direction]) {}
+
+  void stepDown([int n]) {}
+
+  void stepUp([int n]) {}
 }

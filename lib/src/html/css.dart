@@ -675,7 +675,11 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
 
   @override
   String getPropertyValue(String name) {
-    return this._map[name] ?? "";
+    final value = this._map[name];
+    if (value==null) {
+      return "";
+    }
+    return value;
   }
 
   @override

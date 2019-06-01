@@ -4,12 +4,30 @@ Window get window => HtmlDriver.current.window;
 
 typedef FrameRequestCallback = void Function(num highResTime);
 
+typedef IdleRequestCallback = void Function(IdleDeadline deadline);
+
 abstract class CustomElementRegistry {
   void define(String name, Object constructor, [Map options]);
 
   Object get(String name);
 
   Future whenDefined(String name);
+}
+
+class IdleDeadline {
+  final DateTime _deadline;
+
+  IdleDeadline._(this._deadline);
+
+  bool get didTimeout => DateTime.now().isAfter(_deadline);
+
+  double get timeRemaining {
+    final now = DateTime.now();
+    if (now.isAfter(_deadline)) {
+      return 0.0;
+    }
+    return _deadline.difference(now).inMicroseconds / 1e6;
+  }
 }
 
 abstract class Selection {
@@ -51,8 +69,18 @@ class Window extends EventTarget with WindowBase {
 
   bool _closed = false;
 
+  Performance _performance;
+
   /// IMPORTANT: Not part 'dart:html'.
   Window.internal();
+
+  Future<num> get animationFrame {
+    final completer = Completer<num>.sync();
+    requestAnimationFrame((num value) {
+      completer.complete(value);
+    });
+    return completer.future;
+  }
 
   ApplicationCache get applicationCache => null;
 
@@ -64,19 +92,11 @@ class Window extends EventTarget with WindowBase {
 
   num get devicePixelRatio => 1;
 
-  int get innerWidth => 1;
-
-  Future<num> get animationFrame {
-    final completer = Completer<num>.sync();
-    requestAnimationFrame((num value) {
-      completer.complete(value);
-    });
-    return completer.future;
-  }
+  History get history => _history ?? (_history = History._());
 
   int get innerHeight => 1;
 
-  History get history => _history ?? (_history = History._());
+  int get innerWidth => 1;
 
   Storage get localStorage => _localStorage ?? (_localStorage = Storage._());
 
@@ -89,6 +109,9 @@ class Window extends EventTarget with WindowBase {
   Stream<PopStateEvent> get onPopState => Window.popStateEvent.forTarget(this);
 
   int get orientation => 0;
+
+  Performance get performance =>
+      this._performance ?? (this._performance = Performance._());
 
   Storage get sessionStorage =>
       _sessionStorage ?? (_sessionStorage = Storage._());
@@ -112,6 +135,10 @@ class Window extends EventTarget with WindowBase {
     throw UnimplementedError();
   }
 
+  void requestAnimationFrame(FrameRequestCallback callback) {
+    throw UnimplementedError();
+  }
+
   Future<FileSystem> requestFileSystem(int size, {bool persistent = false}) {
     throw UnimplementedError();
   }
@@ -125,33 +152,11 @@ class Window extends EventTarget with WindowBase {
     return 0;
   }
 
-  void requestAnimationFrame(FrameRequestCallback callback) {
-    throw UnimplementedError();
-  }
-
   void scroll([dynamic options_OR_x, dynamic y, Map scrollOptions]) {}
 
   void scrollBy([dynamic options_OR_x, dynamic y, Map scrollOptions]) {}
 
   void scrollTo([dynamic options_OR_x, dynamic y, Map scrollOptions]) {}
-}
-
-typedef IdleRequestCallback = void Function(IdleDeadline deadline);
-
-class IdleDeadline {
-  final DateTime _deadline;
-
-  IdleDeadline._(this._deadline);
-
-  bool get didTimeout => DateTime.now().isAfter(_deadline);
-
-  double get timeRemaining {
-    final now = DateTime.now();
-    if (now.isAfter(_deadline)) {
-      return 0.0;
-    }
-    return _deadline.difference(now).inMicroseconds / 1e6;
-  }
 }
 
 abstract class WindowBase {

@@ -15,6 +15,7 @@ import 'package:html/parser.dart' as html_parsing;
 import 'package:meta/meta.dart';
 import 'package:universal_html/driver.dart';
 
+import 'html/html_common/metadata.dart';
 import 'svg.dart' as svg;
 import 'svg.dart' show Matrix, SvgElement;
 
@@ -51,6 +52,7 @@ part 'html/node_parsing.dart';
 part 'html/node_printing.dart';
 part 'html/node_validator_builder.dart';
 part 'html/notification.dart';
+part 'html/performance.dart';
 part 'html/permissions.dart';
 part 'html/rtc.dart';
 part 'html/storage.dart';

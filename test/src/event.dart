@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:test/test.dart';
 import 'package:universal_html/html.dart';
-import 'dart:async';
 
 void main() {
   group("events:", () {

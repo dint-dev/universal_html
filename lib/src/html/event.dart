@@ -26,7 +26,7 @@ class ElementStream<T extends Event> extends Stream<T> {
   Stream<T> matches(String selector) => this.where((T event) => null);
 }
 
-abstract class Event {
+class Event {
   /// This event is being handled by the event target.
   static const int AT_TARGET = 2;
 
@@ -60,6 +60,26 @@ abstract class Event {
   EventTarget _target;
 
   final num timeStamp;
+
+  /// Creates a new Event object of the specified type.
+  ///
+  /// This is analogous to document.createEvent.
+  /// Normally events should be created via their constructors, if available.
+  ///
+  ///     var e = new Event.type('MouseEvent', 'mousedown', true, true);
+  factory Event.eventType(String type, String name,
+      {bool canBubble = true, bool cancelable = true}) {
+    switch (type) {
+      case "MouseEvent":
+        return MouseEvent(name);
+      case "KeyboardEvent":
+        return KeyboardEvent(name);
+      case "TouchEvent":
+        return TouchEvent([], [], [], name);
+      default:
+        return Event.internalConstructor(type);
+    }
+  }
 
   Event.internalConstructor(this.type,
       {this.bubbles = true, this.cancelable = false})

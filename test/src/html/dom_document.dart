@@ -1,13 +1,10 @@
-import 'package:test/test.dart';
-import 'package:universal_html/html.dart';
+part of main_test;
 
-import 'helpers.dart';
-
-void main() {
+void _testDocument() {
   group("Document:", () {
     test("initial state", () {
       expect(document, isNotNull);
-      expectSaneDocument(document);
+      _expectSaneDocument(document);
 
       final docType = document.firstChild;
       expect(docType, isNotNull);
@@ -36,10 +33,10 @@ void main() {
 
     test("inserting and removing succeeds", () {
       // Remove existing children
-      temporarilyRemoveChildrenFromDocument();
+      _temporarilyRemoveChildrenFromDocument();
 
       // Check initial state
-      expectSaneDocument(document);
+      _expectSaneDocument(document);
 
       // Insert
       final n0 = HtmlHtmlElement()..id = "n0";
@@ -53,7 +50,7 @@ void main() {
       expect(n0.parentNode, same(document));
       expect(n0.nextNode, isNull);
       expect(n0.getRootNode(), document);
-      expectSaneDocument(document);
+      _expectSaneDocument(document);
 
       // Insert
       final n0_n2 = Element.tag("div")..id = "n0_n2";
@@ -75,7 +72,7 @@ void main() {
       expect(n0_n2.lastChild, isNull);
       expect(n0_n2.nextNode, isNull);
       expect(n0_n2.getRootNode(), document);
-      expectSaneDocument(document);
+      _expectSaneDocument(document);
 
       // Insert
       final n0_n0 = Element.tag("div")
@@ -95,7 +92,7 @@ void main() {
       expect(n0_n0.firstChild, isNull);
       expect(n0_n0.nextNode, n0_n2);
       expect(n0_n2.previousNode, n0_n0);
-      expectSaneDocument(document);
+      _expectSaneDocument(document);
 
       // Insert
       final n0_n1 = Element.tag("div")..id = "n0_n1";
@@ -114,7 +111,7 @@ void main() {
       expect(n0_n1.parent, same(n0));
       expect(n0_n1.parentNode, same(n0));
       expect(n0_n1.nextNode, n0_n2);
-      expectSaneDocument(document);
+      _expectSaneDocument(document);
 
       // Remove
       n0_n1.remove();
@@ -130,8 +127,8 @@ void main() {
       expect(document.lastChild, n0);
       expect(n0.firstChild, n0_n0);
       expect(n0.lastChild, n0_n2);
-      expectSaneDocument(document);
-      expectSaneTree(n0_n1);
+      _expectSaneDocument(document);
+      _expectSaneTree(n0_n1);
 
       // Remove
       n0_n2.remove();
@@ -146,8 +143,8 @@ void main() {
       expect(document.lastChild, n0);
       expect(n0.firstChild, n0_n0);
       expect(n0.lastChild, n0_n0);
-      expectSaneDocument(document);
-      expectSaneTree(n0_n2);
+      _expectSaneDocument(document);
+      _expectSaneTree(n0_n2);
 
       // Remove
       n0_n0.remove();
@@ -161,8 +158,8 @@ void main() {
       expect(document.lastChild, n0);
       expect(n0.firstChild, isNull);
       expect(n0.lastChild, isNull);
-      expectSaneDocument(document);
-      expectSaneTree(n0_n0);
+      _expectSaneDocument(document);
+      _expectSaneTree(n0_n0);
 
       // Remove
       n0.remove();
@@ -173,13 +170,13 @@ void main() {
       expect(n0.getRootNode(), same(n0));
       expect(document.firstChild, isNull);
       expect(document.lastChild, isNull);
-      expectSaneDocument(document);
-      expectSaneTree(n0);
+      _expectSaneDocument(document);
+      _expectSaneTree(n0);
     });
 
     test("inserting text shoulding fails", () {
       // Remove existing children
-      temporarilyRemoveChildrenFromDocument();
+      _temporarilyRemoveChildrenFromDocument();
 
       // Test that throws
       expectLater(() {
@@ -199,7 +196,7 @@ void main() {
 
     test("inserting two elements should fail", () {
       // Remove existing children
-      temporarilyRemoveChildrenFromDocument();
+      _temporarilyRemoveChildrenFromDocument();
 
       // First child
       document.append(HtmlHtmlElement());
@@ -225,7 +222,7 @@ void main() {
     });
 
     test("'getElementById(...)'", () {
-      temporarilyRemoveChildrenFromDocument();
+      _temporarilyRemoveChildrenFromDocument();
 
       final n0 = Element.tag("div")..id = "n0";
       final n0_n0 = Element.tag("div")..id = "n0_n0";

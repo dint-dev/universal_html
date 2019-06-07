@@ -1,7 +1,6 @@
-import 'package:test/test.dart';
-import 'package:universal_html/html.dart';
+part of main_test;
 
-void main() {
+void _testNode() {
   group("Node:", () {
     test("append:", () {
       final e = Element.tag("e");

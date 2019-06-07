@@ -1,19 +1,30 @@
-import 'src/cloning.dart' as cloning;
-import 'src/css.dart' as css;
-import 'src/document.dart' as document;
-import 'src/element.dart' as element;
-import 'src/event.dart' as event;
-import 'src/history.dart' as history;
-import 'src/node.dart' as node;
-import 'src/parsing_and_printing.dart' as parsing_and_printing;
+library main_test;
+
+import 'dart:async';
+
+import 'package:test/test.dart';
+import 'package:universal_html/driver.dart';
+import 'package:universal_html/html.dart';
+
+part 'src/html/css.dart';
+part 'src/html/dom.dart';
+part 'src/html/dom_cloning.dart';
+part 'src/html/dom_document.dart';
+part 'src/html/dom_element.dart';
+part 'src/html/dom_parsing.dart';
+part 'src/html/event.dart';
+part 'src/html/helpers.dart';
+part 'src/html/history.dart';
+part 'src/html/http_request.dart';
 
 void main() {
-  node.main();
-  element.main();
-  parsing_and_printing.main();
-  cloning.main();
-  css.main();
-  event.main();
-  document.main();
-  history.main();
+  _testCloning();
+  _testNode();
+  _testDocument();
+  _testElement();
+  _testParsing();
+  _testCss();
+  _testEvents();
+  _testHistory();
+  _testHttpRequest();
 }

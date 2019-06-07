@@ -1,17 +1,20 @@
 name: universal_html
-version: 1.0.1
+version: 1.0.2
 description: Supports a subset of 'dart:html' in all platforms (browser, VM, and Flutter).
-homepage: https://github.com/gohilla/dart-universal_html
+homepage: https://github.com/terrier989/dart-universal_html
 author: terrier989 <terrier989@gmail.com>
 
 environment:
   sdk: '>=2.0.0 <3.0.0'
 
 dependencies:
+  async: ^2.2.0
   charcode: ^1.1.2
+  collection: ^1.14.11
   csslib: ^0.16.0
   html: ^0.14.0
   meta: ^1.1.7
+  universal_io: ^0.1.0
   zone_local: ^0.1.0
 
 dev_dependencies:

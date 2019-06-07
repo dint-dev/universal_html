@@ -1,5 +1,68 @@
 part of universal_html;
 
+class CssClassSet extends SetBase<String> {
+  final Element _element;
+
+  CssClassSet._(this._element);
+
+  bool get frozen => false;
+
+  @override
+  Iterator<String> get iterator => _all.iterator;
+
+  @override
+  int get length {
+    return _all.length;
+  }
+
+  List<String> get _all {
+    final existing = _element.getAttribute("class");
+    if (existing == null || existing.isEmpty) {
+      return const <String>[];
+    }
+    return existing.split(" ");
+  }
+
+  @override
+  bool add(String value) {
+    final existing = _element.getAttribute("class");
+    if (existing == null || existing.isEmpty) {
+      _element.setAttribute("class", value);
+    } else if (existing.split(" ").contains(value)) {
+      return false;
+    }
+    _element.setAttribute("class", "${existing} ${value}");
+    return true;
+  }
+
+  @override
+  bool contains(Object element) {
+    return _all.contains(element);
+  }
+
+  @override
+  String lookup(Object element) {
+    return _all.firstWhere((e) => e == element, orElse: () => null);
+  }
+
+  @override
+  bool remove(Object value) {
+    final existing = _element.getAttribute("class");
+    if (existing == null || existing.isEmpty) {
+      return false;
+    }
+    final list = existing.split(" ");
+    if (!list.remove(value)) {
+      return false;
+    }
+    _element.setAttribute("class", list.join(" "));
+    return true;
+  }
+
+  @override
+  Set<String> toSet() => Set<String>.from(_all);
+}
+
 class CssImportRule extends CssRule {
   final String href;
 
@@ -676,7 +739,7 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
   @override
   String getPropertyValue(String name) {
     final value = this._map[name];
-    if (value==null) {
+    if (value == null) {
       return "";
     }
     return value;

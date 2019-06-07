@@ -1,7 +1,6 @@
-import 'package:test/test.dart';
-import 'package:universal_html/html.dart';
+part of main_test;
 
-void main() {
+void _testParsing() {
   group("Parsing nodes: ", () {
     group("Example 1 (HTML):", () {
       test("`DocumentFragment.html", () {

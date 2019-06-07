@@ -1,5 +1,3 @@
-part of universal_html;
-
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -33,68 +31,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-class CssClassSet extends SetBase<String> {
-  final Element _element;
-
-  CssClassSet._(this._element);
-
-  bool get frozen => false;
-
-  @override
-  Iterator<String> get iterator => _all.iterator;
-
-  @override
-  int get length {
-    return _all.length;
-  }
-
-  List<String> get _all {
-    final existing = _element.getAttribute("class");
-    if (existing == null || existing.isEmpty) {
-      return const <String>[];
-    }
-    return existing.split(" ");
-  }
-
-  @override
-  bool add(String value) {
-    final existing = _element.getAttribute("class");
-    if (existing == null || existing.isEmpty) {
-      _element.setAttribute("class", value);
-    } else if (existing.split(" ").contains(value)) {
-      return false;
-    }
-    _element.setAttribute("class", "${existing} ${value}");
-    return true;
-  }
-
-  @override
-  bool contains(Object element) {
-    return _all.contains(element);
-  }
-
-  @override
-  String lookup(Object element) {
-    return _all.firstWhere((e) => e == element, orElse: () => null);
-  }
-
-  @override
-  bool remove(Object value) {
-    final existing = _element.getAttribute("class");
-    if (existing == null || existing.isEmpty) {
-      return false;
-    }
-    final list = existing.split(" ");
-    if (!list.remove(value)) {
-      return false;
-    }
-    _element.setAttribute("class", list.join(" "));
-    return true;
-  }
-
-  @override
-  Set<String> toSet() => Set<String>.from(_all);
-}
+part of universal_html;
 
 abstract class Element extends Node
     with ChildNode, NonDocumentTypeChildNode, ParentNode, _ElementOrDocument {
@@ -251,6 +188,10 @@ abstract class Element extends Node
   static final _normalizedAttributeNameRegExp =
       RegExp(r"^[a-z_\:][a-z0-9_\-\:]*$");
 
+  static NodeValidatorBuilder _defaultValidator;
+
+  static _ValidatingTreeSanitizer _defaultSanitizer;
+
   final String _lowerCaseTagName;
 
   /// Contains all non-namespaced attributes except special cases.
@@ -271,6 +212,8 @@ abstract class Element extends Node
 
   /// Contains namespaced attributes.
   Map<String, Map<String, String>> _namedspacedAttributes;
+
+  RenderData _renderData;
 
   /// Creates an HTML element from a valid fragment of HTML.
   ///
@@ -293,7 +236,7 @@ abstract class Element extends Node
   ///
   factory Element.html(String html,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    final fragment = const _DomParserHandler().parseFragmentWithHtml(
+    final fragment = const DomParserDriver().parseDocumentFragmentFromHtml(
       document,
       html.trim(),
       validator: validator,
@@ -304,7 +247,7 @@ abstract class Element extends Node
     return element;
   }
 
-  /// IMPORTANT: Not part of 'dart:html'.
+  /// IMPORTANT: Not part of 'dart:html' API.
   Element.internal(Document document, String tagName)
       : this._(document, tagName);
 
@@ -319,6 +262,8 @@ abstract class Element extends Node
         return AreaElement._(ownerDocument);
       case "audio":
         return AudioElement._(ownerDocument);
+      case "base":
+        return BaseElement._(ownerDocument);
       case "body":
         return BodyElement._(ownerDocument);
       case "br":
@@ -353,6 +298,8 @@ abstract class Element extends Node
         return HeadingElement._(ownerDocument, "h6");
       case "hr":
         return HRElement._(ownerDocument);
+      case "html":
+        return HtmlHtmlElement._(ownerDocument);
       case "iframe":
         return IFrameElement._(ownerDocument);
       case "img":
@@ -454,16 +401,6 @@ abstract class Element extends Node
         this._lowerCaseTagName = nodeName,
         super._(ownerDocument);
 
-  /// Returns read-only list of attribute names.
-  List<String> get _attributeNames {
-    final result = <String>[]..addAll(_attributesWithoutLatestValues.keys);
-    final style = this._style;
-    if (style != null && (style._sourceIsLatest || style._map.isNotEmpty)) {
-      result.add("style");
-    }
-    return result;
-  }
-
   /// Returns a modifiable map of attributes.
   Map<String, String> get attributes {
     return _attributesFullViewOrNull ??
@@ -480,20 +417,19 @@ abstract class Element extends Node
     _setAttribute("class", newValue);
   }
 
-  Rectangle<int> get client =>
-      Rectangle(clientLeft, clientTop, clientWidth, clientHeight);
+  Rectangle<int> get client => _getRenderData().client;
 
   /// Returns 0 outside browser.tagWithoutValidation
-  int get clientHeight => 0;
+  int get clientHeight => client.height;
 
   /// Returns 0 outside browser.
-  int get clientLeft => 0;
+  int get clientLeft => client.left;
 
   /// Returns 0 outside browser.
-  int get clientTop => 0;
+  int get clientTop => client.top;
 
   /// Returns 0 outside browser.
-  int get clientWidth => 0;
+  int get clientWidth => client.width;
 
   String get dir => getAttribute("dir");
 
@@ -524,6 +460,14 @@ abstract class Element extends Node
     return sb.toString();
   }
 
+  /// Parses the HTML fragment and sets it as the contents of this element.
+  ///
+  /// This uses the default sanitization behavior to sanitize the HTML fragment,
+  /// use [setInnerHtml] to override the default behavior.
+  set innerHtml(String html) {
+    this.setInnerHtml(html);
+  }
+
   String get namespaceUri => null;
 
   /// Returns node name in uppercase.
@@ -533,22 +477,21 @@ abstract class Element extends Node
   @override
   int get nodeType => Node.ELEMENT_NODE;
 
-  Rectangle<int> get offset =>
-      Rectangle(offsetLeft, offsetTop, offsetWidth, offsetHeight);
+  Rectangle<int> get offset => _getRenderData().offset;
 
   /// Returns 0 outside browser.
-  int get offsetHeight => 0;
+  int get offsetHeight => offset.height;
 
   /// Returns 0 outside browser.
-  int get offsetLeft => 0;
+  int get offsetLeft => offset.left;
 
   Element get offsetParent => parent;
 
   /// Returns 0 outside browser.
-  int get offsetTop => 0;
+  int get offsetTop => offset.top;
 
   /// Returns 0 outside browser.
-  int get offsetWidth => 0;
+  int get offsetWidth => offset.width;
 
   ElementStream<Event> get onBlur => blurEvent.forElement(this);
 
@@ -631,15 +574,15 @@ abstract class Element extends Node
   }
 
   /// Returns 0 outside browser.
-  int get scrollHeight => 0;
+  int get scrollHeight => _getRenderData().scroll.height;
 
-  int get scrollLeft => 0;
-
-  /// Returns 0 outside browser.
-  int get scrollTop => 0;
+  int get scrollLeft => _getRenderData().scroll.left;
 
   /// Returns 0 outside browser.
-  int get scrollWidth => 0;
+  int get scrollTop => _getRenderData().scroll.top;
+
+  /// Returns 0 outside browser.
+  int get scrollWidth => _getRenderData().scroll.width;
 
   bool get spellcheck => _getAttributeBool("spellcheck");
 
@@ -658,15 +601,42 @@ abstract class Element extends Node
   /// Returns node name in uppercase.
   String get tagName => this.nodeName;
 
+  String get title => getAttribute("title");
+
+  set title(String value) {
+    setAttribute("title", value);
+  }
+
   bool get translate => _getAttributeBool("translate");
 
   set translate(bool value) {
     _setAttributeBool("translate", value);
   }
 
+  /// Returns read-only list of attribute names.
+  List<String> get _attributeNames {
+    final result = <String>[]..addAll(_attributesWithoutLatestValues.keys);
+    final style = this._style;
+    if (style != null && (style._sourceIsLatest || style._map.isNotEmpty)) {
+      result.add("style");
+    }
+    return result;
+  }
+
   LinkedHashMap<String, String> get _attributesWithoutLatestValues {
     return this._attributesPartialViewOrNull ??
         (this._attributesPartialViewOrNull = LinkedHashMap<String, String>());
+  }
+
+  HtmlDriver get _htmlDriver {
+    final ownerDocument = this.ownerDocument;
+    if (ownerDocument != null) {
+      final result = ownerDocument._htmlDriver;
+      if (result != null) {
+        return result;
+      }
+    }
+    return HtmlDriver.current;
   }
 
   Animation animate(Iterable<Map<String, dynamic>> frames, [dynamic timing]) {
@@ -677,7 +647,7 @@ abstract class Element extends Node
   /// last child of this element.
   void appendHtml(String text,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    final fragment = const _DomParserHandler().parseFragmentWithHtml(
+    final fragment = const DomParserDriver().parseDocumentFragmentFromHtml(
         ownerDocument, text,
         validator: validator, treeSanitizer: treeSanitizer);
     while (true) {
@@ -700,6 +670,55 @@ abstract class Element extends Node
 
   void click() {
     dispatchEvent(MouseEvent("click"));
+  }
+
+  /// Create a DocumentFragment from the HTML fragment and ensure that it follows
+  /// the sanitization rules specified by the validator or treeSanitizer.
+  ///
+  /// If the default validation behavior is too restrictive then a new
+  /// NodeValidator should be created, either extending or wrapping a default
+  /// validator and overriding the validation APIs.
+  ///
+  /// The treeSanitizer is used to walk the generated node tree and sanitize it.
+  /// A custom treeSanitizer can also be provided to perform special validation
+  /// rules but since the API is more complex to implement this is discouraged.
+  ///
+  /// The returned tree is guaranteed to only contain nodes and attributes which
+  /// are allowed by the provided validator.
+  ///
+  /// See also:
+  ///
+  /// * [NodeValidator]
+  /// * [NodeTreeSanitizer]
+  DocumentFragment createFragment(
+    String html, {
+    NodeValidator validator,
+    NodeTreeSanitizer treeSanitizer,
+  }) {
+    if (treeSanitizer == null) {
+      if (validator == null) {
+        if (_defaultValidator == null) {
+          _defaultValidator = NodeValidatorBuilder.common();
+        }
+        validator = _defaultValidator;
+      }
+      if (_defaultSanitizer == null) {
+        _defaultSanitizer = _ValidatingTreeSanitizer(validator);
+      } else {
+        _defaultSanitizer.validator = validator;
+      }
+      treeSanitizer = _defaultSanitizer;
+    } else if (validator != null) {
+      throw ArgumentError(
+          'validator can only be passed if treeSanitizer is null');
+    }
+    final fragment = DocumentFragment.html(
+      html,
+      validator: validator,
+      treeSanitizer: treeSanitizer,
+    );
+    document.adoptNode(fragment);
+    return fragment;
   }
 
   void focus() {
@@ -844,6 +863,37 @@ abstract class Element extends Node
     }
   }
 
+  /// Parses the HTML fragment and sets it as the contents of this element.
+  /// This ensures that the generated content follows the sanitization rules
+  /// specified by the validator or treeSanitizer.
+  ///
+  /// If the default validation behavior is too restrictive then a new
+  /// NodeValidator should be created, either extending or wrapping a default
+  /// validator and overriding the validation APIs.
+  ///
+  /// The treeSanitizer is used to walk the generated node tree and sanitize it.
+  /// A custom treeSanitizer can also be provided to perform special validation
+  /// rules but since the API is more complex to implement this is discouraged.
+  ///
+  /// The resulting tree is guaranteed to only contain nodes and attributes which
+  /// are allowed by the provided validator.
+  ///
+  /// See also:
+  ///
+  /// * [NodeValidator]
+  /// * [NodeTreeSanitizer]
+  void setInnerHtml(String html,
+      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
+    while (this.firstChild != null) {
+      this.firstChild.remove();
+    }
+    append(createFragment(
+      html,
+      validator: validator,
+      treeSanitizer: treeSanitizer,
+    ));
+  }
+
   @override
   String toString() {
     final id = this.id;
@@ -893,6 +943,10 @@ abstract class Element extends Node
       this._style = result;
     }
     return result;
+  }
+
+  RenderData _getRenderData() {
+    return _htmlDriver.layoutDataFor(this);
   }
 
   Element _newInstance(Document document);
@@ -989,7 +1043,7 @@ class _Attributes extends MapBase<String, String> {
 }
 
 class _ElementChildren extends ListBase<Element> {
-  final Element _element;
+  final _ElementOrDocument _element;
 
   _ElementChildren(this._element);
 

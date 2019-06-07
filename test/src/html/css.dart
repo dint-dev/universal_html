@@ -1,14 +1,9 @@
-import 'package:test/test.dart';
-import 'package:universal_html/html.dart';
+part of main_test;
 
-import 'helpers.dart';
-
-final throwsDomException = throwsA(isA<DomException>());
-
-void main() {
+void _testCss() {
   group("CSS-related tests for Element:", () {
     test("computedStyle", () {
-      temporarilyRemoveChildrenFromDocument(root: document.body);
+      _temporarilyRemoveChildrenFromDocument(root: document.body);
 
       final styleElement = StyleElement()..appendText("""
 .exampleClass {

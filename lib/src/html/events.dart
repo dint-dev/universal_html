@@ -1,3 +1,36 @@
+/*
+Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
+  https://github.com/dart-lang/sdk/tree/master/tools/dom
+
+The source code adopted from 'dart:html' had the following license:
+
+  Copyright 2012, the Dart project authors. All rights reserved.
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of Google Inc. nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 part of universal_html;
 
 class BlobEvent extends Event {
@@ -112,6 +145,7 @@ class MessageEvent extends Event {
   final String lastEventId;
   final String origin;
   final EventTarget source;
+  final List<MessagePort> ports;
 
   MessageEvent(
     String type, {
@@ -119,7 +153,17 @@ class MessageEvent extends Event {
     this.origin,
     this.lastEventId,
     this.source,
+    this.ports,
   }) : super.internalConstructor(type);
+}
+
+abstract class MessagePort {
+  static const EventStreamProvider<MessageEvent> messageEvent =
+      EventStreamProvider<MessageEvent>('message');
+
+  void close();
+
+  void postMessage(dynamic message, [List<Object> transfer]);
 }
 
 class MouseEvent extends UIEvent {
@@ -152,40 +196,73 @@ class MouseEvent extends UIEvent {
       : super(type);
 }
 
+abstract class ExtendableEvent extends Event {
+  /// IMPORTANT: Not part of 'dart:html' API.
+  ExtendableEvent.internalConstructor(String type,
+      {bool bubbles = true, bool cancelable = false})
+      : super.internalConstructor(type,
+            bubbles: bubbles, cancelable: cancelable);
+
+  void waitUntil(Future f) {
+    throw UnimplementedError();
+  }
+}
+
 class PopStateEvent extends Event {
   final Object state;
 
-  PopStateEvent({this.state}) : super.internalConstructor("popstate");
+  PopStateEvent(String type) : this.internal(type: type);
+
+  /// IMPORTANT: Not part of 'dart:html' API.
+  PopStateEvent.internal({String type = "popstate", this.state})
+      : super.internalConstructor(type);
 }
 
 class ProgressEvent extends Event {
-  ProgressEvent() : super.internalConstructor("progress");
+  ProgressEvent(String type) : super.internalConstructor(type);
 }
 
 abstract class SecurityPolicyViolationEvent implements Event {
-  String get blockedUri;
+  final String blockedUri;
 
-  int get columnNumber;
+  final int columnNumber;
 
-  String get disposition;
+  final String disposition;
 
-  String get documentUri;
+  final String documentUri;
 
-  String get effectiveDirective;
+  final String effectiveDirective;
 
-  int get lineNumber;
+  final int lineNumber;
 
-  String get originalPolicy;
+  final String originalPolicy;
 
-  String get referrer;
+  final String referrer;
 
-  String get sample;
+  final String sample;
 
-  String get sourceFile;
+  final String sourceFile;
 
-  int get statusCode;
+  final int statusCode;
 
-  String get violatedDirective;
+  final String violatedDirective;
+
+  /// IMPORTANT: Not part of 'dart:html' API.
+  SecurityPolicyViolationEvent.internal(
+    String type, {
+    this.blockedUri,
+    this.columnNumber,
+    this.disposition,
+    this.documentUri,
+    this.effectiveDirective,
+    this.lineNumber,
+    this.originalPolicy,
+    this.referrer,
+    this.sample,
+    this.sourceFile,
+    this.statusCode,
+    this.violatedDirective,
+  });
 }
 
 class Touch {
@@ -199,7 +276,10 @@ class Touch {
 class TouchEvent extends UIEvent {
   static bool get supported => true;
 
-  TouchEvent(
+  TouchEvent(String type) : super(type);
+
+  /// IMPORTANT: Not part of 'dart:html' API.
+  TouchEvent.internal(
     List<Touch> touches,
     List<Touch> targetTouches,
     List<Touch> changedTouches,
@@ -213,7 +293,7 @@ class TouchEvent extends UIEvent {
     bool altKey = false,
     bool shiftKey = false,
     bool metaKey = false,
-  }) : super("touch");
+  }) : super(type);
 }
 
 abstract class UIEvent extends Event {

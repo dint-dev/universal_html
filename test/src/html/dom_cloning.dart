@@ -1,28 +1,35 @@
-import 'package:test/test.dart';
-import 'package:universal_html/html.dart';
+part of main_test;
 
-import 'helpers.dart';
-
-void main() {
-  test("Cloning DOM", () {
+void _testCloning() {
+  test("node.clone(true)", () {
+    // Create an element with many children
     final original = DivElement();
     for (var tagName in tagNames) {
       original.append(Element.tag(tagName));
     }
+    final originalOuterHtml = original.outerHtml;
+
+    // Clone the element
     final clone = original.clone(true) as Element;
-    expect(clone.outerHtml, equals(original.outerHtml));
-    expectSaneTree(clone);
+    expect(clone.outerHtml, originalOuterHtml);
+    _expectSaneTree(clone);
   });
 
-  test("Adopting DOM", () {
+  test("document.adoptNode", () {
+    // Create an element with many children
     final original = DivElement();
     for (var tagName in tagNames) {
       original.append(Element.tag(tagName));
     }
+    final originalOuterHtml = original.outerHtml;
+
+    // Create a new document
     final document = DomParser().parseFromString("", "text/html");
+
+    // Adopt children from the original element
     final clone = document.adoptNode(original) as Element;
-    expect(clone.outerHtml, equals(original.outerHtml));
-    expectSaneTree(clone);
+    expect(clone.outerHtml, originalOuterHtml);
+    _expectSaneTree(clone);
   });
 }
 

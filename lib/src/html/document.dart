@@ -1,3 +1,36 @@
+/*
+Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
+  https://github.com/dart-lang/sdk/tree/master/tools/dom
+
+The source code adopted from 'dart:html' had the following license:
+
+  Copyright 2012, the Dart project authors. All rights reserved.
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of Google Inc. nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 part of universal_html;
 
 HtmlDocument get document => HtmlDriver.current.document;
@@ -22,18 +55,19 @@ abstract class Document extends Node
   static const EventStreamProvider<Event> selectionChangeEvent =
       EventStreamProvider<Event>("selectionchange");
 
+  final HtmlDriver _htmlDriver;
   final String contentType;
 
   factory Document() {
-    return XmlDocument._();
+    return XmlDocument.internal(HtmlDriver.current);
   }
 
-  Document._(this.contentType) : super._document();
+  Document._(this._htmlDriver, this.contentType) : super._document();
 
   /// Outside the browser, returns null.
   Element get activeElement => null;
 
-  DomImplementation get implementation => const DomImplementation._();
+  DomImplementation get implementation => DomImplementation._(_htmlDriver);
 
   @override
   int get nodeType => Node.DOCUMENT_NODE;
@@ -54,7 +88,7 @@ abstract class Document extends Node
   }
 
   DocumentFragment createDocumentFragment() {
-    return DocumentFragment._(this);
+    return DocumentFragment.internal(this);
   }
 
   Element createElement(String tagName, [String typeExtension]) {
@@ -126,61 +160,6 @@ abstract class Document extends Node
   }
 }
 
-class DocumentFragment extends Node
-    with _ElementOrDocument, _DocumentOrFragment {
-  factory DocumentFragment() {
-    return DocumentFragment._(null);
-  }
-
-  factory DocumentFragment.html(String input,
-      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    return const _DomParserHandler().parseFragmentWithHtml(document, input,
-        validator: validator, treeSanitizer: treeSanitizer);
-  }
-
-  factory DocumentFragment.svg(String input,
-      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    return const _DomParserHandler().parseFragmentWithSvg(document, input,
-        validator: validator, treeSanitizer: treeSanitizer);
-  }
-
-  DocumentFragment._(Document ownerDocument) : super._(ownerDocument);
-
-  String get innerHtml {
-    final sb = StringBuffer();
-    final flags = _getPrintingFlags(this);
-    Node next = this._firstChild;
-    while (next != null) {
-      _printNode(sb, flags, next);
-      next = next.nextNode;
-    }
-    return sb.toString();
-  }
-
-  set innerHtml(String value) {
-    while (firstChild != null) {
-      this.firstChild.remove();
-    }
-    final parsed = DomParser().parseFromString(value, "text/html");
-    final children = (parsed as HtmlDocument).body.children;
-    for (var child in children) {
-      append(child);
-    }
-  }
-
-  @override
-  int get nodeType => Node.DOCUMENT_FRAGMENT_NODE;
-
-  @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
-    final clone = DocumentFragment();
-    if (deep != false) {
-      Node._cloneChildrenFrom(ownerDocument, clone, this);
-    }
-    return clone;
-  }
-}
-
 abstract class DocumentOrShadowRoot {
   Element get activeElement => null;
 
@@ -190,11 +169,13 @@ abstract class DocumentOrShadowRoot {
 }
 
 class DomImplementation {
-  const DomImplementation._();
+  final HtmlDriver _htmlDriver;
+
+  DomImplementation._(this._htmlDriver);
 
   XmlDocument createDocument(
       String namespaceURI, String qualifiedName, DocumentType doctype) {
-    final result = XmlDocument._();
+    final result = XmlDocument.internal(_htmlDriver);
     if (doctype != null) {
       result.append(doctype.internalCloneWithOwnerDocument(result, true));
     }
@@ -211,31 +192,32 @@ class DomImplementation {
   }
 
   HtmlDocument createHtmlDocument([String title]) {
-    return HtmlDocument.internal();
+    return HtmlDocument.internal(_htmlDriver);
   }
 }
 
 class HtmlDocument extends Document {
   /// IMPORTANT: Not part 'dart:html'.
   ///
-  /// Returns document:
-  ///   <doctype html>
-  ///   <html>
-  ///   <head></head>
-  ///   <body></body>
-  ///   </html>
-  factory HtmlDocument.internal() {
-    final result = HtmlDocument._();
-    final docType = DocumentType.internal(result, "html");
-    result.append(docType);
-    final html = HtmlHtmlElement._(result);
-    result.append(html);
-    html.append(HeadElement._(result));
-    html.append(BodyElement._(result));
-    return result;
+  /// If [filled] is true, returns document:
+  ///
+  ///     <doctype html>
+  ///     <html>
+  ///     <head></head>
+  ///     <body></body>
+  ///     </html>
+  HtmlDocument.internal(HtmlDriver driver,
+      {String contentType = "text/html", bool filled = true})
+      : super._(driver, contentType) {
+    if (filled) {
+      final docType = DocumentType.internal(this, "html");
+      append(docType);
+      final htmlElement = HtmlHtmlElement._(this);
+      append(htmlElement);
+      htmlElement.append(HeadElement._(this));
+      htmlElement.append(BodyElement._(this));
+    }
   }
-
-  HtmlDocument._({String contentType = "text/html"}) : super._(contentType);
 
   BodyElement get body {
     Element element = this._html?._firstElementChild;
@@ -302,37 +284,7 @@ class HtmlDocument extends Document {
 
   @override
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
-    final clone = HtmlDocument._(contentType: contentType);
-    if (deep != false) {
-      Node._cloneChildrenFrom(clone, clone, this);
-    }
-    return clone;
-  }
-}
-
-class XmlDocument extends Document {
-  XmlDocument._({String contentType = "application/xml"})
-      : assert(contentType != null),
-        super._(contentType);
-
-  List<StyleSheet> get styleSheets {
-    // TODO: Fix style sheet search
-    final nodes = getElementsByTagName("style");
-    final result = <StyleSheet>[];
-    for (var node in nodes) {
-      if (node is StyleElement) {
-        final sheet = node.sheet;
-        if (sheet != null) {
-          result.add(node.sheet);
-        }
-      }
-    }
-    return result;
-  }
-
-  @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
-    final clone = XmlDocument._(contentType: contentType);
+    final clone = HtmlDocument.internal(_htmlDriver, contentType: contentType);
     if (deep != false) {
       Node._cloneChildrenFrom(clone, clone, this);
     }

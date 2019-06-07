@@ -1,19 +1,13 @@
-/// Q: How to run this on browser without test framework failure?
-//@TestOn("vm")
-library history_test;
+part of main_test;
 
-import 'dart:async';
-
-import 'package:test/test.dart';
-import 'package:universal_html/html.dart' as html;
-
-void main() {
+void _testHistory() {
   group("History:", () {
-    final isVm = !html.window.location.hash.contains("metadata");
+    final isVm = !window.location.hash.contains("metadata");
 
     test("initial state is correct", () {
-      final history = html.window.history;
-      final location = html.window.location;
+      HtmlDriver.current.setDocument(null, uri: Uri.parse("http://localhost/"));
+      final history = window.history;
+      final location = window.location;
 
       // Initial state
       expect(history.state, isNull);
@@ -35,8 +29,8 @@ void main() {
       if (!isVm) {
         return;
       }
-      final history = html.window.history;
-      final location = html.window.location;
+      final history = window.history;
+      final location = window.location;
 
       // Initial state
       expect(history.state, isNull);
@@ -64,8 +58,8 @@ void main() {
       expect(location.href, "http://localhost/path/to/somewhere#fragment");
 
       // Add listener
-      html.PopStateEvent previousEvent;
-      html.window.onPopState.listen(expectAsync1((event) {
+      PopStateEvent previousEvent;
+      window.onPopState.listen(expectAsync1((event) {
         previousEvent = event;
       }, count: 4));
 

@@ -1,3 +1,36 @@
+/*
+Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
+  https://github.com/dart-lang/sdk/tree/master/tools/dom
+
+The source code adopted from 'dart:html' had the following license:
+
+  Copyright 2012, the Dart project authors. All rights reserved.
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of Google Inc. nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 part of universal_html;
 
 class AnchorElement extends HtmlElement with _UrlBase {
@@ -61,6 +94,24 @@ class AudioElement extends MediaElement {
   Element _newInstance(Document ownerDocument) => AudioElement._(ownerDocument);
 }
 
+class BaseElement extends HtmlElement {
+  BaseElement() : this._(null);
+  BaseElement._(Document ownerDocument) : super._(ownerDocument, "base");
+
+  String get href => _getAttribute("href");
+  set href(String value) {
+    _setAttribute("href", value);
+  }
+
+  String get target => _getAttribute("target");
+  set target(String value) {
+    _setAttribute("target", value);
+  }
+
+  @override
+  Element _newInstance(Document ownerDocument) => BaseElement._(ownerDocument);
+}
+
 class BodyElement extends HtmlElement {
   factory BodyElement() => BodyElement._(null);
 
@@ -100,7 +151,7 @@ class ButtonInputElement extends InputElementBase {
       ButtonInputElement._(ownerDocument);
 }
 
-class CanvasElement extends HtmlElement {
+class CanvasElement extends HtmlElement implements CanvasImageSource {
   CanvasRenderingContext2D _context2D;
 
   CanvasElement({int width, int height}) : super._(null, "canvas") {
@@ -115,7 +166,11 @@ class CanvasElement extends HtmlElement {
   CanvasElement._(Document ownerDocument) : super._(ownerDocument, "canvas");
 
   CanvasRenderingContext2D get context2D {
-    return _context2D ??= CanvasRenderingContext2D._(this);
+    if (_context2D == null) {
+      final htmlDriver = ownerDocument?._htmlDriver ?? HtmlDriver.current;
+      _context2D = htmlDriver.newCanvasRenderingContext2D(this);
+    }
+    return _context2D;
   }
 
   int get height => _getAttributeInt("height");
@@ -123,7 +178,7 @@ class CanvasElement extends HtmlElement {
   int get width => _getAttributeInt("width");
 
   MediaStream captureStream([num frameRate]) {
-    throw CanvasRenderingContext2D._(this);
+    throw UnimplementedError();
   }
 
   void toBlob(BlobCallback callback, String type, [Object arguments]) {
@@ -199,31 +254,6 @@ class DateInputElement extends InputElementBase {
   @override
   Element _newInstance(Document ownerDocument) =>
       DateInputElement._(ownerDocument);
-}
-
-class LocalDateTimeInputElement extends InputElementBase {
-  factory LocalDateTimeInputElement() => LocalDateTimeInputElement._(null);
-
-  LocalDateTimeInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "datetime-local");
-
-  bool get readOnly => _getAttributeBool("readOnly");
-
-  set readOnly(bool value) {
-    _setAttributeBool("readOnly", value);
-  }
-
-  bool get required => _getAttributeBool("required");
-
-  set required(bool value) {
-    _setAttributeBool("required", value);
-  }
-
-  DateTime get valueAsDate => DateTime.parse(value);
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      LocalDateTimeInputElement._(ownerDocument);
 }
 
 class DetailsElement extends HtmlElement {
@@ -500,7 +530,7 @@ class ImageButtonInputElement extends InputElementBase {
       ImageButtonInputElement._(ownerDocument);
 }
 
-class ImageElement extends HtmlElement {
+class ImageElement extends HtmlElement implements CanvasImageSource {
   factory ImageElement() => ImageElement._(null);
 
   ImageElement._(Document ownerDocument) : super._(ownerDocument, "img");
@@ -559,6 +589,171 @@ class ImageElement extends HtmlElement {
   Element _newInstance(Document ownerDocument) => ImageElement._(ownerDocument);
 }
 
+class InputElement extends HtmlElement
+    with _TextInputElementMixin
+    implements
+        HiddenInputElement,
+        SearchInputElement,
+        TextInputElement,
+        UrlInputElement,
+        TelephoneInputElement,
+        EmailInputElement,
+        PasswordInputElement,
+        DateInputElement,
+        MonthInputElement,
+        WeekInputElement,
+        TimeInputElement,
+        LocalDateTimeInputElement,
+        NumberInputElement,
+        RangeInputElement,
+        CheckboxInputElement,
+        RadioButtonInputElement,
+        FileUploadInputElement,
+        SubmitButtonInputElement,
+        ImageButtonInputElement,
+        ResetButtonInputElement,
+        ButtonInputElement {
+  String accept;
+
+  String alt;
+
+  String autocapitalize;
+
+  String autocomplete;
+
+  bool autofocus;
+
+  String capture;
+
+  bool checked;
+
+  bool defaultChecked;
+
+  String defaultValue;
+
+  String dirName;
+
+  bool disabled;
+
+  List<File> files;
+
+  FormElement form;
+
+  String formAction;
+
+  String formEnctype;
+
+  String formMethod;
+
+  bool formNoValidate;
+
+  String formTarget;
+
+  int height;
+
+  bool incremental;
+
+  bool indeterminate;
+
+  List<Node> labels;
+
+  HtmlElement list;
+
+  String max;
+
+  int maxLength;
+
+  String min;
+
+  int minLength;
+
+  bool multiple;
+
+  String name;
+
+  String pattern;
+
+  String placeholder;
+
+  bool readOnly;
+
+  bool required;
+
+  String selectionDirection;
+
+  int selectionEnd;
+
+  int selectionStart;
+
+  int size;
+
+  String src;
+
+  String step;
+
+  String type;
+
+  String validationMessage;
+
+  ValidityState validity;
+
+  String value;
+
+  num valueAsNumber;
+
+  @SupportedBrowser(SupportedBrowser.CHROME)
+  @SupportedBrowser(SupportedBrowser.SAFARI)
+  List<Entry> entries;
+
+  @SupportedBrowser(SupportedBrowser.CHROME)
+  @SupportedBrowser(SupportedBrowser.SAFARI)
+  bool directory;
+
+  int width;
+
+  bool willValidate;
+
+  factory InputElement({String type}) {
+    InputElement e = InputElement._(null);
+    e.type = type;
+    return e;
+  }
+
+  InputElement._(Document ownerDocument) : super._(ownerDocument, "input");
+
+  DateTime get valueAsDate {
+    throw UnimplementedError();
+  }
+
+  set valueAsDate(DateTime value) {
+    throw UnimplementedError();
+  }
+
+  bool checkValidity() {
+    throw UnimplementedError();
+  }
+
+  bool reportValidity() {
+    throw UnimplementedError();
+  }
+
+  void select() {}
+
+  void setCustomValidity(String error) {}
+
+  void setRangeText(String replacement,
+      {int start, int end, String selectionMode}) {}
+
+  void setSelectionRange(int start, int end, [String direction]) {}
+
+  void stepDown([int n]) {}
+
+  void stepUp([int n]) {}
+
+  @override
+  Element _newInstance(Document ownerDocument) => InputElement._(ownerDocument);
+}
+
 class InputElementBase extends HtmlElement {
   InputElementBase() : super._(null, "input");
 
@@ -605,7 +800,7 @@ class InputElementBase extends HtmlElement {
 
   InputElementBase._(Document ownerDocument, String type)
       : super._(ownerDocument, "input") {
-    if (type!=null) {
+    if (type != null) {
       _setAttribute("type", type);
     }
   }
@@ -699,6 +894,31 @@ class LinkElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) => LinkElement._(ownerDocument);
+}
+
+class LocalDateTimeInputElement extends InputElementBase {
+  factory LocalDateTimeInputElement() => LocalDateTimeInputElement._(null);
+
+  LocalDateTimeInputElement._(Document ownerDocument)
+      : super._(ownerDocument, "datetime-local");
+
+  bool get readOnly => _getAttributeBool("readOnly");
+
+  set readOnly(bool value) {
+    _setAttributeBool("readOnly", value);
+  }
+
+  bool get required => _getAttributeBool("required");
+
+  set required(bool value) {
+    _setAttributeBool("required", value);
+  }
+
+  DateTime get valueAsDate => DateTime.parse(value);
+
+  @override
+  Element _newInstance(Document ownerDocument) =>
+      LocalDateTimeInputElement._(ownerDocument);
 }
 
 abstract class MediaElement extends HtmlElement {
@@ -797,6 +1017,11 @@ class MetaElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) => MetaElement._(ownerDocument);
+}
+
+class MonthInputElement extends InputElementBase {
+  MonthInputElement() : this._(null);
+  MonthInputElement._(Document ownerDocument) : super._(ownerDocument, "month");
 }
 
 abstract class NoncedElement {
@@ -982,6 +1207,11 @@ class RadioButtonInputElement extends InputElementBase {
       RadioButtonInputElement._(ownerDocument);
 }
 
+class RangeInputElement extends InputElementBase {
+  RangeInputElement() : this._(null);
+  RangeInputElement._(Document ownerDocument) : super._(ownerDocument, "range");
+}
+
 class ResetButtonInputElement extends InputElementBase {
   factory ResetButtonInputElement() => ResetButtonInputElement._(null);
 
@@ -1087,6 +1317,12 @@ class SelectElement extends HtmlElement {
 
   set required(bool value) {
     _setAttributeBool("required", value);
+  }
+
+  String get value => _getAttribute("value");
+
+  set value(String value) {
+    _setAttribute("value", value);
   }
 
   @override
@@ -1427,6 +1663,12 @@ class TextAreaElement extends HtmlElement {
     _setAttributeInt("rows", value);
   }
 
+  String get value => _getAttribute("value");
+
+  set value(String value) {
+    _setAttribute("value", value);
+  }
+
   String get wrap => _getAttribute("wrap");
 
   set wrap(String value) {
@@ -1488,48 +1730,6 @@ abstract class TextInputElementBase extends InputElementBase {
   }
 
   bool checkValidity();
-}
-
-abstract class _TextInputElementMixin implements InputElementBase {
-  RegExp _patternRegExp;
-
-  bool get required;
-  int get minLength;
-  String get pattern;
-
-  @override
-  bool checkValidity() => _checkValidity(value);
-
-  bool _checkValidity(String value) {
-    if (value == null) return !required;
-    final minLength = this.minLength;
-    if (minLength is int && minLength > value.length) {
-      return false;
-    }
-    final maxLength = this.minLength;
-    if (maxLength is int && maxLength < value.length) {
-      return false;
-    }
-    final regExp = this._getRegExp();
-    if (regExp != null && !regExp.hasMatch(value)) {
-      return false;
-    }
-    return true;
-  }
-
-  RegExp _getRegExp() {
-    final pattern = this.pattern;
-    if (pattern == null) {
-      return null;
-    }
-    var regExp = this._patternRegExp;
-    if (regExp != null && pattern == regExp.pattern) {
-      return regExp;
-    }
-    regExp = RegExp(pattern);
-    _patternRegExp = regExp;
-    return regExp;
-  }
 }
 
 class TimeInputElement extends InputElementBase {
@@ -1648,7 +1848,7 @@ abstract class ValidityState {
   bool get valueMissing;
 }
 
-class VideoElement extends MediaElement {
+class VideoElement extends MediaElement implements CanvasImageSource {
   factory VideoElement() => VideoElement._(null);
 
   VideoElement._(Document ownerDocument) : super._(ownerDocument, "video");
@@ -1682,177 +1882,44 @@ class WeekInputElement extends InputElementBase {
   WeekInputElement._(Document ownerDocument) : super._(ownerDocument, "week");
 }
 
-class MonthInputElement extends InputElementBase {
-  MonthInputElement() : this._(null);
-  MonthInputElement._(Document ownerDocument) : super._(ownerDocument, "month");
-}
+abstract class _TextInputElementMixin implements InputElementBase {
+  RegExp _patternRegExp;
 
-class RangeInputElement extends InputElementBase {
-  RangeInputElement() : this._(null);
-  RangeInputElement._(Document ownerDocument) : super._(ownerDocument, "range");
-}
-
-class InputElement extends HtmlElement
-    with _TextInputElementMixin
-    implements
-        HiddenInputElement,
-        SearchInputElement,
-        TextInputElement,
-        UrlInputElement,
-        TelephoneInputElement,
-        EmailInputElement,
-        PasswordInputElement,
-        DateInputElement,
-        MonthInputElement,
-        WeekInputElement,
-        TimeInputElement,
-        LocalDateTimeInputElement,
-        NumberInputElement,
-        RangeInputElement,
-        CheckboxInputElement,
-        RadioButtonInputElement,
-        FileUploadInputElement,
-        SubmitButtonInputElement,
-        ImageButtonInputElement,
-        ResetButtonInputElement,
-        ButtonInputElement {
-  factory InputElement({String type}) {
-    InputElement e = InputElement._(null);
-    e.type = type;
-    return e;
-  }
-
-  InputElement._(Document ownerDocument) : super._(ownerDocument, "input");
-
-  String accept;
-
-  String alt;
-
-  String autocapitalize;
-
-  String autocomplete;
-
-  bool autofocus;
-
-  String capture;
-
-  bool checked;
-
-  bool defaultChecked;
-
-  String defaultValue;
-
-  String dirName;
-
-  bool disabled;
-
-  List<File> files;
-
-  FormElement form;
-
-  String formAction;
-
-  String formEnctype;
-
-  String formMethod;
-
-  bool formNoValidate;
-
-  String formTarget;
-
-  int height;
-
-  bool incremental;
-
-  bool indeterminate;
-
-  List<Node> labels;
-
-  HtmlElement list;
-
-  String max;
-
-  int maxLength;
-
-  String min;
-
-  int minLength;
-
-  bool multiple;
-
-  String name;
-
-  String pattern;
-
-  String placeholder;
-
-  bool readOnly;
-
-  bool required;
-
-  String selectionDirection;
-
-  int selectionEnd;
-
-  int selectionStart;
-
-  int size;
-
-  String src;
-
-  String step;
-
-  String type;
-
-  String validationMessage;
-
-  ValidityState validity;
-
-  String value;
-
-  DateTime get valueAsDate {
-    throw UnimplementedError();
-  }
-
-  set valueAsDate(DateTime value) {
-    throw UnimplementedError();
-  }
+  int get minLength;
+  String get pattern;
+  bool get required;
 
   @override
-  Element _newInstance(Document ownerDocument) => InputElement._(ownerDocument);
+  bool checkValidity() => _checkValidity(value);
 
-  num valueAsNumber;
-
-  @SupportedBrowser(SupportedBrowser.CHROME)
-  @SupportedBrowser(SupportedBrowser.SAFARI)
-  List<Entry> entries;
-
-  @SupportedBrowser(SupportedBrowser.CHROME)
-  @SupportedBrowser(SupportedBrowser.SAFARI)
-  bool directory;
-
-  int width;
-
-  bool willValidate;
-
-  bool checkValidity() {
-    throw UnimplementedError();
+  bool _checkValidity(String value) {
+    if (value == null) return !required;
+    final minLength = this.minLength;
+    if (minLength is int && minLength > value.length) {
+      return false;
+    }
+    final maxLength = this.minLength;
+    if (maxLength is int && maxLength < value.length) {
+      return false;
+    }
+    final regExp = this._getRegExp();
+    if (regExp != null && !regExp.hasMatch(value)) {
+      return false;
+    }
+    return true;
   }
 
-  bool reportValidity() {
-    throw UnimplementedError();
+  RegExp _getRegExp() {
+    final pattern = this.pattern;
+    if (pattern == null) {
+      return null;
+    }
+    var regExp = this._patternRegExp;
+    if (regExp != null && pattern == regExp.pattern) {
+      return regExp;
+    }
+    regExp = RegExp(pattern);
+    _patternRegExp = regExp;
+    return regExp;
   }
-
-  void select() {}
-
-  void setCustomValidity(String error) {}
-
-  void setRangeText(String replacement,
-      {int start, int end, String selectionMode}) {}
-
-  void setSelectionRange(int start, int end, [String direction]) {}
-
-  void stepDown([int n]) {}
-
-  void stepUp([int n]) {}
 }

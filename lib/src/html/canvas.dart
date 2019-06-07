@@ -1,24 +1,78 @@
+/*
+Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
+  https://github.com/dart-lang/sdk/tree/master/tools/dom
+
+The source code adopted from 'dart:html' had the following license:
+
+  Copyright 2012, the Dart project authors. All rights reserved.
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of Google Inc. nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 part of universal_html;
 
-abstract class CanvasGradient {}
+abstract class CanvasGradient {
+  void addColorStop(num offset, String color);
+}
 
 abstract class CanvasImageSource {}
 
 abstract class CanvasPattern {}
 
-abstract class CanvasRenderingContext {}
+abstract class CanvasRenderingContext {
+  CanvasElement get canvas;
+}
 
 abstract class CanvasRenderingContext2D extends _CanvasRenderingContext2DBase {
   final CanvasElement canvas;
 
-  @deprecated
-  CanvasRenderingContext2D.constructor(this.canvas);
-
-  factory CanvasRenderingContext2D._(CanvasElement element) =>
-      HtmlDriver.current.newCanvasRenderingContext2D(element);
+  /// IMPORTANT: Not part of 'dart:html' API.
+  CanvasRenderingContext2D.internal(this.canvas);
 }
 
-abstract class ImageData {}
+class ImageData {
+  ImageData._(this.data, this.width, this.height);
+
+  factory ImageData(data_OR_sw, int sh_OR_sw, [int sh]) {
+    if (data_OR_sw is int) {
+      final width = data_OR_sw;
+      final height = sh_OR_sw;
+      final data = Uint8ClampedList(4 * width * height);
+      return ImageData._(data, width, height);
+    } else {
+      final data = Uint8ClampedList.fromList(data_OR_sw as List);
+      final width = sh_OR_sw;
+      final height = sh ?? data.lengthInBytes ~/ (width * 4);
+      return ImageData._(data, width, height);
+    }
+  }
+
+  final Uint8ClampedList data;
+  final int height;
+  final int width;
+}
 
 abstract class OffscreenCanvas extends EventTarget {
   final int height;
@@ -62,7 +116,35 @@ abstract class Path2D {
   void rect(num x, num y, num width, num height);
 }
 
-abstract class TextMetrics {}
+abstract class TextMetrics {
+  factory TextMetrics._() {
+    throw UnimplementedError();
+  }
+
+  final num actualBoundingBoxAscent;
+
+  final num actualBoundingBoxDescent;
+
+  final num actualBoundingBoxLeft;
+
+  final num actualBoundingBoxRight;
+
+  final num alphabeticBaseline;
+
+  final num emHeightAscent;
+
+  final num emHeightDescent;
+
+  final num fontBoundingBoxAscent;
+
+  final num fontBoundingBoxDescent;
+
+  final num hangingBaseline;
+
+  final num ideographicBaseline;
+
+  final num width;
+}
 
 abstract class _CanvasRenderingContext2DBase implements CanvasRenderingContext {
   Matrix currentTransform;

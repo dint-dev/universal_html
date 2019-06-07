@@ -1,9 +1,8 @@
-import 'package:test/test.dart';
-import 'package:universal_html/html.dart';
+part of main_test;
 
 final throwsDomException = throwsA(isA<DomException>());
 
-void main() {
+void _testElement() {
   group("Element:", () {
     test("'Element.tag' fails if the name is invalid", () {
       const invalidChars = ["<", ">", '"', " ", "&"];
@@ -235,7 +234,8 @@ void main() {
         expect(e.outerHtml, isNot(contains(v)));
       });
 
-      test("style.setProperty(...), changes result of element.getAttribute", () {
+      test("style.setProperty(...), changes result of element.getAttribute",
+          () {
         final e = Element.tag("a");
         e.style.setProperty("color", "blue");
         expect(e.getAttribute("style"), contains("blue"));
@@ -247,7 +247,9 @@ void main() {
         expect(e.attributes["style"], contains("blue"));
       });
 
-      test("style.setProperty(...), changes result of element.attributes, obtained before setting style", () {
+      test(
+          "style.setProperty(...), changes result of element.attributes, obtained before setting style",
+          () {
         final e = Element.tag("a");
         final attributes = e.attributes;
         e.style.setProperty("color", "blue");
@@ -260,7 +262,9 @@ void main() {
         expect(e.outerHtml, contains("blue"));
       });
 
-      test("style.getProperty('font-size') returns non-quoted value when value is '90px'", () {
+      test(
+          "style.getProperty('font-size') returns non-quoted value when value is '90px'",
+          () {
         final e = Element.tag("a");
         e.style.setProperty("font-size", "90px");
         expect(e.style.getPropertyValue("font-size"), "90px");
@@ -280,16 +284,19 @@ void main() {
         }
       });
 
-      test("element.attributes['style']='color: blue', changes element.style", () {
-          final e = Element.tag("a");
-          final value = "color: blue";
-          e.attributes["style"] = value;
-          expect(e.getAttribute("style"), value);
-          expect(e.attributes["style"], value);
-          expect(e.style.color, "blue");
+      test("element.attributes['style']='color: blue', changes element.style",
+          () {
+        final e = Element.tag("a");
+        final value = "color: blue";
+        e.attributes["style"] = value;
+        expect(e.getAttribute("style"), value);
+        expect(e.attributes["style"], value);
+        expect(e.style.color, "blue");
       });
 
-      test("element.attributes['style']='color: blue; font-size: 2em', changes element.style", () {
+      test(
+          "element.attributes['style']='color: blue; font-size: 2em', changes element.style",
+          () {
         final e = Element.tag("a");
         final value = "color: blue; font-size: 2em";
         e.attributes["style"] = value;

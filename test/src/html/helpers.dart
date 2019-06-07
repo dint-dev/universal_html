@@ -1,7 +1,6 @@
-import 'package:test/test.dart';
-import 'package:universal_html/html.dart';
+part of main_test;
 
-void temporarilyRemoveChildrenFromDocument({Node root}) {
+void _temporarilyRemoveChildrenFromDocument({Node root}) {
   // Save nodes
   root ??= document;
 
@@ -23,12 +22,12 @@ void temporarilyRemoveChildrenFromDocument({Node root}) {
   });
 }
 
-void expectSaneDocument(Document document) {
-  expectSaneTree(document, expectedOwnerDocument: document);
+void _expectSaneDocument(Document document) {
+  _expectSaneTree(document, expectedOwnerDocument: document);
 }
 
 /// Does sanity checks on the tree.
-void expectSaneTree(Node node,
+void _expectSaneTree(Node node,
     {Document expectedOwnerDocument, Node expectedParentNode}) {
   // 'ownerDocument'
   if (expectedOwnerDocument != null && node is! Document) {
@@ -80,7 +79,7 @@ void expectSaneTree(Node node,
   Node previousChild;
   Node nextChild = node.firstChild;
   while (nextChild != null) {
-    expectSaneTree(nextChild,
+    _expectSaneTree(nextChild,
         expectedOwnerDocument: expectedOwnerDocument, expectedParentNode: node);
     previousChild = nextChild;
     nextChild = nextChild.nextNode;

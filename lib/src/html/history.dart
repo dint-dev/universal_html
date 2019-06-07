@@ -1,9 +1,43 @@
+/*
+Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
+  https://github.com/dart-lang/sdk/tree/master/tools/dom
+
+The source code adopted from 'dart:html' had the following license:
+
+  Copyright 2012, the Dart project authors. All rights reserved.
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of Google Inc. nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 part of universal_html;
 
 class History {
   final List<_HistoryState> _stack = [
     _HistoryState(null, "", window.location.href),
   ];
+
   int _index = 0;
   dynamic _state;
 
@@ -11,7 +45,8 @@ class History {
     throw UnimplementedError();
   }
 
-  History._();
+  /// IMPORTANT: Not part of 'dart:html' API.
+  History.internal();
 
   int get length => _stack.length;
 
@@ -58,7 +93,7 @@ class History {
   void _setStateAndDispatchEvent(_HistoryState state) {
     this._state = state.data;
     window.location.replace(state.url);
-    window.dispatchEvent(PopStateEvent(state: state.data));
+    window.dispatchEvent(PopStateEvent.internal(state: state.data));
   }
 
   static String _resolve(String url) {
@@ -71,6 +106,8 @@ class History {
 }
 
 class Location extends Object with _UrlBase {
+  final HtmlDriver _htmlDriver;
+
   List<String> ancestorOrigins;
 
   /// For [_UrlBase]
@@ -79,8 +116,17 @@ class Location extends Object with _UrlBase {
 
   String _href;
 
-  Location._() {
-    replace("http://localhost/");
+  /// Did we receive a real URL in the constructor?
+  bool _isRealUri = true;
+
+  /// IMPORTANT: Not part of 'dart:html' API.
+  Location.internal(this._htmlDriver, {Uri uri}) {
+    if (uri == null) {
+      this._isRealUri = false;
+      uri = Uri(scheme: "https", host: "localhost", path: "/");
+    }
+    this._uri = uri;
+    this._href = uri.toString();
   }
 
   String get href => _href;
@@ -97,7 +143,11 @@ class Location extends Object with _UrlBase {
     replace(url);
   }
 
-  void reload() {}
+  void reload() {
+    if (_isRealUri) {
+      _htmlDriver.setDocumentFromUri(_uri);
+    }
+  }
 
   void replace(String url) {
     this.href = url;

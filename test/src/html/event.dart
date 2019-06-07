@@ -1,9 +1,6 @@
-import 'dart:async';
+part of main_test;
 
-import 'package:test/test.dart';
-import 'package:universal_html/html.dart';
-
-void main() {
+void _testEvents() {
   group("events:", () {
     List<String> registerStepListeners(List<Element> elements,
         {Element expectedTarget}) {

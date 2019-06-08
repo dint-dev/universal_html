@@ -4,6 +4,7 @@ import 'package:universal_html/src/html.dart';
 import 'package:universal_html/src/svg.dart';
 import 'package:universal_html/driver.dart';
 
+/// Parses DOM trees.
 class DomParserDriver {
   static final NodeValidatorBuilder _defaultValidator =
       NodeValidatorBuilder.common();

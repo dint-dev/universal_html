@@ -1,4 +1,4 @@
-/// Sniffs MIME type of content.
+/// Suggests MIME type based on the content.
 class ContentTypeSniffer {
   static final RegExp _htmlRegExp = RegExp(
     r"^(:?<!DOCTYPE html[ >]|<html[ >])",

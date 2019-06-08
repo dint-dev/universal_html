@@ -1,17 +1,16 @@
 import 'package:collection/collection.dart';
 import 'package:universal_html/src/html.dart';
 
-/// Holds Content Security Policy (CSP).
-///
-/// Instances can be built with [CspBuilder].
+/// An immutable instance of [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP).
 class Csp {
-  static final Csp allowAny = Csp._(<String, List<String>>{
-    "default-src": ["*"]
-  });
-  static final Csp allowSelf = Csp._(<String, List<String>>{
-    "default-src": ["'self'"]
-  });
-  static final Csp allowNone = Csp._(<String, List<String>>{});
+  /// CSP declaration "default-src: *".
+  static final Csp allowAny = Csp.parse("default-src: *");
+
+  /// CSP declaration "default-src: 'self'".
+  static final Csp allowSelf = Csp.parse("default-src: 'self'");
+
+  /// CSP declaration "default-src: 'none'".
+  static final Csp allowNone = Csp.parse("default-src: 'none'");
 
   final Map<String, List<String>> _rules;
 

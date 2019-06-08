@@ -1,3 +1,13 @@
+## 1.0.6
+
+* Fixed various bugs.
+* Added _browser/html.dart_ and related documentation.
+* Added _ServerSideRenderer_.
+
+## 1.0.5
+
+* Fixed a dependency.
+
 ## 1.0.4
 
 * Fixed various bugs and added dart:html APIs.

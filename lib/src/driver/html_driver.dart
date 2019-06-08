@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:universal_html/src/html.dart';
-import 'package:universal_io/io.dart';
+import 'package:universal_io/io.dart' show HttpClient, HttpClientResponse;
 import 'package:zone_local/zone_local.dart';
 
 import 'content_type_sniffer.dart';
@@ -11,7 +11,7 @@ import 'dom_parser_driver.dart';
 
 // TODO: Refactoring: Split into two classes ("Browser" and "HtmlDriver")?
 
-/// Browser window internal implementation.
+/// Simulates a browser window.
 class HtmlDriver {
   static final ZoneLocal<HtmlDriver> zoneLocal =
       ZoneLocal<HtmlDriver>(defaultValue: HtmlDriver());

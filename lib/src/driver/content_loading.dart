@@ -1,17 +1,18 @@
 import 'package:meta/meta.dart';
 import 'package:universal_html/src/html.dart';
 
-class Resource {
+/// A resource (such as image) described by an element in a DOM tree.
+class HtmlResource {
   final Uri uri;
   final String cspType;
   final Element element;
 
-  Resource(this.uri, {@required this.cspType, this.element});
+  HtmlResource(this.uri, {@required this.cspType, this.element});
 }
 
-class RsourceLoader {
-  /// Finds loadable subresources in a DOM tree.
-  Iterable<Resource> findResourcesInDocument(Node root) sync* {
+/// Loads resources such as images.
+class HtmlResourceLoader {
+  Iterable<HtmlResource> findResourcesInDocument(Node root) sync* {
     var node = root;
     while (true) {
       final contentReference = _contentReferenceFromNode(node);
@@ -34,13 +35,13 @@ class RsourceLoader {
     }
   }
 
-  Resource _contentReferenceFromNode(Node node) {
+  HtmlResource _contentReferenceFromNode(Node node) {
     if (node is IFrameElement) {
       final uri = Uri.tryParse(node.src);
       if (uri == null) {
         return null;
       }
-      return Resource(
+      return HtmlResource(
         uri,
         cspType: "iframe-src",
         element: node,
@@ -51,7 +52,7 @@ class RsourceLoader {
       if (uri == null) {
         return null;
       }
-      return Resource(
+      return HtmlResource(
         uri,
         cspType: "image-src",
         element: node,
@@ -62,7 +63,7 @@ class RsourceLoader {
       if (uri == null) {
         return null;
       }
-      return Resource(
+      return HtmlResource(
         uri,
         cspType: "script-src",
         element: node,

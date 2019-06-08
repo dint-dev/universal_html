@@ -1,32 +1,54 @@
 [![Pub Package](https://img.shields.io/pub/v/universal_html.svg)](https://pub.dartlang.org/packages/universal_html)
 # Introduction
-This package implements _dart:html_ in all platforms (Flutter, VM, Node.JS, browser, etc.).
-
-In browser, _'package:universal_html'_ exports _'dart:html'_. In other words, using the package has
-almost no downsides. Your _dart2js_ build sizes won't grow.
+Cross-platform _dart:html_ that works in browser, Flutter, Dart VM, and Node.JS.
  
 The project is licensed under the [MIT license](LICENSE).
 
 ## Issues?
-  * Please report issues at the [Github issue tracker](https://github.com/terrier989/dart-universal_html/issues).
-  * Have a fix? Just create a pull request in Github.
-    * Frequent contributors will be invited to become project administrators.
-
+  * Have a bug report or feature request? Go to [Github issue tracker](https://github.com/terrier989/dart-universal_html/issues).
+  * Have a fix? Just [create a pull request](https://github.com/terrier989/dart-universal_html/issues).
+  * API documentation can be found [here](https://pub.dev/documentation/universal_html/latest/).
+  
 ### Similar projects
-  * [universal_io](https://pub.dev/packages/universal_io) (cross-platform implementation of
-    _dart:io_)
+  * [universal_io](https://pub.dev/packages/universal_io) (cross-platform _dart:io_)
   * [jsdom](https://www.npmjs.com/package/jsdom) (DOM implementation in Javascript).
 
 # Getting started
+## 1. Add dependency
 In `pubspec.yaml`:
 ```yaml
 name: example
 dependencies:
-  universal_html: ^1.0.4
+  universal_html: ^1.0.6
 ```
 
 Now you can replace usage of "dart:html" with "package:universal_html/html.dart".
 
+## 2. Choose library
+### Recommended
+```dart
+import 'package:universal_html/html.dart';
+```
+
+This library exports our implementation by default. The library exports _dart:html_ only in
+browsers.
+
+Getting warnings? If you exchange DOM elements with packages that use _dart:html_, your IDE/compiler
+may produce type warnings ("universal_html Element is not dart:html Element"). You can eliminate the
+warnings by using the package below.
+
+### Library that exports dart:html by default
+```dart
+import 'package:universal_html/browser/html.dart';
+```
+This library exports _dart:html_ by default. The library exports our implementation only when
+_dart:io_ is available.
+
+If you use this library:
+  * Dart tools may mistakenly think that your package is not compatible with VM/Flutter.
+  * Your package will not compile in Node.JS.
+
+## 3. That's it!
 ```dart
 import "package:universal_html/html.dart";
 
@@ -47,40 +69,47 @@ void main() {
 }
 ```
 
-# Controlling "browser instance"
-  * Library _"package:universal_html/driver.dart"_ lets you control the "browser instance".
-  * You can manipulate global variables like _document_, _navigator_ and _window_:
-    * Want to have zone-local values? Use _HtmlIsolate.zoneLocal_.
-    * Want to reset the values to defaults (after a test)? Use _HtmlIsolate.current.setDocument(null)_.
-
-## Example
+# Manual
+## Server-side rendering
 ```dart
 import 'package:universal_html/driver.dart';
 import 'package:universal_html/html.dart';
 
-main() async {
-  // Construct a driver
-  final driver = new HtmlDriver(userAgent:"My scraper");
-  
-  // Load a document.
-  // Content type will be determined using HTTP headers or content sniffing.
-  await driver.setDocumentFromUri(Uri.parse("https://example.com/"));
-  
-  // Set as default instance
-  HtmlDriver.zoneLocal.freezeDefault(driver);
-  
-  // Print some node
-  print(querySelector(".results:first").text);
+void main() {
+  final renderer = new ServerSideRenderer(webAppMain);
+  renderer.bind("localhost", 12345);
+}
+
+void webAppMain() {
+  document.body.appendText("Hello world!");
 }
 ```
 
-# Implemented APIs
-## Principles
+## Creating and using browser simulators
+```dart
+import 'package:universal_html/driver.dart';
+import 'package:universal_html/html.dart';
+
+Future main() async {
+  // Construct a driver
+  final driver = new HtmlDriver(userAgent:"My Hacker News bot");
+  
+  // Load a document.
+  await driver.setDocumentFromUri(Uri.parse("https://news.ycombinator.com/"));
+  
+  // Select top story
+  final topStoryTitle = driver.document.querySelectorAll(".athing > .title").first.text;
+  print("Top Hacker News story is: ${topStoryTitle}");
+}
+```
+
+## Implemented APIs
+### Principles
   * Our goal is that the implemented APIs behave identically to _dart:html_ code running in Chrome.
   * Non-implemented APIs either throw `UnimplementedError` or fail silently.
   * We accept pull requests for more API implementations!
 
-## Incomplete list of implemented APIs
+### An incomplete list
   * __Document nodes__
     * All the core classes (_Node_, _Element_, etc.)
     * Much of the element subclasses (_CheckboxInputElement_, _ResetButtonElement_, etc.)

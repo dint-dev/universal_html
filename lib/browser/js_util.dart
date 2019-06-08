@@ -1,5 +1,4 @@
-/// Implements _dart:js_util_ in VM and Flutter. In browser, exports
-/// _"dart:js_util"_.
+/// Exports _dart:js_util_. In VM and Flutter, exports our implementation.
 ///
 /// # Introduction
 ///
@@ -8,7 +7,6 @@
 /// methods when the same effect cannot be achieved with @JS annotations.
 /// These methods would be extension methods on JSObject if Dart supported
 /// extension methods.
-///
-library vm.js_util;
+library browser.js_util;
 
-export 'src/js_util.dart' if (dart.library.js_util) 'dart:js_util';
+export 'dart:js_util' if (dart.library.io) '../js_util.dart';

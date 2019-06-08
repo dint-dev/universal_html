@@ -1,5 +1,4 @@
-/// Implements _dart:html_ in VM and Flutter. In browser, exports
-/// _"dart:html"_.
+/// Exports _dart:html_. In VM and Flutter, exports our implementation.
 ///
 /// # Introduction
 ///
@@ -13,6 +12,6 @@
 /// DOM types.
 ///
 /// For information on writing web apps with Dart, see https://webdev.dartlang.org.
-library vm.html;
+library browser.html;
 
-export 'src/html.dart' if (dart.library.html) 'dart:html';
+export 'dart:html' if (dart.library.io) '../html.dart';

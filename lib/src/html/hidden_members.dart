@@ -3,7 +3,7 @@ part of universal_html;
 // IMPORTANT: This is NOT exported by 'package:universal/html.dart'.
 // The method declared here so it will have access to private members.
 //
-// The method is exported by 'package:universal/driver.dart'.
+// The method is exported by 'package:universal/html_driver.dart'.
 /// Produces string representation of DOM tree.
 String nodeToString(Node node) {
   if (node == null) {
@@ -17,7 +17,7 @@ String nodeToString(Node node) {
 // IMPORTANT: This is NOT exported by 'package:universal/html.dart'.
 // The method declared here so it will have access to private members.
 //
-// The method is exported by 'package:universal/driver.dart'.
+// The method is exported by 'package:universal/html_driver.dart'.
 /// Contains data for layout queries.
 ///
 /// Elements request this object from [HtmlDriver],  which can use [setAttached]

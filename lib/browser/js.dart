@@ -1,4 +1,4 @@
-/// Implements _dart:js_ in VM and Flutter. In browser, exports _"dart:js"_.
+/// Exports _dart:js_. In VM and Flutter, exports our implementation.
 ///
 /// # Introduction
 ///
@@ -78,6 +78,6 @@
 ///
 ///     var jsArray = new JsObject.jsify([1, 2, 3]);=
 ///
-library vm.js;
+library browser.js;
 
-export 'src/js.dart' if (dart.library.js) 'dart:js';
+export 'dart:js' if (dart.library.io) '../js.dart';

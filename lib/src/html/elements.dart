@@ -221,6 +221,24 @@ class CheckboxInputElement extends InputElementBase {
       CheckboxInputElement._(ownerDocument);
 }
 
+class ContentElement extends HtmlElement {
+  static bool get supported => false;
+
+  String select;
+
+  factory ContentElement() => ContentElement._(null);
+
+  ContentElement._(Document ownerDocument) : super._(ownerDocument, "content");
+
+  List<Node> getDistributedNodes() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Element _newInstance(Document ownerDocument) =>
+      ContentElement._(ownerDocument);
+}
+
 class DataListElement extends HtmlElement {
   factory DataListElement() => DataListElement._(null);
 
@@ -264,6 +282,32 @@ class DetailsElement extends HtmlElement {
   @override
   Element _newInstance(Document ownerDocument) =>
       DetailsElement._(ownerDocument);
+}
+
+class DialogElement extends HtmlElement {
+  bool open;
+
+  String returnValue;
+
+  factory DialogElement() => DialogElement._(null);
+
+  DialogElement._(Document ownerDocument) : super._(ownerDocument, "dialog");
+
+  void close([String returnValue]) {
+    // Ignore
+  }
+
+  void show() {
+    // Ignore
+  }
+
+  void showModal() {
+    // Ignore
+  }
+
+  @override
+  Element _newInstance(Document ownerDocument) =>
+      DialogElement._(ownerDocument);
 }
 
 class DivElement extends HtmlElement {
@@ -1335,6 +1379,12 @@ class SlotElement extends HtmlElement {
 
   SlotElement._(Document ownerDocument) : super._(ownerDocument, "slot");
 
+  String get name => _getAttribute("name");
+
+  set name(String value) {
+    _setAttribute("name", value);
+  }
+
   @override
   Element _newInstance(Document ownerDocument) => SlotElement._(ownerDocument);
 }
@@ -1601,14 +1651,37 @@ class TelephoneInputElement extends TextInputElementBase
 }
 
 class TemplateElement extends HtmlElement {
+  /// Checks if this type is supported on the current platform.
+  static bool get supported => Element.isTagSupported('template');
+
   factory TemplateElement() => TemplateElement._(null);
 
   TemplateElement._(Document ownerDocument)
       : super._(ownerDocument, "template");
 
-  Element get content => this.childNodes.firstWhere(
-      (child) => child is Element && child._lowerCaseTagName == "content",
-      orElse: () => null);
+  DocumentFragment get content {
+    throw UnimplementedError();
+  }
+
+  /// An override to place the contents into content rather than as child nodes.
+  ///
+  /// See also:
+  ///
+  /// * <https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#innerhtml-on-templates>
+  @override
+  void setInnerHtml(
+    String html, {
+    NodeValidator validator,
+    NodeTreeSanitizer treeSanitizer,
+  }) {
+    text = null;
+    var fragment = createFragment(
+      html,
+      validator: validator,
+      treeSanitizer: treeSanitizer,
+    );
+    content.append(fragment);
+  }
 
   @override
   Element _newInstance(Document ownerDocument) =>

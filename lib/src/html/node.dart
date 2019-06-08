@@ -539,7 +539,21 @@ abstract class _ElementOrDocument implements Node, ParentNode {
     return all.first;
   }
 
-  List<Element> querySelectorAll<T extends Element>(String input) {
+  /// Finds all descendant elements of this document that match the specified
+  /// group of selectors.
+  ///
+  /// Unless your webpage contains multiple documents, the top-level
+  /// [querySelectorAll]
+  /// method behaves the same as this method, so you should use it instead to
+  /// save typing a few characters.
+  ///
+  /// [selectors] should be a string using CSS selector syntax.
+  ///
+  ///     var items = document.querySelectorAll('.itemClassName');
+  ///
+  /// For details about CSS selector syntax, see the
+  /// [CSS selector specification](http://www.w3.org/TR/css3-selectors/).
+  ElementList<T> querySelectorAll<T extends Element>(String input) {
     if (input == null) {
       throw ArgumentError.notNull(input);
     }
@@ -550,7 +564,7 @@ abstract class _ElementOrDocument implements Node, ParentNode {
         result.add(element);
       }
     });
-    return result;
+    return _FrozenElementList<T>._wrap(result);
   }
 
   void _forEachTreeElement(void f(Element element)) {
@@ -588,3 +602,8 @@ class _NodeMissingParent extends StateError {
 }
 
 class Range {}
+
+/// For accessing underlying node lists, for dart:js interop.
+abstract class NodeListWrapper {
+  List<Node> get rawList;
+}

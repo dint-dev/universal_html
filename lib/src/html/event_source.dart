@@ -34,14 +34,26 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html;
 
 class EventSource extends EventTarget {
+  /// Static factory designed to expose `error` events to event
+  /// handlers that are not necessarily instances of [EventSource].
+  ///
+  /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<Event> errorEvent =
-      EventStreamProvider<Event>("error");
+      EventStreamProvider<Event>('error');
 
+  /// Static factory designed to expose `message` events to event
+  /// handlers that are not necessarily instances of [EventSource].
+  ///
+  /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<MessageEvent> messageEvent =
-      EventStreamProvider<MessageEvent>("message");
+      EventStreamProvider<MessageEvent>('message');
 
+  /// Static factory designed to expose `open` events to event
+  /// handlers that are not necessarily instances of [EventSource].
+  ///
+  /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<Event> openEvent =
-      EventStreamProvider<Event>("open");
+      EventStreamProvider<Event>('open');
 
   static const int CLOSED = 2;
   static const int CONNECTING = 0;

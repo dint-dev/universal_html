@@ -35,25 +35,70 @@ part of universal_html;
 
 HtmlDocument get document => HtmlDriver.current.document;
 
-/// Outside the browser, throws [UnimplementedError].
+/// Finds the first descendant element of this document that matches the
+/// specified group of selectors.
+///
+/// Unless your webpage contains multiple documents, the top-level
+/// [querySelector]
+/// method behaves the same as this method, so you should use it instead to
+/// save typing a few characters.
+///
+/// [selectors] should be a string using CSS selector syntax.
+///
+///     var element1 = document.querySelector('.className');
+///     var element2 = document.querySelector('#id');
+///
+/// For details about CSS selector syntax, see the
+/// [CSS selector specification](http://www.w3.org/TR/css3-selectors/).
 T querySelector<T extends Element>(String s) => document.querySelector(s);
 
-/// Outside the browser, throws [UnimplementedError].
-List<T> querySelectorAll<T extends Element>(String s) =>
-    document.querySelectorAll(s);
+/// Finds all descendant elements of this document that match the specified
+/// group of selectors.
+///
+/// Unless your webpage contains multiple documents, the top-level
+/// [querySelectorAll]
+/// method behaves the same as this method, so you should use it instead to
+/// save typing a few characters.
+///
+/// [selectors] should be a string using CSS selector syntax.
+///
+///     var items = document.querySelectorAll('.itemClassName');
+///
+/// For details about CSS selector syntax, see the
+/// [CSS selector specification](http://www.w3.org/TR/css3-selectors/).
+ElementList<T> querySelectorAll<T extends Element>(String s) =>
+    document.querySelectorAll<T>(s);
 
 abstract class Document extends Node
     with _ElementOrDocument, DocumentOrShadowRoot, _DocumentOrFragment {
-  static const EventStreamProvider<Event> readyStateChangeEvent =
-      EventStreamProvider<Event>("readystatechange");
+  static const EventStreamProvider<Event> pointerLockChangeEvent =
+      EventStreamProvider<Event>('pointerlockchange');
 
+  static const EventStreamProvider<Event> pointerLockErrorEvent =
+      EventStreamProvider<Event>('pointerlockerror');
+
+  /// Static factory designed to expose `readystatechange` events to event
+  /// handlers that are not necessarily instances of [Document].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<Event> readyStateChangeEvent =
+      EventStreamProvider<Event>('readystatechange');
+
+  /// Static factory designed to expose `securitypolicyviolation` events to event
+  /// handlers that are not necessarily instances of [Document].
+  ///
+  /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<SecurityPolicyViolationEvent>
       securityPolicyViolationEvent =
       EventStreamProvider<SecurityPolicyViolationEvent>(
-          "securitypolicyviolation");
+          'securitypolicyviolation');
 
+  /// Static factory designed to expose `selectionchange` events to event
+  /// handlers that are not necessarily instances of [Document].
+  ///
+  /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<Event> selectionChangeEvent =
-      EventStreamProvider<Event>("selectionchange");
+      EventStreamProvider<Event>('selectionchange');
 
   final HtmlDriver _htmlDriver;
   final String contentType;
@@ -67,19 +112,227 @@ abstract class Document extends Node
   /// Outside the browser, returns null.
   Element get activeElement => null;
 
+  Element get documentElement {
+    var node = firstChild;
+    while (node != null) {
+      if (node is Element) {
+        return node;
+      }
+      node = node.nextNode;
+    }
+    return null;
+  }
+
   DomImplementation get implementation => DomImplementation._(_htmlDriver);
 
   @override
   int get nodeType => Node.DOCUMENT_NODE;
 
-  ElementStream<Event> get onReadyStateChange =>
-      readyStateChangeEvent.forTarget(this);
+  /// Stream of `abort` events handled by this [Document].
+  Stream<Event> get onAbort => Element.abortEvent.forTarget(this);
 
-  ElementStream<SecurityPolicyViolationEvent> get onSecurityPolicyViolation =>
+  /// Stream of `beforecopy` events handled by this [Document].
+  Stream<Event> get onBeforeCopy => Element.beforeCopyEvent.forTarget(this);
+
+  /// Stream of `beforecut` events handled by this [Document].
+  Stream<Event> get onBeforeCut => Element.beforeCutEvent.forTarget(this);
+
+  /// Stream of `beforepaste` events handled by this [Document].
+  Stream<Event> get onBeforePaste => Element.beforePasteEvent.forTarget(this);
+
+  /// Stream of `blur` events handled by this [Document].
+  Stream<Event> get onBlur => Element.blurEvent.forTarget(this);
+
+  Stream<Event> get onCanPlay => Element.canPlayEvent.forTarget(this);
+
+  Stream<Event> get onCanPlayThrough =>
+      Element.canPlayThroughEvent.forTarget(this);
+
+  /// Stream of `change` events handled by this [Document].
+  Stream<Event> get onChange => Element.changeEvent.forTarget(this);
+
+  /// Stream of `click` events handled by this [Document].
+  Stream<MouseEvent> get onClick => Element.clickEvent.forTarget(this);
+
+  /// Stream of `contextmenu` events handled by this [Document].
+  Stream<MouseEvent> get onContextMenu =>
+      Element.contextMenuEvent.forTarget(this);
+
+  /// Stream of `copy` events handled by this [Document].
+  Stream<ClipboardEvent> get onCopy => Element.copyEvent.forTarget(this);
+
+  /// Stream of `cut` events handled by this [Document].
+  Stream<ClipboardEvent> get onCut => Element.cutEvent.forTarget(this);
+
+  /// Stream of `doubleclick` events handled by this [Document].
+  @DomName('Document.ondblclick')
+  Stream<Event> get onDoubleClick => Element.doubleClickEvent.forTarget(this);
+
+  /// Stream of `drag` events handled by this [Document].
+  Stream<MouseEvent> get onDrag => Element.dragEvent.forTarget(this);
+
+  /// Stream of `dragend` events handled by this [Document].
+  Stream<MouseEvent> get onDragEnd => Element.dragEndEvent.forTarget(this);
+
+  /// Stream of `dragenter` events handled by this [Document].
+  Stream<MouseEvent> get onDragEnter => Element.dragEnterEvent.forTarget(this);
+
+  /// Stream of `dragleave` events handled by this [Document].
+  Stream<MouseEvent> get onDragLeave => Element.dragLeaveEvent.forTarget(this);
+
+  /// Stream of `dragover` events handled by this [Document].
+  Stream<MouseEvent> get onDragOver => Element.dragOverEvent.forTarget(this);
+
+  /// Stream of `dragstart` events handled by this [Document].
+  Stream<MouseEvent> get onDragStart => Element.dragStartEvent.forTarget(this);
+
+  /// Stream of `drop` events handled by this [Document].
+  Stream<MouseEvent> get onDrop => Element.dropEvent.forTarget(this);
+
+  Stream<Event> get onDurationChange =>
+      Element.durationChangeEvent.forTarget(this);
+
+  Stream<Event> get onEmptied => Element.emptiedEvent.forTarget(this);
+
+  Stream<Event> get onEnded => Element.endedEvent.forTarget(this);
+
+  /// Stream of `error` events handled by this [Document].
+  Stream<Event> get onError => Element.errorEvent.forTarget(this);
+
+  /// Stream of `focus` events handled by this [Document].
+  Stream<Event> get onFocus => Element.focusEvent.forTarget(this);
+
+  /// Stream of `fullscreenchange` events handled by this [Document].
+  Stream<Event> get onFullscreenChange =>
+      Element.fullscreenChangeEvent.forTarget(this);
+
+  /// Stream of `fullscreenerror` events handled by this [Document].
+  Stream<Event> get onFullscreenError =>
+      Element.fullscreenErrorEvent.forTarget(this);
+
+  /// Stream of `input` events handled by this [Document].
+  Stream<Event> get onInput => Element.inputEvent.forTarget(this);
+
+  /// Stream of `invalid` events handled by this [Document].
+  Stream<Event> get onInvalid => Element.invalidEvent.forTarget(this);
+
+  /// Stream of `keydown` events handled by this [Document].
+  Stream<KeyboardEvent> get onKeyDown => Element.keyDownEvent.forTarget(this);
+
+  /// Stream of `keypress` events handled by this [Document].
+  Stream<KeyboardEvent> get onKeyPress => Element.keyPressEvent.forTarget(this);
+
+  /// Stream of `keyup` events handled by this [Document].
+  Stream<KeyboardEvent> get onKeyUp => Element.keyUpEvent.forTarget(this);
+
+  /// Stream of `load` events handled by this [Document].
+  Stream<Event> get onLoad => Element.loadEvent.forTarget(this);
+
+  Stream<Event> get onLoadedData => Element.loadedDataEvent.forTarget(this);
+
+  Stream<Event> get onLoadedMetadata =>
+      Element.loadedMetadataEvent.forTarget(this);
+
+  /// Stream of `mousedown` events handled by this [Document].
+  Stream<MouseEvent> get onMouseDown => Element.mouseDownEvent.forTarget(this);
+
+  /// Stream of `mouseenter` events handled by this [Document].
+  Stream<MouseEvent> get onMouseEnter =>
+      Element.mouseEnterEvent.forTarget(this);
+
+  /// Stream of `mouseleave` events handled by this [Document].
+  Stream<MouseEvent> get onMouseLeave =>
+      Element.mouseLeaveEvent.forTarget(this);
+
+  /// Stream of `mousemove` events handled by this [Document].
+  Stream<MouseEvent> get onMouseMove => Element.mouseMoveEvent.forTarget(this);
+
+  /// Stream of `mouseout` events handled by this [Document].
+  Stream<MouseEvent> get onMouseOut => Element.mouseOutEvent.forTarget(this);
+
+  /// Stream of `mouseover` events handled by this [Document].
+  Stream<MouseEvent> get onMouseOver => Element.mouseOverEvent.forTarget(this);
+
+  /// Stream of `mouseup` events handled by this [Document].
+  Stream<MouseEvent> get onMouseUp => Element.mouseUpEvent.forTarget(this);
+
+  /// Stream of `mousewheel` events handled by this [Document].
+  Stream<WheelEvent> get onMouseWheel =>
+      Element.mouseWheelEvent.forTarget(this);
+
+  /// Stream of `paste` events handled by this [Document].
+  Stream<ClipboardEvent> get onPaste => Element.pasteEvent.forTarget(this);
+
+  Stream<Event> get onPause => Element.pauseEvent.forTarget(this);
+
+  Stream<Event> get onPlay => Element.playEvent.forTarget(this);
+
+  Stream<Event> get onPlaying => Element.playingEvent.forTarget(this);
+
+  Stream<Event> get onPointerLockChange =>
+      pointerLockChangeEvent.forTarget(this);
+
+  Stream<Event> get onPointerLockError => pointerLockErrorEvent.forTarget(this);
+
+  Stream<Event> get onRateChange => Element.rateChangeEvent.forTarget(this);
+
+  /// Stream of `readystatechange` events handled by this [Document].
+  Stream<Event> get onReadyStateChange => readyStateChangeEvent.forTarget(this);
+
+  /// Stream of `reset` events handled by this [Document].
+  Stream<Event> get onReset => Element.resetEvent.forTarget(this);
+
+  Stream<Event> get onResize => Element.resizeEvent.forTarget(this);
+
+  /// Stream of `scroll` events handled by this [Document].
+  Stream<Event> get onScroll => Element.scrollEvent.forTarget(this);
+
+  /// Stream of `search` events handled by this [Document].
+  Stream<Event> get onSearch => Element.searchEvent.forTarget(this);
+
+  /// Stream of `securitypolicyviolation` events handled by this [Document].
+  Stream<SecurityPolicyViolationEvent> get onSecurityPolicyViolation =>
       securityPolicyViolationEvent.forTarget(this);
 
-  ElementStream<Event> get onSelectionChange =>
-      selectionChangeEvent.forTarget(this);
+  Stream<Event> get onSeeked => Element.seekedEvent.forTarget(this);
+
+  Stream<Event> get onSeeking => Element.seekingEvent.forTarget(this);
+
+  /// Stream of `select` events handled by this [Document].
+  Stream<Event> get onSelect => Element.selectEvent.forTarget(this);
+
+  /// Stream of `selectionchange` events handled by this [Document].
+  Stream<Event> get onSelectionChange => selectionChangeEvent.forTarget(this);
+
+  /// Stream of `selectstart` events handled by this [Document].
+  Stream<Event> get onSelectStart => Element.selectStartEvent.forTarget(this);
+
+  Stream<Event> get onStalled => Element.stalledEvent.forTarget(this);
+
+  /// Stream of `submit` events handled by this [Document].
+  Stream<Event> get onSubmit => Element.submitEvent.forTarget(this);
+
+  Stream<Event> get onSuspend => Element.suspendEvent.forTarget(this);
+
+  Stream<Event> get onTimeUpdate => Element.timeUpdateEvent.forTarget(this);
+
+  /// Stream of `touchcancel` events handled by this [Document].
+  Stream<TouchEvent> get onTouchCancel =>
+      Element.touchCancelEvent.forTarget(this);
+
+  /// Stream of `touchend` events handled by this [Document].
+  Stream<TouchEvent> get onTouchEnd => Element.touchEndEvent.forTarget(this);
+
+  /// Stream of `touchmove` events handled by this [Document].
+  Stream<TouchEvent> get onTouchMove => Element.touchMoveEvent.forTarget(this);
+
+  /// Stream of `touchstart` events handled by this [Document].
+  Stream<TouchEvent> get onTouchStart =>
+      Element.touchStartEvent.forTarget(this);
+
+  Stream<Event> get onVolumeChange => Element.volumeChangeEvent.forTarget(this);
+
+  Stream<Event> get onWaiting => Element.waitingEvent.forTarget(this);
 
   Node adoptNode(Node node) {
     final clone = node.internalCloneWithOwnerDocument(this, true);

@@ -98,12 +98,12 @@ class _ComputedStyle extends CssStyleDeclaration {
   int get length => compute().length;
 
   @override
-  void _setPropertyWithValidName(String name, String value) {
+  void setProperty(String name, String value, [String priority]) {
     throw UnsupportedError("Computed style can't be modified.");
   }
 
   @override
-  void removeProperty(String name) {
+  String removeProperty(String name) {
     throw UnsupportedError("Computed style can't be modified.");
   }
 
@@ -112,6 +112,16 @@ class _ComputedStyle extends CssStyleDeclaration {
 
   @override
   String getPropertyValue(String name) => compute().getPropertyValue(name);
+
+  @override
+  CssRule get parentRule {
+    throw UnimplementedError();
+  }
+
+  @override
+  String getPropertyPriority(String property) {
+    throw UnimplementedError();
+  }
 }
 
 class _PriotizedCssStyleRule {

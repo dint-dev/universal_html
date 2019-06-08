@@ -73,24 +73,72 @@ abstract class FileEntry extends Entry {
   Future remove();
 }
 
-abstract class FileReader {
+abstract class FileReader extends EventTarget {
   static const int DONE = 2;
   static const int EMPTY = 0;
   static const int LOADING = 1;
 
+  /// Static factory designed to expose `abort` events to event
+  /// handlers that are not necessarily instances of [FileReader].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<ProgressEvent> abortEvent =
+      EventStreamProvider<ProgressEvent>('abort');
+
+  /// Static factory designed to expose `error` events to event
+  /// handlers that are not necessarily instances of [FileReader].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<ProgressEvent> errorEvent =
+      EventStreamProvider<ProgressEvent>('error');
+
+  /// Static factory designed to expose `load` events to event
+  /// handlers that are not necessarily instances of [FileReader].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<ProgressEvent> loadEvent =
+      EventStreamProvider<ProgressEvent>('load');
+
+  /// Static factory designed to expose `loadend` events to event
+  /// handlers that are not necessarily instances of [FileReader].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<ProgressEvent> loadEndEvent =
+      EventStreamProvider<ProgressEvent>('loadend');
+
+  /// Static factory designed to expose `loadstart` events to event
+  /// handlers that are not necessarily instances of [FileReader].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<ProgressEvent> loadStartEvent =
+      EventStreamProvider<ProgressEvent>('loadstart');
+
+  /// Static factory designed to expose `progress` events to event
+  /// handlers that are not necessarily instances of [FileReader].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<ProgressEvent> progressEvent =
+      EventStreamProvider<ProgressEvent>('progress');
+
   Error get error;
 
-  Stream<ProgressEvent> get onAbort;
+  /// Stream of `abort` events handled by this [FileReader].
+  Stream<ProgressEvent> get onAbort => abortEvent.forTarget(this);
 
-  Stream<ProgressEvent> get onError;
+  /// Stream of `error` events handled by this [FileReader].
+  Stream<ProgressEvent> get onError => errorEvent.forTarget(this);
 
-  Stream<ProgressEvent> get onLoad;
+  /// Stream of `load` events handled by this [FileReader].
+  Stream<ProgressEvent> get onLoad => loadEvent.forTarget(this);
 
-  Stream<ProgressEvent> get onLoadEnd;
+  /// Stream of `loadend` events handled by this [FileReader].
+  Stream<ProgressEvent> get onLoadEnd => loadEndEvent.forTarget(this);
 
-  Stream<ProgressEvent> get onLoadStart;
+  /// Stream of `loadstart` events handled by this [FileReader].
+  Stream<ProgressEvent> get onLoadStart => loadStartEvent.forTarget(this);
 
-  Stream<ProgressEvent> get onProgress;
+  /// Stream of `progress` events handled by this [FileReader].
+  Stream<ProgressEvent> get onProgress => progressEvent.forTarget(this);
 
   int get readyState;
 
@@ -113,22 +161,70 @@ abstract class FileSystem {
   DirectoryEntry get root;
 }
 
-abstract class FileWriter {
+abstract class FileWriter extends EventTarget {
+  /// Static factory designed to expose `abort` events to event
+  /// handlers that are not necessarily instances of [FileWriter].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<ProgressEvent> abortEvent =
+      EventStreamProvider<ProgressEvent>('abort');
+
+  /// Static factory designed to expose `error` events to event
+  /// handlers that are not necessarily instances of [FileWriter].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<Event> errorEvent =
+      EventStreamProvider<Event>('error');
+
+  /// Static factory designed to expose `progress` events to event
+  /// handlers that are not necessarily instances of [FileWriter].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<ProgressEvent> progressEvent =
+      EventStreamProvider<ProgressEvent>('progress');
+
+  /// Static factory designed to expose `write` events to event
+  /// handlers that are not necessarily instances of [FileWriter].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<ProgressEvent> writeEvent =
+      EventStreamProvider<ProgressEvent>('write');
+
+  /// Static factory designed to expose `writeend` events to event
+  /// handlers that are not necessarily instances of [FileWriter].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<ProgressEvent> writeEndEvent =
+      EventStreamProvider<ProgressEvent>('writeend');
+
+  /// Static factory designed to expose `writestart` events to event
+  /// handlers that are not necessarily instances of [FileWriter].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<ProgressEvent> writeStartEvent =
+      EventStreamProvider<ProgressEvent>('writestart');
+
   Error get error;
 
   int get length;
 
-  Stream<ProgressEvent> get onAbort;
+  /// Stream of `abort` events handled by this [FileWriter].
+  Stream<ProgressEvent> get onAbort => abortEvent.forTarget(this);
 
-  Stream<ProgressEvent> get onError;
+  /// Stream of `error` events handled by this [FileWriter].
+  Stream<Event> get onError => errorEvent.forTarget(this);
 
-  Stream<ProgressEvent> get onProgress;
+  /// Stream of `progress` events handled by this [FileWriter].
+  Stream<ProgressEvent> get onProgress => progressEvent.forTarget(this);
 
-  Stream<ProgressEvent> get onWrite;
+  /// Stream of `write` events handled by this [FileWriter].
+  Stream<ProgressEvent> get onWrite => writeEvent.forTarget(this);
 
-  Stream<ProgressEvent> get onWriteEnd;
+  /// Stream of `writeend` events handled by this [FileWriter].
+  Stream<ProgressEvent> get onWriteEnd => writeEndEvent.forTarget(this);
 
-  Stream<ProgressEvent> get onWriteStart;
+  /// Stream of `writestart` events handled by this [FileWriter].
+  Stream<ProgressEvent> get onWriteStart => writeStartEvent.forTarget(this);
 
   void abort();
 

@@ -53,6 +53,28 @@ abstract class CloseEvent implements Event {
   bool get wasClean;
 }
 
+class CustomEvent extends Event {
+  final Object detail;
+
+  factory CustomEvent(
+    String type, {
+    bool canBubble = true,
+    bool cancelable = true,
+    Object detail,
+  }) {
+    return CustomEvent(
+      type,
+      canBubble: canBubble,
+      cancelable: cancelable,
+      detail: detail,
+    );
+  }
+
+  CustomEvent._(String type, {bool canBubble, cancelable, this.detail})
+      : super.internalConstructor(type,
+            bubbles: canBubble, cancelable: cancelable);
+}
+
 abstract class DeviceOrientationEvent implements Event {
   num get absolute;
 
@@ -61,6 +83,18 @@ abstract class DeviceOrientationEvent implements Event {
   num get beta;
 
   num get gamma;
+}
+
+abstract class ExtendableEvent extends Event {
+  /// IMPORTANT: Not part of 'dart:html' API.
+  ExtendableEvent.internalConstructor(String type,
+      {bool bubbles = true, bool cancelable = false})
+      : super.internalConstructor(type,
+            bubbles: bubbles, cancelable: cancelable);
+
+  void waitUntil(Future f) {
+    throw UnimplementedError();
+  }
 }
 
 class FocusEvent extends UIEvent {
@@ -78,6 +112,28 @@ class HashChangeEvent extends Event {
       : super.internalConstructor(type);
 
   bool get supported => true;
+}
+
+class FetchEvent extends ExtendableEvent {
+  FetchEvent.internal(
+      {this.clientId, this.isReload, this.preloadResponse, this.request})
+      : super.internalConstructor("fetch");
+
+  factory FetchEvent(String type, Map eventInitDict) {
+    throw UnimplementedError();
+  }
+
+  final String clientId;
+
+  final bool isReload;
+
+  final Future preloadResponse;
+
+  final _Request request;
+
+  void respondWith(Future r) {
+    throw UnimplementedError();
+  }
 }
 
 class InputDeviceCapabilities {}
@@ -196,18 +252,6 @@ class MouseEvent extends UIEvent {
       : super(type);
 }
 
-abstract class ExtendableEvent extends Event {
-  /// IMPORTANT: Not part of 'dart:html' API.
-  ExtendableEvent.internalConstructor(String type,
-      {bool bubbles = true, bool cancelable = false})
-      : super.internalConstructor(type,
-            bubbles: bubbles, cancelable: cancelable);
-
-  void waitUntil(Future f) {
-    throw UnimplementedError();
-  }
-}
-
 class PopStateEvent extends Event {
   final Object state;
 
@@ -302,4 +346,79 @@ abstract class UIEvent extends Event {
   int get detail => null;
 
   InputDeviceCapabilities get sourceCapabilities => null;
+}
+
+class WheelEvent extends MouseEvent {
+  factory WheelEvent(String type,
+      {Window view,
+      num deltaX = 0,
+      num deltaY = 0,
+      num deltaZ = 0,
+      int deltaMode = 0,
+      int detail = 0,
+      int screenX = 0,
+      int screenY = 0,
+      int clientX = 0,
+      int clientY = 0,
+      int button = 0,
+      bool canBubble = true,
+      bool cancelable = true,
+      bool ctrlKey = false,
+      bool altKey = false,
+      bool shiftKey = false,
+      bool metaKey = false,
+      EventTarget relatedTarget}) {
+    return WheelEvent._(type, deltaZ: deltaZ);
+  }
+
+  WheelEvent._(String type, {this.deltaZ}) : super(type);
+
+  static const int DOM_DELTA_LINE = 0x01;
+
+  static const int DOM_DELTA_PAGE = 0x02;
+
+  static const int DOM_DELTA_PIXEL = 0x00;
+
+  final num deltaZ;
+
+  /// The amount that is expected to scroll vertically, in units determined by
+  /// [deltaMode].
+  ///
+  /// See also:
+  ///
+  /// * [WheelEvent.deltaY](http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html#events-WheelEvent-deltaY) from the W3C.
+  num get deltaY {
+    throw UnsupportedError('deltaY is not supported');
+  }
+
+  /// The amount that is expected to scroll horizontally, in units determined by
+  /// [deltaMode].
+  ///
+  /// See also:
+  ///
+  /// * [WheelEvent.deltaX](http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html#events-WheelEvent-deltaX) from the W3C.
+  num get deltaX {
+    throw UnsupportedError('deltaX is not supported');
+  }
+
+  int get deltaMode {
+    return 0;
+  }
+}
+
+class TransitionEvent extends Event {
+  // To suppress missing implicit constructor warnings.
+  TransitionEvent._(String type,
+      {this.elapsedTime, this.propertyName, this.pseudoElement})
+      : super.internalConstructor(type);
+
+  factory TransitionEvent(String type, [Map eventInitDict]) {
+    return TransitionEvent._(type);
+  }
+
+  final num elapsedTime;
+
+  final String propertyName;
+
+  final String pseudoElement;
 }

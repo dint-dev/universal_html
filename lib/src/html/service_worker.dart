@@ -45,6 +45,24 @@ abstract class AbstractWorker implements EventTarget {
   Stream<Event> get onError => errorEvent.forTarget(this);
 }
 
+class Body {
+  final bool bodyUsed;
+
+  factory Body._() {
+    throw UnimplementedError();
+  }
+
+  Future arrayBuffer() => throw UnimplementedError();
+
+  Future<Blob> blob() => throw UnimplementedError();
+
+  Future<FormData> formData() => throw UnimplementedError();
+
+  Future json() => throw UnimplementedError();
+
+  Future<String> text() => throw UnimplementedError();
+}
+
 class Client {
   final String frameType;
 
@@ -100,6 +118,36 @@ class ForeignFetchEvent extends ExtendableEvent {
   // final _Request request;
 
   void respondWith(Future r) {
+    throw UnimplementedError();
+  }
+}
+
+class FormData {
+  /// Checks if this type is supported on the current platform.
+  static bool get supported => false;
+
+  factory FormData([FormElement form]) {
+    throw UnimplementedError();
+  }
+
+  void append(String name, String value) => throw UnimplementedError();
+
+  void appendBlob(String name, Blob value, [String filename]) =>
+      throw UnimplementedError();
+
+  void delete(String name) => throw UnimplementedError();
+
+  Object get(String name) => throw UnimplementedError();
+
+  List<Object> getAll(String name) => throw UnimplementedError();
+
+  bool has(String name) => throw UnimplementedError();
+
+  void set(String name, value, [String filename]) => throw UnimplementedError();
+}
+
+class Headers {
+  factory Headers([Object init]) {
     throw UnimplementedError();
   }
 }
@@ -380,6 +428,39 @@ class WorkerGlobalScope extends EventTarget {
   }
 
   void importScripts(String urls) {
+    throw UnimplementedError();
+  }
+}
+
+class _Request extends Body {
+  // To suppress missing implicit constructor warnings.
+  final String cache;
+
+  final String credentials;
+
+  final Headers headers;
+
+  final String integrity;
+
+  final String mode;
+
+  final String redirect;
+
+  final String referrer;
+
+  final String referrerPolicy;
+
+  final String url;
+
+  factory _Request(Object input, [Map requestInitDict]) {
+    throw UnimplementedError();
+  }
+
+  factory _Request._() {
+    throw UnsupportedError("Not supported");
+  }
+
+  _Request clone() {
     throw UnimplementedError();
   }
 }

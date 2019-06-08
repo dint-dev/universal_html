@@ -17,7 +17,6 @@ The project is licensed under the [MIT license](LICENSE).
 ## 1. Add dependency
 In `pubspec.yaml`:
 ```yaml
-name: example
 dependencies:
   universal_html: ^1.0.6
 ```

@@ -7,42 +7,34 @@ void _testDomParserDriver() {
     test("parseDocument(...), '<!DOCTYPE HTML>'", () {
       final source =
           "<!DOCTYPE HTML><html><body><div>Example</div></body></html>";
-      final document = parser.parseDocument(source);
+      final document = parser.parseHtml(source);
       expect(
         nodeToString(document),
         "<!doctype><html><head></head><body><div>Example</div></body></html>",
       );
-      if (document is HtmlDocument) {
-        expect(document.body, isNotNull);
-        expect(document.body.children, hasLength(1));
-        expect(document.body.children.single, TypeMatcher<DivElement>());
-        expect(document.body.innerHtml, "<div>Example</div>");
-      } else {
-        expect(document, TypeMatcher<HtmlDocument>());
-      }
+      expect(document.body, isNotNull);
+      expect(document.body.children, hasLength(1));
+      expect(document.body.children.single, TypeMatcher<DivElement>());
+      expect(document.body.innerHtml, "<div>Example</div>");
     });
 
     test("parseDocument(...), '<html>...</html>'", () {
       final source = "<html><body><div>Example</div></body></html>";
-      final document = parser.parseDocument(source);
+      final document = parser.parseHtml(source);
       expect(
         nodeToString(document),
         "<html><head></head><body><div>Example</div></body></html>",
       );
-      if (document is HtmlDocument) {
-        expect(document.body, isNotNull);
-        expect(document.body.children, hasLength(1));
-        expect(document.body.children.single, TypeMatcher<DivElement>());
-        expect(document.body.innerHtml, "<div>Example</div>");
-      } else {
-        expect(document, TypeMatcher<HtmlDocument>());
-      }
+      expect(document.body, isNotNull);
+      expect(document.body.children, hasLength(1));
+      expect(document.body.children.single, TypeMatcher<DivElement>());
+      expect(document.body.innerHtml, "<div>Example</div>");
     });
 
     test("parseHtmlDocument(...), '<!DOCTYPE HTML>'", () {
       final source =
           "<!DOCTYPE HTML><html><body><div>Example</div></body></html>";
-      final document = parser.parseHtmlDocument(source);
+      final document = parser.parseHtmlFromAnything(source);
       expect(
         nodeToString(document),
         "<!doctype><html><head></head><body><div>Example</div></body></html>",
@@ -55,7 +47,7 @@ void _testDomParserDriver() {
 
     test("parseHtmlDocument(...), '<html>...</html>'", () {
       final source = "<html><body><div>Example</div></body></html>";
-      final document = parser.parseHtmlDocument(source);
+      final document = parser.parseHtmlFromAnything(source);
       expect(
         nodeToString(document),
         "<html><head></head><body><div>Example</div></body></html>",
@@ -69,7 +61,7 @@ void _testDomParserDriver() {
     test("parseHtmlDocumentFromHtml(...), '<!DOCTYPE HTML>'", () {
       final source =
           "<!DOCTYPE HTML><html><body><div>Example</div></body></html>";
-      final document = parser.parseHtmlDocumentFromHtml(source);
+      final document = parser.parseHtml(source);
       expect(
         nodeToString(document),
         "<!doctype><html><head></head><body><div>Example</div></body></html>",
@@ -82,7 +74,7 @@ void _testDomParserDriver() {
 
     test("parseHtmlDocumentFromHtml(...), '<html>...</html>')", () {
       final source = "<html><body><div>Example</div></body></html>";
-      final document = parser.parseHtmlDocumentFromHtml(source);
+      final document = parser.parseHtml(source);
       expect(
         nodeToString(document),
         "<html><head></head><body><div>Example</div></body></html>",

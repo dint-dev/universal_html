@@ -36,8 +36,7 @@ part of universal_html;
 class XmlDocument extends Document {
   /// IMPORTANT: Not part of 'dart:html' API.
   @visibleForTesting
-  XmlDocument.internal(HtmlDriver htmlDriver,
-      {String contentType = "application/xml"})
+  XmlDocument.internal(HtmlDriver htmlDriver, {@required String contentType})
       : assert(contentType != null),
         super._(htmlDriver, contentType);
 

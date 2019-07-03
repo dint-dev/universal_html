@@ -36,7 +36,7 @@ part of universal_html;
 class AnchorElement extends HtmlElement with _UrlBase {
   factory AnchorElement() => AnchorElement._(null);
 
-  AnchorElement._(Document ownerDocument) : super._(ownerDocument, "a");
+  AnchorElement._(Document ownerDocument) : super._(ownerDocument, "A");
 
   String get download => _getAttribute("download");
 
@@ -79,7 +79,8 @@ class AnchorElement extends HtmlElement with _UrlBase {
 class AreaElement extends MediaElement {
   factory AreaElement() => AreaElement._(null);
 
-  AreaElement._(Document ownerDocument) : super._(ownerDocument, "area");
+  AreaElement._(Document ownerDocument, {String nodeName = "AREA"})
+      : super._(ownerDocument, nodeName);
 
   @override
   Element _newInstance(Document ownerDocument) => AreaElement._(ownerDocument);
@@ -88,7 +89,7 @@ class AreaElement extends MediaElement {
 class AudioElement extends MediaElement {
   factory AudioElement() => AudioElement._(null);
 
-  AudioElement._(Document ownerDocument) : super._(ownerDocument, "audio");
+  AudioElement._(Document ownerDocument) : super._(ownerDocument, "AUDIO");
 
   @override
   Element _newInstance(Document ownerDocument) => AudioElement._(ownerDocument);
@@ -96,7 +97,7 @@ class AudioElement extends MediaElement {
 
 class BaseElement extends HtmlElement {
   BaseElement() : this._(null);
-  BaseElement._(Document ownerDocument) : super._(ownerDocument, "base");
+  BaseElement._(Document ownerDocument) : super._(ownerDocument, "BASE");
 
   String get href => _getAttribute("href");
   set href(String value) {
@@ -115,7 +116,7 @@ class BaseElement extends HtmlElement {
 class BodyElement extends HtmlElement {
   factory BodyElement() => BodyElement._(null);
 
-  BodyElement._(Document ownerDocument) : super._(ownerDocument, "body");
+  BodyElement._(Document ownerDocument) : super._(ownerDocument, "BODY");
 
   @override
   Element _newInstance(Document ownerDocument) => BodyElement._(ownerDocument);
@@ -124,7 +125,7 @@ class BodyElement extends HtmlElement {
 class BRElement extends HtmlElement {
   factory BRElement() => BRElement._(null);
 
-  BRElement._(Document ownerDocument) : super._(ownerDocument, "br");
+  BRElement._(Document ownerDocument) : super._(ownerDocument, "BR");
 
   @override
   Element _newInstance(Document ownerDocument) => BRElement._(ownerDocument);
@@ -133,28 +134,17 @@ class BRElement extends HtmlElement {
 class ButtonElement extends HtmlElement {
   factory ButtonElement() => ButtonElement._(null);
 
-  ButtonElement._(Document ownerDocument) : super._(ownerDocument, "button");
+  ButtonElement._(Document ownerDocument) : super._(ownerDocument, "BUTTON");
 
   @override
   Element _newInstance(Document ownerDocument) =>
       ButtonElement._(ownerDocument);
 }
 
-class ButtonInputElement extends InputElementBase {
-  factory ButtonInputElement() => ButtonInputElement._(null);
-
-  ButtonInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "button");
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      ButtonInputElement._(ownerDocument);
-}
-
 class CanvasElement extends HtmlElement implements CanvasImageSource {
   CanvasRenderingContext2D _context2D;
 
-  CanvasElement({int width, int height}) : super._(null, "canvas") {
+  CanvasElement({int width, int height}) : super._(null, "CANVAS") {
     if (width != null) {
       _setAttributeInt("width", width);
     }
@@ -163,7 +153,7 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
     }
   }
 
-  CanvasElement._(Document ownerDocument) : super._(ownerDocument, "canvas");
+  CanvasElement._(Document ownerDocument) : super._(ownerDocument, "CANVAS");
 
   CanvasRenderingContext2D get context2D {
     if (_context2D == null) {
@@ -198,29 +188,6 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
       CanvasElement._(ownerDocument);
 }
 
-class CheckboxInputElement extends InputElementBase {
-  factory CheckboxInputElement() => CheckboxInputElement._(null);
-
-  CheckboxInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "checkbox");
-
-  bool get checked => _getAttributeBool("checked");
-
-  set checked(bool value) {
-    _setAttributeBool("checked", value);
-  }
-
-  bool get required => _getAttributeBool("required");
-
-  set required(bool value) {
-    _setAttributeBool("required", value);
-  }
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      CheckboxInputElement._(ownerDocument);
-}
-
 class ContentElement extends HtmlElement {
   static bool get supported => false;
 
@@ -228,7 +195,7 @@ class ContentElement extends HtmlElement {
 
   factory ContentElement() => ContentElement._(null);
 
-  ContentElement._(Document ownerDocument) : super._(ownerDocument, "content");
+  ContentElement._(Document ownerDocument) : super._(ownerDocument, "CONTENTN");
 
   List<Node> getDistributedNodes() {
     throw UnimplementedError();
@@ -243,41 +210,17 @@ class DataListElement extends HtmlElement {
   factory DataListElement() => DataListElement._(null);
 
   DataListElement._(Document ownerDocument)
-      : super._(ownerDocument, "datalist");
+      : super._(ownerDocument, "DATALIST");
 
   @override
   Element _newInstance(Document ownerDocument) =>
       DataListElement._(ownerDocument);
 }
 
-class DateInputElement extends InputElementBase {
-  factory DateInputElement() => DateInputElement._(null);
-
-  DateInputElement._(Document ownerDocument) : super._(ownerDocument, "date");
-
-  bool get readOnly => _getAttributeBool("readOnly");
-
-  set readOnly(bool value) {
-    _setAttributeBool("readOnly", value);
-  }
-
-  bool get required => _getAttributeBool("required");
-
-  set required(bool value) {
-    _setAttributeBool("required", value);
-  }
-
-  DateTime get valueAsDate => DateTime.parse(value);
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      DateInputElement._(ownerDocument);
-}
-
 class DetailsElement extends HtmlElement {
   factory DetailsElement() => DetailsElement._(null);
 
-  DetailsElement._(Document ownerDocument) : super._(ownerDocument, "details");
+  DetailsElement._(Document ownerDocument) : super._(ownerDocument, "DETAILS");
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -291,7 +234,7 @@ class DialogElement extends HtmlElement {
 
   factory DialogElement() => DialogElement._(null);
 
-  DialogElement._(Document ownerDocument) : super._(ownerDocument, "dialog");
+  DialogElement._(Document ownerDocument) : super._(ownerDocument, "DIALOG");
 
   void close([String returnValue]) {
     // Ignore
@@ -313,7 +256,7 @@ class DialogElement extends HtmlElement {
 class DivElement extends HtmlElement {
   factory DivElement() => DivElement._(null);
 
-  DivElement._(Document ownerDocument) : super._(ownerDocument, "div");
+  DivElement._(Document ownerDocument) : super._(ownerDocument, "DIV");
 
   @override
   Element _newInstance(Document ownerDocument) => DivElement._(ownerDocument);
@@ -322,63 +265,27 @@ class DivElement extends HtmlElement {
 class DListElement extends HtmlElement {
   factory DListElement() => DListElement._(null);
 
-  DListElement._(Document ownerDocument) : super._(ownerDocument, "dl");
+  DListElement._(Document ownerDocument) : super._(ownerDocument, "DL");
 
   @override
   Element _newInstance(Document ownerDocument) => DListElement._(ownerDocument);
-}
-
-class EmailInputElement extends TextInputElementBase
-    with _TextInputElementMixin {
-  factory EmailInputElement() => EmailInputElement._(null);
-
-  EmailInputElement._(Document ownerDocument) : super._(ownerDocument, "email");
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      EmailInputElement._(ownerDocument);
 }
 
 class FieldSetElement extends HtmlElement {
   factory FieldSetElement() => FieldSetElement._(null);
 
   FieldSetElement._(Document ownerDocument)
-      : super._(ownerDocument, "fieldset");
+      : super._(ownerDocument, "FIELDSET");
 
   @override
   Element _newInstance(Document ownerDocument) =>
       FieldSetElement._(ownerDocument);
 }
 
-class FileUploadInputElement extends InputElementBase {
-  factory FileUploadInputElement() => FileUploadInputElement._(null);
-
-  FileUploadInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "file");
-
-  String get accept => _getAttribute("accept");
-
-  set accept(String value) {
-    _setAttribute("accept", value);
-  }
-
-  List<File> get files => throw UnimplementedError();
-
-  bool get multiple => _getAttributeBool("multiple");
-
-  set multiple(bool value) {
-    _setAttributeBool("multiple", value);
-  }
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      FileUploadInputElement._(ownerDocument);
-}
-
 class FormElement extends HtmlElement {
   factory FormElement() => FormElement._(null);
 
-  FormElement._(Document ownerDocument) : super._(ownerDocument, "form");
+  FormElement._(Document ownerDocument) : super._(ownerDocument, "FORM");
 
   String get action => _getAttribute("action");
 
@@ -411,24 +318,24 @@ class FormElement extends HtmlElement {
 class HeadElement extends HtmlElement {
   factory HeadElement() => HeadElement._(null);
 
-  HeadElement._(Document ownerDocument) : super._(ownerDocument, "head");
+  HeadElement._(Document ownerDocument) : super._(ownerDocument, "HEAD");
 
   @override
   Element _newInstance(Document ownerDocument) => HeadElement._(ownerDocument);
 }
 
 class HeadingElement extends HtmlElement {
-  factory HeadingElement.h1() => HeadingElement._(null, "h1");
+  factory HeadingElement.h1() => HeadingElement._(null, "H1");
 
-  factory HeadingElement.h2() => HeadingElement._(null, "h2");
+  factory HeadingElement.h2() => HeadingElement._(null, "H2");
 
-  factory HeadingElement.h3() => HeadingElement._(null, "h3");
+  factory HeadingElement.h3() => HeadingElement._(null, "H3");
 
-  factory HeadingElement.h4() => HeadingElement._(null, "h4");
+  factory HeadingElement.h4() => HeadingElement._(null, "H4");
 
-  factory HeadingElement.h5() => HeadingElement._(null, "h5");
+  factory HeadingElement.h5() => HeadingElement._(null, "H5");
 
-  factory HeadingElement.h6() => HeadingElement._(null, "h6");
+  factory HeadingElement.h6() => HeadingElement._(null, "H6");
 
   HeadingElement._(Document ownerDocument, String name)
       : super._(ownerDocument, name);
@@ -438,21 +345,10 @@ class HeadingElement extends HtmlElement {
       HeadingElement._(ownerDocument, _lowerCaseTagName);
 }
 
-class HiddenInputElement extends InputElementBase {
-  factory HiddenInputElement() => HiddenInputElement._(null);
-
-  HiddenInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "hidden");
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      HiddenInputElement._(ownerDocument);
-}
-
 class HRElement extends HtmlElement {
   factory HRElement() => HRElement._(null);
 
-  HRElement._(Document ownerDocument) : super._(ownerDocument, "hr");
+  HRElement._(Document ownerDocument) : super._(ownerDocument, "HR");
 
   @override
   Element _newInstance(Document ownerDocument) => HRElement._(ownerDocument);
@@ -472,7 +368,7 @@ abstract class HtmlElement extends Element implements NoncedElement {
 class HtmlHtmlElement extends HtmlElement {
   factory HtmlHtmlElement() => HtmlHtmlElement._(null);
 
-  HtmlHtmlElement._(Document ownerDocument) : super._(ownerDocument, "html");
+  HtmlHtmlElement._(Document ownerDocument) : super._(ownerDocument, "HTML");
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -482,7 +378,7 @@ class HtmlHtmlElement extends HtmlElement {
 class IFrameElement extends HtmlElement {
   factory IFrameElement() => IFrameElement._(null);
 
-  IFrameElement._(Document ownerDocument) : super._(ownerDocument, "iframe");
+  IFrameElement._(Document ownerDocument) : super._(ownerDocument, "IFRAME");
 
   bool get allowfullscreen => _getAttributeBool("allowfullscreen");
 
@@ -539,45 +435,10 @@ class IFrameElement extends HtmlElement {
       IFrameElement._(ownerDocument);
 }
 
-class ImageButtonInputElement extends InputElementBase {
-  factory ImageButtonInputElement() => ImageButtonInputElement._(null);
-
-  ImageButtonInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "image");
-
-  String get alt => _getAttribute("alt");
-
-  set alt(String value) {
-    _setAttribute("alt", value);
-  }
-
-  int get height => _getAttributeInt("height");
-
-  set height(int value) {
-    _setAttributeInt("height", value);
-  }
-
-  String get src => _getAttribute("src");
-
-  set src(String value) {
-    _setAttribute("src", value);
-  }
-
-  int get width => _getAttributeInt("width");
-
-  set width(int value) {
-    _setAttributeInt("width", value);
-  }
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      ImageButtonInputElement._(ownerDocument);
-}
-
 class ImageElement extends HtmlElement implements CanvasImageSource {
   factory ImageElement() => ImageElement._(null);
 
-  ImageElement._(Document ownerDocument) : super._(ownerDocument, "img");
+  ImageElement._(Document ownerDocument) : super._(ownerDocument, "IMG");
 
   String get alt => _getAttribute("alt");
 
@@ -609,7 +470,25 @@ class ImageElement extends HtmlElement implements CanvasImageSource {
     _setAttribute("sizes", value);
   }
 
-  String get src => _getAttribute("src");
+  String get src {
+    final uriString = _getAttribute("src");
+    if (uriString == null) {
+      return null;
+    }
+    final uri = Uri.parse(uriString);
+    if (uri.isAbsolute) {
+      return uriString;
+    }
+    final baseUriString = this.baseUri;
+    if (baseUriString == null) {
+      return uriString;
+    }
+    final baseUri = Uri.parse(baseUriString);
+    if (!baseUri.isAbsolute) {
+      return uriString;
+    }
+    return baseUri.resolveUri(uri).toString();
+  }
 
   set src(String value) {
     _setAttribute("src", value);
@@ -763,7 +642,7 @@ class InputElement extends HtmlElement
     return e;
   }
 
-  InputElement._(Document ownerDocument) : super._(ownerDocument, "input");
+  InputElement._(Document ownerDocument) : super._(ownerDocument, "INPUT");
 
   DateTime get valueAsDate {
     throw UnimplementedError();
@@ -798,109 +677,10 @@ class InputElement extends HtmlElement
   Element _newInstance(Document ownerDocument) => InputElement._(ownerDocument);
 }
 
-class InputElementBase extends HtmlElement {
-  InputElementBase() : super._(null, "input");
-
-  /// IMPORTANT: Not part 'dart:html'.
-  factory InputElementBase.internalFromType(
-      Document ownerDocument, String type) {
-    switch (type) {
-      case "button":
-        return ButtonInputElement._(ownerDocument);
-      case "checkbox":
-        return CheckboxInputElement._(ownerDocument);
-      case "date":
-        return DateInputElement._(ownerDocument);
-      case "datetime-local":
-        return LocalDateTimeInputElement._(ownerDocument);
-      case "email":
-        return EmailInputElement._(ownerDocument);
-      case "hidden":
-        return HiddenInputElement._(ownerDocument);
-      case "image":
-        return ImageButtonInputElement._(ownerDocument);
-      case "number":
-        return NumberInputElement._(ownerDocument);
-      case "password":
-        return PasswordInputElement._(ownerDocument);
-      case "submit":
-        return SubmitButtonInputElement._(ownerDocument);
-      case "telephone":
-        return TelephoneInputElement._(ownerDocument);
-      case "text":
-        return TextInputElement._(ownerDocument);
-      case "time":
-        return TimeInputElement._(ownerDocument);
-      case "radio":
-        return RadioButtonInputElement._(ownerDocument);
-      case "reset":
-        return ResetButtonInputElement._(ownerDocument);
-      case "url":
-        return UrlInputElement._(ownerDocument);
-      default:
-        return InputElementBase._(ownerDocument, null);
-    }
-  }
-
-  InputElementBase._(Document ownerDocument, String type)
-      : super._(ownerDocument, "input") {
-    if (type != null) {
-      _setAttribute("type", type);
-    }
-  }
-
-  bool get autofocus => _getAttributeBool("autofocus");
-
-  set autofocus(bool value) {
-    _setAttributeBool("autofocus", value);
-  }
-
-  bool get disabled => _getAttributeBool("disabled");
-
-  set disabled(bool value) {
-    _setAttributeBool("disabled", value);
-  }
-
-  String get name => _getAttribute("name");
-
-  set name(String value) {
-    _setAttribute("name", value);
-  }
-
-  String get validationMessage => _getAttribute("validationmessage");
-
-  set validationMessage(String value) {
-    _setAttribute("validationmessage", value);
-  }
-
-  ValidityState get validity => throw UnimplementedError();
-
-  String get value => _getAttribute("value");
-
-  set value(String value) {
-    _setAttribute("value", value);
-  }
-
-  num get valueAsNumber {
-    final value = this.value;
-    return value == null ? null : num.parse(value);
-  }
-
-  set valueAsNumber(num value) {
-    this.value = value?.toString();
-  }
-
-  bool checkValidity() => true;
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      InputElementBase._(ownerDocument, null);
-}
-
 class LabelElement extends HtmlElement {
   factory LabelElement() => LabelElement._(null);
 
-  LabelElement._(Document ownerDocument) : super._(ownerDocument, "label");
+  LabelElement._(Document ownerDocument) : super._(ownerDocument, "LABEL");
 
   String get htmlFor => _getAttribute("for");
 
@@ -915,7 +695,7 @@ class LabelElement extends HtmlElement {
 class LegendElement extends HtmlElement {
   factory LegendElement() => LegendElement._(null);
 
-  LegendElement._(Document ownerDocument) : super._(ownerDocument, "legend");
+  LegendElement._(Document ownerDocument) : super._(ownerDocument, "LEGEND");
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -925,7 +705,7 @@ class LegendElement extends HtmlElement {
 class LIElement extends HtmlElement {
   factory LIElement() => LIElement._(null);
 
-  LIElement._(Document ownerDocument) : super._(ownerDocument, "li");
+  LIElement._(Document ownerDocument) : super._(ownerDocument, "LI");
 
   @override
   Element _newInstance(Document ownerDocument) => LIElement._(ownerDocument);
@@ -934,35 +714,10 @@ class LIElement extends HtmlElement {
 class LinkElement extends HtmlElement {
   factory LinkElement() => LinkElement._(null);
 
-  LinkElement._(Document ownerDocument) : super._(ownerDocument, "link");
+  LinkElement._(Document ownerDocument) : super._(ownerDocument, "LINK");
 
   @override
   Element _newInstance(Document ownerDocument) => LinkElement._(ownerDocument);
-}
-
-class LocalDateTimeInputElement extends InputElementBase {
-  factory LocalDateTimeInputElement() => LocalDateTimeInputElement._(null);
-
-  LocalDateTimeInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "datetime-local");
-
-  bool get readOnly => _getAttributeBool("readOnly");
-
-  set readOnly(bool value) {
-    _setAttributeBool("readOnly", value);
-  }
-
-  bool get required => _getAttributeBool("required");
-
-  set required(bool value) {
-    _setAttributeBool("required", value);
-  }
-
-  DateTime get valueAsDate => DateTime.parse(value);
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      LocalDateTimeInputElement._(ownerDocument);
 }
 
 abstract class MediaElement extends HtmlElement {
@@ -1045,7 +800,7 @@ abstract class MediaElement extends HtmlElement {
 class MetaElement extends HtmlElement {
   factory MetaElement() => MetaElement._(null);
 
-  MetaElement._(Document ownerDocument) : super._(ownerDocument, "meta");
+  MetaElement._(Document ownerDocument) : super._(ownerDocument, "META");
 
   String get content => _getAttribute("content");
 
@@ -1063,50 +818,16 @@ class MetaElement extends HtmlElement {
   Element _newInstance(Document ownerDocument) => MetaElement._(ownerDocument);
 }
 
-class MonthInputElement extends InputElementBase {
-  MonthInputElement() : this._(null);
-  MonthInputElement._(Document ownerDocument) : super._(ownerDocument, "month");
-}
-
 abstract class NoncedElement {
   String get nonce;
 
   set nonce(String value);
 }
 
-class NumberInputElement extends InputElementBase {
-  factory NumberInputElement() => NumberInputElement._(null);
-
-  NumberInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "number");
-
-  String get placeholder => _getAttribute("placeholder");
-
-  set placeholder(String value) {
-    _setAttribute("placeholder", value);
-  }
-
-  bool get readOnly => _getAttributeBool("readOnly");
-
-  set readOnly(bool value) {
-    _setAttributeBool("readOnly", value);
-  }
-
-  bool get required => _getAttributeBool("required");
-
-  set required(bool value) {
-    _setAttributeBool("required", value);
-  }
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      NumberInputElement._(ownerDocument);
-}
-
 class OListElement extends HtmlElement {
   factory OListElement() => OListElement._(null);
 
-  OListElement._(Document ownerDocument) : super._(ownerDocument, "ol");
+  OListElement._(Document ownerDocument) : super._(ownerDocument, "OL");
 
   @override
   Element _newInstance(Document ownerDocument) => OListElement._(ownerDocument);
@@ -1116,7 +837,7 @@ class OptGroupElement extends HtmlElement {
   factory OptGroupElement() => OptGroupElement._(null);
 
   OptGroupElement._(Document ownerDocument)
-      : super._(ownerDocument, "optgroup");
+      : super._(ownerDocument, "OPTGROUP");
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -1137,7 +858,8 @@ class OptionElement extends HtmlElement {
     }
   }
 
-  OptionElement._(Document ownerDocument) : super._(ownerDocument, "option");
+  OptionElement._(Document ownerDocument, {String nodeName = "OPTION"})
+      : super._(ownerDocument, nodeName);
 
   bool get disabled => _getAttributeBool("disabled");
 
@@ -1165,29 +887,19 @@ class OptionElement extends HtmlElement {
 class ParagraphElement extends HtmlElement {
   factory ParagraphElement() => ParagraphElement._(null);
 
-  ParagraphElement._(Document ownerDocument) : super._(ownerDocument, "p");
+  ParagraphElement._(Document ownerDocument, {String nodeName = "P"})
+      : super._(ownerDocument, nodeName);
 
   @override
   Element _newInstance(Document ownerDocument) =>
       ParagraphElement._(ownerDocument);
 }
 
-class PasswordInputElement extends TextInputElementBase
-    with _TextInputElementMixin {
-  factory PasswordInputElement() => PasswordInputElement._(null);
-
-  PasswordInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "password");
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      PasswordInputElement._(ownerDocument);
-}
-
 class PictureElement extends HtmlElement {
   factory PictureElement() => PictureElement._(null);
 
-  PictureElement._(Document ownerDocument) : super._(ownerDocument, "picture");
+  PictureElement._(Document ownerDocument, {String nodeName = "PICTURE"})
+      : super._(ownerDocument, nodeName);
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -1197,7 +909,8 @@ class PictureElement extends HtmlElement {
 class PreElement extends HtmlElement {
   factory PreElement() => PreElement._(null);
 
-  PreElement._(Document ownerDocument) : super._(ownerDocument, "pre");
+  PreElement._(Document ownerDocument, {String nodeName = "PRE"})
+      : super._(ownerDocument, nodeName);
 
   @override
   Element _newInstance(Document ownerDocument) => PreElement._(ownerDocument);
@@ -1206,8 +919,8 @@ class PreElement extends HtmlElement {
 class ProgressElement extends HtmlElement {
   factory ProgressElement() => ProgressElement._(null);
 
-  ProgressElement._(Document ownerDocument)
-      : super._(ownerDocument, "progress");
+  ProgressElement._(Document ownerDocument, {String nodeName = "PROGRESS"})
+      : super._(ownerDocument, nodeName);
 
   num get max => _getAttributeNum("max");
 
@@ -1228,49 +941,11 @@ class ProgressElement extends HtmlElement {
       ProgressElement._(ownerDocument);
 }
 
-class RadioButtonInputElement extends InputElementBase {
-  factory RadioButtonInputElement() => RadioButtonInputElement._(null);
-
-  RadioButtonInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "radio");
-
-  bool get checked => _getAttributeBool("checked");
-
-  set checked(bool value) {
-    _setAttributeBool("checked", value);
-  }
-
-  bool get required => _getAttributeBool("required");
-
-  set required(bool value) {
-    _setAttributeBool("required", value);
-  }
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      RadioButtonInputElement._(ownerDocument);
-}
-
-class RangeInputElement extends InputElementBase {
-  RangeInputElement() : this._(null);
-  RangeInputElement._(Document ownerDocument) : super._(ownerDocument, "range");
-}
-
-class ResetButtonInputElement extends InputElementBase {
-  factory ResetButtonInputElement() => ResetButtonInputElement._(null);
-
-  ResetButtonInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "reset");
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      ResetButtonInputElement._(ownerDocument);
-}
-
 class ScriptElement extends HtmlElement {
   factory ScriptElement() => ScriptElement._(null);
 
-  ScriptElement._(Document ownerDocument) : super._(ownerDocument, "script");
+  ScriptElement._(Document ownerDocument, {String nodeName = "SCRIPT"})
+      : super._(ownerDocument, nodeName);
 
   bool get async => _getAttributeBool("async");
 
@@ -1319,22 +994,10 @@ class ScriptElement extends HtmlElement {
       ScriptElement._(ownerDocument);
 }
 
-class SearchInputElement extends TextInputElementBase
-    with _TextInputElementMixin {
-  factory SearchInputElement() => SearchInputElement._(null);
-
-  SearchInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "search");
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      SearchInputElement._(ownerDocument);
-}
-
 class SelectElement extends HtmlElement {
   factory SelectElement() => SelectElement._(null);
 
-  SelectElement._(Document ownerDocument) : super._(ownerDocument, "select");
+  SelectElement._(Document ownerDocument) : super._(ownerDocument, "SELECT");
 
   bool get autofocus => _getAttributeBool("autofocus");
 
@@ -1377,7 +1040,7 @@ class SelectElement extends HtmlElement {
 class SlotElement extends HtmlElement {
   factory SlotElement() => SlotElement._(null);
 
-  SlotElement._(Document ownerDocument) : super._(ownerDocument, "slot");
+  SlotElement._(Document ownerDocument) : super._(ownerDocument, "SLOT");
 
   String get name => _getAttribute("name");
 
@@ -1392,7 +1055,7 @@ class SlotElement extends HtmlElement {
 class SourceElement extends HtmlElement {
   factory SourceElement() => SourceElement._(null);
 
-  SourceElement._(Document ownerDocument) : super._(ownerDocument, "source");
+  SourceElement._(Document ownerDocument) : super._(ownerDocument, "SOURCE");
 
   String get media => _getAttribute("media");
 
@@ -1432,7 +1095,7 @@ class SourceElement extends HtmlElement {
 class SpanElement extends HtmlElement {
   factory SpanElement() => SpanElement._(null);
 
-  SpanElement._(Document ownerDocument) : super._(ownerDocument, "span");
+  SpanElement._(Document ownerDocument) : super._(ownerDocument, "SPAN");
 
   @override
   Element _newInstance(Document ownerDocument) => SpanElement._(ownerDocument);
@@ -1443,7 +1106,7 @@ class StyleElement extends HtmlElement {
 
   factory StyleElement() => StyleElement._(null);
 
-  StyleElement._(Document ownerDocument) : super._(ownerDocument, "style");
+  StyleElement._(Document ownerDocument) : super._(ownerDocument, "STYLE");
   StyleSheet get sheet {
     if (_sheet != null) {
       return _sheet;
@@ -1475,22 +1138,11 @@ class StyleElement extends HtmlElement {
   Element _newInstance(Document ownerDocument) => StyleElement._(ownerDocument);
 }
 
-class SubmitButtonInputElement extends InputElementBase {
-  factory SubmitButtonInputElement() => SubmitButtonInputElement._(null);
-
-  SubmitButtonInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "submit");
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      SubmitButtonInputElement._(ownerDocument);
-}
-
 class TableCaptionElement extends HtmlElement {
   factory TableCaptionElement() => TableCaptionElement._(null);
 
   TableCaptionElement._(Document ownerDocument)
-      : super._(ownerDocument, "caption");
+      : super._(ownerDocument, "CAPTION");
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -1500,7 +1152,7 @@ class TableCaptionElement extends HtmlElement {
 class TableCellElement extends HtmlElement {
   factory TableCellElement() => TableCellElement._(null);
 
-  TableCellElement._(Document ownerDocument) : super._(ownerDocument, "td");
+  TableCellElement._(Document ownerDocument) : super._(ownerDocument, "TD");
 
   int get cellIndex => _getAttributeInt("cellindex");
 
@@ -1528,7 +1180,7 @@ class TableCellElement extends HtmlElement {
 class TableElement extends HtmlElement {
   factory TableElement() => TableElement._(null);
 
-  TableElement._(Document ownerDocument) : super._(ownerDocument, "table");
+  TableElement._(Document ownerDocument) : super._(ownerDocument, "TABLE");
 
   TableRowElement addRow() => createTBody().addRow();
 
@@ -1589,7 +1241,7 @@ class TableElement extends HtmlElement {
 class TableRowElement extends HtmlElement {
   factory TableRowElement() => TableRowElement._(null);
 
-  TableRowElement._(Document ownerDocument) : super._(ownerDocument, "tr");
+  TableRowElement._(Document ownerDocument) : super._(ownerDocument, "TR");
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -1642,14 +1294,6 @@ class TableSectionElement extends HtmlElement {
       TableSectionElement._(ownerDocument, _lowerCaseTagName);
 }
 
-class TelephoneInputElement extends TextInputElementBase
-    with _TextInputElementMixin {
-  factory TelephoneInputElement() => TelephoneInputElement._(null);
-
-  TelephoneInputElement._(Document ownerDocument)
-      : super._(ownerDocument, "telephone");
-}
-
 class TemplateElement extends HtmlElement {
   /// Checks if this type is supported on the current platform.
   static bool get supported => Element.isTagSupported('template');
@@ -1657,7 +1301,7 @@ class TemplateElement extends HtmlElement {
   factory TemplateElement() => TemplateElement._(null);
 
   TemplateElement._(Document ownerDocument)
-      : super._(ownerDocument, "template");
+      : super._(ownerDocument, "TEMPLATE");
 
   DocumentFragment get content {
     throw UnimplementedError();
@@ -1692,7 +1336,7 @@ class TextAreaElement extends HtmlElement {
   factory TextAreaElement() => TextAreaElement._(null);
 
   TextAreaElement._(Document ownerDocument)
-      : super._(ownerDocument, "textarea");
+      : super._(ownerDocument, "TEXTAREA");
 
   int get cols => _getAttributeInt("cols");
 
@@ -1753,86 +1397,10 @@ class TextAreaElement extends HtmlElement {
       TextAreaElement._(ownerDocument);
 }
 
-class TextInputElement extends TextInputElementBase
-    with _TextInputElementMixin {
-  factory TextInputElement() => TextInputElement._(null);
-
-  TextInputElement._(Document ownerDocument) : super._(ownerDocument, "text");
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      TextInputElement._(ownerDocument);
-}
-
-abstract class TextInputElementBase extends InputElementBase {
-  RegExp _patternRegExp;
-
-  TextInputElementBase() : super();
-
-  TextInputElementBase._(Document ownerDocument, String type)
-      : super._(ownerDocument, type);
-
-  int get maxLength => _getAttributeInt("maxlength");
-
-  set maxLength(int value) {
-    _setAttributeInt("maxlength", value);
-  }
-
-  int get minLength => _getAttributeInt("minlength");
-
-  set minLength(int value) {
-    _setAttributeInt("minlength", value);
-  }
-
-  String get pattern => _getAttribute("pattern");
-
-  set pattern(String value) {
-    _setAttribute("pattern", value);
-  }
-
-  String get placeholder => _getAttribute("placeholder");
-
-  set placeholder(String value) {
-    _setAttribute("placeholder", value);
-  }
-
-  bool get required => _getAttributeBool("required");
-
-  set required(bool value) {
-    _setAttributeBool("required", value);
-  }
-
-  bool checkValidity();
-}
-
-class TimeInputElement extends InputElementBase {
-  factory TimeInputElement() => TimeInputElement._(null);
-
-  TimeInputElement._(Document ownerDocument) : super._(ownerDocument, "time");
-
-  bool get readOnly => _getAttributeBool("readOnly");
-
-  set readOnly(bool value) {
-    _setAttributeBool("readOnly", value);
-  }
-
-  bool get required => _getAttributeBool("required");
-
-  set required(bool value) {
-    _setAttributeBool("required", value);
-  }
-
-  DateTime get valueAsDate => DateTime.parse(value);
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      TimeInputElement._(ownerDocument);
-}
-
 class TitleElement extends HtmlElement {
   factory TitleElement() => TitleElement._(null);
 
-  TitleElement._(Document ownerDocument) : super._(ownerDocument, "title");
+  TitleElement._(Document ownerDocument) : super._(ownerDocument, "TITLE");
 
   @override
   Element _newInstance(Document ownerDocument) => TitleElement._(ownerDocument);
@@ -1841,7 +1409,7 @@ class TitleElement extends HtmlElement {
 class TrackElement extends HtmlElement {
   factory TrackElement() => TrackElement._(null);
 
-  TrackElement._(Document ownerDocument) : super._(ownerDocument, "track");
+  TrackElement._(Document ownerDocument) : super._(ownerDocument, "TRACK");
 
   String get kind => _getAttribute("kind");
 
@@ -1868,7 +1436,7 @@ class TrackElement extends HtmlElement {
 class UListElement extends HtmlElement {
   factory UListElement() => UListElement._(null);
 
-  UListElement._(Document ownerDocument) : super._(ownerDocument, "ul");
+  UListElement._(Document ownerDocument) : super._(ownerDocument, "UL");
 
   @override
   Element _newInstance(Document ownerDocument) => UListElement._(ownerDocument);
@@ -1885,16 +1453,6 @@ class UnknownElement extends HtmlElement {
   @override
   Element _newInstance(Document ownerDocument) =>
       UnknownElement.internal(ownerDocument, namespaceUri, _lowerCaseTagName);
-}
-
-class UrlInputElement extends TextInputElementBase {
-  factory UrlInputElement() => UrlInputElement._(null);
-
-  UrlInputElement._(Document ownerDocument) : super._(ownerDocument, "url");
-
-  @override
-  Element _newInstance(Document ownerDocument) =>
-      UrlInputElement._(ownerDocument);
 }
 
 abstract class ValidityState {
@@ -1924,7 +1482,7 @@ abstract class ValidityState {
 class VideoElement extends MediaElement implements CanvasImageSource {
   factory VideoElement() => VideoElement._(null);
 
-  VideoElement._(Document ownerDocument) : super._(ownerDocument, "video");
+  VideoElement._(Document ownerDocument) : super._(ownerDocument, "VIDEO");
 
   int get height => _getAttributeInt("height");
 
@@ -1948,51 +1506,4 @@ class VideoElement extends MediaElement implements CanvasImageSource {
 
   @override
   Element _newInstance(Document ownerDocument) => VideoElement._(ownerDocument);
-}
-
-class WeekInputElement extends InputElementBase {
-  WeekInputElement() : this._(null);
-  WeekInputElement._(Document ownerDocument) : super._(ownerDocument, "week");
-}
-
-abstract class _TextInputElementMixin implements InputElementBase {
-  RegExp _patternRegExp;
-
-  int get minLength;
-  String get pattern;
-  bool get required;
-
-  @override
-  bool checkValidity() => _checkValidity(value);
-
-  bool _checkValidity(String value) {
-    if (value == null) return !required;
-    final minLength = this.minLength;
-    if (minLength is int && minLength > value.length) {
-      return false;
-    }
-    final maxLength = this.minLength;
-    if (maxLength is int && maxLength < value.length) {
-      return false;
-    }
-    final regExp = this._getRegExp();
-    if (regExp != null && !regExp.hasMatch(value)) {
-      return false;
-    }
-    return true;
-  }
-
-  RegExp _getRegExp() {
-    final pattern = this.pattern;
-    if (pattern == null) {
-      return null;
-    }
-    var regExp = this._patternRegExp;
-    if (regExp != null && pattern == regExp.pattern) {
-      return regExp;
-    }
-    regExp = RegExp(pattern);
-    _patternRegExp = regExp;
-    return regExp;
-  }
 }

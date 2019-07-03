@@ -1,3 +1,7 @@
+## 1.0.7
+
+* Fixed various bugs.
+
 ## 1.0.6
 
 * Fixed various bugs.

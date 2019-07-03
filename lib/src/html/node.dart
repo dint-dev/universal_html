@@ -66,6 +66,25 @@ class Comment extends CharacterData {
       Comment.internal(ownerDocument, nodeValue);
 }
 
+/// IMPORTANT: Not part 'dart:html'.
+class DocumentType extends Node {
+  final String _value;
+
+  /// IMPORTANT: Not part 'dart:html'.
+  DocumentType.internal(Document ownerDocument, this._value)
+      : super._(ownerDocument);
+
+  @override
+  String get nodeName => _value;
+
+  @override
+  int get nodeType => Node.DOCUMENT_TYPE_NODE;
+
+  @override
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
+      DocumentType.internal(ownerDocument, this._value);
+}
+
 abstract class Node extends EventTarget {
   static const int ATTRIBUTE_NODE = 2;
   static const int CDATA_SECTION_NODE = 4;
@@ -91,9 +110,11 @@ abstract class Node extends EventTarget {
 
   Node._document() : this.ownerDocument = null;
 
-  List<Node> get childNodes => _ChildNodeListLazy(this);
+  String get baseUri {
+    return ownerDocument.baseUri;
+  }
 
-  List<Node> get nodes => _ChildNodeListLazy(this);
+  List<Node> get childNodes => _ChildNodeListLazy(this);
 
   Node get firstChild => null;
 
@@ -104,6 +125,8 @@ abstract class Node extends EventTarget {
   Node get nextNode => _nextNode;
 
   String get nodeName => null;
+
+  List<Node> get nodes => _ChildNodeListLazy(this);
 
   int get nodeType;
 
@@ -191,9 +214,6 @@ abstract class Node extends EventTarget {
     return clone;
   }
 
-  @protected
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep);
-
   bool contains(Node node) {
     while (true) {
       node = node.parentNode;
@@ -226,6 +246,9 @@ abstract class Node extends EventTarget {
   void insertBefore(Node node, Node before) {
     throw DomException._invalidMethod("Node", "insertBefore");
   }
+
+  @protected
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep);
 
   void remove() {
     final parent = this._parent;
@@ -349,6 +372,11 @@ abstract class Node extends EventTarget {
   }
 }
 
+/// For accessing underlying node lists, for dart:js interop.
+abstract class NodeListWrapper {
+  List<Node> get rawList;
+}
+
 abstract class NonDocumentTypeChildNode implements Node {
   Element get nextElementSibling {
     Node node = this.nextNode;
@@ -376,6 +404,8 @@ abstract class NonDocumentTypeChildNode implements Node {
 abstract class ParentNode implements Node {
   Element querySelector(String selectors);
 }
+
+class Range {}
 
 class Text extends CharacterData {
   factory Text(String value) {
@@ -433,25 +463,6 @@ class _ChildNodeIterator extends Iterator<Node> {
       return true;
     }
   }
-}
-
-/// IMPORTANT: Not part 'dart:html'.
-class DocumentType extends Node {
-  final String _value;
-
-  /// IMPORTANT: Not part 'dart:html'.
-  DocumentType.internal(Document ownerDocument, this._value)
-      : super._(ownerDocument);
-
-  @override
-  String get nodeName => _value;
-
-  @override
-  int get nodeType => Node.DOCUMENT_TYPE_NODE;
-
-  @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      DocumentType.internal(ownerDocument, this._value);
 }
 
 /// Mixin for [Element] and [Document].
@@ -599,11 +610,4 @@ abstract class _ElementOrDocument implements Node, ParentNode {
 
 class _NodeMissingParent extends StateError {
   _NodeMissingParent() : super("Node doesn't have a parent");
-}
-
-class Range {}
-
-/// For accessing underlying node lists, for dart:js interop.
-abstract class NodeListWrapper {
-  List<Node> get rawList;
 }

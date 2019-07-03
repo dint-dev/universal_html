@@ -110,30 +110,13 @@ class Location extends Object with _UrlBase {
 
   List<String> ancestorOrigins;
 
-  /// For [_UrlBase]
-  @override
-  Uri _uri;
-
-  String _href;
-
-  /// Did we receive a real URL in the constructor?
-  bool _isRealUri = true;
-
   /// IMPORTANT: Not part of 'dart:html' API.
-  Location.internal(this._htmlDriver, {Uri uri}) {
-    if (uri == null) {
-      this._isRealUri = false;
-      uri = Uri(scheme: "https", host: "localhost", path: "/");
-    }
-    this._uri = uri;
-    this._href = uri.toString();
-  }
+  Location.internal(this._htmlDriver);
 
-  String get href => _href;
+  String get href => _htmlDriver.uriString;
 
   set href(String value) {
-    this._uri = Uri.parse(value);
-    this._href = value;
+    _htmlDriver.uri = Uri.parse(value);
   }
 
   void assign([String url]) {
@@ -144,14 +127,15 @@ class Location extends Object with _UrlBase {
   }
 
   void reload() {
-    if (_isRealUri) {
-      _htmlDriver.setDocumentFromUri(_uri);
-    }
+    _htmlDriver.reload();
   }
 
   void replace(String url) {
     this.href = url;
   }
+
+  @override
+  Uri get _uri => _htmlDriver.uri;
 }
 
 class Url extends _UrlBase {

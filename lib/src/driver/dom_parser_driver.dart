@@ -1,55 +1,61 @@
 import 'package:html/dom.dart' as html_parsing;
 import 'package:html/parser.dart' as html_parsing;
+import 'package:meta/meta.dart';
+import 'package:universal_html/driver.dart';
 import 'package:universal_html/src/html.dart';
 import 'package:universal_html/src/svg.dart';
-import 'package:universal_html/driver.dart';
+import 'package:xml/xml.dart' as xml;
 
 /// Parses DOM trees.
 class DomParserDriver {
-  static final NodeValidatorBuilder _defaultValidator =
-      NodeValidatorBuilder.common();
-  static final NodeTreeSanitizer _defaultSanitizer =
-      NodeTreeSanitizer(_defaultValidator);
-
-  static const int _typeHtml = 0;
-  static const int _typeXml = 1;
-  static const int _typeSvg = 2;
-
   final HtmlDriver _htmlDriver;
 
-  HtmlDriver get htmlDriver => _htmlDriver ?? HtmlDriver.current;
-
   const DomParserDriver({HtmlDriver driver}) : this._htmlDriver = driver;
+
+  HtmlDriver get htmlDriver => _htmlDriver ?? HtmlDriver.current;
 
   /// Parses [Document] based on [mime] (e.g. "text/html").
   ///
   /// The result is either [HtmlDocument] or [XmlDocument].
   Document parseDocument(
     String input, {
-    String mime = "text/html",
+    @required String mime,
   }) {
     if (mime == null) {
       throw ArgumentError.notNull("mime");
     }
     switch (mime) {
-      case "text/html":
-        return parseHtmlDocumentFromHtml(input);
       case "text/plain":
-        final document = HtmlDocument.internal(htmlDriver);
+        final document = HtmlDocument.internal(
+          htmlDriver,
+          contentType: mime,
+          filled: true,
+        );
         document.body.appendText(input);
         return document;
+
+      // HTML
+      case "text/html":
+        return parseHtml(input, mime: mime);
       case "application/html":
-        return parseHtmlDocumentFromHtml(input);
+        return parseHtml(input, mime: mime);
+
+      // XHTML
       case "application/xhtml+xml":
-        return parseHtmlDocumentFromXhtml(input);
-      case "text/xml":
-        return parseXmlDocument(input);
-      case "application/xml":
-        return parseXmlDocument(input);
+        return parseXml(input, mime: mime);
+
+      // SVG
       case "text/svg":
-        return parseXmlDocumentFromSvg(input);
+        return parseSvg(input, mime: mime);
       case "application/svg":
-        return parseXmlDocumentFromSvg(input);
+        return parseSvg(input, mime: mime);
+
+      // XML
+      case "text/xml":
+        return parseXml(input, mime: mime);
+      case "application/xml":
+        return parseXml(input, mime: mime);
+
       default:
         throw ArgumentError.value(
           mime,
@@ -62,8 +68,13 @@ class DomParserDriver {
   DocumentFragment parseDocumentFragmentFromHtml(
       Document ownerDocument, String html,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    return _parseDocumentFragment(
-      _typeHtml,
+    final task = _HtmlParser(
+      htmlDriver,
+      type: _HtmlParser._typeHtml,
+      mime: "text/html",
+    );
+    return task._parseDocumentFragment(
+      _HtmlParser._typeHtml,
       ownerDocument,
       html,
       validator: validator,
@@ -74,8 +85,13 @@ class DomParserDriver {
   DocumentFragment parseDocumentFragmentFromSvg(
       Document ownerDocument, String html,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    return _parseDocumentFragment(
-      _typeSvg,
+    final task = _HtmlParser(
+      htmlDriver,
+      type: _HtmlParser._typeSvg,
+      mime: "application/svg",
+    );
+    return task._parseDocumentFragment(
+      _HtmlParser._typeSvg,
       ownerDocument,
       html,
       validator: validator,
@@ -91,7 +107,7 @@ class DomParserDriver {
   ///
   /// Currently conversion happens by inserting the document element into the
   /// body of blank HTML document.
-  HtmlDocument parseHtmlDocument(
+  HtmlDocument parseHtmlFromAnything(
     String input, {
     String mime = "text/html",
   }) {
@@ -101,7 +117,11 @@ class DomParserDriver {
     }
     if (document is XmlDocument) {
       // Convert XML document to HTML document
-      final htmlDocument = HtmlDocument.internal(htmlDriver, filled: false);
+      final htmlDocument = HtmlDocument.internal(
+        htmlDriver,
+        contentType: mime,
+        filled: false,
+      );
       while (true) {
         final firstChild = document.firstChild;
         if (firstChild == null) {
@@ -116,109 +136,97 @@ class DomParserDriver {
     throw StateError("Invalid document type");
   }
 
-  HtmlDocument parseHtmlDocumentFromHtml(String input) {
-    final node = _newNodeFrom(_typeHtml, null, html_parsing.parse(input));
-    return node as HtmlDocument;
-  }
-
-  HtmlDocument parseHtmlDocumentFromXhtml(String input) {
-    final node = _newNodeFrom(_typeHtml, null, html_parsing.parse(input));
-    return node as HtmlDocument;
-  }
-
-  XmlDocument parseXmlDocument(String input) {
-    // TODO: Real XML parsing
-    final node = _newNodeFrom(_typeXml, null, html_parsing.parse(input));
-    return node as XmlDocument;
-  }
-
-  XmlDocument parseXmlDocumentFromSvg(String input) {
-    // TODO: Real SVG parsing
-    final node = _newNodeFrom(_typeSvg, null, html_parsing.parse(input));
-    return node as XmlDocument;
-  }
-
-  DocumentFragment _parseDocumentFragment(
-    int type,
-    Document ownerDocument,
-    String html, {
-    NodeValidator validator,
-    NodeTreeSanitizer treeSanitizer,
-    String container,
-  }) {
-    if (html == null) {
-      throw ArgumentError.notNull();
-    }
-    if (treeSanitizer == null) {
-      if (validator == null) {
-        validator = _defaultValidator;
-        treeSanitizer = _defaultSanitizer;
-      } else {
-        treeSanitizer = NodeTreeSanitizer(validator);
-      }
-    } else if (validator != null) {
-      throw ArgumentError(
-          'validator can only be passed if treeSanitizer is null');
-    }
-    final node = _newNodeFrom(
-      type,
-      null,
-      html_parsing.parseFragment(html, container: container),
+  HtmlDocument parseHtml(String input, {String mime = "text/html"}) {
+    final task = _HtmlParser(
+      htmlDriver,
+      type: _HtmlParser._typeHtml,
+      mime: mime,
     );
-    final fragment = node as DocumentFragment;
-    var child = fragment.firstChild;
-    while (child != null) {
-      treeSanitizer.sanitizeTree(child);
-      child = child.nextNode;
-    }
-    return fragment;
+    final node = task._newNodeFrom(null, html_parsing.parse(input));
+    return node as HtmlDocument;
   }
+
+  XmlDocument parseXhtml(String input,
+      {String mime = "application/xhtml+xml"}) {
+    final parser = _XmlParser(htmlDriver, mime);
+    final node = parser._newNodeFrom(null, xml.parse(input));
+    return node as XmlDocument;
+  }
+
+  XmlDocument parseXml(String input, {String mime = "text/xml"}) {
+    final parser = _XmlParser(htmlDriver, mime);
+    final node = parser._newNodeFrom(null, xml.parse(input));
+    return node as XmlDocument;
+  }
+
+  XmlDocument parseSvg(String input, {String mime = "application/svg"}) {
+    final parser = _XmlParser(htmlDriver, mime);
+    final node = parser._newNodeFrom(null, xml.parse(input));
+    return node as XmlDocument;
+  }
+}
+
+class _HtmlParser {
+  static final NodeValidatorBuilder _defaultValidator =
+      NodeValidatorBuilder.common();
+
+  static final NodeTreeSanitizer _defaultSanitizer =
+      NodeTreeSanitizer(_defaultValidator);
+
+  static const int _typeHtml = 0;
+  static const int _typeXml = 1;
+  static const int _typeSvg = 2;
+
+  final HtmlDriver htmlDriver;
+  final int type;
+  final String mime;
+
+  _HtmlParser(this.htmlDriver, {@required this.type, @required this.mime});
 
   Element _newElementWithoutChildrenFrom(
-    int type,
     Document ownerDocument,
     html_parsing.Element input,
   ) {
     switch (type) {
       case _typeHtml:
-        final tag = input.localName;
+        final tag = input.localName.toUpperCase();
         switch (tag) {
-          case "input":
+          case "INPUT":
+            String type;
+            for (var name in input.attributes.keys) {
+              if (name.toLowerCase() == "type") {
+                type = input.attributes[name];
+              }
+            }
             return InputElementBase.internalFromType(
               ownerDocument,
-              input.attributes["type"],
+              type,
             );
           default:
             return Element.internalTag(
               ownerDocument,
-              input.localName,
+              tag,
             );
         }
         break;
       case _typeXml:
-        // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-        return Element.internalTag(ownerDocument, input.localName);
+        return UnknownElement.internal(
+            ownerDocument, input.namespaceUri, input.localName);
       case _typeSvg:
-        // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
         return SvgElement.internal(ownerDocument, input.localName);
       default:
         throw ArgumentError.value(type);
     }
   }
 
-  Node _newNodeFrom(
-    int type,
-    Document ownerDocument,
-    html_parsing.Node input,
-  ) {
+  Node _newNodeFrom(Document ownerDocument, html_parsing.Node input) {
     if (input == null) {
       return null;
     } else if (input is html_parsing.Element) {
       // -------
       // Element
       // -------
-      Element result =
-          _newElementWithoutChildrenFrom(type, ownerDocument, input);
+      Element result = _newElementWithoutChildrenFrom(ownerDocument, input);
 
       // Set attributes
       final inputAttributes = input.attributes;
@@ -236,7 +244,7 @@ class DomParserDriver {
 
       // Append children
       for (var child in input.nodes) {
-        result.append(_newNodeFrom(type, ownerDocument, child));
+        result.append(_newNodeFrom(ownerDocument, child));
       }
       return result;
     } else if (input is html_parsing.Text) {
@@ -265,16 +273,23 @@ class DomParserDriver {
       switch (type) {
         case _typeHtml:
           // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-          final result = HtmlDocument.internal(htmlDriver, filled: false);
+          final result = HtmlDocument.internal(
+            htmlDriver,
+            contentType: mime,
+            filled: false,
+          );
           for (var child in input.nodes) {
-            result.append(_newNodeFrom(type, result, child));
+            result.append(_newNodeFrom(result, child));
           }
           return result;
         default:
           // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-          final result = XmlDocument.internal(htmlDriver);
+          final result = XmlDocument.internal(
+            htmlDriver,
+            contentType: mime,
+          );
           for (var child in input.nodes) {
-            result.append(_newNodeFrom(type, result, child));
+            result.append(_newNodeFrom(result, child));
           }
           return result;
       }
@@ -285,7 +300,7 @@ class DomParserDriver {
 
       final result = DocumentFragment.internal(ownerDocument);
       for (var child in input.nodes) {
-        result.append(_newNodeFrom(type, ownerDocument, child));
+        result.append(_newNodeFrom(ownerDocument, child));
       }
       return result;
     } else if (input is html_parsing.DocumentType) {
@@ -297,5 +312,111 @@ class DomParserDriver {
     } else {
       throw UnimplementedError();
     }
+  }
+
+  DocumentFragment _parseDocumentFragment(
+    int type,
+    Document ownerDocument,
+    String html, {
+    NodeValidator validator,
+    NodeTreeSanitizer treeSanitizer,
+    String container,
+  }) {
+    if (html == null) {
+      throw ArgumentError.notNull();
+    }
+    if (treeSanitizer == null) {
+      if (validator == null) {
+        validator = _defaultValidator;
+        treeSanitizer = _defaultSanitizer;
+      } else {
+        treeSanitizer = NodeTreeSanitizer(validator);
+      }
+    } else if (validator != null) {
+      throw ArgumentError(
+          'validator can only be passed if treeSanitizer is null');
+    }
+    final node = _newNodeFrom(
+      null,
+      html_parsing.parseFragment(html, container: container),
+    );
+    final fragment = node as DocumentFragment;
+    var child = fragment.firstChild;
+    while (child != null) {
+      treeSanitizer.sanitizeTree(child);
+      child = child.nextNode;
+    }
+    return fragment;
+  }
+}
+
+class _XmlParser {
+  final HtmlDriver htmlDriver;
+  final String contentType;
+
+  _XmlParser(this.htmlDriver, this.contentType);
+
+  Node _newNodeFrom(Document document, xml.XmlNode input) {
+    if (input is xml.XmlProcessing) {
+      return null;
+    }
+    if (input is xml.XmlText) {
+      return Text.internal(document, input.text);
+    }
+    if (input is xml.XmlElement) {
+      final namespace = input.name.namespaceUri;
+      final name = input.name.local;
+      if (name == null) {
+        throw ArgumentError.value(input);
+      }
+      final result = UnknownElement.internal(
+        document,
+        namespace,
+        name,
+      );
+      for (var attribute in input.attributes) {
+        final namespace = attribute.name.prefix;
+        if (namespace != null) {
+          result.setAttributeNS(
+            namespace,
+            attribute.name.qualified ?? attribute.name.local,
+            attribute.value,
+          );
+        } else {
+          result.setAttribute(
+            attribute.name.qualified,
+            attribute.value,
+          );
+        }
+      }
+      for (var inputChild in input.children) {
+        final child = _newNodeFrom(document, inputChild);
+        if (child != null) {
+          result.append(child);
+        }
+      }
+      return result;
+    }
+    if (input is xml.XmlCDATA) {
+      return Text(input.text);
+    }
+    if (input is xml.XmlDocument) {
+      // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
+      final result = XmlDocument.internal(htmlDriver, contentType: contentType);
+      for (var inputChild in input.children) {
+        final child = _newNodeFrom(result, inputChild);
+        if (child != null) {
+          result.append(child);
+        }
+      }
+      return result;
+    }
+    if (input is xml.XmlDoctype) {
+      return DocumentType.internal(document, input.text);
+    }
+    if (input is xml.XmlComment) {
+      return Comment.internal(document, input.text);
+    }
+    throw ArgumentError.value(input);
   }
 }

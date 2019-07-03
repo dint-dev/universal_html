@@ -104,13 +104,18 @@ abstract class Document extends Node
   final String contentType;
 
   factory Document() {
-    return XmlDocument.internal(HtmlDriver.current);
+    return XmlDocument.internal(HtmlDriver.current, contentType: "text/html");
   }
 
   Document._(this._htmlDriver, this.contentType) : super._document();
 
   /// Outside the browser, returns null.
   Element get activeElement => null;
+
+  @override
+  String get baseUri {
+    return window.location.href;
+  }
 
   Element get documentElement {
     var node = firstChild;
@@ -373,10 +378,10 @@ abstract class Document extends Node
     if (document is HtmlDocument) {
       return const <Node>[];
     }
-    elementName = elementName.toUpperCase();
+    elementName = elementName.toLowerCase();
     final result = <Node>[];
     this._forEachTreeElement((element) {
-      if (element.nodeName == elementName) {
+      if (element._lowerCaseTagName == elementName) {
         result.add(element);
       }
     });
@@ -384,10 +389,10 @@ abstract class Document extends Node
   }
 
   List<Node> getElementsByTagName(String tagName) {
-    tagName = tagName.toUpperCase();
+    tagName = tagName.toLowerCase();
     final result = <Node>[];
     this._forEachTreeElement((element) {
-      if (element.tagName == tagName) {
+      if (element._lowerCaseTagName == tagName) {
         result.add(element);
       }
     });
@@ -396,14 +401,42 @@ abstract class Document extends Node
 
   @override
   void insertBefore(Node node, Node before) {
-    if (node is! Element && node is! DocumentType) {
+    if (node is Element) {
+      if (this._firstElementChild != null) {
+        throw DomException._failedToExecute(
+          DomException.HIERARCHY_REQUEST,
+          "Node",
+          "appendChild",
+          "Only one element on document allowed.",
+        );
+      }
+    } else if (node is DocumentType) {
+      // OK
+    } else if (node is Comment) {
+      // OK
+    } else if (node is Text) {
+      // Check that the text is whitespace
+      final value = node.text.replaceAll("\n", "").trim();
+      if (value.isNotEmpty) {
+        throw DomException._mayNotBeInsertedInside(
+          "Document",
+          "insertBefore",
+          node,
+          this,
+        );
+      }
+      // Ignore the text
+      return;
+    } else {
       throw DomException._mayNotBeInsertedInside(
-          "Document", "insertBefore", node, this);
+        "Document",
+        "insertBefore",
+        node,
+        this,
+      );
     }
-    if (node is Element && this._firstElementChild != null) {
-      throw DomException._failedToExecute(DomException.HIERARCHY_REQUEST,
-          "Node", "appendChild", "Only one element on document allowed.");
-    }
+
+    // Insert
     super.insertBefore(node, before);
   }
 
@@ -428,7 +461,7 @@ class DomImplementation {
 
   XmlDocument createDocument(
       String namespaceURI, String qualifiedName, DocumentType doctype) {
-    final result = XmlDocument.internal(_htmlDriver);
+    final result = XmlDocument.internal(_htmlDriver, contentType: "text/xml");
     if (doctype != null) {
       result.append(doctype.internalCloneWithOwnerDocument(result, true));
     }
@@ -445,7 +478,11 @@ class DomImplementation {
   }
 
   HtmlDocument createHtmlDocument([String title]) {
-    return HtmlDocument.internal(_htmlDriver);
+    return HtmlDocument.internal(
+      _htmlDriver,
+      contentType: "text/html",
+      filled: false,
+    );
   }
 }
 
@@ -460,7 +497,7 @@ class HtmlDocument extends Document {
   ///     <body></body>
   ///     </html>
   HtmlDocument.internal(HtmlDriver driver,
-      {String contentType = "text/html", bool filled = true})
+      {@required String contentType, @required bool filled})
       : super._(driver, contentType) {
     if (filled) {
       final docType = DocumentType.internal(this, "html");
@@ -470,6 +507,18 @@ class HtmlDocument extends Document {
       htmlElement.append(HeadElement._(this));
       htmlElement.append(BodyElement._(this));
     }
+  }
+
+  @override
+  String get baseUri {
+    if (head != null) {
+      for (var child in head.children) {
+        if (child is BaseElement) {
+          return child.href;
+        }
+      }
+    }
+    return super.baseUri;
   }
 
   BodyElement get body {
@@ -537,7 +586,11 @@ class HtmlDocument extends Document {
 
   @override
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
-    final clone = HtmlDocument.internal(_htmlDriver, contentType: contentType);
+    final clone = HtmlDocument.internal(
+      _htmlDriver,
+      contentType: contentType,
+      filled: false,
+    );
     if (deep != false) {
       Node._cloneChildrenFrom(clone, clone, this);
     }

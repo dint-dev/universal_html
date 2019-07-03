@@ -25,22 +25,19 @@ void _testHtmlDriver() {
     test("setDocumentFromContent(...) supports XML", () {
       final driver = HtmlDriver();
       driver.setDocumentFromContent(
-        "<xml><product>Example</product></xml>",
+        """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root><product>Example</product></root>
+""",
       );
       final document = driver.document;
       expect(
         nodeToString(document),
-        "<html><head></head><body><xml><product>Example</product></xml></body></html>",
-      );
-      expect(driver.document.body, isNotNull);
-      expect(driver.document.body.children, hasLength(1));
-      expect(
-        driver.document.body.children.single,
-        TypeMatcher<Element>(),
+        "<root><product>Example</product></root>",
       );
       expect(
-        driver.document.body.innerHtml,
-        "<xml><product>Example</product></xml>",
+        driver.document.documentElement.outerHtml,
+        "<root><product>Example</product></root>",
       );
     });
 

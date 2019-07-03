@@ -26,6 +26,8 @@ export 'dart:math' show Point, Rectangle;
 
 export 'svg.dart' show Matrix;
 
+export 'package:universal_io/io.dart' show HttpStatus;
+
 part 'html/animation.dart';
 part 'html/application_cache.dart';
 part 'html/blob.dart';
@@ -47,6 +49,7 @@ part 'html/dom_parser.dart';
 part 'html/element.dart';
 part 'html/element_list.dart';
 part 'html/elements.dart';
+part 'html/elements_input.dart';
 part 'html/event.dart';
 part 'html/event_source.dart';
 part 'html/event_stream.dart';

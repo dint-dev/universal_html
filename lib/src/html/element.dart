@@ -518,6 +518,9 @@ abstract class Element extends Node
   static const EventStreamProvider<TransitionEvent> transitionEndEvent =
       EventStreamProvider<TransitionEvent>("transition");
 
+  /// For [nodeName] and [tagName].
+  String _nodeName;
+
   final String _lowerCaseTagName;
 
   /// Contains all non-namespaced attributes except special cases.
@@ -640,131 +643,13 @@ abstract class Element extends Node
   /// IMPORTANT: Not part 'dart:html'.
   factory Element.internalTag(Document ownerDocument, String name,
       [String typeExtension]) {
-    final normalizedName = name.toLowerCase();
-    switch (normalizedName) {
-      case "a":
-        return AnchorElement._(ownerDocument);
-      case "area":
-        return AreaElement._(ownerDocument);
-      case "audio":
-        return AudioElement._(ownerDocument);
-      case "base":
-        return BaseElement._(ownerDocument);
-      case "body":
-        return BodyElement._(ownerDocument);
-      case "br":
-        return BRElement._(ownerDocument);
-      case "button":
-        return ButtonElement._(ownerDocument);
-      case "canvas":
-        return CanvasElement._(ownerDocument);
-      case "caption":
-        return TableCaptionElement._(ownerDocument);
-      case "content":
-        return ContentElement._(ownerDocument);
-      case "datalist":
-        return DataListElement._(ownerDocument);
-      case "dialog":
-        return DialogElement._(ownerDocument);
-      case "div":
-        return DivElement._(ownerDocument);
-      case "fieldset":
-        return FieldSetElement._(ownerDocument);
-      case "form":
-        return FormElement._(ownerDocument);
-      case "head":
-        return HeadElement._(ownerDocument);
-      case "h1":
-        return HeadingElement._(ownerDocument, "h1");
-      case "h2":
-        return HeadingElement._(ownerDocument, "h2");
-      case "h3":
-        return HeadingElement._(ownerDocument, "h3");
-      case "h4":
-        return HeadingElement._(ownerDocument, "h4");
-      case "h5":
-        return HeadingElement._(ownerDocument, "h5");
-      case "h6":
-        return HeadingElement._(ownerDocument, "h6");
-      case "hr":
-        return HRElement._(ownerDocument);
-      case "html":
-        return HtmlHtmlElement._(ownerDocument);
-      case "iframe":
-        return IFrameElement._(ownerDocument);
-      case "img":
-        return ImageElement._(ownerDocument);
-      case "input":
-        return InputElementBase._(ownerDocument, null);
-      case "label":
-        return LabelElement._(ownerDocument);
-      case "legend":
-        return LegendElement._(ownerDocument);
-      case "li":
-        return LIElement._(ownerDocument);
-      case "link":
-        return LinkElement._(ownerDocument);
-      case "meta":
-        return MetaElement._(ownerDocument);
-      case "ol":
-        return OListElement._(ownerDocument);
-      case "option":
-        return OptionElement._(ownerDocument);
-      case "optgroup":
-        return OptGroupElement._(ownerDocument);
-      case "p":
-        return ParagraphElement._(ownerDocument);
-      case "picture":
-        return PictureElement._(ownerDocument);
-      case "pre":
-        return PreElement._(ownerDocument);
-      case "select":
-        return SelectElement._(ownerDocument);
-      case "script":
-        return ScriptElement._(ownerDocument);
-      case "slot":
-        return SlotElement._(ownerDocument);
-      case "source":
-        return SourceElement._(ownerDocument);
-      case "span":
-        return SpanElement._(ownerDocument);
-      case "style":
-        return StyleElement._(ownerDocument);
-      case "table":
-        return TableElement._(ownerDocument);
-      case "tbody":
-        return TableSectionElement._(ownerDocument, "tbody");
-      case "template":
-        return TemplateElement._(ownerDocument);
-      case "td":
-        return TableCellElement._(ownerDocument);
-      case "tfoot":
-        return TableSectionElement._(ownerDocument, "tfoot");
-      case "thead":
-        return TableSectionElement._(ownerDocument, "thead");
-      case "textarea":
-        return TextAreaElement._(ownerDocument);
-      case "title":
-        return TitleElement._(ownerDocument);
-      case "tr":
-        return TableRowElement._(ownerDocument);
-      case "track":
-        return TrackElement._(ownerDocument);
-      case "ul":
-        return UListElement._(ownerDocument);
-      case "video":
-        return VideoElement._(ownerDocument);
-      default:
-        if (!Element._normalizedElementNameRegExp.hasMatch(normalizedName)) {
-          throw DomException._failedToExecute(
-            "ElementNameException",
-            "Element",
-            "tag",
-            "'$name' is an invalid element name.",
-          );
-        }
-        return UnknownElement.internal(ownerDocument, null, normalizedName);
-    }
+    final result = Element._internalTag(
+      ownerDocument,
+      name,
+      typeExtension,
+    );
+    result._nodeName = name;
+    return result;
   }
 
   /// IMPORTANT: Not part 'dart:html'.
@@ -836,7 +721,7 @@ abstract class Element extends Node
   /// Creates a new element with the tag name.
   /// If the name is invalid, throws an error or exception.
   factory Element.tag(String name, [String typeExtension]) {
-    return Element.internalTag(null, name, typeExtension);
+    return Element.internalTag(null, name.toUpperCase(), typeExtension);
   }
 
   /// Creates a new `<td>` element.
@@ -872,9 +757,138 @@ abstract class Element extends Node
   /// Internal constructor that does not normalize or validate element name.
   /// Used by Element subclasses such as [AnchorElement].
   Element._(Document ownerDocument, String nodeName)
-      : assert(nodeName.toLowerCase() == nodeName),
-        this._lowerCaseTagName = nodeName,
+      : this._nodeName = nodeName,
+        this._lowerCaseTagName = nodeName.toLowerCase(),
         super._(ownerDocument);
+
+  factory Element._internalTag(Document ownerDocument, String name,
+      [String typeExtension]) {
+    final lowerCaseName = name.toLowerCase();
+    switch (lowerCaseName) {
+      case "a":
+        return AnchorElement._(ownerDocument);
+      case "area":
+        return AreaElement._(ownerDocument);
+      case "audio":
+        return AudioElement._(ownerDocument);
+      case "base":
+        return BaseElement._(ownerDocument);
+      case "body":
+        return BodyElement._(ownerDocument);
+      case "br":
+        return BRElement._(ownerDocument);
+      case "button":
+        return ButtonElement._(ownerDocument);
+      case "canvas":
+        return CanvasElement._(ownerDocument);
+      case "caption":
+        return TableCaptionElement._(ownerDocument);
+      case "content":
+        return ContentElement._(ownerDocument);
+      case "datalist":
+        return DataListElement._(ownerDocument);
+      case "dialog":
+        return DialogElement._(ownerDocument);
+      case "div":
+        return DivElement._(ownerDocument);
+      case "fieldset":
+        return FieldSetElement._(ownerDocument);
+      case "form":
+        return FormElement._(ownerDocument);
+      case "head":
+        return HeadElement._(ownerDocument);
+      case "h1":
+        return HeadingElement._(ownerDocument, name);
+      case "h2":
+        return HeadingElement._(ownerDocument, name);
+      case "h3":
+        return HeadingElement._(ownerDocument, name);
+      case "h4":
+        return HeadingElement._(ownerDocument, name);
+      case "h5":
+        return HeadingElement._(ownerDocument, name);
+      case "h6":
+        return HeadingElement._(ownerDocument, name);
+      case "hr":
+        return HRElement._(ownerDocument);
+      case "html":
+        return HtmlHtmlElement._(ownerDocument);
+      case "iframe":
+        return IFrameElement._(ownerDocument);
+      case "img":
+        return ImageElement._(ownerDocument);
+      case "input":
+        return InputElementBase._(ownerDocument, null);
+      case "label":
+        return LabelElement._(ownerDocument);
+      case "legend":
+        return LegendElement._(ownerDocument);
+      case "li":
+        return LIElement._(ownerDocument);
+      case "link":
+        return LinkElement._(ownerDocument);
+      case "meta":
+        return MetaElement._(ownerDocument);
+      case "ol":
+        return OListElement._(ownerDocument);
+      case "option":
+        return OptionElement._(ownerDocument);
+      case "optgroup":
+        return OptGroupElement._(ownerDocument);
+      case "p":
+        return ParagraphElement._(ownerDocument);
+      case "picture":
+        return PictureElement._(ownerDocument);
+      case "pre":
+        return PreElement._(ownerDocument);
+      case "select":
+        return SelectElement._(ownerDocument);
+      case "script":
+        return ScriptElement._(ownerDocument);
+      case "slot":
+        return SlotElement._(ownerDocument);
+      case "source":
+        return SourceElement._(ownerDocument);
+      case "span":
+        return SpanElement._(ownerDocument);
+      case "style":
+        return StyleElement._(ownerDocument);
+      case "table":
+        return TableElement._(ownerDocument);
+      case "tbody":
+        return TableSectionElement._(ownerDocument, name);
+      case "template":
+        return TemplateElement._(ownerDocument);
+      case "td":
+        return TableCellElement._(ownerDocument);
+      case "tfoot":
+        return TableSectionElement._(ownerDocument, name);
+      case "thead":
+        return TableSectionElement._(ownerDocument, name);
+      case "textarea":
+        return TextAreaElement._(ownerDocument);
+      case "title":
+        return TitleElement._(ownerDocument);
+      case "tr":
+        return TableRowElement._(ownerDocument);
+      case "track":
+        return TrackElement._(ownerDocument);
+      case "ul":
+        return UListElement._(ownerDocument);
+      case "video":
+        return VideoElement._(ownerDocument);
+      default:
+        if (!Element._normalizedElementNameRegExp.hasMatch(lowerCaseName)) {
+          throw DomException._failedToExecute(
+            "ElementNameException",
+            "Element",
+            "tag",
+            "'$name' is an invalid element name.",
+          );
+        }
+        return UnknownElement.internal(ownerDocument, null, name);
+    }
+  }
 
   /// Returns a modifiable map of attributes.
   Map<String, String> get attributes {
@@ -1057,8 +1071,7 @@ abstract class Element extends Node
   }
 
   /// Returns node name in uppercase.
-  @override
-  String get nodeName => _lowerCaseTagName.toUpperCase();
+  String get nodeName => _nodeName;
 
   @override
   int get nodeType => Node.ELEMENT_NODE;
@@ -1779,6 +1792,7 @@ class _DataAttributeMap extends MapBase<String, String> {
   bool get isEmpty => length == 0;
 
   bool get isNotEmpty => !isEmpty;
+
   // TODO: Use lazy iterator when it is available on Map.
   Iterable<String> get keys {
     final keys = <String>[];
@@ -1843,7 +1857,9 @@ class _DataAttributeMap extends MapBase<String, String> {
 
   // Helpers.
   String _attr(String key) => 'data-${_toHyphenedName(key)}';
+
   bool _matches(String key) => key.startsWith('data-');
+
   String _strip(String key) => _toCamelCase(key.substring(5));
 
   /// Converts a string name with hyphens into an identifier, by removing hyphens

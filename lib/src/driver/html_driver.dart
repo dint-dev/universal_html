@@ -56,12 +56,22 @@ class HtmlDriver {
   HtmlDocument get document {
     var document = this._document;
     if (document == null) {
-      this._document = document = HtmlDocument.internal(this);
+      this._document = document = HtmlDocument.internal(
+        this,
+        contentType: "text/html",
+        filled: true,
+      );
     }
     return document;
   }
 
+  String get uriString => _uri.toString();
+
   Uri get uri => _uri;
+
+  set uri(Uri value) {
+    this._uri = value;
+  }
 
   /// Used by 'dart:html' _window_.
   Window get window {
@@ -103,7 +113,7 @@ class HtmlDriver {
   }
 
   /// Constructs 'dart:html' _window.location_.
-  Location newLocation() => Location.internal(this, uri: uri);
+  Location newLocation() => Location.internal(this);
 
   /// Constructs 'dart:html' _navigator_.
   Navigator newNavigator() => Navigator.internal(this);
@@ -119,6 +129,10 @@ class HtmlDriver {
   /// Constructs 'dart:html' _window_.
   Window newWindow() => Window.internal(this);
 
+  void reload() {
+    setDocumentFromUri(uri);
+  }
+
   /// Replaces current document.
   ///
   /// Sets:
@@ -126,9 +140,10 @@ class HtmlDriver {
   ///   * [document]
   ///   * [window] (using [newWindow])
   ///   * [contentSecurityPolicy] (using null)
-  void setDocument(HtmlDocument document, {Uri uri}) {
+  void setDocument(Document document, {Uri uri}) {
     this._uri = uri ?? defaultUri;
-    this._document = document; // If null, it will be lazily initialized.
+    this._document =
+        _htmlDocumentFrom(document); // If null, it will be lazily initialized.
     this._window = null; // It will be lazily initialized.
     this.contentSecurityPolicy = null;
     if (document == null) {
@@ -140,6 +155,24 @@ class HtmlDriver {
     }
   }
 
+  HtmlDocument _htmlDocumentFrom(Document document) {
+    if (document == null) {
+      return null;
+    }
+    if (document is HtmlDocument) {
+      return document;
+    }
+    final result = HtmlDocument.internal(
+      this,
+      contentType: document.contentType,
+      filled: true,
+    );
+    for (var child in document.childNodes) {
+      result.append(child);
+    }
+    return result;
+  }
+
   /// Loads document from the string and calls [setDocument].
   void setDocumentFromContent(
     String input, {
@@ -148,7 +181,7 @@ class HtmlDriver {
     ContentTypeSniffer contentTypeSniffer = const ContentTypeSniffer(),
   }) async {
     mime ??= contentTypeSniffer.sniffMime(input) ?? "text/html";
-    final document = domParserDriver.parseHtmlDocument(input, mime: mime);
+    final document = domParserDriver.parseHtmlFromAnything(input, mime: mime);
     setDocument(document, uri: uri);
   }
 

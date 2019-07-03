@@ -114,8 +114,10 @@ Future main() async {
     * Much of the element subclasses (_CheckboxInputElement_, _ResetButtonElement_, etc.)
     * Much of the CSS classes (_CssStyleDeclaration_, etc.)
   * __DOM parsing__
-    * _DomParser_, _innerHtml/outerHtml_ setters
-    * Uses [package:html](https://github.com/dartlang/html) and [package:csslib](https://github.com/dartlang/csslib)
+    * _innerHtml/outerHtml_ setters
+    * _DomParser_
+    * HTML parsing uses [package:html](https://pub.dev/packages/html) and [package:csslib](https://pub.dev/packages/csslib)
+    * XML parsing uses [package:xml](https://pub.dev/packages/xml)
   * __DOM printing__
     * _element.innerHtml_
     * _element.outerHtml_

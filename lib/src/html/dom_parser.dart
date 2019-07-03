@@ -35,20 +35,6 @@ part of universal_html;
 
 class DomParser {
   Document parseFromString(String input, String type) {
-    final driver = HtmlDriver.current.domParserDriver;
-    switch (type) {
-      case "text/html":
-        return driver.parseHtmlDocument(input);
-      case "application/xhtml+xml":
-        return driver.parseHtmlDocument(input);
-      case "text/xml":
-        return driver.parseXmlDocument(input);
-      case "application/xml":
-        return driver.parseXmlDocument(input);
-      case "image/svg+xml":
-        return driver.parseXmlDocumentFromSvg(input);
-      default:
-        throw ArgumentError.value(type, "type");
-    }
+    return HtmlDriver.current.domParserDriver.parseDocument(input, mime: type);
   }
 }

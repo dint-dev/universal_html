@@ -184,8 +184,13 @@ void _printElement(StringBuffer sb, int flags, Element node) {
       }
     }
   }
+  if (node.childNodes.isEmpty && node.ownerDocument is XmlDocument) {
+    sb.write("/>");
+    return;
+  }
   sb.write(">");
-  if (_singleTagNamesInLowerCase.contains(node._lowerCaseTagName)) {
+  if (_singleTagNamesInLowerCase.contains(node._lowerCaseTagName) &&
+      node.ownerDocument is HtmlDocument) {
     return;
   }
   _printChildren(sb, flags, node);
@@ -250,6 +255,10 @@ String _namespaceUriToPrefix(Node node, String uri) {
   }
   for (; node != null; node = node.parent) {
     if (node is Element) {
+      final defaultNamespace = node.getAttribute("xmlns");
+      if (defaultNamespace == uri) {
+        return null;
+      }
       final namespaces = node._namespacedAttributes;
       if (namespaces == null) {
         continue;
@@ -265,7 +274,7 @@ String _namespaceUriToPrefix(Node node, String uri) {
       }
     }
   }
-  throw StateError("Could not resolve prefix for namespace: '${uri}'");
+  return null;
 }
 
 void _printChildren(StringBuffer sb, int flags, Node node) {

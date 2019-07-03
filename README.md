@@ -18,7 +18,7 @@ The project is licensed under the [MIT license](LICENSE).
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^1.0.6
+  universal_html: ^1.0.9
 ```
 
 Now you can replace usage of "dart:html" with "package:universal_html/html.dart".

@@ -1,3 +1,8 @@
+
+## 1.0.9
+
+* Fixed bugs related to XML handling.
+
 ## 1.0.8
 
 * Fixed various bugs.

@@ -1,7 +1,6 @@
 name: universal_html
-version: 1.0.8
-description:
-  Cross-platform 'dart:html' that works in browser, Flutter, Dart VM, and Node.JS.
+version: 1.0.9
+description: Cross-platform 'dart:html'. Works in browser, server-side, and Flutter.
 homepage: https://github.com/terrier989/dart-universal_html
 author: terrier989 <terrier989@gmail.com>
 

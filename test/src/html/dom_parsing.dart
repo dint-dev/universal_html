@@ -189,24 +189,15 @@ some text
     test("`DomParser, 'text/xml', 'application/xml'", () {
       for (var contentType in ["text/xml", "application/xml"]) {
         const source = """
-<?xml version="1.0"?>
-<!DOCTYPE example>
-<!-- comment -->
 <root xmlns:x="example_namespace">
 <Child k0="v0" k1="v1">text</Child>
 <x:Child x:k0="v0" x:k1="v1">text</x:Child>
-</root>
-""";
+</root>""";
 
         // Parse
         final document = DomParser().parseFromString(source, contentType);
         expect(document.contentType, contentType);
-
-        expect(document.documentElement.outerHtml, """
-<root xmlns:x="example_namespace">
-<Child k0="v0" k1="v1">text</Child>
-<x:Child x:k0="v0" x:k1="v1">text</x:Child>
-</root>""");
+        expect(document.documentElement.outerHtml, source);
 
         final root = document.documentElement;
         expect(root.ownerDocument, isNotNull);
@@ -279,6 +270,55 @@ some text
           reason: "getElementsByTagName",
         );
       }
+    });
+
+    test("`DomParser, 'text/xml' (default namespace)", () {
+      const source = """<a xmlns="example"><b>&amp;&lt;&gt;</b></a>""";
+      final document = DomParser().parseFromString(source, "text/xml");
+      expect(document.documentElement.outerHtml, source);
+    });
+
+    test("`DomParser, 'text/xml' (comment before element)", () {
+      const source = """<!-- x --><a></a>""";
+      final document = DomParser().parseFromString(source, "text/xml");
+      expect(document.childNodes, hasLength(2));
+      expect(document.documentElement.outerHtml, "<a/>");
+    });
+
+    test("`DomParser, 'text/xml' (XML processing instruction)", () {
+      const source = """<?xml version="1.0"?><a></a>""";
+      final document = DomParser().parseFromString(source, "text/xml");
+      expect(document.childNodes, hasLength(1));
+      expect(document.documentElement.outerHtml, "<a/>");
+    });
+
+    test("`DomParser, 'text/xml' (doctype)", () {
+      const source = """<!DOCTYPE example><a></a>""";
+      final document = DomParser().parseFromString(source, "text/xml");
+      expect(document.childNodes, hasLength(2));
+      expect(document.documentElement.outerHtml, "<a/>");
+    });
+
+    test("`DomParser, 'text/xml' (special characters)", () {
+      const source = """<a>&amp;&lt;&gt;</a>""";
+      final document = DomParser().parseFromString(source, "text/xml");
+      expect(document.documentElement.outerHtml, source);
+    });
+
+    test(
+        "`DomParser, 'text/xml' (element that doesn't have closing tag in HTML)",
+        () {
+      const source = """<img>text</img>""";
+      final document = DomParser().parseFromString(source, "text/xml");
+      expect(document.documentElement.outerHtml, source);
+    });
+
+    test(
+        "`DomParser, 'text/xml' (element that doesn't have closing tag in HTML, no content)",
+        () {
+      const source = """<img/>""";
+      final document = DomParser().parseFromString(source, "text/xml");
+      expect(document.documentElement.outerHtml, source);
     });
   });
 }

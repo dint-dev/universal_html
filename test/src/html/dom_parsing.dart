@@ -8,11 +8,11 @@ void _testParsing() {
     test("`DomParser, 'text/html'", () {
       final contentType = "text/html";
       const source = """
-<div emptyname name="value" namespace:name="value2">
+<div emptyname name="value" ns:name="value2">
 some text
 <!--some comment-->
 <h1>element #1</h1>
-<img src="image.jpeg">
+<Img src="image.jpeg">
 </div>""";
 
       // Parse
@@ -33,7 +33,7 @@ some text
       // Get node
       final div = root.childNodes[1].firstChild;
 
-      // <div emptyname name="value" namespace:name="value2">
+      // <div emptyname name="value" ns:name="value2">
       {
         expect(div, isA<DivElement>());
 
@@ -192,8 +192,9 @@ some text
 <?xml version="1.0"?>
 <!DOCTYPE example>
 <!-- comment -->
-<root>
-<child k0="v0" k1="v1">text</child>
+<root xmlns:x="example_namespace">
+<Child k0="v0" k1="v1">text</Child>
+<x:Child x:k0="v0" x:k1="v1">text</x:Child>
 </root>
 """;
 
@@ -202,8 +203,9 @@ some text
         expect(document.contentType, contentType);
 
         expect(document.documentElement.outerHtml, """
-<root>
-<child k0="v0" k1="v1">text</child>
+<root xmlns:x="example_namespace">
+<Child k0="v0" k1="v1">text</Child>
+<x:Child x:k0="v0" x:k1="v1">text</x:Child>
 </root>""");
 
         final root = document.documentElement;
@@ -212,20 +214,70 @@ some text
         expect(root, isA<Element>());
         expect(root.nodeName, "root");
         expect(root.tagName, "root");
-        expect(root.childNodes, hasLength(3));
-        expect(root.children, hasLength(1));
+        expect(root.childNodes, hasLength(5));
+        expect(root.children, hasLength(2));
 
-        // <child k0="v0" k1>text</child>
-        final child = root.children[0];
-        expect(child.ownerDocument, isNotNull);
-        expect(child.ownerDocument.contentType, contentType);
-        expect(child.tagName, "child");
-        expect(child.attributes, hasLength(2));
-        expect(child.attributes["k0"], "v0");
-        expect(child.attributes["k1"], "v1");
+        // <child k0="v0" ns:k1="v1">text</child>
+        final child0 = root.children[0];
+        expect(child0.ownerDocument, isNotNull);
+        expect(child0.ownerDocument.contentType, contentType);
+        expect(child0.tagName, "Child");
+        expect(child0.attributes, hasLength(2));
+        expect(child0.attributes["k0"], "v0");
+        expect(child0.attributes["k1"], "v1");
+        expect(child0.childNodes, hasLength(1));
+        expect(child0.text, "text");
 
-        expect(child.childNodes, hasLength(1));
-        expect(child.text, "text");
+        // <ns:child ns:k0="v0" ns:k1="v1">text</ns:child>
+        final child1 = root.children[1];
+        expect(child1.namespaceUri, "example_namespace");
+        expect(child1.nodeName, "x:Child");
+        expect(child1.tagName, "x:Child");
+        expect(child1.attributes, isNot(contains("k0")));
+        expect(child1.attributes, isNot(contains("k1")));
+        expect(child1.getAttributeNS("example_namespace", "k0"), "v0");
+        expect(child1.getAttributeNS("example_namespace", "k1"), "v1");
+        expect(child1.childNodes, hasLength(1));
+        expect(child1.text, "text");
+
+        // ---------------------------------------------------------------------
+        // Test various methods
+        // ---------------------------------------------------------------------
+        for (var child in root.children) {
+          expect(child.parent, same(root));
+        }
+        expect(document.querySelector("root"), isNotNull);
+        expect(document.querySelectorAll("not-found"), hasLength(0));
+        expect(
+          document.querySelectorAll("child"),
+          hasLength(0),
+          reason: "querySelectorAll",
+        );
+        expect(
+          document.querySelectorAll("Child"),
+          hasLength(2),
+          reason: "querySelectorAll",
+        );
+        expect(
+          document.getElementsByName("child"),
+          hasLength(0),
+          reason: "getElementsByName",
+        );
+        expect(
+          document.getElementsByName("Child"),
+          hasLength(0),
+          reason: "getElementsByName",
+        );
+        expect(
+          document.getElementsByTagName("child"),
+          hasLength(0),
+          reason: "getElementsByTagName",
+        );
+        expect(
+          document.getElementsByTagName("Child"),
+          hasLength(1),
+          reason: "getElementsByTagName",
+        );
       }
     });
   });

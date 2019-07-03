@@ -339,6 +339,8 @@ abstract class Document extends Node
 
   Stream<Event> get onWaiting => Element.waitingEvent.forTarget(this);
 
+  bool get _isCaseSensitive => false;
+
   Node adoptNode(Node node) {
     final clone = node.internalCloneWithOwnerDocument(this, true);
     clone._parent = null;
@@ -373,15 +375,10 @@ abstract class Document extends Node
     return result;
   }
 
-  List<Node> getElementsByName(String elementName) {
-    // Only works in XHTML documents
-    if (document is HtmlDocument) {
-      return const <Node>[];
-    }
-    elementName = elementName.toLowerCase();
+  List<Node> getElementsByName(String name) {
     final result = <Node>[];
     this._forEachTreeElement((element) {
-      if (element._lowerCaseTagName == elementName) {
+      if (element.getAttribute("name") == name) {
         result.add(element);
       }
     });
@@ -389,13 +386,22 @@ abstract class Document extends Node
   }
 
   List<Node> getElementsByTagName(String tagName) {
-    tagName = tagName.toLowerCase();
     final result = <Node>[];
-    this._forEachTreeElement((element) {
-      if (element._lowerCaseTagName == tagName) {
-        result.add(element);
-      }
-    });
+    if (_isCaseSensitive) {
+      this._forEachTreeElement((element) {
+        if (element.namespaceUri == null && element._nodeName == tagName) {
+          result.add(element);
+        }
+      });
+    } else {
+      tagName = tagName.toLowerCase();
+      this._forEachTreeElement((element) {
+        if (element.namespaceUri == null &&
+            element._lowerCaseTagName == tagName) {
+          result.add(element);
+        }
+      });
+    }
     return result;
   }
 

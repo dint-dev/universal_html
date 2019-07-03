@@ -364,30 +364,34 @@ class _XmlParser {
       return Text.internal(document, input.text);
     }
     if (input is xml.XmlElement) {
-      final namespace = input.name.namespaceUri;
+      final namespaceUri = input.name.namespaceUri;
       final name = input.name.local;
       if (name == null) {
         throw ArgumentError.value(input);
       }
       final result = UnknownElement.internal(
         document,
-        namespace,
+        namespaceUri,
         name,
       );
       for (var attribute in input.attributes) {
-        final namespace = attribute.name.prefix;
-        if (namespace != null) {
-          result.setAttributeNS(
-            namespace,
-            attribute.name.qualified ?? attribute.name.local,
-            attribute.value,
-          );
-        } else {
+        final prefix = attribute.name.prefix;
+        if (prefix == null) {
           result.setAttribute(
             attribute.name.qualified,
             attribute.value,
           );
+          continue;
         }
+        var namespaceUri = attribute.name.namespaceUri;
+        if (namespaceUri == null) {
+          namespaceUri = "xmlns";
+        }
+        result.setAttributeNS(
+          namespaceUri,
+          attribute.name.local,
+          attribute.value,
+        );
       }
       for (var inputChild in input.children) {
         final child = _newNodeFrom(document, inputChild);
@@ -418,5 +422,17 @@ class _XmlParser {
       return Comment.internal(document, input.text);
     }
     throw ArgumentError.value(input);
+  }
+
+  static String _findNamespaceUri(Node node, String prefix) {
+    for (; node != null; node = node.parent) {
+      if (node is Element) {
+        final result = node.getAttributeNS("xmlns", prefix);
+        if (result != null) {
+          return result;
+        }
+      }
+    }
+    return null;
   }
 }

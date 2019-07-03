@@ -174,6 +174,9 @@ bool _matchesSimpleSelector(
     //
     // elementName
     //
+    if (element._isCaseSensitive) {
+      return selector.name == element._nodeName;
+    }
     return selector.name.toLowerCase() == element._lowerCaseTagName;
   } else if (selector is css.IdSelector) {
     //

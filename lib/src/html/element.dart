@@ -540,7 +540,7 @@ abstract class Element extends Node
   _CssStyleDeclaration _style;
 
   /// Contains namespaced attributes.
-  Map<String, Map<String, String>> _namedspacedAttributes;
+  Map<String, Map<String, String>> _namespacedAttributes;
 
   RenderData _renderData;
 
@@ -1071,7 +1071,18 @@ abstract class Element extends Node
   }
 
   /// Returns node name in uppercase.
-  String get nodeName => _nodeName;
+  String get nodeName {
+    final name = _nodeName;
+    final namespaceUri = this.namespaceUri;
+    if (namespaceUri == null) {
+      return name;
+    }
+    final prefix = _namespaceUriToPrefix(this, namespaceUri);
+    if (prefix == null) {
+      return name;
+    }
+    return "$prefix:$name";
+  }
 
   @override
   int get nodeType => Node.ELEMENT_NODE;
@@ -1277,6 +1288,10 @@ abstract class Element extends Node
     return HtmlDriver.current;
   }
 
+  bool get _isCaseSensitive {
+    return ownerDocument?._isCaseSensitive ?? false;
+  }
+
   /// Creates a new AnimationEffect object whose target element is the object
   /// on which the method is called, and calls the play() method of the
   /// AnimationTimeline object of the document timeline of the node document
@@ -1409,11 +1424,11 @@ abstract class Element extends Node
   }
 
   String getAttributeNS(String namespace, String name) {
-    final namespaces = this._namedspacedAttributes;
+    final namespaces = this._namespacedAttributes;
     if (namespaces == null) {
       return null;
     }
-    final attributes = _namedspacedAttributes[namespace];
+    final attributes = _namespacedAttributes[namespace];
     if (attributes == null) {
       return null;
     }
@@ -1439,14 +1454,15 @@ abstract class Element extends Node
   }
 
   Map<String, String> getNamespacedAttributes(String namespace) {
-    var namespaces = this._namedspacedAttributes;
+    var namespaces = this._namespacedAttributes;
     if (namespaces == null) {
-      this._namedspacedAttributes =
-          namespaces = <String, Map<String, String>>{};
+      namespaces = <String, Map<String, String>>{};
+      this._namespacedAttributes = namespaces;
     }
     var result = namespaces[namespace];
     if (result == null) {
-      namespaces[namespace] = result = <String, String>{};
+      // TODO: Return a special subclass of Map
+      return <String, String>{};
     }
     return result;
   }
@@ -1455,6 +1471,7 @@ abstract class Element extends Node
   Element internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
     // Create a new instance of the same class
     final clone = _newInstance(ownerDocument);
+    clone._nodeName = this._nodeName;
 
     // Clone attributes
     final attributes = this._attributesPartialViewOrNull;
@@ -1566,21 +1583,48 @@ abstract class Element extends Node
   }
 
   void setAttributeNS(String namespace, String name, String value) {
+    // Validate namespace
     if (namespace == null ||
         !Element._normalizedAttributeNameRegExp.hasMatch(namespace)) {
       throw ArgumentError.value(namespace, "namespace");
     }
+
+    // Validate attribute name
     if (name == null ||
         !Element._normalizedAttributeNameRegExp.hasMatch(name)) {
       throw ArgumentError.value(name, "name");
     }
-    var namespaces = this._namedspacedAttributes;
+
+    var namespaces = this._namespacedAttributes;
     if (value == null) {
-      if (namespaces != null) {
-        namespaces[namespace]?.remove(name);
+      //
+      // Remove attribute
+      //
+      if (namespaces == null) {
+        return;
+      }
+      final map = namespaces[namespace];
+      if (map == null) {
+        return;
+      }
+      map.remove(name);
+      if (map.isEmpty) {
+        namespaces.remove(namespace);
       }
     } else {
-      getNamespacedAttributes(namespace)[name] = value;
+      //
+      // Set attribute
+      //
+      if (namespaces == null) {
+        namespaces = <String, Map<String, String>>{};
+        this._namespacedAttributes = namespaces;
+      }
+      var map = namespaces[namespace];
+      if (map == null) {
+        map = <String, String>{};
+        namespaces[namespace] = map;
+      }
+      map[name] = value;
     }
   }
 
@@ -1974,7 +2018,7 @@ class _ElementIterator extends Iterator<Element> {
       this._current = first;
       return first != null;
     }
-    if (!identical(_parent, current)) {
+    if (!identical(_parent, current.parent)) {
       // TODO: Implementation that handles modifications like 'dart:html' does.
       throw StateError("DOM tree was modified during iteration");
     }

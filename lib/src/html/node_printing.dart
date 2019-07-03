@@ -155,18 +155,32 @@ final Set<String> _singleTagNamesInLowerCase = Set<String>.from(const [
 ]);
 
 void _printElement(StringBuffer sb, int flags, Element node) {
+  String prefix;
+  final namespaceUri = node.namespaceUri;
+  if (namespaceUri != null) {
+    prefix = _namespaceUriToPrefix(node, namespaceUri);
+  }
   sb.write("<");
-  sb.write(node._lowerCaseTagName); // Already validated!
+  if (prefix != null) {
+    sb.write(prefix);
+    sb.write(":");
+  }
+  if (node._isCaseSensitive) {
+    sb.write(node._nodeName); // Already validated!
+  } else {
+    sb.write(node._lowerCaseTagName); // Already validated!
+  }
   node.attributes.forEach((name, value) {
     _printAttribute(sb, flags, null, name, value);
   });
-  final namespaces = node._namedspacedAttributes;
+  final namespaces = node._namespacedAttributes;
   if (namespaces != null) {
-    for (var namespace in namespaces.keys.toList()..sort()) {
-      final attributes = namespaces[namespace];
+    for (var namespaceUri in namespaces.keys.toList()..sort()) {
+      final attributes = namespaces[namespaceUri];
+      final prefix = _namespaceUriToPrefix(node, namespaceUri);
       for (var name in attributes.keys.toList()..sort()) {
         final value = attributes[name];
-        _printAttribute(sb, flags, namespace, name, value);
+        _printAttribute(sb, flags, prefix, name, value);
       }
     }
   }
@@ -176,31 +190,35 @@ void _printElement(StringBuffer sb, int flags, Element node) {
   }
   _printChildren(sb, flags, node);
   sb.write("</");
-  sb.write(node._lowerCaseTagName); // Already validated!
+  if (prefix != null) {
+    sb.write(prefix);
+    sb.write(":");
+  }
+  if (node._isCaseSensitive) {
+    sb.write(node._nodeName); // Already validated!
+  } else {
+    sb.write(node._lowerCaseTagName); // Already validated!
+  }
   sb.write(">");
 }
 
 void _printAttribute(
-    StringBuffer sb, int flags, String namespace, String name, String value) {
+    StringBuffer sb, int flags, String prefix, String name, String value) {
   sb.write(" ");
-  if (namespace == null) {
-    // Already validated!
-    sb.write(name);
-  } else {
+  if (prefix != null) {
     // TODO: Validate mutations (like browsers do) so nothing needs to be done here.
     if (!(Element._normalizedAttributeNameRegExp.hasMatch(name) &&
         Element._normalizedAttributeNameRegExp.hasMatch(name))) {
       throw StateError(
-        "Invalid namespaced attribute: '${namespace}:${name}'",
+        "Invalid namespaced attribute: '${prefix}:${name}'",
       );
     }
     if (_printingAttributeNamespaces & flags != 0) {
-      // In non-xml mode, Chrome prints only name
-      sb.write(namespace);
+      sb.write(prefix);
       sb.write(":");
     }
-    sb.write(name);
   }
+  sb.write(name);
   sb.write('="');
 
   // We want escaping to be identical to Chrome's 'outerHTML'
@@ -224,6 +242,30 @@ void _printAttribute(
   }
   sb.write(0 == writeFrom ? value : value.substring(writeFrom));
   sb.write('"');
+}
+
+String _namespaceUriToPrefix(Node node, String uri) {
+  if (uri == "xmlns") {
+    return "xmlns";
+  }
+  for (; node != null; node = node.parent) {
+    if (node is Element) {
+      final namespaces = node._namespacedAttributes;
+      if (namespaces == null) {
+        continue;
+      }
+      final map = namespaces["xmlns"];
+      if (map == null) {
+        continue;
+      }
+      for (var entry in map.entries) {
+        if (entry.value == uri) {
+          return entry.key;
+        }
+      }
+    }
+  }
+  throw StateError("Could not resolve prefix for namespace: '${uri}'");
 }
 
 void _printChildren(StringBuffer sb, int flags, Node node) {

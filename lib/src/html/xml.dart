@@ -40,6 +40,9 @@ class XmlDocument extends Document {
       : assert(contentType != null),
         super._(htmlDriver, contentType);
 
+  @override
+  bool get _isCaseSensitive => true;
+
   List<StyleSheet> get styleSheets {
     // TODO: Fix style sheet search
     final nodes = getElementsByTagName("style");

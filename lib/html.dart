@@ -15,4 +15,4 @@
 /// For information on writing web apps with Dart, see https://webdev.dartlang.org.
 library vm.html;
 
-export 'src/html.dart' if (dart.library.html) 'dart:html';
+export 'src/html.dart' if (dart.library.html) 'src/_sdk/html.dart';

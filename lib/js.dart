@@ -80,4 +80,4 @@
 ///
 library vm.js;
 
-export 'src/js.dart' if (dart.library.js) 'dart:js';
+export 'src/js.dart' if (dart.library.js) 'src/_sdk/js.dart';

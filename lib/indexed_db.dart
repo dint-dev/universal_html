@@ -2,4 +2,5 @@
 /// _"dart:indexed_db"_.
 library vm.indexed_db;
 
-export 'src/indexed_db.dart' if (dart.library.indexed_db) 'dart:indexed_db';
+export 'src/indexed_db.dart'
+    if (dart.library.indexed_db) 'src/_sdk/indexed_db.dart';

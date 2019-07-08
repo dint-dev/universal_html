@@ -1,3 +1,6 @@
+## 1.0.10
+* Eliminated the following error that Dart build system threw in some cases:
+  _Unsupported conditional import of dart:html found in universal_html|lib/html.dart_
 
 ## 1.0.9
 

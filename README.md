@@ -18,13 +18,13 @@ The project is licensed under the [MIT license](LICENSE).
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^1.0.9
+  universal_html: '>=1.0.10 <2.0.0'
 ```
 
 Now you can replace usage of "dart:html" with "package:universal_html/html.dart".
 
 ## 2. Choose library
-### Recommended
+### Option 1
 ```dart
 import 'package:universal_html/html.dart';
 ```
@@ -32,20 +32,20 @@ import 'package:universal_html/html.dart';
 This library exports our implementation by default. The library exports _dart:html_ only in
 browsers.
 
-Getting warnings? If you exchange DOM elements with packages that use _dart:html_, your IDE/compiler
-may produce type warnings ("universal_html Element is not dart:html Element"). You can eliminate the
-warnings by using the package below.
+Getting warnings? In some cases, when you mix _universal_io_ classes with _dart:html_ classes, your
+IDE produces type warnings ("universal_html Element is not dart:html Element"). Your application
+should still compile (in Dart2js, _universal_html_ classes will be _dart:html_ classes). You can
+eliminate these warnings by using Option 2 (below).
 
-### Library that exports dart:html by default
+### Option 2
 ```dart
 import 'package:universal_html/browser/html.dart';
 ```
 This library exports _dart:html_ by default. The library exports our implementation only when
 _dart:io_ is available.
 
-If you use this library:
-  * Dart tools may mistakenly think that your package is not compatible with VM/Flutter.
-  * Your package will not compile in Node.JS.
+If you use this library, your package will not compile in Node.JS. Dart tools may also mistakenly
+think that your package is not compatible with VM/Flutter.
 
 ## 3. That's it!
 ```dart

@@ -423,16 +423,4 @@ class _XmlParser {
     }
     throw ArgumentError.value(input);
   }
-
-  static String _findNamespaceUri(Node node, String prefix) {
-    for (; node != null; node = node.parent) {
-      if (node is Element) {
-        final result = node.getAttributeNS("xmlns", prefix);
-        if (result != null) {
-          return result;
-        }
-      }
-    }
-    return null;
-  }
 }

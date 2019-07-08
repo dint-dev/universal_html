@@ -11,4 +11,4 @@
 ///
 library vm.js_util;
 
-export 'src/js_util.dart' if (dart.library.js_util) 'dart:js_util';
+export 'src/js_util.dart' if (dart.library.js_util) 'src/_sdk/js_util.dart';

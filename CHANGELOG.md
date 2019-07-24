@@ -1,3 +1,6 @@
+## 1.0.13
+* Fixed dependencies.
+
 ## 1.0.12
 * A fix related to Dart SDK 2.5.
 

@@ -184,7 +184,10 @@ class EventSource extends EventTarget {
         final transformer = EventStreamDecoder(onReceivedTimeout: (newTimeout) {
           timeout = newTimeout;
         });
-        final eventStream = httpResponse.transform(transformer);
+        final eventStream = httpResponse.map((data) {
+          // TODO: Remove this when Dart SDK 2.5 becomes stable
+          return data is Uint8List ? data : Uint8List.fromList(data);
+        }).transform(transformer);
 
         // Listen the event stream
         nonListenedStream = null;

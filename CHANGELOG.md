@@ -1,3 +1,6 @@
+## 1.0.12
+* A fix related to Dart SDK 2.5.
+
 ## 1.0.11
 * Fixes compatibility with Dart SDK 2.5.
 * EventSource support.

@@ -1,3 +1,7 @@
+## 1.0.11
+* Fixes compatibility with Dart SDK 2.5.
+* EventSource support.
+
 ## 1.0.10
 * Eliminated the following error that Dart build system threw in some cases:
   _Unsupported conditional import of dart:html found in universal_html|lib/html.dart_

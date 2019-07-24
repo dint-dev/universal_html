@@ -165,6 +165,8 @@ Future main() async {
       * Stores values in the heap.
   * __HttpRequest__
     * Does not implement same-origin security policies that browsers have.
+  * __EventSource__
+    * Supports the full specification ('data', 'type', 'id', 'retry', comments, 'Last-Event-ID')
   * __Related libraries__ (_dart:js_, _dart:svg_, etc.).
     * Just API declarations. Any attempt to use APIs will throw _UnimplementedException_.
     * Available in:

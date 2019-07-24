@@ -59,20 +59,36 @@ class EventSource extends EventTarget {
   static const int CONNECTING = 0;
   static const int OPEN = 1;
 
+  static const String _mediaType = "text/event-stream";
+
+  /// URL of this event source.
   final String url;
+
+  /// Value of `withCredentials` given in the constructor.
   final bool withCredentials;
+
+  /// Parsed [url].
   Uri _parsedUri;
-  StreamSubscription _subscription;
+
+  /// HTTP response stream subscription.
+  StreamSubscription _eventSubscription;
+
+  /// Used by [readyState].
   int _readyState = CONNECTING;
 
   EventSource(this.url, {this.withCredentials = false}) {
+    // Parse URI
     var parsedUri = Uri.tryParse(url);
     if (parsedUri == null) {
       throw ArgumentError.value(url, "url", "Invalid URL");
     }
+
+    // Resolve relative URLs
     if (!parsedUri.isAbsolute) {
       parsedUri = Uri.parse(window.location.origin).resolveUri(parsedUri);
     }
+
+    // Check the scheme
     final scheme = parsedUri.scheme;
     switch (scheme) {
       case "http":
@@ -86,69 +102,116 @@ class EventSource extends EventTarget {
           "Scheme must be 'http' or 'https'",
         );
     }
+
+    // Connect
     this._parsedUri = parsedUri;
     _connect();
   }
 
   Stream<Event> get onError => errorEvent.forTarget(this);
+
   Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
 
   Stream<Event> get onOpen => openEvent.forTarget(this);
 
   int get readyState => _readyState;
 
+  /// Closes the event stream.
   void close() {
     _readyState = CLOSED;
-    _close();
-  }
-
-  void _close() {
-    if (_subscription != null) {
-      _subscription.cancel();
-      _subscription = null;
+    if (_eventSubscription != null) {
+      _eventSubscription.cancel();
+      _eventSubscription = null;
     }
   }
 
   void _addError(Object error, [StackTrace stackTrace]) {
-    this.dispatchEvent(Event.eventType("error", "error"));
+    this.dispatchEvent(ErrorEvent.internalConstructor(
+        error: error, message: "Error:\n$error\n\nStack trace:\n$stackTrace"));
   }
 
-  void _connect() async {
-    String lastEventId;
-    while (_readyState != CLOSED) {
-      close();
-      final httpClient = HtmlDriver.current.newHttpClient();
-      final httpRequest = await httpClient.getUrl(_parsedUri);
-      httpRequest.headers.set("Accept", "application/event-stream");
-      if (lastEventId != null) {
-        httpRequest.headers.set("Last-Event-Id", lastEventId);
+  Future<void> _connect() async {
+    Stream<Uint8List> nonListenedStream;
+    try {
+      String lastEventId;
+      while (_readyState != CLOSED) {
+        // Create a HTTP request
+        final httpClient = HtmlDriver.current.newHttpClient();
+        final httpRequest = await httpClient.getUrl(_parsedUri);
+
+        // Add HTTP header "Accept"
+        httpRequest.headers.set("Accept", _mediaType);
+
+        // Add HTTP header "Last-Event-ID"
+        if (lastEventId != null) {
+          httpRequest.headers.set("Last-Event-ID", lastEventId);
+        }
+
+        // Send the HTTP request
+        final httpResponse = await httpRequest.close();
+        nonListenedStream = httpResponse;
+
+        // Check HTTP status
+        final statusCode = httpResponse.statusCode;
+        if (statusCode != 200) {
+          throw StateError(
+            "Server returned HTTP status $statusCode",
+          );
+        }
+
+        // Check HTTP header "Content-Type"
+        final mimeType = httpResponse.headers.contentType.mimeType;
+        switch (mimeType) {
+          case _mediaType:
+            break;
+
+          default:
+            throw StateError(
+              "Server returned MIME type '$mimeType': $_parsedUri",
+            );
+        }
+
+        // Did we close the stream already?
+        if (_readyState == CLOSED) {
+          return;
+        }
+
+        // We are ready
+        _readyState = OPEN;
+
+        // Transform to event stream
+        var timeout = Duration(seconds: 5);
+        final transformer = EventStreamDecoder(onReceivedTimeout: (newTimeout) {
+          timeout = newTimeout;
+        });
+        final eventStream = httpResponse.transform(transformer);
+
+        // Listen the event stream
+        nonListenedStream = null;
+        _eventSubscription = eventStream.listen((event) {
+          lastEventId = event.lastEventId;
+          this.dispatchEvent(event);
+        });
+        await _eventSubscription.asFuture();
+
+        // Wait timeout
+        await Future.delayed(timeout);
       }
-      final httpResponse = await httpRequest.close();
-      if (httpResponse.statusCode != 200) {
-        _readyState = CLOSED;
-        await httpResponse.listen((data) {}).cancel();
+    } catch (error, stackTrace) {
+      // Ignore errors after closing
+      if (_readyState == CLOSED) {
         return;
       }
-      final mimeType = httpResponse.headers.contentType.mimeType;
-      switch (mimeType) {
-        case "application/event-stream":
-          break;
-        default:
-          this._addError(StateError(
-            "Server returned MIME type '$mimeType': $_parsedUri",
-          ));
-      }
-      _readyState = OPEN;
-      var timeout = Duration(seconds: 5);
-      final transformer = EventStreamDecoder(onReceivedTimeout: (newTimeout) {
-        timeout = newTimeout;
-      });
-      _subscription = httpResponse.transform(transformer).listen((event) {
-        lastEventId = event.lastEventId;
-        window.dispatchEvent(event);
-      });
-      await _subscription.asFuture();
-      await Future.delayed(timeout);
+
+      // Add error
+      _addError(error, stackTrace);
+    } finally {
+      // Close
+      close();
+
+      // To avoid leaking memory, dart:io instructs to read HTTP response body.
+      // ignore: unawaited_futures
+      nonListenedStream?.listen((data) {})?.cancel();
     }
   }
 }

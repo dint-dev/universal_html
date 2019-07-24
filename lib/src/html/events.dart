@@ -85,6 +85,22 @@ abstract class DeviceOrientationEvent implements Event {
   num get gamma;
 }
 
+class ErrorEvent extends Event {
+  final int colno;
+  final Object error;
+  final String fileName;
+  final int lineno;
+  final String message;
+
+  /// IMPORTANT: Not part of 'dart:html' API.
+  ErrorEvent.internalConstructor(
+      {this.colno, this.error, this.fileName, this.lineno, this.message})
+      : super.internalConstructor("error");
+
+  @override
+  String toString() => "[ErrorEvent: $message]";
+}
+
 abstract class ExtendableEvent extends Event {
   /// IMPORTANT: Not part of 'dart:html' API.
   ExtendableEvent.internalConstructor(String type,
@@ -93,6 +109,28 @@ abstract class ExtendableEvent extends Event {
             bubbles: bubbles, cancelable: cancelable);
 
   void waitUntil(Future f) {
+    throw UnimplementedError();
+  }
+}
+
+class FetchEvent extends ExtendableEvent {
+  final String clientId;
+
+  final bool isReload;
+
+  final Future preloadResponse;
+
+  final _Request request;
+
+  factory FetchEvent(String type, Map eventInitDict) {
+    throw UnimplementedError();
+  }
+
+  FetchEvent.internal(
+      {this.clientId, this.isReload, this.preloadResponse, this.request})
+      : super.internalConstructor("fetch");
+
+  void respondWith(Future r) {
     throw UnimplementedError();
   }
 }
@@ -112,28 +150,6 @@ class HashChangeEvent extends Event {
       : super.internalConstructor(type);
 
   bool get supported => true;
-}
-
-class FetchEvent extends ExtendableEvent {
-  FetchEvent.internal(
-      {this.clientId, this.isReload, this.preloadResponse, this.request})
-      : super.internalConstructor("fetch");
-
-  factory FetchEvent(String type, Map eventInitDict) {
-    throw UnimplementedError();
-  }
-
-  final String clientId;
-
-  final bool isReload;
-
-  final Future preloadResponse;
-
-  final _Request request;
-
-  void respondWith(Future r) {
-    throw UnimplementedError();
-  }
 }
 
 class InputDeviceCapabilities {}
@@ -340,6 +356,23 @@ class TouchEvent extends UIEvent {
   }) : super(type);
 }
 
+class TransitionEvent extends Event {
+  // To suppress missing implicit constructor warnings.
+  final num elapsedTime;
+
+  final String propertyName;
+
+  final String pseudoElement;
+
+  factory TransitionEvent(String type, [Map eventInitDict]) {
+    return TransitionEvent._(type);
+  }
+
+  TransitionEvent._(String type,
+      {this.elapsedTime, this.propertyName, this.pseudoElement})
+      : super.internalConstructor(type);
+}
+
 abstract class UIEvent extends Event {
   UIEvent(String type) : super.internalConstructor(type);
 
@@ -349,6 +382,14 @@ abstract class UIEvent extends Event {
 }
 
 class WheelEvent extends MouseEvent {
+  static const int DOM_DELTA_LINE = 0x01;
+
+  static const int DOM_DELTA_PAGE = 0x02;
+
+  static const int DOM_DELTA_PIXEL = 0x00;
+
+  final num deltaZ;
+
   factory WheelEvent(String type,
       {Window view,
       num deltaX = 0,
@@ -373,22 +414,8 @@ class WheelEvent extends MouseEvent {
 
   WheelEvent._(String type, {this.deltaZ}) : super(type);
 
-  static const int DOM_DELTA_LINE = 0x01;
-
-  static const int DOM_DELTA_PAGE = 0x02;
-
-  static const int DOM_DELTA_PIXEL = 0x00;
-
-  final num deltaZ;
-
-  /// The amount that is expected to scroll vertically, in units determined by
-  /// [deltaMode].
-  ///
-  /// See also:
-  ///
-  /// * [WheelEvent.deltaY](http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html#events-WheelEvent-deltaY) from the W3C.
-  num get deltaY {
-    throw UnsupportedError('deltaY is not supported');
+  int get deltaMode {
+    return 0;
   }
 
   /// The amount that is expected to scroll horizontally, in units determined by
@@ -401,24 +428,13 @@ class WheelEvent extends MouseEvent {
     throw UnsupportedError('deltaX is not supported');
   }
 
-  int get deltaMode {
-    return 0;
+  /// The amount that is expected to scroll vertically, in units determined by
+  /// [deltaMode].
+  ///
+  /// See also:
+  ///
+  /// * [WheelEvent.deltaY](http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html#events-WheelEvent-deltaY) from the W3C.
+  num get deltaY {
+    throw UnsupportedError('deltaY is not supported');
   }
-}
-
-class TransitionEvent extends Event {
-  // To suppress missing implicit constructor warnings.
-  TransitionEvent._(String type,
-      {this.elapsedTime, this.propertyName, this.pseudoElement})
-      : super.internalConstructor(type);
-
-  factory TransitionEvent(String type, [Map eventInitDict]) {
-    return TransitionEvent._(type);
-  }
-
-  final num elapsedTime;
-
-  final String propertyName;
-
-  final String pseudoElement;
 }

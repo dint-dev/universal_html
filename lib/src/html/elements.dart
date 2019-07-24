@@ -1018,7 +1018,7 @@ class SelectElement extends HtmlElement {
   }
 
   List<OptionElement> get options =>
-      this.childNodes.where((node) => node is OptionElement).toList();
+      this.childNodes.whereType<OptionElement>().toList();
 
   bool get required => _getAttributeBool("required");
 
@@ -1253,7 +1253,7 @@ class TableSectionElement extends HtmlElement {
       : super._(ownerDocument, tag);
 
   List<TableRowElement> get rows =>
-      this.childNodes.where((item) => item is TableRowElement).toList();
+      this.childNodes.whereType<TableRowElement>().toList();
 
   TableRowElement addRow() {
     final row = TableRowElement();

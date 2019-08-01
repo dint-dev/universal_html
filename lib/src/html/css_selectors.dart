@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 bool _matches(Element element, String selector, String pseudoElement) {
   if (selector == null) {
@@ -48,6 +61,86 @@ bool _matches(Element element, String selector, String pseudoElement) {
   return _matchesSelectorGroup(element, selectorGroup, null);
 }
 
+bool _matchesNthChildSelector(
+    Element element, css.PseudoClassFunctionSelector selector) {
+  // Find index of this node
+  var index = 0;
+  for (var sibling in element.parent.childNodes) {
+    if (identical(sibling, element)) {
+      break;
+    }
+    if (sibling is Element) {
+      index++;
+    }
+  }
+
+  // Get arguments
+  final expressions = (selector.argument as css.SelectorExpression).expressions;
+
+  // Choose based on the number of arguments
+  switch (expressions.length) {
+    case 1:
+      //
+      // :nth-child(3) | :nth-child(even) | :nth-child(odd)
+      //
+      final term0 = expressions[0];
+      if (term0 is css.NumberTerm) {
+        //
+        // :nth-child(3)
+        //
+        final expectedIndex = (term0.value as num).toInt() - 1;
+        return expectedIndex == index;
+      } else if (term0 is css.LiteralTerm) {
+        switch (term0.text) {
+          case "even":
+            //
+            // :nth-child(even)
+            //
+            return index % 2 == 0;
+          case "odd":
+            //
+            // :nth-child(odd)
+            //
+            return index % 2 == 1;
+        }
+      }
+      throw _UnsupportedCssSelectorException(selector.span.text);
+
+    case 2:
+      //
+      // nth-child(3n)
+      //
+      final term0 = expressions[0] as css.NumberTerm;
+      final term1 = expressions[1] as css.LiteralTerm;
+      assert(term1.text == "n");
+
+      final mod = (term0.value as num).toInt();
+      return (index % mod) == 1;
+
+    case 3:
+      //
+      // :nth-child(3n+1)
+      //
+      final term0 = expressions[0] as css.NumberTerm;
+      final term1 = expressions[1] as css.LiteralTerm;
+      final term2 = expressions[2] as css.NumberTerm;
+      assert(term1.text == "n");
+
+      final mod = (term0.value as num).toInt();
+      final rem = (term2.value as num).toInt();
+      return (index % mod) == (rem - 1);
+    default:
+      throw _UnsupportedCssSelectorException(selector.span.text);
+  }
+}
+
+// We start from the innermost selector.
+//
+// Example:
+//   "#a < .b .c"
+//     1.We match '.c'
+//     2.We try each parent that matches '.b'
+//     3.We match immediate parent for '#a'
 bool _matchesSelector(
     Element element, css.Selector selector, int index, String pseudoElement) {
   final simpleSelectorSequences = selector.simpleSelectorSequences;
@@ -141,13 +234,6 @@ bool _matchesSelector(
   }
 }
 
-// We start from the innermost selector.
-//
-// Example:
-//   "#a < .b .c"
-//     1.We match '.c'
-//     2.We try each parent that matches '.b'
-//     3.We match immediate parent for '#a'
 bool _matchesSelectorGroup(
     Element element, css.SelectorGroup selectorGroup, String pseudoElement) {
   if (selectorGroup == null) {
@@ -286,79 +372,6 @@ bool _matchesSimpleSelector(
     }
   }
   throw _UnsupportedCssSelectorException(selector.span.text);
-}
-
-bool _matchesNthChildSelector(
-    Element element, css.PseudoClassFunctionSelector selector) {
-  // Find index of this node
-  var index = 0;
-  for (var sibling in element.parent.childNodes) {
-    if (identical(sibling, element)) {
-      break;
-    }
-    if (sibling is Element) {
-      index++;
-    }
-  }
-
-  // Get arguments
-  final expressions = (selector.argument as css.SelectorExpression).expressions;
-
-  // Choose based on the number of arguments
-  switch (expressions.length) {
-    case 1:
-      //
-      // :nth-child(3) | :nth-child(even) | :nth-child(odd)
-      //
-      final term0 = expressions[0];
-      if (term0 is css.NumberTerm) {
-        //
-        // :nth-child(3)
-        //
-        final expectedIndex = (term0.value as num).toInt() - 1;
-        return expectedIndex == index;
-      } else if (term0 is css.LiteralTerm) {
-        switch (term0.text) {
-          case "even":
-            //
-            // :nth-child(even)
-            //
-            return index % 2 == 0;
-          case "odd":
-            //
-            // :nth-child(odd)
-            //
-            return index % 2 == 1;
-        }
-      }
-      throw _UnsupportedCssSelectorException(selector.span.text);
-
-    case 2:
-      //
-      // nth-child(3n)
-      //
-      final term0 = expressions[0] as css.NumberTerm;
-      final term1 = expressions[1] as css.LiteralTerm;
-      assert(term1.text == "n");
-
-      final mod = (term0.value as num).toInt();
-      return (index % mod) == 1;
-
-    case 3:
-      //
-      // :nth-child(3n+1)
-      //
-      final term0 = expressions[0] as css.NumberTerm;
-      final term1 = expressions[1] as css.LiteralTerm;
-      final term2 = expressions[2] as css.NumberTerm;
-      assert(term1.text == "n");
-
-      final mod = (term0.value as num).toInt();
-      final rem = (term2.value as num).toInt();
-      return (index % mod) == (rem - 1);
-    default:
-      throw _UnsupportedCssSelectorException(selector.span.text);
-  }
 }
 
 class _UnsupportedCssSelectorException implements Exception {

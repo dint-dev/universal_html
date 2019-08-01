@@ -1,3 +1,15 @@
+## 1.1.0
+* The sole copyright owner (except for code derived from the Dart SDK as noted in the relevant
+  files) decided to publish the source code the Apache License 2.0. to make the project more
+  enterprise-happy. Previous versions were published under the MIT License.
+* Many new tests and bug fixes.
+* Many new _dart:html_ APIs.
+* Removed class factory APIs in _HtmlDriver_ in favor of separate _BrowserImplementation_ and
+  _BrowserImplementationUtils_.
+* Deprecated "package:universal_html/browser/(library).dart" in favor of more descriptive
+  "package:universal_html/prefer_sdk/(library).dart". Deprecated APIs will be removed in future.
+* Added "package:universal_html/prefer_universal/(library).dart".
+
 ## 1.0.13
 * Fixed dependencies.
 

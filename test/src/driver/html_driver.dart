@@ -1,6 +1,21 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 part of driver_test;
 
 void _testHtmlDriver() {
+  final nodeToString = BrowserImplementationUtils.nodeToString;
   group("HtmlDriver", () {
     test("setDocument(null) resets the state", () {
       final driver = HtmlDriver();
@@ -42,14 +57,16 @@ void _testHtmlDriver() {
     });
 
     test("newHttpClient() uses htmlDriver.userAgent", () {
-      final driver = HtmlDriver(userAgent: "Example");
-      expect(driver.userAgent, "Example");
-      expect(driver.newHttpClient().userAgent, "Example");
+      final userAgent = UserAgent("Example");
+      final driver = HtmlDriver(userAgent: userAgent);
+      expect(driver.userAgent, userAgent);
+      expect(driver.browserClassFactory.newHttpClient().userAgent, "Example");
     });
 
     test("window.navigator.userAgent uses htmlDriver.userAgent", () {
-      final driver = HtmlDriver(userAgent: "Example");
-      expect(driver.userAgent, "Example");
+      final userAgent = UserAgent("Example");
+      final driver = HtmlDriver(userAgent: userAgent);
+      expect(driver.userAgent, userAgent);
       expect(driver.window.navigator.userAgent, "Example");
     });
   });

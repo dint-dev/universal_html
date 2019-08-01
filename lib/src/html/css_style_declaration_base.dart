@@ -1,12 +1,55 @@
-part of universal_html;
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/*
+Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
+  https://github.com/dart-lang/sdk/tree/master/tools/dom
+
+The source code adopted from 'dart:html' had the following license:
+
+  Copyright 2012, the Dart project authors. All rights reserved.
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of Google Inc. nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+part of universal_html.internal;
 
 abstract class CssStyleDeclarationBase {
-  String getPropertyValue(String propertyName);
-  void setProperty(String propertyName, String value, [String priority]);
+  CssStyleDeclarationBase._();
 
   /// Gets the value of "align-content"
   String get alignContent => getPropertyValue('align-content');
-
   /// Sets the value of "align-content"
   set alignContent(String value) {
     setProperty('align-content', value, '');
@@ -102,20 +145,20 @@ abstract class CssStyleDeclarationBase {
     setProperty('animation-timing-function', value, '');
   }
 
-  /// Gets the value of "app-region"
-  String get appRegion => getPropertyValue('app-region');
-
-  /// Sets the value of "app-region"
-  set appRegion(String value) {
-    setProperty('app-region', value, '');
-  }
-
   /// Gets the value of "appearance"
   String get appearance => getPropertyValue('appearance');
 
   /// Sets the value of "appearance"
   set appearance(String value) {
     setProperty('appearance', value, '');
+  }
+
+  /// Gets the value of "app-region"
+  String get appRegion => getPropertyValue('app-region');
+
+  /// Sets the value of "app-region"
+  set appRegion(String value) {
+    setProperty('app-region', value, '');
   }
 
   /// Gets the value of "aspect-ratio"
@@ -899,6 +942,14 @@ abstract class CssStyleDeclarationBase {
     setProperty('column-rule-width', value, '');
   }
 
+  /// Gets the value of "columns"
+  String get columns => getPropertyValue('columns');
+
+  /// Sets the value of "columns"
+  set columns(String value) {
+    setProperty('columns', value, '');
+  }
+
   /// Gets the value of "column-span"
   String get columnSpan => getPropertyValue('column-span');
 
@@ -913,14 +964,6 @@ abstract class CssStyleDeclarationBase {
   /// Sets the value of "column-width"
   set columnWidth(String value) {
     setProperty('column-width', value, '');
-  }
-
-  /// Gets the value of "columns"
-  String get columns => getPropertyValue('columns');
-
-  /// Sets the value of "columns"
-  set columns(String value) {
-    setProperty('columns', value, '');
   }
 
   /// Gets the value of "content"
@@ -2155,20 +2198,20 @@ abstract class CssStyleDeclarationBase {
     setProperty('src', value, '');
   }
 
-  /// Gets the value of "tab-size"
-  String get tabSize => getPropertyValue('tab-size');
-
-  /// Sets the value of "tab-size"
-  set tabSize(String value) {
-    setProperty('tab-size', value, '');
-  }
-
   /// Gets the value of "table-layout"
   String get tableLayout => getPropertyValue('table-layout');
 
   /// Sets the value of "table-layout"
   set tableLayout(String value) {
     setProperty('table-layout', value, '');
+  }
+
+  /// Gets the value of "tab-size"
+  String get tabSize => getPropertyValue('tab-size');
+
+  /// Sets the value of "tab-size"
+  set tabSize(String value) {
+    setProperty('tab-size', value, '');
   }
 
   /// Gets the value of "tap-highlight-color"
@@ -2227,14 +2270,6 @@ abstract class CssStyleDeclarationBase {
     setProperty('text-decoration-line', value, '');
   }
 
-  /// Gets the value of "text-decoration-style"
-  String get textDecorationStyle => getPropertyValue('text-decoration-style');
-
-  /// Sets the value of "text-decoration-style"
-  set textDecorationStyle(String value) {
-    setProperty('text-decoration-style', value, '');
-  }
-
   /// Gets the value of "text-decorations-in-effect"
   String get textDecorationsInEffect =>
       getPropertyValue('text-decorations-in-effect');
@@ -2242,6 +2277,14 @@ abstract class CssStyleDeclarationBase {
   /// Sets the value of "text-decorations-in-effect"
   set textDecorationsInEffect(String value) {
     setProperty('text-decorations-in-effect', value, '');
+  }
+
+  /// Gets the value of "text-decoration-style"
+  String get textDecorationStyle => getPropertyValue('text-decoration-style');
+
+  /// Sets the value of "text-decoration-style"
+  set textDecorationStyle(String value) {
+    setProperty('text-decoration-style', value, '');
   }
 
   /// Gets the value of "text-emphasis"
@@ -2760,4 +2803,8 @@ abstract class CssStyleDeclarationBase {
   set zoom(String value) {
     setProperty('zoom', value, '');
   }
+
+  String getPropertyValue(String propertyName);
+
+  void setProperty(String propertyName, String value, [String priority]);
 }

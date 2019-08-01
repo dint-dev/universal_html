@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 /// A Dart DOM validator generated from Caja whitelists.
 ///
@@ -425,9 +438,9 @@ class _Html5NodeValidator implements NodeValidator {
     'VIDEO::poster',
   ];
 
-  final UriPolicy uriPolicy;
-
   static final Map<String, Function> _attributeValidators = {};
+
+  final UriPolicy uriPolicy;
 
   /// All known URI attributes will be validated against the UriPolicy, if
   /// [uriPolicy] is null then a default UriPolicy will be used.
@@ -444,10 +457,6 @@ class _Html5NodeValidator implements NodeValidator {
     }
   }
 
-  bool allowsElement(Element element) {
-    return _allowedElements.contains(Element._safeTagName(element));
-  }
-
   bool allowsAttribute(Element element, String attributeName, String value) {
     var tagName = Element._safeTagName(element);
     var validator = _attributeValidators['$tagName::$attributeName'];
@@ -458,6 +467,10 @@ class _Html5NodeValidator implements NodeValidator {
       return false;
     }
     return validator(element, attributeName, value, this);
+  }
+
+  bool allowsElement(Element element) {
+    return _allowedElements.contains(Element._safeTagName(element));
   }
 
   static bool _standardAttributeValidator(Element element, String attributeName,

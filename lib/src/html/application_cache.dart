@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 abstract class ApplicationCache extends EventTarget {
   static const EventStreamProvider<Event> cachedEvent =
@@ -71,6 +84,8 @@ abstract class ApplicationCache extends EventTarget {
   static const int OBSOLETE = 5;
 
   static bool get supported => false;
+
+  ApplicationCache._() : super._created();
 
   Stream<Event> get onCached;
 

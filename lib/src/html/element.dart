@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,16 +44,19 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 abstract class Element extends Node
-    with ChildNode, NonDocumentTypeChildNode, ParentNode, _ElementOrDocument {
+    with GlobalEventHandlers, _ChildNode, _ElementOrDocument
+    implements ChildNode, NonDocumentTypeChildNode, ParentNode {
   /// Static factory designed to expose `abort` events to event
   /// handlers that are not necessarily instances of [Element].
   ///
   /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<Event> abortEvent =
       EventStreamProvider<Event>('abort');
+
+  static final _whitespaceRegExp = RegExp("\s");
 
   /// Static factory designed to expose `beforecopy` events to event
   /// handlers that are not necessarily instances of [Element].
@@ -523,26 +539,26 @@ abstract class Element extends Node
 
   final String _lowerCaseTagName;
 
-  /// Contains all non-namespaced attributes except special cases.
-  /// Initialized lazily.
+  AccessibleNode _accessibleNode;
+
+  /// Contains all non-namespaced attributes except special cases like "style".
+  /// The instance is allocated lazily.
   LinkedHashMap<String, String> _attributesPartialViewOrNull;
 
-  /// Contains all attributes. The map will take care of special cases.
-  /// Initialized lazily.
+  /// Cached instance of [_Attributes].
   ///
   /// Note that because it just invokes [getAttribute] and [setAttribute],
   /// we don't necessarily have to cache it and decision to cache it wasn't a
   /// result of careful analysis.
   _Attributes _attributesFullViewOrNull;
 
-  /// Contains style.
-  /// Initialized lazily.
+  /// Contains style. The instance is allocated lazily.
   _CssStyleDeclaration _style;
 
   /// Contains namespaced attributes.
   Map<String, Map<String, String>> _namespacedAttributes;
 
-  RenderData _renderData;
+  RenderData _renderDataField;
 
   /// Creates a new `<a>` element.
   ///
@@ -573,6 +589,12 @@ abstract class Element extends Node
   ///
   /// This is equivalent to calling `new Element.tag('canvas')`.
   factory Element.canvas() = CanvasElement;
+
+  Element.created()
+      : this._lowerCaseTagName = null,
+        super._(null) {
+    throw UnimplementedError();
+  }
 
   /// Creates a new `<div>` element.
   ///
@@ -637,10 +659,12 @@ abstract class Element extends Node
   factory Element.img() = ImageElement;
 
   /// IMPORTANT: Not part of 'dart:html' API.
+  @visibleForTesting
   Element.internal(Document document, String tagName)
       : this._(document, tagName);
 
   /// IMPORTANT: Not part 'dart:html'.
+  @visibleForTesting
   factory Element.internalTag(Document ownerDocument, String name,
       [String typeExtension]) {
     final result = Element._internalTag(
@@ -653,6 +677,7 @@ abstract class Element extends Node
   }
 
   /// IMPORTANT: Not part 'dart:html'.
+  @visibleForTesting
   factory Element.internalTagNS(
       Document ownerDocument, String namespaceUri, String name,
       [String typeExtension]) {
@@ -660,7 +685,7 @@ abstract class Element extends Node
     if (!Element._normalizedElementNameRegExp.hasMatch(normalizedName)) {
       throw ArgumentError.value(name);
     }
-    return UnknownElement.internal(ownerDocument, namespaceUri, normalizedName);
+    return UnknownElement._(ownerDocument, namespaceUri, normalizedName);
   }
 
   /// Creates a new `<li>` element.
@@ -783,14 +808,20 @@ abstract class Element extends Node
         return CanvasElement._(ownerDocument);
       case "caption":
         return TableCaptionElement._(ownerDocument);
+      case "col":
+        return TableColElement._(ownerDocument);
       case "content":
         return ContentElement._(ownerDocument);
+      case "data":
+        return DataElement._(ownerDocument);
       case "datalist":
         return DataListElement._(ownerDocument);
       case "dialog":
         return DialogElement._(ownerDocument);
       case "div":
         return DivElement._(ownerDocument);
+      case "embed":
+        return EmbedElement._(ownerDocument);
       case "fieldset":
         return FieldSetElement._(ownerDocument);
       case "form":
@@ -818,7 +849,7 @@ abstract class Element extends Node
       case "img":
         return ImageElement._(ownerDocument);
       case "input":
-        return InputElementBase._(ownerDocument, null);
+        return InputElement._(ownerDocument);
       case "label":
         return LabelElement._(ownerDocument);
       case "legend":
@@ -827,8 +858,16 @@ abstract class Element extends Node
         return LIElement._(ownerDocument);
       case "link":
         return LinkElement._(ownerDocument);
+      case "map":
+        return MapElement._(ownerDocument);
+      case "menu":
+        return MenuElement._(ownerDocument);
       case "meta":
         return MetaElement._(ownerDocument);
+      case "meter":
+        return MeterElement._(ownerDocument);
+      case "object":
+        return ObjectElement._(ownerDocument);
       case "ol":
         return OListElement._(ownerDocument);
       case "option":
@@ -837,14 +876,20 @@ abstract class Element extends Node
         return OptGroupElement._(ownerDocument);
       case "p":
         return ParagraphElement._(ownerDocument);
+      case "param":
+        return ParamElement._(ownerDocument);
       case "picture":
         return PictureElement._(ownerDocument);
       case "pre":
         return PreElement._(ownerDocument);
+      case "q":
+        return QuoteElement._(ownerDocument);
       case "select":
         return SelectElement._(ownerDocument);
       case "script":
         return ScriptElement._(ownerDocument);
+      case "shadow":
+        return ShadowElement._(ownerDocument);
       case "slot":
         return SlotElement._(ownerDocument);
       case "source":
@@ -867,6 +912,8 @@ abstract class Element extends Node
         return TableSectionElement._(ownerDocument, name);
       case "textarea":
         return TextAreaElement._(ownerDocument);
+      case "time":
+        return TimeElement._(ownerDocument);
       case "title":
         return TitleElement._(ownerDocument);
       case "tr":
@@ -886,14 +933,27 @@ abstract class Element extends Node
             "'$name' is an invalid element name.",
           );
         }
-        return UnknownElement.internal(ownerDocument, null, name);
+        return UnknownElement._(ownerDocument, null, name);
     }
   }
+
+  AccessibleNode get accessibleNode {
+    return _accessibleNode ??= AccessibleNode._();
+  }
+
+  Element get assignedSlot => null;
 
   /// Returns a modifiable map of attributes.
   Map<String, String> get attributes {
     return _attributesFullViewOrNull ??
         (_attributesFullViewOrNull = _Attributes(this));
+  }
+
+  set attributes(Map<String, String> value) {
+    attributes..clear();
+    for (var entry in value.entries) {
+      setAttribute(entry.key, entry.value);
+    }
   }
 
   /// Access the dimensions and position of this element's content + padding +
@@ -914,6 +974,13 @@ abstract class Element extends Node
 
   List<Element> get children => _ElementChildren(this);
 
+  set children(List<Element> value) {
+    _clearChildren();
+    for (var child in value) {
+      append(child);
+    }
+  }
+
   /// The set of CSS classes applied to this element.
   ///
   /// This set makes it easy to add, remove or toggle the classes applied to
@@ -932,13 +999,13 @@ abstract class Element extends Node
     classSet.addAll(value);
   }
 
-  String get className => getAttribute("class");
+  String get className => _getAttribute("class");
 
   set className(String newValue) {
     _setAttribute("class", newValue);
   }
 
-  Rectangle<int> get client => _getRenderData().client;
+  Rectangle<int> get client => _renderData.client;
 
   /// Returns 0 outside browser.tagWithoutValidation
   int get clientHeight => client.height;
@@ -952,6 +1019,10 @@ abstract class Element extends Node
   /// Returns 0 outside browser.
   int get clientWidth => client.width;
 
+  String get computedName => null;
+
+  String get computedRole => null;
+
   /// Access this element's content position.
   ///
   /// This returns a rectangle with the dimensions actually available for content
@@ -964,6 +1035,14 @@ abstract class Element extends Node
   /// animation frame is discouraged. See also:
   /// [Browser Reflow](https://developers.google.com/speed/articles/reflow)
   CssRect get contentEdge => _ContentCssRect(this);
+
+  bool get contentEditable {
+    return _getAttributeBool("contenteditable");
+  }
+
+  set contentEditable(bool value) {
+    _setAttributeBool("contentEditable", value);
+  }
 
   /// Allows access to all custom data attributes (data-*) set on this element.
   ///
@@ -997,7 +1076,7 @@ abstract class Element extends Node
     }
   }
 
-  String get dir => getAttribute("dir");
+  String get dir => _getAttribute("dir");
 
   set dir(String value) {
     _setAttribute("dir", value);
@@ -1010,16 +1089,30 @@ abstract class Element extends Node
   /// [offset](http://api.jquery.com/offset/) method.
   Point get documentOffset => offsetTo(document.documentElement);
 
-  bool get draggable => _getAttributeBool("draggable");
+  bool get draggable => _getAttributeBoolString("draggable") ?? false;
 
   set draggable(bool value) {
-    _setAttributeBool("draggable", value);
+    _setAttributeBoolString("draggable", value);
   }
 
-  String get id => getAttribute("id");
+  bool get hidden {
+    return _getAttributeBool("hidden") ?? false;
+  }
+
+  set hidden(bool value) {
+    _setAttributeBool("hidden", value);
+  }
+
+  String get id => _getAttribute("id");
 
   set id(String value) {
     _setAttribute("id", value);
+  }
+
+  bool get inert => _getAttributeBool("inert") ?? false;
+
+  set inert(bool value) {
+    _setAttributeBool("inert", value);
   }
 
   String get innerHtml {
@@ -1040,6 +1133,30 @@ abstract class Element extends Node
   set innerHtml(String html) {
     this.setInnerHtml(html);
   }
+
+  String get innerText {
+    return text;
+  }
+
+  set innerText(String value) {
+    this.text = value.replaceAll("\n", "");
+  }
+
+  String get inputMode => _getAttribute("inputmode");
+
+  set inputMode(String value) {
+    _setAttribute("inputmode", value);
+  }
+
+  bool get isContentEditable => false;
+
+  String get lang => getAttribute("lang");
+
+  set lang(String value) {
+    setAttribute("lang", value);
+  }
+
+  String get localName => this.tagName;
 
   /// Access the dimensions and position of this element's content + padding +
   /// border + margin box.
@@ -1087,7 +1204,7 @@ abstract class Element extends Node
   @override
   int get nodeType => Node.ELEMENT_NODE;
 
-  Rectangle<int> get offset => _getRenderData().offset;
+  Rectangle<int> get offset => _renderData.offset;
 
   /// Returns 0 outside browser.
   int get offsetHeight => offset.height;
@@ -1103,78 +1220,297 @@ abstract class Element extends Node
   /// Returns 0 outside browser.
   int get offsetWidth => offset.width;
 
+  @override
+  Events get on => ElementEvents(this);
+
+  /// Stream of `abort` events handled by this [Element].
+  ElementStream<Event> get onAbort => abortEvent.forElement(this);
+
+  /// Stream of `beforecopy` events handled by this [Element].
+  ElementStream<Event> get onBeforeCopy => beforeCopyEvent.forElement(this);
+
+  /// Stream of `beforecut` events handled by this [Element].
+  ElementStream<Event> get onBeforeCut => beforeCutEvent.forElement(this);
+
+  /// Stream of `beforepaste` events handled by this [Element].
+  ElementStream<Event> get onBeforePaste => beforePasteEvent.forElement(this);
+
+  /// Stream of `blur` events handled by this [Element].
   ElementStream<Event> get onBlur => blurEvent.forElement(this);
 
+  ElementStream<Event> get onCanPlay => canPlayEvent.forElement(this);
+
+  ElementStream<Event> get onCanPlayThrough =>
+      canPlayThroughEvent.forElement(this);
+
+  /// Stream of `change` events handled by this [Element].
   ElementStream<Event> get onChange => changeEvent.forElement(this);
 
+  /// Stream of `click` events handled by this [Element].
   ElementStream<MouseEvent> get onClick => clickEvent.forElement(this);
 
+  /// Stream of `contextmenu` events handled by this [Element].
+  ElementStream<MouseEvent> get onContextMenu =>
+      contextMenuEvent.forElement(this);
+
+  /// Stream of `copy` events handled by this [Element].
+  ElementStream<ClipboardEvent> get onCopy => copyEvent.forElement(this);
+
+  /// Stream of `cut` events handled by this [Element].
+  ElementStream<ClipboardEvent> get onCut => cutEvent.forElement(this);
+
+  /// Stream of `doubleclick` events handled by this [Element].
+  @DomName('Element.ondblclick')
+  ElementStream<Event> get onDoubleClick => doubleClickEvent.forElement(this);
+
+  /// A stream of `drag` events fired when this element currently being dragged.
+  ///
+  /// A `drag` event is added to this stream as soon as the drag begins.
+  /// A `drag` event is also added to this stream at intervals while the drag
+  /// operation is still ongoing.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Drag and drop
+  ///   sample](https://github.com/dart-lang/dart-samples/tree/master/html5/web/dnd/basics)
+  ///   based on [the tutorial](http://www.html5rocks.com/en/tutorials/dnd/basics/)
+  ///   from HTML5Rocks.
+  /// * [Drag and drop
+  ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
+  ///   from WHATWG.
   ElementStream<MouseEvent> get onDrag => dragEvent.forElement(this);
 
+  /// A stream of `dragend` events fired when this element completes a drag
+  /// operation.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Drag and drop
+  ///   sample](https://github.com/dart-lang/dart-samples/tree/master/html5/web/dnd/basics)
+  ///   based on [the tutorial](http://www.html5rocks.com/en/tutorials/dnd/basics/)
+  ///   from HTML5Rocks.
+  /// * [Drag and drop
+  ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
+  ///   from WHATWG.
   ElementStream<MouseEvent> get onDragEnd => dragEndEvent.forElement(this);
 
+  /// A stream of `dragenter` events fired when a dragged object is first dragged
+  /// over this element.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Drag and drop
+  ///   sample](https://github.com/dart-lang/dart-samples/tree/master/html5/web/dnd/basics)
+  ///   based on [the tutorial](http://www.html5rocks.com/en/tutorials/dnd/basics/)
+  ///   from HTML5Rocks.
+  /// * [Drag and drop
+  ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
+  ///   from WHATWG.
   ElementStream<MouseEvent> get onDragEnter => dragEnterEvent.forElement(this);
 
+  /// A stream of `dragleave` events fired when an object being dragged over this
+  /// element leaves this element's target area.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Drag and drop
+  ///   sample](https://github.com/dart-lang/dart-samples/tree/master/html5/web/dnd/basics)
+  ///   based on [the tutorial](http://www.html5rocks.com/en/tutorials/dnd/basics/)
+  ///   from HTML5Rocks.
+  /// * [Drag and drop
+  ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
+  ///   from WHATWG.
   ElementStream<MouseEvent> get onDragLeave => dragLeaveEvent.forElement(this);
 
+  /// A stream of `dragover` events fired when a dragged object is currently
+  /// being dragged over this element.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Drag and drop
+  ///   sample](https://github.com/dart-lang/dart-samples/tree/master/html5/web/dnd/basics)
+  ///   based on [the tutorial](http://www.html5rocks.com/en/tutorials/dnd/basics/)
+  ///   from HTML5Rocks.
+  /// * [Drag and drop
+  ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
+  ///   from WHATWG.
   ElementStream<MouseEvent> get onDragOver => dragOverEvent.forElement(this);
 
+  /// A stream of `dragstart` events fired when this element starts being
+  /// dragged.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Drag and drop
+  ///   sample](https://github.com/dart-lang/dart-samples/tree/master/html5/web/dnd/basics)
+  ///   based on [the tutorial](http://www.html5rocks.com/en/tutorials/dnd/basics/)
+  ///   from HTML5Rocks.
+  /// * [Drag and drop
+  ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
+  ///   from WHATWG.
   ElementStream<MouseEvent> get onDragStart => dragStartEvent.forElement(this);
 
+  /// A stream of `drop` events fired when a dragged object is dropped on this
+  /// element.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Drag and drop
+  ///   sample](https://github.com/dart-lang/dart-samples/tree/master/html5/web/dnd/basics)
+  ///   based on [the tutorial](http://www.html5rocks.com/en/tutorials/dnd/basics/)
+  ///   from HTML5Rocks.
+  /// * [Drag and drop
+  ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
+  ///   from WHATWG.
   ElementStream<MouseEvent> get onDrop => dropEvent.forElement(this);
 
+  ElementStream<Event> get onDurationChange =>
+      durationChangeEvent.forElement(this);
+
+  ElementStream<Event> get onEmptied => emptiedEvent.forElement(this);
+
+  ElementStream<Event> get onEnded => endedEvent.forElement(this);
+
+  /// Stream of `error` events handled by this [Element].
   ElementStream<Event> get onError => errorEvent.forElement(this);
 
+  /// Stream of `focus` events handled by this [Element].
   ElementStream<Event> get onFocus => focusEvent.forElement(this);
 
+  /// Stream of `fullscreenchange` events handled by this [Element].
+  ElementStream<Event> get onFullscreenChange =>
+      fullscreenChangeEvent.forElement(this);
+
+  /// Stream of `fullscreenerror` events handled by this [Element].
+  ElementStream<Event> get onFullscreenError =>
+      fullscreenErrorEvent.forElement(this);
+
+  /// Stream of `input` events handled by this [Element].
   ElementStream<Event> get onInput => inputEvent.forElement(this);
 
+  /// Stream of `invalid` events handled by this [Element].
+  ElementStream<Event> get onInvalid => invalidEvent.forElement(this);
+
+  /// Stream of `keydown` events handled by this [Element].
   ElementStream<KeyboardEvent> get onKeyDown => keyDownEvent.forElement(this);
 
+  /// Stream of `keypress` events handled by this [Element].
   ElementStream<KeyboardEvent> get onKeyPress => keyPressEvent.forElement(this);
 
+  /// Stream of `keyup` events handled by this [Element].
   ElementStream<KeyboardEvent> get onKeyUp => keyUpEvent.forElement(this);
 
+  /// Stream of `load` events handled by this [Element].
   ElementStream<Event> get onLoad => loadEvent.forElement(this);
 
+  ElementStream<Event> get onLoadedData => loadedDataEvent.forElement(this);
+
+  ElementStream<Event> get onLoadedMetadata =>
+      loadedMetadataEvent.forElement(this);
+
+  /// Stream of `mousedown` events handled by this [Element].
   ElementStream<MouseEvent> get onMouseDown => mouseDownEvent.forElement(this);
 
+  /// Stream of `mouseenter` events handled by this [Element].
   ElementStream<MouseEvent> get onMouseEnter =>
       mouseEnterEvent.forElement(this);
 
+  /// Stream of `mouseleave` events handled by this [Element].
   ElementStream<MouseEvent> get onMouseLeave =>
       mouseLeaveEvent.forElement(this);
 
+  /// Stream of `mousemove` events handled by this [Element].
   ElementStream<MouseEvent> get onMouseMove => mouseMoveEvent.forElement(this);
 
+  /// Stream of `mouseout` events handled by this [Element].
+  ElementStream<MouseEvent> get onMouseOut => mouseOutEvent.forElement(this);
+
+  /// Stream of `mouseover` events handled by this [Element].
   ElementStream<MouseEvent> get onMouseOver => mouseOverEvent.forElement(this);
 
+  /// Stream of `mouseup` events handled by this [Element].
   ElementStream<MouseEvent> get onMouseUp => mouseUpEvent.forElement(this);
+
+  /// Stream of `mousewheel` events handled by this [Element].
+  ElementStream<WheelEvent> get onMouseWheel =>
+      mouseWheelEvent.forElement(this);
+
+  /// Stream of `paste` events handled by this [Element].
+  ElementStream<ClipboardEvent> get onPaste => pasteEvent.forElement(this);
+
+  ElementStream<Event> get onPause => pauseEvent.forElement(this);
 
   ElementStream<Event> get onPlay => playEvent.forElement(this);
 
+  ElementStream<Event> get onPlaying => playingEvent.forElement(this);
+
+  ElementStream<Event> get onRateChange => rateChangeEvent.forElement(this);
+
+  /// Stream of `reset` events handled by this [Element].
+  ElementStream<Event> get onReset => resetEvent.forElement(this);
+
+  ElementStream<Event> get onResize => resizeEvent.forElement(this);
+
+  /// Stream of `scroll` events handled by this [Element].
   ElementStream<Event> get onScroll => scrollEvent.forElement(this);
 
+  /// Stream of `search` events handled by this [Element].
+  ElementStream<Event> get onSearch => searchEvent.forElement(this);
+
+  ElementStream<Event> get onSeeked => seekedEvent.forElement(this);
+
+  ElementStream<Event> get onSeeking => seekingEvent.forElement(this);
+
+  /// Stream of `select` events handled by this [Element].
   ElementStream<Event> get onSelect => selectEvent.forElement(this);
 
+  /// Stream of `selectstart` events handled by this [Element].
+  ElementStream<Event> get onSelectStart => selectStartEvent.forElement(this);
+
+  ElementStream<Event> get onStalled => stalledEvent.forElement(this);
+
+  /// Stream of `submit` events handled by this [Element].
   ElementStream<Event> get onSubmit => submitEvent.forElement(this);
 
+  ElementStream<Event> get onSuspend => suspendEvent.forElement(this);
+
+  ElementStream<Event> get onTimeUpdate => timeUpdateEvent.forElement(this);
+
+  /// Stream of `touchcancel` events handled by this [Element].
   ElementStream<TouchEvent> get onTouchCancel =>
       touchCancelEvent.forElement(this);
 
-  ElementStream<TouchEvent> get onTouchEndCancel =>
-      touchEndEvent.forElement(this);
+  /// Stream of `touchend` events handled by this [Element].
+  ElementStream<TouchEvent> get onTouchEnd => touchEndEvent.forElement(this);
 
+  /// Stream of `touchenter` events handled by this [Element].
   ElementStream<TouchEvent> get onTouchEnter =>
       touchEnterEvent.forElement(this);
 
+  /// Stream of `touchleave` events handled by this [Element].
   ElementStream<TouchEvent> get onTouchLeave =>
       touchLeaveEvent.forElement(this);
 
+  /// Stream of `touchmove` events handled by this [Element].
   ElementStream<TouchEvent> get onTouchMove => touchMoveEvent.forElement(this);
 
+  /// Stream of `touchstart` events handled by this [Element].
   ElementStream<TouchEvent> get onTouchStart =>
       touchStartEvent.forElement(this);
+
+  /// Stream of `transitionend` events handled by this [Element].
+  @SupportedBrowser(SupportedBrowser.CHROME)
+  @SupportedBrowser(SupportedBrowser.FIREFOX)
+  @SupportedBrowser(SupportedBrowser.IE, '10')
+  @SupportedBrowser(SupportedBrowser.SAFARI)
+  ElementStream<TransitionEvent> get onTransitionEnd =>
+      transitionEndEvent.forElement(this);
+
+  ElementStream<Event> get onVolumeChange => volumeChangeEvent.forElement(this);
+
+  ElementStream<Event> get onWaiting => waitingEvent.forElement(this);
+
+  ElementStream<WheelEvent> get onWheel => wheelEvent.forElement(this);
 
   String get outerHtml {
     final sb = StringBuffer();
@@ -1212,15 +1548,19 @@ abstract class Element extends Node
   }
 
   /// Returns 0 outside browser.
-  int get scrollHeight => _getRenderData().scroll.height;
+  int get scrollHeight => _renderData.scroll.height;
 
-  int get scrollLeft => _getRenderData().scroll.left;
+  int get scrollLeft => _renderData.scroll.left;
+
+  set scrollLeft(int value) {}
 
   /// Returns 0 outside browser.
-  int get scrollTop => _getRenderData().scroll.top;
+  int get scrollTop => _renderData.scroll.top;
+
+  set scrollTop(int value) {}
 
   /// Returns 0 outside browser.
-  int get scrollWidth => _getRenderData().scroll.width;
+  int get scrollWidth => _renderData.scroll.width;
 
   /// The shadow root of this shadow host.
   ///
@@ -1233,18 +1573,36 @@ abstract class Element extends Node
   @SupportedBrowser(SupportedBrowser.CHROME, '25')
   ShadowRoot get shadowRoot => null;
 
-  bool get spellcheck => _getAttributeBool("spellcheck");
+  String get slot => _getAttribute("slot");
+
+  set slot(String value) {
+    _setAttribute("slot", value);
+  }
+
+  bool get spellcheck {
+    final value = _getAttributeBoolString("spellcheck") ?? _defaultSpellcheck;
+    if (value != null) {
+      return value;
+    }
+    final parent = this.parent;
+    if (parent != null) {
+      return parent.spellcheck;
+    }
+    return false;
+  }
 
   set spellcheck(bool value) {
-    _setAttributeBool("spellcheck", value);
+    _setAttributeBoolString("spellcheck", value);
   }
 
   CssStyleDeclaration get style => _getOrCreateStyle();
 
-  int get tabIndex => _getAttributeInt("tabindex");
+  StylePropertyMap get styleMap => StylePropertyMap._();
+
+  int get tabIndex => _getAttributeInt("tabindex") ?? -1;
 
   set tabIndex(int value) {
-    _setAttributeInt("tabindex", value);
+    _setAttributeInt("tabindex", value ?? -1);
   }
 
   /// Returns node name in uppercase.
@@ -1256,10 +1614,17 @@ abstract class Element extends Node
     setAttribute("title", value);
   }
 
-  bool get translate => _getAttributeBool("translate");
+  bool get translate {
+    final result = _getAttributeBoolString(
+      "translate",
+      falseValue: "no",
+      trueValue: "yes",
+    );
+    return result ?? true;
+  }
 
   set translate(bool value) {
-    _setAttributeBool("translate", value);
+    _setAttribute("translate", value ? "yes" : "no");
   }
 
   /// Returns read-only list of attribute names.
@@ -1277,19 +1642,17 @@ abstract class Element extends Node
         (this._attributesPartialViewOrNull = LinkedHashMap<String, String>());
   }
 
-  HtmlDriver get _htmlDriver {
-    final ownerDocument = this.ownerDocument;
-    if (ownerDocument != null) {
-      final result = ownerDocument._htmlDriver;
-      if (result != null) {
-        return result;
-      }
-    }
-    return HtmlDriver.current;
-  }
+  /// Default value of [spellcheck]. Null means that it's inherited.
+  bool get _defaultSpellcheck => null;
 
   bool get _isCaseSensitive {
     return ownerDocument?._isCaseSensitive ?? false;
+  }
+
+  @override
+  RenderData get _renderData {
+    return this._renderDataField ??=
+        _htmlDriver.browserClassFactory.newRenderData(this);
   }
 
   /// Creates a new AnimationEffect object whose target element is the object
@@ -1342,12 +1705,31 @@ abstract class Element extends Node
     this.insertBefore(Text(value), null);
   }
 
+  /// Called by the DOM when this element has been inserted into the live
+  /// document.
+  ///
+  /// More information can be found in the
+  /// [Custom Elements](http://w3c.github.io/webcomponents/spec/custom/#dfn-attached-callback)
+  /// draft specification.
+  void attached() {}
+
+  ShadowRoot attachShadow(Map shadowRootInitDict) {
+    throw UnimplementedError();
+  }
+
+  /// Called by the DOM whenever an attribute on this has been changed.
+  void attributeChanged(String name, String oldValue, String newValue) {}
+
   void blur() {
     dispatchEvent(FocusEvent("blur"));
   }
 
   void click() {
     dispatchEvent(MouseEvent("click"));
+  }
+
+  Element closest(String selectors) {
+    throw UnimplementedError();
   }
 
   /// Create a DocumentFragment from the HTML fragment and ensure that it follows
@@ -1411,24 +1793,36 @@ abstract class Element extends Node
     throw UnimplementedError();
   }
 
+  /// Called by the DOM when this element has been removed from the live
+  /// document.
+  ///
+  /// More information can be found in the
+  /// [Custom Elements](http://w3c.github.io/webcomponents/spec/custom/#dfn-detached-callback)
+  /// draft specification.
+  void detached() {}
+
   void focus() {
     dispatchEvent(FocusEvent("focus"));
   }
 
+  List<Animation> getAnimations() {
+    return const <Animation>[];
+  }
+
   String getAttribute(String name) {
-    return _getAttribute(name.toLowerCase());
+    return _getAttribute(name.toLowerCase(), defaultValue: null);
   }
 
   List<String> getAttributeNames() {
     return this.attributes.keys.toList();
   }
 
-  String getAttributeNS(String namespace, String name) {
+  String getAttributeNS(String namespaceUri, String name) {
     final namespaces = this._namespacedAttributes;
     if (namespaces == null) {
       return null;
     }
-    final attributes = _namespacedAttributes[namespace];
+    final attributes = _namespacedAttributes[namespaceUri];
     if (attributes == null) {
       return null;
     }
@@ -1449,8 +1843,32 @@ abstract class Element extends Node
     throw UnimplementedError();
   }
 
+  List<Rectangle> getClientRects() {
+    throw UnimplementedError();
+  }
+
   CssStyleDeclaration getComputedStyle([String pseudoElement]) {
     return _ComputedStyle._(this, pseudoElement);
+  }
+
+  /// Returns a list of shadow DOM insertion points to which this element is
+  /// distributed.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Shadow DOM
+  ///   specification](https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html)
+  ///   from W3C.
+  List<Node> getDestinationInsertionPoints() {
+    throw UnimplementedError();
+  }
+
+  List<Node> getElementsByClassName(String classNames) {
+    if (classNames.isEmpty) {
+      throw ArgumentError.value(classNames);
+    }
+    return querySelectorAll(
+        classNames.split(_whitespaceRegExp).map((name) => ".$name").join());
   }
 
   Map<String, String> getNamespacedAttributes(String namespace) {
@@ -1467,6 +1885,76 @@ abstract class Element extends Node
     return result;
   }
 
+  bool hasAttribute(String name) {
+    return _hasAttribute(name.toLowerCase());
+  }
+
+  bool hasAttributeNS(String namespaceUri, String name) {
+    final namespaces = this._namespacedAttributes;
+    if (namespaces == null) {
+      return false;
+    }
+    final attributes = _namespacedAttributes[namespaceUri];
+    if (attributes == null) {
+      return false;
+    }
+    return attributes.containsKey(name.toLowerCase());
+  }
+
+  bool hasPointerCapture(int pointerId) {
+    return false;
+  }
+
+  /// Inserts [element] into the DOM at the specified location.
+  ///
+  /// To see the possible values for [where], read the doc for
+  /// [insertAdjacentHtml].
+  ///
+  /// See also:
+  ///
+  /// * [insertAdjacentHtml]
+  Element insertAdjacentElement(String where, Element element) {
+    throw UnimplementedError();
+  }
+
+  /// Parses text as an HTML fragment and inserts it into the DOM at the
+  /// specified location.
+  ///
+  /// The [where] parameter indicates where to insert the HTML fragment:
+  ///
+  /// * 'beforeBegin': Immediately before this element.
+  /// * 'afterBegin': As the first child of this element.
+  /// * 'beforeEnd': As the last child of this element.
+  /// * 'afterEnd': Immediately after this element.
+  ///
+  ///     var html = '<div class="something">content</div>';
+  ///     // Inserts as the first child
+  ///     document.body.insertAdjacentHtml('afterBegin', html);
+  ///     var createdElement = document.body.children[0];
+  ///     print(createdElement.classes[0]); // Prints 'something'
+  ///
+  /// See also:
+  ///
+  /// * [insertAdjacentText]
+  /// * [insertAdjacentElement]
+  void insertAdjacentHtml(String where, String html,
+      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
+    throw UnimplementedError();
+  }
+
+  /// Inserts text into the DOM at the specified location.
+  ///
+  /// To see the possible values for [where], read the doc for
+  /// [insertAdjacentHtml].
+  ///
+  /// See also:
+  ///
+  /// * [insertAdjacentHtml]
+  void insertAdjacentText(String where, String text) {
+    throw UnimplementedError();
+  }
+
+  @visibleForTesting
   @override
   Element internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
     // Create a new instance of the same class
@@ -1521,6 +2009,8 @@ abstract class Element extends Node
     return Element._offsetToHelper(this, parent);
   }
 
+  void releasePointerCapture(int pointerId) {}
+
   void removeAttribute(String name) {
     _attributesWithoutLatestValues.remove(name);
     switch (name) {
@@ -1563,6 +2053,10 @@ abstract class Element extends Node
   }
 
   void scrollTo([dynamic options_OR_x, num y]) {}
+
+  Future<ScrollState> setApplyScroll(String nativeScrollBehavior) {
+    throw UnimplementedError();
+  }
 
   void setAttribute(String name, String value) {
     // Normalize name
@@ -1628,6 +2122,10 @@ abstract class Element extends Node
     }
   }
 
+  Future<ScrollState> setDistributeScroll(String nativeScrollBehavior) {
+    throw UnimplementedError();
+  }
+
   /// Parses the HTML fragment and sets it as the contents of this element.
   /// This ensures that the generated content follows the sanitization rules
   /// specified by the validator or treeSanitizer.
@@ -1659,42 +2157,101 @@ abstract class Element extends Node
     ));
   }
 
+  void setPointerCapture(int pointerId) {}
+
   @override
   String toString() {
+    final outerHtml = this.outerHtml;
+    if (outerHtml.length < 256) {
+      return outerHtml;
+    }
     final id = this.id;
-    if (id == null) {
+    final tagName = this.tagName.toLowerCase();
+    if (id == "") {
       return '<$tagName ...>...</$tagName>';
     }
     return '<$tagName id="$id" ...>...</$tagName>';
   }
 
-  String _getAttribute(String name) {
+  /// Returns value of the attribute. The name MUST be lowercase.
+  String _getAttribute(String name, {String defaultValue = ""}) {
     switch (name) {
       case "style":
-        return _style?.toString();
+        return _style?.toString() ?? defaultValue;
       default:
-        return _attributesWithoutLatestValues[name];
+        final map = this._attributesPartialViewOrNull;
+        if (map == null) {
+          return defaultValue;
+        }
+        return map[name] ?? defaultValue;
     }
   }
 
+  /// Returns boolean value of the attribute. The name MUST be lowercase.
+  /// This is for attributes that either exist or don't exist.
+  ///
+  /// See also [_getAttributeBoolString].
   bool _getAttributeBool(String name) {
-    return getAttribute(name) != "";
+    return _hasAttribute(name);
   }
 
+  /// Returns boolean value of the attribute. The name MUST be lowercase.
+  /// This is for attributes where the value is either "true" or "false".
+  /// If the value is something else, returns null.
+  ///
+  /// See also [_getAttributeBool].
+  bool _getAttributeBoolString(String name,
+      {String falseValue = "false", String trueValue = "true"}) {
+    final value = _getAttribute(name, defaultValue: null);
+    if (value == falseValue) {
+      return false;
+    }
+    if (value == trueValue) {
+      return true;
+    }
+    return null;
+  }
+
+  /// Returns integer value of the attribute. The name MUST be lowercase.
   int _getAttributeInt(String name) {
-    final s = getAttribute(name);
+    final s = _getAttribute(name, defaultValue: null);
     if (s == null) {
       return null;
     }
-    return int.parse(s);
+    return int.tryParse(s);
   }
 
-  num _getAttributeNum(String name) {
-    final s = getAttribute(name);
+  /// Returns number value of the attribute. The name MUST be lowercase.
+  num _getAttributeNum(String name, {num defaultValue}) {
+    final s = _getAttribute(name, defaultValue: null);
     if (s == null) {
       return null;
     }
-    return num.parse(s);
+    return num.tryParse(s) ?? defaultValue;
+  }
+
+  /// Returns resolved URI value of the attribute. The name MUST be lowercase.
+  String _getAttributeResolvedUri(String name) {
+    final uriString = _getAttribute(name, defaultValue: null);
+    if (uriString == null) {
+      return null;
+    }
+    final uri = Uri.tryParse(uriString);
+    if (uri == null) {
+      return uriString;
+    }
+    if (uri.scheme != "") {
+      return uriString;
+    }
+    final baseUriString = this.baseUri;
+    if (baseUriString == null) {
+      return uriString;
+    }
+    final baseUri = Uri.parse(baseUriString);
+    if (baseUri == null) {
+      return uriString;
+    }
+    return baseUri.resolveUri(uri).toString();
   }
 
   _CssStyleDeclaration _getOrCreateStyle() {
@@ -1710,27 +2267,43 @@ abstract class Element extends Node
     return result;
   }
 
-  RenderData _getRenderData() {
-    return _htmlDriver.layoutDataFor(this);
+  bool _hasAttribute(String name) {
+    switch (name) {
+      case "style":
+        return _style != null;
+      default:
+        final map = this._attributesPartialViewOrNull;
+        if (map == null) {
+          return false;
+        }
+        return map.containsKey(name);
+    }
   }
 
   Element _newInstance(Document document);
 
-  /// Internal method that does not validate attribute name
+  /// Sets value of the attribute. The name MUST be lowercase.
   void _setAttribute(String name, String value) {
+    name = name.toLowerCase();
     value ??= "null";
 
-    // Map update
-    _attributesWithoutLatestValues[name] = value;
+    if (!_hasAttribute(name) || value != this._getAttribute(name)) {
+      // Mark as dirty
+      _markDirty();
 
-    // Field update for possible special case
-    switch (name) {
-      case "style":
-        this._getOrCreateStyle()._parse(value);
-        break;
+      // Map update
+      _attributesWithoutLatestValues[name] = value;
+
+      // Field update for possible special case
+      switch (name) {
+        case "style":
+          this._getOrCreateStyle()._parse(value);
+          break;
+      }
     }
   }
 
+  /// Sets boolean value of the attribute. The name MUST be lowercase.
   void _setAttributeBool(String name, bool value) {
     if (value) {
       _setAttribute(name, "");
@@ -1739,10 +2312,17 @@ abstract class Element extends Node
     }
   }
 
+  /// Sets boolean value of the attribute. The name MUST be lowercase.
+  void _setAttributeBoolString(String name, bool value) {
+    _setAttribute(name, value ? "true" : "false");
+  }
+
+  /// Sets integer value of the attribute. The name MUST be lowercase.
   void _setAttributeInt(String name, int value) {
     _setAttribute(name, value?.toString());
   }
 
+  /// Sets number value of the attribute. The name MUST be lowercase.
   void _setAttributeNum(String name, num value) {
     _setAttribute(name, value?.toString());
   }
@@ -1774,259 +2354,5 @@ abstract class Element extends Node
 
   static String _safeTagName(Element element) {
     return element.tagName;
-  }
-}
-
-class ScrollAlignment {
-  static const ScrollAlignment BOTTOM = ScrollAlignment._("BOTTOM");
-  static const ScrollAlignment CENTER = ScrollAlignment._("CENTER");
-  static const ScrollAlignment TOP = ScrollAlignment._("TOP");
-  final String _name;
-
-  const ScrollAlignment._(this._name);
-
-  String toString() => _name;
-}
-
-/// Exposes attributes (including up-to-date 'style') as a map.
-class _Attributes extends MapBase<String, String> {
-  final Element _element;
-
-  _Attributes(this._element);
-
-  @override
-  Iterable<String> get keys {
-    return _element._attributeNames;
-  }
-
-  @override
-  String operator [](Object key) {
-    return _element.getAttribute(key);
-  }
-
-  @override
-  void operator []=(String key, String value) {
-    _element.setAttribute(key, value);
-  }
-
-  @override
-  void clear() {
-    for (var key in _element._attributeNames) {
-      _element.setAttribute(key, null);
-    }
-  }
-
-  @override
-  String remove(Object key) {
-    final value = _element.getAttribute(key);
-    _element.setAttribute(key, null);
-    return value;
-  }
-}
-
-/// Provides a Map abstraction on top of data-* attributes, similar to the
-/// dataSet in the old DOM.
-class _DataAttributeMap extends MapBase<String, String> {
-  final Map<String, String> _attributes;
-
-  _DataAttributeMap(this._attributes);
-
-  // interface Map
-
-  bool get isEmpty => length == 0;
-
-  bool get isNotEmpty => !isEmpty;
-
-  // TODO: Use lazy iterator when it is available on Map.
-  Iterable<String> get keys {
-    final keys = <String>[];
-    _attributes.forEach((String key, String value) {
-      if (_matches(key)) {
-        keys.add(_strip(key));
-      }
-    });
-    return keys;
-  }
-
-  int get length => keys.length;
-
-  Iterable<String> get values {
-    final values = <String>[];
-    _attributes.forEach((String key, String value) {
-      if (_matches(key)) {
-        values.add(value);
-      }
-    });
-    return values;
-  }
-
-  String operator [](Object key) => _attributes[_attr(key)];
-
-  void operator []=(String key, String value) {
-    _attributes[_attr(key)] = value;
-  }
-
-  void addAll(Map<String, String> other) {
-    other.forEach((k, v) {
-      this[k] = v;
-    });
-  }
-
-  Map<K, V> cast<K, V>() => Map.castFrom<String, String, K, V>(this);
-
-  void clear() {
-    // Needs to operate on a snapshot since we are mutating the collection.
-    for (String key in keys) {
-      remove(key);
-    }
-  }
-
-  bool containsKey(Object key) => _attributes.containsKey(_attr(key));
-
-  bool containsValue(Object value) => values.any((v) => v == value);
-
-  void forEach(void f(String key, String value)) {
-    _attributes.forEach((String key, String value) {
-      if (_matches(key)) {
-        f(_strip(key), value);
-      }
-    });
-  }
-
-  // TODO: Use lazy iterator when it is available on Map.
-  String putIfAbsent(String key, String ifAbsent()) =>
-      _attributes.putIfAbsent(_attr(key), ifAbsent);
-
-  String remove(Object key) => _attributes.remove(_attr(key));
-
-  // Helpers.
-  String _attr(String key) => 'data-${_toHyphenedName(key)}';
-
-  bool _matches(String key) => key.startsWith('data-');
-
-  String _strip(String key) => _toCamelCase(key.substring(5));
-
-  /// Converts a string name with hyphens into an identifier, by removing hyphens
-  /// and capitalizing the following letter. Optionally [startUppercase] to
-  /// capitalize the first letter.
-  String _toCamelCase(String hyphenedName, {bool startUppercase = false}) {
-    var segments = hyphenedName.split('-');
-    int start = startUppercase ? 0 : 1;
-    for (int i = start; i < segments.length; i++) {
-      var segment = segments[i];
-      if (segment.isNotEmpty) {
-        // Character between 'a'..'z' mapped to 'A'..'Z'
-        segments[i] = '${segment[0].toUpperCase()}${segment.substring(1)}';
-      }
-    }
-    return segments.join('');
-  }
-
-  /// Reverse of [toCamelCase].
-  String _toHyphenedName(String word) {
-    var sb = StringBuffer();
-    for (int i = 0; i < word.length; i++) {
-      var lower = word[i].toLowerCase();
-      if (word[i] != lower && i > 0) sb.write('-');
-      sb.write(lower);
-    }
-    return sb.toString();
-  }
-}
-
-class _ElementChildren extends ListBase<Element> {
-  final _ElementOrDocument _element;
-
-  _ElementChildren(this._element);
-
-  @override
-  Iterator<Element> get iterator {
-    return _ElementIterator(_element);
-  }
-
-  @override
-  int get length {
-    Node node = _element.firstChild;
-    int length = 0;
-    while (node != null) {
-      if (node is Element) {
-        length++;
-      }
-      node = node.nextNode;
-    }
-    return length;
-  }
-
-  @override
-  set length(int newLength) {
-    final element = this._element;
-    if (newLength == 0) {
-      while (true) {
-        final first = element._firstElementChild;
-        if (first == null) {
-          break;
-        }
-        first.remove();
-      }
-    } else {
-      final lastChild = this[newLength - 1];
-      while (true) {
-        final last = lastChild.nextElementSibling;
-        if (last == null) {
-          break;
-        }
-        last.remove();
-      }
-    }
-  }
-
-  @override
-  Element operator [](int index) {
-    Node node = _element.firstChild;
-    while (node != null) {
-      if (node is Element) {
-        if (index == 0) {
-          return node;
-        }
-        index--;
-      }
-      node = node.nextNode;
-    }
-    throw ArgumentError.value(index);
-  }
-
-  @override
-  operator []=(int index, Element child) {
-    this[index].replaceWith(child);
-  }
-}
-
-class _ElementIterator extends Iterator<Element> {
-  final Element _parent;
-  Element _current;
-
-  _ElementIterator(this._parent);
-
-  @override
-  Element get current => _current;
-
-  @override
-  bool moveNext() {
-    final current = this._current;
-    if (current == null) {
-      final first = _parent._firstElementChild;
-      this._current = first;
-      return first != null;
-    }
-    if (!identical(_parent, current.parent)) {
-      // TODO: Implementation that handles modifications like 'dart:html' does.
-      throw StateError("DOM tree was modified during iteration");
-    }
-    final next = current.nextElementSibling;
-    if (next == null) {
-      return false;
-    }
-    this._current = next;
-    return true;
   }
 }

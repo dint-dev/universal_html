@@ -171,3 +171,8 @@ class CspBuilder {
     return result;
   }
 }
+
+class CspRuleType {
+  static const String script = "script-src";
+  CspRuleType._();
+}

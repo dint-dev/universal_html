@@ -1,4 +1,49 @@
-part of universal_html;
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/*
+Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
+  https://github.com/dart-lang/sdk/tree/master/tools/dom
+
+The source code adopted from 'dart:html' had the following license:
+
+  Copyright 2012, the Dart project authors. All rights reserved.
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of Google Inc. nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+part of universal_html.internal;
 
 final _CONTENT = 'content';
 
@@ -297,6 +342,41 @@ class _ContentCssRect extends CssRect {
   }
 }
 
+/// This is the [Jenkins hash function][1] but using masking to keep
+/// values in SMI range.
+///
+/// [1]: http://en.wikipedia.org/wiki/Jenkins_hash_function
+///
+/// Use:
+/// Hash each value with the hash of the previous value, then get the final
+/// hash by calling finish.
+///
+///     var hash = 0;
+///     for (var value in values) {
+///       hash = JenkinsSmiHash.combine(hash, value.hashCode);
+///     }
+///     hash = JenkinsSmiHash.finish(hash);
+class _JenkinsSmiHash {
+  // TODO(11617): This class should be optimized and standardized elsewhere.
+
+  static int combine(int hash, int value) {
+    hash = 0x1fffffff & (hash + value);
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+
+  static int hash2(a, b) => finish(combine(combine(0, a), b));
+
+  static int hash4(a, b, c, d) =>
+      finish(combine(combine(combine(combine(0, a), b), c), d));
+}
+
 /// A rectangle representing the dimensions of the space occupied by the
 /// element's content + padding + border + margin in the
 /// [box model](http://www.w3.org/TR/CSS2/box.html).
@@ -331,39 +411,4 @@ class _PaddingCssRect extends CssRect {
       _addOrSubtractToBoxModel(['top'], _PADDING);
   num get width =>
       _element.offsetWidth + _addOrSubtractToBoxModel(_WIDTH, _PADDING);
-}
-
-/// This is the [Jenkins hash function][1] but using masking to keep
-/// values in SMI range.
-///
-/// [1]: http://en.wikipedia.org/wiki/Jenkins_hash_function
-///
-/// Use:
-/// Hash each value with the hash of the previous value, then get the final
-/// hash by calling finish.
-///
-///     var hash = 0;
-///     for (var value in values) {
-///       hash = JenkinsSmiHash.combine(hash, value.hashCode);
-///     }
-///     hash = JenkinsSmiHash.finish(hash);
-class _JenkinsSmiHash {
-  // TODO(11617): This class should be optimized and standardized elsewhere.
-
-  static int combine(int hash, int value) {
-    hash = 0x1fffffff & (hash + value);
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-
-  static int hash2(a, b) => finish(combine(combine(0, a), b));
-
-  static int hash4(a, b, c, d) =>
-      finish(combine(combine(combine(combine(0, a), b), c), d));
 }

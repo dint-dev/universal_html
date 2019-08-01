@@ -1,3 +1,17 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 part of main_test;
 
 final throwsDomException = throwsA(isA<DomException>());
@@ -315,5 +329,22 @@ void _testElement() {
         expect(e.style.getPropertyValue("font-family"), "");
       });
     });
+
+    // toString()
+    //
+    // We test toString() only in the VM, because Chrome implementation is not
+    // good for debugging, which is the main purpose of toString().
+    group("toString()", () {
+      test("empty element", () {
+        final node = Element.div();
+        expect(node.toString(), "<div></div>");
+      });
+      test("complex element", () {
+        final node = Element.div()
+          ..setAttribute("k0", "v0")
+          ..appendText("abc");
+        expect(node.toString(), """<div k0="v0">abc</div>""");
+      });
+    }, testOn: "vm");
   });
 }

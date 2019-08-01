@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,13 +44,65 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 abstract class DirectoryEntry extends Entry {
+  factory DirectoryEntry._() {
+    throw UnimplementedError();
+  }
+
   bool get isDirectory => true;
+
+  /// Create a new directory with the specified `path`. If `exclusive` is true,
+  /// the returned Future will complete with an error if a directory already
+  /// exists with the specified `path`.
+  Future<Entry> createDirectory(String path, {bool exclusive = false}) {
+    throw UnimplementedError();
+  }
+
+  /// Create a new file with the specified `path`. If `exclusive` is true,
+  /// the returned Future will complete with an error if a file already
+  /// exists at the specified `path`.
+  Future<Entry> createFile(String path, {bool exclusive = false}) {
+    throw UnimplementedError();
+  }
+
+  DirectoryReader createReader() {
+    throw UnimplementedError();
+  }
+
+  /// Retrieve an already existing directory entry. The returned future will
+  /// result in an error if a directory at `path` does not exist or if the item
+  /// at `path` is not a directory.
+  Future<Entry> getDirectory(String path) {
+    throw UnimplementedError();
+  }
+
+  /// Retrieve an already existing file entry. The returned future will
+  /// result in an error if a file at `path` does not exist or if the item at
+  /// `path` is not a file.
+  Future<Entry> getFile(String path) {
+    throw UnimplementedError();
+  }
+
+  Future removeRecursively() {
+    throw UnimplementedError();
+  }
+}
+
+class DirectoryReader {
+  factory DirectoryReader._() {
+    throw UnimplementedError();
+  }
+
+  Future<List<Entry>> readEntries() {
+    throw UnimplementedError();
+  }
 }
 
 abstract class Entry {
+  Entry._();
+
   FileSystem get filesystem;
 
   String get fullPath;
@@ -47,25 +112,56 @@ abstract class Entry {
   bool get isFile => false;
 
   String get name;
+
+  Future<Entry> copyTo(DirectoryEntry parent, {String name}) {
+    throw UnimplementedError();
+  }
+
+  Future<Metadata> getMetadata() {
+    throw UnimplementedError();
+  }
+
+  Future<Entry> getParent() {
+    throw UnimplementedError();
+  }
+
+  Future<Entry> moveTo(DirectoryEntry parent, {String name}) {
+    throw UnimplementedError();
+  }
+
+  Future remove() {
+    throw UnimplementedError();
+  }
+
+  String toUrl() {
+    throw UnimplementedError();
+  }
 }
 
-abstract class File implements Blob {
-  int get lastModified;
+class File implements Blob {
+  factory File(List<Object> fileBits, String fileName, [Map options]) {
+    throw UnimplementedError();
+  }
 
-  DateTime get lastModifiedDate;
+  int get lastModified => throw UnimplementedError();
 
-  String get name;
+  DateTime get lastModifiedDate => throw UnimplementedError();
 
-  String get relativePath;
+  String get name => throw UnimplementedError();
 
-  int get size;
+  String get relativePath => throw UnimplementedError();
 
-  String get type;
+  int get size => throw UnimplementedError();
 
-  Blob slice([int start, int end, String contentType]);
+  String get type => throw UnimplementedError();
+
+  Blob slice([int start, int end, String contentType]) =>
+      throw UnimplementedError();
 }
 
 abstract class FileEntry extends Entry {
+  FileEntry._() : super._();
+
   bool get isFile => true;
 
   Future<File> file();
@@ -120,6 +216,8 @@ abstract class FileReader extends EventTarget {
   static const EventStreamProvider<ProgressEvent> progressEvent =
       EventStreamProvider<ProgressEvent>('progress');
 
+  FileReader() : super._created();
+
   Error get error;
 
   /// Stream of `abort` events handled by this [FileReader].
@@ -155,6 +253,8 @@ abstract class FileReader extends EventTarget {
 
 abstract class FileSystem {
   static bool get supported => false;
+
+  FileSystem._();
 
   String get name;
 
@@ -204,6 +304,16 @@ abstract class FileWriter extends EventTarget {
   static const EventStreamProvider<ProgressEvent> writeStartEvent =
       EventStreamProvider<ProgressEvent>('writestart');
 
+  static const int DONE = 2;
+
+  static const int INIT = 0;
+
+  static const int WRITING = 1;
+
+  factory FileWriter._() {
+    throw UnimplementedError();
+  }
+
   Error get error;
 
   int get length;
@@ -226,6 +336,10 @@ abstract class FileWriter extends EventTarget {
   /// Stream of `writestart` events handled by this [FileWriter].
   Stream<ProgressEvent> get onWriteStart => writeStartEvent.forTarget(this);
 
+  int get position => throw UnimplementedError();
+
+  int get readyState => throw UnimplementedError();
+
   void abort();
 
   void seek(int position);
@@ -236,6 +350,8 @@ abstract class FileWriter extends EventTarget {
 }
 
 abstract class Metadata {
+  Metadata._();
+
   DateTime get modificationTime;
 
   int get size;

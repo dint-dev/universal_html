@@ -26,8 +26,8 @@ class DomParserDriver {
     }
     switch (mime) {
       case "text/plain":
-        final document = HtmlDocument.internal(
-          htmlDriver,
+        final document = BrowserImplementationUtils.newHtmlDocument(
+          htmlDriver: htmlDriver,
           contentType: mime,
           filled: true,
         );
@@ -117,8 +117,8 @@ class DomParserDriver {
     }
     if (document is XmlDocument) {
       // Convert XML document to HTML document
-      final htmlDocument = HtmlDocument.internal(
-        htmlDriver,
+      final htmlDocument = BrowserImplementationUtils.newHtmlDocument(
+        htmlDriver: htmlDriver,
         contentType: mime,
         filled: false,
       );
@@ -189,28 +189,15 @@ class _HtmlParser {
   ) {
     switch (type) {
       case _typeHtml:
-        final tag = input.localName.toUpperCase();
-        switch (tag) {
-          case "INPUT":
-            String type;
-            for (var name in input.attributes.keys) {
-              if (name.toLowerCase() == "type") {
-                type = input.attributes[name];
-              }
-            }
-            return InputElementBase.internalFromType(
-              ownerDocument,
-              type,
-            );
-          default:
-            return Element.internalTag(
-              ownerDocument,
-              tag,
-            );
-        }
-        break;
+        final tagName = input.localName.toUpperCase();
+
+        // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
+        return Element.internalTag(
+          ownerDocument,
+          tagName,
+        );
       case _typeXml:
-        return UnknownElement.internal(
+        return BrowserImplementationUtils.newUnknownElement(
             ownerDocument, input.namespaceUri, input.localName);
       case _typeSvg:
         return SvgElement.internal(ownerDocument, input.localName);
@@ -273,8 +260,8 @@ class _HtmlParser {
       switch (type) {
         case _typeHtml:
           // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-          final result = HtmlDocument.internal(
-            htmlDriver,
+          final result = BrowserImplementationUtils.newHtmlDocument(
+            htmlDriver: htmlDriver,
             contentType: mime,
             filled: false,
           );
@@ -284,8 +271,8 @@ class _HtmlParser {
           return result;
         default:
           // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-          final result = XmlDocument.internal(
-            htmlDriver,
+          final result = BrowserImplementationUtils.newXmlDocument(
+            htmlDriver: htmlDriver,
             contentType: mime,
           );
           for (var child in input.nodes) {
@@ -298,7 +285,8 @@ class _HtmlParser {
       // DocumentFragment
       // ----------------
 
-      final result = DocumentFragment.internal(ownerDocument);
+      final result =
+          BrowserImplementationUtils.newDocumentFragment(ownerDocument);
       for (var child in input.nodes) {
         result.append(_newNodeFrom(ownerDocument, child));
       }
@@ -308,7 +296,8 @@ class _HtmlParser {
       // DocumentType
       // ------------
 
-      return DocumentType.internal(ownerDocument, input.name);
+      return BrowserImplementationUtils.newDocumentType(
+          ownerDocument, input.name);
     } else {
       throw UnimplementedError();
     }
@@ -361,7 +350,7 @@ class _XmlParser {
       return null;
     }
     if (input is xml.XmlText) {
-      return Text.internal(document, input.text);
+      return BrowserImplementationUtils.newText(document, input.text);
     }
     if (input is xml.XmlElement) {
       final namespaceUri = input.name.namespaceUri;
@@ -369,7 +358,7 @@ class _XmlParser {
       if (name == null) {
         throw ArgumentError.value(input);
       }
-      final result = UnknownElement.internal(
+      final result = BrowserImplementationUtils.newUnknownElement(
         document,
         namespaceUri,
         name,
@@ -405,8 +394,10 @@ class _XmlParser {
       return Text(input.text);
     }
     if (input is xml.XmlDocument) {
-      // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-      final result = XmlDocument.internal(htmlDriver, contentType: contentType);
+      final result = BrowserImplementationUtils.newXmlDocument(
+        htmlDriver: htmlDriver,
+        contentType: contentType,
+      );
       for (var inputChild in input.children) {
         final child = _newNodeFrom(result, inputChild);
         if (child != null) {
@@ -416,10 +407,10 @@ class _XmlParser {
       return result;
     }
     if (input is xml.XmlDoctype) {
-      return DocumentType.internal(document, input.text);
+      return BrowserImplementationUtils.newDocumentType(document, input.text);
     }
     if (input is xml.XmlComment) {
-      return Comment.internal(document, input.text);
+      return BrowserImplementationUtils.newComment(document, input.text);
     }
     throw ArgumentError.value(input);
   }

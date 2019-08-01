@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -30,25 +43,48 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html;
+part of universal_html.internal;
 
-class Navigator {
-  final HtmlDriver _driver;
-  final Permissions permission = Permissions._();
+class Navigator extends NavigatorConcurrentHardware
+    implements
+        NavigatorCookies,
+        NavigatorLanguage,
+        NavigatorOnLine,
+        NavigatorAutomationInformation,
+        NavigatorID {
+  final HtmlDriver _htmlDriver;
+  final Permissions permissions = Permissions._();
 
-  /// IMPORTANT: Not part of 'dart:html' API.
-  Navigator.internal(
-    this._driver, {
-    this.deviceMemory,
-    this.vendor = "",
-    this.vendorSub = "",
-  });
-
+  /// Amount of memory in the device.
   final int deviceMemory;
 
+  /// Lazily allocated [Geolocation].
   Geolocation _geoLocation;
-  Geolocation get geoLocation {
-    return _geoLocation ?? (_geoLocation = _driver.newGeolocation());
+
+  Navigator._(this._htmlDriver, {this.deviceMemory}) : super._();
+
+  String get appCodeName => null;
+
+  String get appName => _htmlDriver.userAgent.appName;
+
+  String get appVersion => _htmlDriver.userAgent.appVersion;
+
+  _Clipboard get clipboard => throw UnimplementedError();
+
+  NetworkInformation get connection => throw UnimplementedError();
+
+  @Unstable()
+  bool get cookieEnabled => false;
+
+  CredentialsContainer get credentials => throw UnimplementedError();
+
+  bool get dartEnabled => false;
+
+  String get doNotTrack => throw UnimplementedError();
+
+  Geolocation get geolocation {
+    return _geoLocation ??
+        (_geoLocation = _htmlDriver.browserClassFactory.newGeolocation());
   }
 
   String get language {
@@ -56,33 +92,98 @@ class Navigator {
     return languages.isEmpty ? null : languages.first;
   }
 
-  List<String> get languages => _driver.languages;
+  List<String> get languages => _htmlDriver.languages;
+
+  int get maxTouchPoints => throw UnimplementedError();
+
+  MediaCapabilities get mediaCapabilities => throw UnimplementedError();
 
   MediaDevices get mediaDevices => MediaDevices._();
 
+  MediaSession get mediaSession => throw UnimplementedError();
+
+  List<MimeType> get mimeTypes => throw UnimplementedError();
+
+  Object get nfc => null;
+
   bool get onLine => false;
 
-  String get userAgent => _driver.userAgent;
+  String get platform => "Win32";
 
-  final String vendor;
+  Presentation get presentation => null;
 
-  final String vendorSub;
+  String get product => _htmlDriver.userAgent.product;
+
+  String get productSub => _htmlDriver.userAgent.productSub;
 
   ServiceWorkerContainer get serviceWorker {
     throw UnimplementedError();
   }
 
+  StorageManager get storage => null;
+
+  String get userAgent => _htmlDriver.userAgent.string;
+
+  String get vendor => _htmlDriver.userAgent.vendor;
+
+  String get vendorSub => _htmlDriver.userAgent.vendorSub;
+
+  VR get vr => null;
+
+  bool get webdriver => null;
+
   void cancelKeyboardLock() {
     // Ignore
   }
+
+  Future getBattery() => throw UnimplementedError();
+
+  List<Gamepad> getGamepads() => throw UnimplementedError();
 
   Future<RelatedApplication> getInstalledRelatedApps() {
     return Future.error(UnimplementedError());
   }
 
+  /// Gets a stream (video and or audio) from the local computer.
+  ///
+  /// Use [MediaStream.supported] to check if this is supported by the current
+  /// platform. The arguments `audio` and `video` default to `false` (stream does
+  /// not use audio or video, respectively).
+  ///
+  /// Simple example usage:
+  ///
+  ///     window.navigator.getUserMedia(audio: true, video: true).then((stream) {
+  ///       var video = new VideoElement()
+  ///         ..autoplay = true
+  ///         ..src = Url.createObjectUrlFromStream(stream);
+  ///       document.body.append(video);
+  ///     });
+  ///
+  /// The user can also pass in Maps to the audio or video parameters to specify
+  /// mandatory and optional constraints for the media stream. Not passing in a
+  /// map, but passing in `true` will provide a MediaStream with audio or
+  /// video capabilities, but without any additional constraints. The particular
+  /// constraint names for audio and video are still in flux, but as of this
+  /// writing, here is an example providing more constraints.
+  ///
+  ///     window.navigator.getUserMedia(
+  ///         audio: true,
+  ///         video: {'mandatory':
+  ///                    { 'minAspectRatio': 1.333, 'maxAspectRatio': 1.334 },
+  ///                 'optional':
+  ///                    [{ 'minFrameRate': 60 },
+  ///                     { 'maxWidth': 640 }]
+  ///     });
+  ///
+  /// See also:
+  /// * [MediaStream.supported]
   Future<MediaStream> getUserMedia(
       {dynamic audio = false, dynamic video = false}) {
     return Future.error(UnimplementedError());
+  }
+
+  Future getVRDisplays() {
+    throw UnimplementedError();
   }
 
   void registerProtocolHandler(String scheme, String url, String title) {
@@ -98,20 +199,21 @@ class Navigator {
     return Future.error(UnimplementedError());
   }
 
+  Future requestMidiAccess([Map options]) => throw UnimplementedError();
+
   bool sendBeacon(String url, Object data) {
+    // Send beacon later
     _sendBeacon(url, data);
+
+    // Return true
     return true;
+  }
+
+  Future share([Map data]) {
+    throw UnimplementedError();
   }
 
   Future<void> _sendBeacon(String url, Object data) async {
     await HttpRequest.request(url, method: "POST", sendData: data);
   }
-}
-
-class RelatedApplication {
-  final String id;
-  final String platform;
-  final String url;
-
-  RelatedApplication._({this.id, this.platform, this.url});
 }

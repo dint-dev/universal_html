@@ -1,9 +1,65 @@
-part of universal_html;
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/*
+Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
+  https://github.com/dart-lang/sdk/tree/master/tools/dom
+
+The source code adopted from 'dart:html' had the following license:
+
+  Copyright 2012, the Dart project authors. All rights reserved.
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of Google Inc. nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+part of universal_html.internal;
 
 /// An immutable list containing HTML elements. This list contains some
 /// additional methods when compared to regular lists for ease of CSS
 /// manipulation on a group of elements.
 abstract class ElementList<T extends Element> extends ListBase<T> {
+  /// Access dimensions and position of the first Element's content + padding +
+  /// border box in this list.
+  ///
+  /// This returns a rectangle with the dimensions actually available for content
+  /// in this element, in pixels, regardless of this element's box-sizing
+  /// property. Unlike [getBoundingClientRect], the dimensions of this rectangle
+  /// will return the same numerical height if the element is hidden or not. This
+  /// can be used to retrieve jQuery's `outerHeight` value for an element.
+  CssRect get borderEdge;
+
   /// The union of all CSS classes applied to the elements in this list.
   ///
   /// This set makes it easy to add, remove or toggle (add if not present, remove
@@ -17,16 +73,6 @@ abstract class ElementList<T extends Element> extends ListBase<T> {
   /// Replace the classes with `value` for every element in this list.
   set classes(Iterable<String> value);
 
-  /// Access the union of all [CssStyleDeclaration]s that are associated with an
-  /// [ElementList].
-  ///
-  /// Grouping the style objects all together provides easy editing of specific
-  /// properties of a collection of elements. Setting a specific property value
-  /// will set that property in all [Element]s in the [ElementList]. Getting a
-  /// specific property value will return the value of the property of the first
-  /// element in the [ElementList].
-  CssStyleDeclarationBase get style;
-
   /// Access dimensions and position of the Elements in this list.
   ///
   /// Setting the height or width properties will set the height or width
@@ -39,28 +85,6 @@ abstract class ElementList<T extends Element> extends ListBase<T> {
   /// Unlike [getBoundingClientRect], the dimensions of this rectangle
   /// will return the same numerical height if the element is hidden or not.
   CssRect get contentEdge;
-
-  /// Access dimensions and position of the first Element's content + padding box
-  /// in this list.
-  ///
-  /// This returns a rectangle with the dimensions actually available for content
-  /// in this element, in pixels, regardless of this element's box-sizing
-  /// property. Unlike [getBoundingClientRect], the dimensions of this rectangle
-  /// will return the same numerical height if the element is hidden or not. This
-  /// can be used to retrieve jQuery's `innerHeight` value for an element. This
-  /// is also a rectangle equalling the dimensions of clientHeight and
-  /// clientWidth.
-  CssRect get paddingEdge;
-
-  /// Access dimensions and position of the first Element's content + padding +
-  /// border box in this list.
-  ///
-  /// This returns a rectangle with the dimensions actually available for content
-  /// in this element, in pixels, regardless of this element's box-sizing
-  /// property. Unlike [getBoundingClientRect], the dimensions of this rectangle
-  /// will return the same numerical height if the element is hidden or not. This
-  /// can be used to retrieve jQuery's `outerHeight` value for an element.
-  CssRect get borderEdge;
 
   /// Access dimensions and position of the first Element's content + padding +
   /// border + margin box in this list.
@@ -223,6 +247,12 @@ abstract class ElementList<T extends Element> extends ListBase<T> {
   /// Stream of `focus` events handled by this [Element].
   ElementStream<Event> get onFocus;
 
+  /// Stream of `fullscreenchange` events handled by this [Element].
+  ElementStream<Event> get onFullscreenChange;
+
+  /// Stream of `fullscreenerror` events handled by this [Element].
+  ElementStream<Event> get onFullscreenError;
+
   /// Stream of `input` events handled by this [Element].
   ElementStream<Event> get onInput;
 
@@ -339,13 +369,29 @@ abstract class ElementList<T extends Element> extends ListBase<T> {
 
   ElementStream<Event> get onWaiting;
 
-  /// Stream of `fullscreenchange` events handled by this [Element].
-  ElementStream<Event> get onFullscreenChange;
-
-  /// Stream of `fullscreenerror` events handled by this [Element].
-  ElementStream<Event> get onFullscreenError;
-
   ElementStream<WheelEvent> get onWheel;
+
+  /// Access dimensions and position of the first Element's content + padding box
+  /// in this list.
+  ///
+  /// This returns a rectangle with the dimensions actually available for content
+  /// in this element, in pixels, regardless of this element's box-sizing
+  /// property. Unlike [getBoundingClientRect], the dimensions of this rectangle
+  /// will return the same numerical height if the element is hidden or not. This
+  /// can be used to retrieve jQuery's `innerHeight` value for an element. This
+  /// is also a rectangle equalling the dimensions of clientHeight and
+  /// clientWidth.
+  CssRect get paddingEdge;
+
+  /// Access the union of all [CssStyleDeclaration]s that are associated with an
+  /// [ElementList].
+  ///
+  /// Grouping the style objects all together provides easy editing of specific
+  /// properties of a collection of elements. Setting a specific property value
+  /// will set that property in all [Element]s in the [ElementList]. Getting a
+  /// specific property value will return the value of the property of the first
+  /// element in the [ElementList].
+  CssStyleDeclarationBase get style;
 }
 
 // Wrapper over an immutable NodeList to make it implement ElementList.
@@ -355,7 +401,7 @@ abstract class ElementList<T extends Element> extends ListBase<T> {
 // benefit so there is no need for this class have a constrained type parameter.
 //
 class _FrozenElementList<E extends Element> extends ListBase<E>
-    implements ElementList<E>, NodeListWrapper {
+    implements ElementList<E>, _NodeListWrapper {
   final List<Node> _nodeList;
 
   _FrozenElementList._wrap(this._nodeList) {
@@ -363,35 +409,9 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
         "Query expects only HTML elements of type $E but found ${this._nodeList.firstWhere((e) => e is! E)}");
   }
 
-  int get length => _nodeList.length;
-
-  E operator [](int index) => _nodeList[index];
-
-  void operator []=(int index, E value) {
-    throw UnsupportedError('Cannot modify list');
-  }
-
-  set length(int newLength) {
-    throw UnsupportedError('Cannot modify list');
-  }
-
-  void sort([Comparator<E> compare]) {
-    throw UnsupportedError('Cannot sort list');
-  }
-
-  void shuffle([Random random]) {
-    throw UnsupportedError('Cannot shuffle list');
-  }
-
-  E get first => _nodeList.first;
-
-  E get last => _nodeList.last;
-
-  E get single => _nodeList.single;
+  CssRect get borderEdge => this.first.borderEdge;
 
   CssClassSet get classes => _MultiElementCssClassSet(this);
-
-  CssStyleDeclarationBase get style => _CssStyleDeclarationSet(this);
 
   set classes(Iterable<String> value) {
     // TODO(sra): This might be faster for Sets:
@@ -405,13 +425,17 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
 
   CssRect get contentEdge => _ContentCssListRect(this);
 
-  CssRect get paddingEdge => this.first.paddingEdge;
+  E get first => _nodeList.first;
 
-  CssRect get borderEdge => this.first.borderEdge;
+  E get last => _nodeList.last;
+
+  int get length => _nodeList.length;
+
+  set length(int newLength) {
+    throw UnsupportedError('Cannot modify list');
+  }
 
   CssRect get marginEdge => this.first.marginEdge;
-
-  List<Node> get rawList => _nodeList;
 
   /// Stream of `abort` events handled by this [Element].
   ElementStream<Event> get onAbort => Element.abortEvent._forElementList(this);
@@ -584,6 +608,14 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   /// Stream of `focus` events handled by this [Element].
   ElementStream<Event> get onFocus => Element.focusEvent._forElementList(this);
 
+  /// Stream of `fullscreenchange` events handled by this [Element].
+  ElementStream<Event> get onFullscreenChange =>
+      Element.fullscreenChangeEvent._forElementList(this);
+
+  /// Stream of `fullscreenerror` events handled by this [Element].
+  ElementStream<Event> get onFullscreenError =>
+      Element.fullscreenErrorEvent._forElementList(this);
+
   /// Stream of `input` events handled by this [Element].
   ElementStream<Event> get onInput => Element.inputEvent._forElementList(this);
 
@@ -737,14 +769,28 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   ElementStream<Event> get onWaiting =>
       Element.waitingEvent._forElementList(this);
 
-  /// Stream of `fullscreenchange` events handled by this [Element].
-  ElementStream<Event> get onFullscreenChange =>
-      Element.fullscreenChangeEvent._forElementList(this);
-
-  /// Stream of `fullscreenerror` events handled by this [Element].
-  ElementStream<Event> get onFullscreenError =>
-      Element.fullscreenErrorEvent._forElementList(this);
-
   ElementStream<WheelEvent> get onWheel =>
       Element.wheelEvent._forElementList(this);
+
+  CssRect get paddingEdge => this.first.paddingEdge;
+
+  List<Node> get rawList => _nodeList;
+
+  E get single => _nodeList.single;
+
+  CssStyleDeclarationBase get style => _CssStyleDeclarationSet(this);
+
+  E operator [](int index) => _nodeList[index];
+
+  void operator []=(int index, E value) {
+    throw UnsupportedError('Cannot modify list');
+  }
+
+  void shuffle([Random random]) {
+    throw UnsupportedError('Cannot shuffle list');
+  }
+
+  void sort([Comparator<E> compare]) {
+    throw UnsupportedError('Cannot sort list');
+  }
 }

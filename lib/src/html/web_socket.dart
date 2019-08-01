@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,14 +44,9 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 class WebSocket extends EventTarget {
-  // To suppress missing implicit constructor warnings.
-  factory WebSocket._() {
-    throw UnimplementedError();
-  }
-
   /// Static factory designed to expose `close` events to event
   /// handlers that are not necessarily instances of [WebSocket].
   ///
@@ -67,13 +75,6 @@ class WebSocket extends EventTarget {
   static const EventStreamProvider<Event> openEvent =
       EventStreamProvider<Event>('open');
 
-  factory WebSocket(String url, [Object protocols]) {
-    return HtmlDriver.current.newWebSocket(url, protocols);
-  }
-
-  /// Checks if this type is supported on the current platform.
-  static bool get supported => false;
-
   static const int CLOSED = 3;
 
   static const int CLOSING = 2;
@@ -81,6 +82,9 @@ class WebSocket extends EventTarget {
   static const int CONNECTING = 0;
 
   static const int OPEN = 1;
+
+  /// Checks if this type is supported on the current platform.
+  static bool get supported => false;
 
   String binaryType;
 
@@ -93,6 +97,26 @@ class WebSocket extends EventTarget {
   final int readyState;
 
   final String url;
+
+  factory WebSocket(String url, [Object protocols]) {
+    return HtmlDriver.current.browserClassFactory.newWebSocket(url, protocols);
+  }
+
+  factory WebSocket._() {
+    throw UnimplementedError();
+  }
+
+  /// Stream of `close` events handled by this [WebSocket].
+  Stream<CloseEvent> get onClose => closeEvent.forTarget(this);
+
+  /// Stream of `error` events handled by this [WebSocket].
+  Stream<Event> get onError => errorEvent.forTarget(this);
+
+  /// Stream of `message` events handled by this [WebSocket].
+  Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
+
+  /// Stream of `open` events handled by this [WebSocket].
+  Stream<Event> get onOpen => openEvent.forTarget(this);
 
   void close([int code, String reason]) {
     throw UnimplementedError();
@@ -142,16 +166,4 @@ class WebSocket extends EventTarget {
   void sendTypedData(TypedData data) {
     throw UnimplementedError();
   }
-
-  /// Stream of `close` events handled by this [WebSocket].
-  Stream<CloseEvent> get onClose => closeEvent.forTarget(this);
-
-  /// Stream of `error` events handled by this [WebSocket].
-  Stream<Event> get onError => errorEvent.forTarget(this);
-
-  /// Stream of `message` events handled by this [WebSocket].
-  Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
-
-  /// Stream of `open` events handled by this [WebSocket].
-  Stream<Event> get onOpen => openEvent.forTarget(this);
 }

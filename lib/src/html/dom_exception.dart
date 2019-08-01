@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 class DomError implements Exception {
   final String message;
@@ -43,28 +56,37 @@ class DomError implements Exception {
 }
 
 class DomException implements Exception {
-  static const ABORT = 'AbortError';
-  static const DATA_CLONE = 'DataCloneError';
-  static const HIERARCHY_REQUEST = 'HierarchyRequestError';
-  static const INDEX_SIZE = 'IndexSizeError';
-  static const INVALID_ACCESS = 'InvalidAccessError';
-  static const INVALID_CHARACTER = 'InvalidCharacterError';
-  static const INVALID_MODIFICATION = 'InvalidModificationError';
-  static const INVALID_NODE_TYPE = 'InvalidNodeTypeError';
-  static const INVALID_STATE = 'InvalidStateError';
-  static const NAMESPACE = 'NamespaceError';
-  static const NETWORK = 'NetworkError';
-  static const NO_MODIFICATION_ALLOWED = 'NoModificationAllowedError';
-  static const NOT_FOUND = 'NotFoundError';
-  static const NOT_SUPPORTED = 'NotSupportedError';
-  static const QUOTA_EXCEEDED = 'QuotaExceededError';
-  static const SECURITY = 'SecurityError';
-  static const SYNTAX = 'SyntaxError';
-  static const TIMEOUT = 'TimeoutError';
-  static const TYPE_ERROR = 'TypeError';
-  static const TYPE_MISMATCH = 'TypeMismatchError';
-  static const URL_MISMATCH = 'URLMismatchError';
-  static const WRONG_DOCUMENT = 'WrongDocumentError';
+  static const String INDEX_SIZE = 'IndexSizeError';
+  static const String HIERARCHY_REQUEST = 'HierarchyRequestError';
+  static const String WRONG_DOCUMENT = 'WrongDocumentError';
+  static const String INVALID_CHARACTER = 'InvalidCharacterError';
+  static const String NO_MODIFICATION_ALLOWED = 'NoModificationAllowedError';
+  static const String NOT_FOUND = 'NotFoundError';
+  static const String NOT_SUPPORTED = 'NotSupportedError';
+  static const String INVALID_STATE = 'InvalidStateError';
+  static const String SYNTAX = 'SyntaxError';
+  static const String INVALID_MODIFICATION = 'InvalidModificationError';
+  static const String NAMESPACE = 'NamespaceError';
+  static const String INVALID_ACCESS = 'InvalidAccessError';
+  static const String TYPE_MISMATCH = 'TypeMismatchError';
+  static const String SECURITY = 'SecurityError';
+  static const String NETWORK = 'NetworkError';
+  static const String ABORT = 'AbortError';
+  static const String URL_MISMATCH = 'URLMismatchError';
+  static const String QUOTA_EXCEEDED = 'QuotaExceededError';
+  static const String TIMEOUT = 'TimeoutError';
+  static const String INVALID_NODE_TYPE = 'InvalidNodeTypeError';
+  static const String DATA_CLONE = 'DataCloneError';
+  static const String ENCODING = 'EncodingError';
+  static const String NOT_READABLE = 'NotReadableError';
+  static const String UNKNOWN = 'UnknownError';
+  static const String CONSTRAINT = 'ConstraintError';
+  static const String TRANSACTION_INACTIVE = 'TransactionInactiveError';
+  static const String READ_ONLY = 'ReadOnlyError';
+  static const String VERSION = 'VersionError';
+  static const String OPERATION = 'OperationError';
+  static const String NOT_ALLOWED = 'NotAllowedError';
+  static const String TYPE_ERROR = 'TypeError';
 
   final String message;
   final String name;
@@ -77,15 +99,6 @@ class DomException implements Exception {
         name, "Failed to execute '$method' on '$type': $message");
   }
 
-  factory DomException._mayNotBeInsertedInside(
-      String type, String method, Node node, Node parent) {
-    return DomException._failedToExecute(
-        DomException.HIERARCHY_REQUEST,
-        type,
-        method,
-        "Nodes of type '#${node._nodeTypeName}' may not be inserted inside nodes of type '#${parent._nodeTypeName}'.");
-  }
-
   factory DomException._invalidMethod(String type, String method) {
     return DomException._failedToExecute(
       DomException.INVALID_MODIFICATION,
@@ -93,6 +106,15 @@ class DomException implements Exception {
       method,
       "This node type does not support this method.",
     );
+  }
+
+  factory DomException._mayNotBeInsertedInside(
+      String type, String method, Node node, Node parent) {
+    return DomException._failedToExecute(
+        DomException.HIERARCHY_REQUEST,
+        type,
+        method,
+        "Nodes of type '#${node._nodeTypeName}' may not be inserted inside nodes of type '#${parent._nodeTypeName}'.");
   }
 
   String toString() => "${name}: ${message}";

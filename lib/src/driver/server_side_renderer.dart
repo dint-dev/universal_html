@@ -156,7 +156,7 @@ class ServerSideRenderer {
     });
 
     // Produce HTML representation of the current DOM tree
-    return nodeToString(htmlDriver.document);
+    return BrowserImplementationUtils.nodeToString(htmlDriver.document);
   }
 
   /// Called when rendering throws an error.

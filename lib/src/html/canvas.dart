@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,30 +44,38 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 abstract class CanvasGradient {
+  CanvasGradient._();
   void addColorStop(num offset, String color);
 }
 
-abstract class CanvasImageSource {}
+abstract class CanvasImageSource {
+  CanvasImageSource._();
+}
 
-abstract class CanvasPattern {}
+abstract class CanvasPattern {
+  CanvasPattern._();
+}
 
 abstract class CanvasRenderingContext {
+  CanvasRenderingContext._();
   CanvasElement get canvas;
 }
 
 abstract class CanvasRenderingContext2D extends _CanvasRenderingContext2DBase {
   final CanvasElement canvas;
 
-  /// IMPORTANT: Not part of 'dart:html' API.
-  CanvasRenderingContext2D.internal(this.canvas);
+  CanvasRenderingContext2D._(this.canvas);
 }
 
 class ImageData {
-  ImageData._(this.data, this.width, this.height);
+  final Uint8ClampedList data;
 
+  final int height;
+
+  final int width;
   factory ImageData(data_OR_sw, int sh_OR_sw, [int sh]) {
     if (data_OR_sw is int) {
       final width = data_OR_sw;
@@ -68,17 +89,14 @@ class ImageData {
       return ImageData._(data, width, height);
     }
   }
-
-  final Uint8ClampedList data;
-  final int height;
-  final int width;
+  ImageData._(this.data, this.width, this.height);
 }
 
 abstract class OffscreenCanvas extends EventTarget {
-  final int height;
-  final int width;
+  int height;
+  int width;
 
-  OffscreenCanvas(this.width, this.height);
+  OffscreenCanvas(this.width, this.height) : super._created();
 
   Future convertToBlob([Map options]);
 
@@ -87,13 +105,117 @@ abstract class OffscreenCanvas extends EventTarget {
   ImageBitmap transferToImageBitmap();
 }
 
-abstract class OffscreenCanvasRenderingContext2D
-    extends _CanvasRenderingContext2DBase {}
+abstract class OffscreenCanvasRenderingContext2D {
+
+  String direction;
+  Object fillStyle;
+  String filter;
+  String font;
+  num globalAlpha;
+  String globalCompositeOperation;
+  bool imageSmoothingEnabled;
+  String imageSmoothingQuality;
+  String lineCap;
+  num lineDashOffset;
+  String lineJoin;
+  num lineWidth;
+  num miterLimit;
+  num shadowBlur;
+  String shadowColor;
+  num shadowOffsetX;
+  num shadowOffsetY;
+  Object strokeStyle;
+  String textAlign;
+  String textBaseline;
+  OffscreenCanvasRenderingContext2D._();
+
+  void arc(num x, num y, num radius, num startAngle, num endAngle,
+      [bool anticlockwise = false]);
+
+  void arcTo(num x1, num y1, num x2, num y2, num radius);
+
+  void beginPath();
+
+  void bezierCurveTo(num cp1x, num cp1y, num cp2x, num cp2y, num x, num y);
+
+  void clearRect(num x, num y, num width, num height);
+
+  void clip([dynamic path_OR_winding, String winding]);
+
+  void closePath();
+
+  ImageData createImageData(dynamic data_OR_imagedata_OR_sw,
+      [int sh_OR_sw,
+      dynamic imageDataColorSettings_OR_sh,
+      Map imageDataColorSettings]);
+
+  CanvasGradient createLinearGradient(num x0, num y0, num x1, num y1);
+
+  CanvasPattern createPattern(Object image, String repetitionType);
+
+  CanvasGradient createRadialGradient(
+      num x0, num y0, num r0, num x1, num y1, num r1);
+
+  void drawImage(CanvasImageSource source, num destX, num destY);
+
+  void ellipse(num x, num y, num radiusX, num radiusY, num rotation,
+      num startAngle, num endAngle, bool anticlockwise);
+
+  void fill([dynamic path_OR_winding, String winding]);
+
+  void fillRect(num x, num y, num width, num height);
+
+  void fillText(String text, num x, num y, [num maxWidth]);
+
+  ImageData getImageData(int sx, int sy, int sw, int sh);
+
+  List<num> getLineDash();
+
+  bool isPointInPath(dynamic path_OR_x, num x_OR_y,
+      [dynamic winding_OR_y, String winding]);
+
+  bool isPointInStroke(dynamic path_OR_x, num x_OR_y, [num y]);
+
+  void lineTo(num x, num y);
+
+  TextMetrics measureText(String text);
+
+  void moveTo(num x, num y);
+
+  void putImageData(ImageData imagedata, int dx, int dy,
+      [int dirtyX, int dirtyY, int dirtyWidth, int dirtyHeight]);
+
+  void quadraticCurveTo(num cpx, num cpy, num x, num y);
+
+  void rect(num x, num y, num width, num height);
+
+  void resetTransform();
+
+  void restore();
+
+  void rotate(num angle);
+
+  void save();
+
+  void scale(num x, num y);
+
+  void setTransform(num a, num b, num c, num d, num e, num f);
+
+  void stroke([Path2D path]);
+
+  void strokeRect(num x, num y, num width, num height);
+
+  void strokeText(String text, num x, num y, [num maxWidth]);
+
+  void transform(num a, num b, num c, num d, num e, num f);
+
+  void translate(num x, num y);
+}
 
 abstract class Path2D {
   Path2D([dynamic path_OR_text]);
 
-  void addPath(Path2D path, [Matrix transform]);
+  void addPath(Path2D path, [DomMatrix transform]);
 
   void arc(num x, num y, num radius, num startAngle, num endAngle,
       bool anticlockwise);
@@ -117,10 +239,6 @@ abstract class Path2D {
 }
 
 abstract class TextMetrics {
-  factory TextMetrics._() {
-    throw UnimplementedError();
-  }
-
   final num actualBoundingBoxAscent;
 
   final num actualBoundingBoxDescent;
@@ -144,10 +262,13 @@ abstract class TextMetrics {
   final num ideographicBaseline;
 
   final num width;
+
+  factory TextMetrics._() {
+    throw UnimplementedError();
+  }
 }
 
 abstract class _CanvasRenderingContext2DBase implements CanvasRenderingContext {
-  Matrix currentTransform;
   String direction;
   Object fillStyle;
   String filter;

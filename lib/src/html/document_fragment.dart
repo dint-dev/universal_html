@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,12 +44,12 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 class DocumentFragment extends Node
     with _ElementOrDocument, _DocumentOrFragment {
   factory DocumentFragment() {
-    return DocumentFragment.internal(null);
+    return DocumentFragment._(null);
   }
 
   factory DocumentFragment.html(
@@ -65,8 +78,7 @@ class DocumentFragment extends Node
     );
   }
 
-  /// IMPORTANT: Not part of 'dart:html' API.
-  DocumentFragment.internal(Document ownerDocument) : super._(ownerDocument);
+  DocumentFragment._(Document ownerDocument) : super._(ownerDocument);
 
   List<Element> get children {
     return _ElementChildren(this);
@@ -90,24 +102,8 @@ class DocumentFragment extends Node
     this.setInnerHtml(value);
   }
 
-  void setInnerHtml(
-    String html, {
-    NodeValidator validator,
-    NodeTreeSanitizer treeSanitizer,
-  }) {
-    this.nodes.clear();
-    append(document.body.createFragment(
-      html,
-      validator: validator,
-      treeSanitizer: treeSanitizer,
-    ));
-  }
-
-  /// Adds the specified text as a text node after the last child of this
-  /// document fragment.
-  void appendText(String text) {
-    this.append(Text(text));
-  }
+  @override
+  int get nodeType => Node.DOCUMENT_FRAGMENT_NODE;
 
   /// Parses the specified text as HTML and adds the resulting node after the
   /// last child of this document fragment.
@@ -123,9 +119,13 @@ class DocumentFragment extends Node
     ));
   }
 
-  @override
-  int get nodeType => Node.DOCUMENT_FRAGMENT_NODE;
+  /// Adds the specified text as a text node after the last child of this
+  /// document fragment.
+  void appendText(String text) {
+    this.append(Text(text));
+  }
 
+  @visibleForTesting
   @override
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
     final clone = DocumentFragment();
@@ -134,10 +134,77 @@ class DocumentFragment extends Node
     }
     return clone;
   }
+
+  void setInnerHtml(
+    String html, {
+    NodeValidator validator,
+    NodeTreeSanitizer treeSanitizer,
+  }) {
+    this.nodes.clear();
+    append(document.body.createFragment(
+      html,
+      validator: validator,
+      treeSanitizer: treeSanitizer,
+    ));
+  }
 }
 
 class ShadowRoot extends DocumentFragment {
   static bool get supported => false;
 
-  ShadowRoot.internal(Document ownerDocument) : super.internal(ownerDocument);
+  final bool delegatesFocus;
+
+  final Element host;
+
+  String innerHtml;
+
+  final String mode;
+
+  final ShadowRoot olderShadowRoot;
+
+  final Element activeElement;
+
+  // From DocumentOrShadowRoot
+
+  final Element fullscreenElement;
+
+  final Element pointerLockElement;
+
+  final List<StyleSheet> styleSheets;
+
+  factory ShadowRoot._() {
+    throw UnimplementedError();
+  }
+
+  @deprecated
+  bool get applyAuthorStyles {
+    throw UnimplementedError();
+  }
+
+  @deprecated
+  set applyAuthorStyles(bool value) {
+    throw UnimplementedError();
+  }
+
+  @deprecated
+  bool get resetStyleInheritance {
+    throw UnimplementedError();
+  }
+
+  @deprecated
+  set resetStyleInheritance(bool value) {
+    throw UnimplementedError();
+  }
+
+  Element elementFromPoint(int x, int y) {
+    throw UnimplementedError();
+  }
+
+  List<Element> elementsFromPoint(int x, int y) {
+    throw UnimplementedError();
+  }
+
+  Selection getSelection() {
+    throw UnimplementedError();
+  }
 }

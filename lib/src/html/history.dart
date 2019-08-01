@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 class History {
   final List<_HistoryState> _stack = [
@@ -41,12 +54,7 @@ class History {
   int _index = 0;
   dynamic _state;
 
-  factory History() {
-    throw UnimplementedError();
-  }
-
-  /// IMPORTANT: Not part of 'dart:html' API.
-  History.internal();
+  History._();
 
   int get length => _stack.length;
 
@@ -93,7 +101,7 @@ class History {
   void _setStateAndDispatchEvent(_HistoryState state) {
     this._state = state.data;
     window.location.replace(state.url);
-    window.dispatchEvent(PopStateEvent.internal(state: state.data));
+    window.dispatchEvent(PopStateEvent._(state: state.data));
   }
 
   static String _resolve(String url) {
@@ -108,15 +116,22 @@ class History {
 class Location extends Object with _UrlBase {
   final HtmlDriver _htmlDriver;
 
-  List<String> ancestorOrigins;
+  Location._(this._htmlDriver);
 
-  /// IMPORTANT: Not part of 'dart:html' API.
-  Location.internal(this._htmlDriver);
+  List<String> get ancestorOrigins => <String>[];
 
   String get href => _htmlDriver.uriString;
 
   set href(String value) {
     _htmlDriver.uri = Uri.parse(value);
+  }
+
+  @override
+  Uri get _uri => _htmlDriver.uri;
+
+  @override
+  set _uri(Uri value) {
+    _htmlDriver.uri = value;
   }
 
   void assign([String url]) {
@@ -133,12 +148,14 @@ class Location extends Object with _UrlBase {
   void replace(String url) {
     this.href = url;
   }
-
-  @override
-  Uri get _uri => _htmlDriver.uri;
 }
 
 class Url extends _UrlBase {
+  @override
+  Uri _uri;
+
+  Url._(this._uri);
+
   static String createObjectUrl(dynamic blob_OR_source_OR_stream) {
     throw UnimplementedError();
   }
@@ -156,10 +173,6 @@ class Url extends _UrlBase {
   }
 
   static void revokeObjectUrl(String url) {}
-
-  final Uri _uri;
-
-  Url._(this._uri);
 }
 
 class _HistoryState {
@@ -171,7 +184,17 @@ class _HistoryState {
 }
 
 abstract class _UrlBase {
-  String get hash => _uri?.fragment ?? "";
+  String get hash {
+    final uri = this._uri;
+    if (uri.hasFragment) {
+      return "#${uri.fragment}";
+    }
+    return "";
+  }
+
+  set hash(String value) {
+    throw UnimplementedError();
+  }
 
   String get host {
     final uri = this._uri;
@@ -185,15 +208,21 @@ abstract class _UrlBase {
 
   String get origin => _uri?.origin;
 
-  String get password => throw UnimplementedError();
-
   String get pathname => _uri?.path ?? "";
+
+  set pathname(String value) {
+    throw UnimplementedError();
+  }
 
   String get port {
     final uri = this._uri;
     if (uri == null) return "";
     final port = uri.port;
     return port == 0 ? "" : port.toString();
+  }
+
+  set port(String value) {
+    throw UnimplementedError();
   }
 
   String get protocol {
@@ -204,7 +233,11 @@ abstract class _UrlBase {
 
   String get search => _uri?.query ?? "";
 
-  String get username => throw UnimplementedError();
+  set search(String value) {
+    throw UnimplementedError();
+  }
 
   Uri get _uri;
+
+  set _uri(Uri value);
 }

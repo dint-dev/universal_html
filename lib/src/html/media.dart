@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -30,13 +43,17 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html;
+part of universal_html.internal;
 
 abstract class CanvasCaptureMediaStreamTrack implements MediaStreamTrack {
+  CanvasCaptureMediaStreamTrack._();
+
   CanvasElement get canvas;
 }
 
-abstract class ImageBitmap {}
+abstract class ImageBitmap {
+  ImageBitmap._();
+}
 
 abstract class ImageCapture {
   factory ImageCapture(MediaStreamTrack track) {
@@ -55,6 +72,8 @@ abstract class ImageCapture {
 }
 
 abstract class MediaDeviceInfo {
+  MediaDeviceInfo._();
+
   String get deviceId;
 
   String get groupId;
@@ -72,11 +91,9 @@ class MediaDevices {
   }
 }
 
-class VideoPlaybackQuality {}
-
-class MediaKeys {}
-
-class TextTrack {}
+class MediaKeys {
+  MediaKeys._();
+}
 
 abstract class MediaRecorder {
   void pause() {}
@@ -91,6 +108,8 @@ abstract class MediaRecorder {
 }
 
 abstract class MediaSettingsRange {
+  MediaSettingsRange._();
+
   num get max;
 
   num get min;
@@ -101,7 +120,7 @@ abstract class MediaSettingsRange {
 abstract class MediaSource extends EventTarget {
   static bool get supported => false;
 
-  static bool isTypeSupported(String type) => false;
+  MediaSource._() : super._created();
 
   List<SourceBuffer> get activeSourceBuffers;
 
@@ -110,22 +129,25 @@ abstract class MediaSource extends EventTarget {
   String get readyState;
 
   List<SourceBuffer> get sourceBuffers;
+
+  static bool isTypeSupported(String type) => false;
 }
 
-abstract class MediaStream extends EventTarget {}
+abstract class MediaStream extends EventTarget {
+  MediaStream._() : super._created();
+}
 
 class MediaStreamEvent extends Event {
-  MediaStreamEvent(String type) : super.internalConstructor(type);
+  MediaStreamEvent(String type) : super.internal(type);
 }
 
 abstract class MediaStreamTrack extends EventTarget {
   String contentHint;
   bool enabled;
-  String id;
 
-  factory MediaStreamTrack() {
-    throw UnimplementedError();
-  }
+  MediaStreamTrack._() : super._created();
+
+  String get id;
 
   String get kind;
 
@@ -145,6 +167,8 @@ abstract class MediaStreamTrackEvent extends Event {
 }
 
 abstract class PhotoCapabilities {
+  PhotoCapabilities._();
+
   List get fillLightMode;
 
   MediaSettingsRange get imageHeight;
@@ -155,6 +179,8 @@ abstract class PhotoCapabilities {
 }
 
 abstract class SourceBuffer {
+  SourceBuffer._();
+
   void abort();
 
   void appendBuffer(ByteBuffer data);
@@ -162,4 +188,12 @@ abstract class SourceBuffer {
   void appendTypedData(TypedData data);
 
   void remove(num start, num end);
+}
+
+class TextTrack {
+  TextTrack._();
+}
+
+class VideoPlaybackQuality {
+  VideoPlaybackQuality._();
 }

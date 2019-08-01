@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 abstract class AbstractWorker implements EventTarget {
   static const EventStreamProvider<Event> errorEvent =
@@ -43,6 +56,44 @@ abstract class AbstractWorker implements EventTarget {
 
   /// Stream of `error` events handled by this [AbstractWorker].
   Stream<Event> get onError => errorEvent.forTarget(this);
+}
+
+class BackgroundFetchManager {
+  factory BackgroundFetchManager._() {
+    throw UnimplementedError();
+  }
+
+  Future<BackgroundFetchRegistration> fetch(String id, Object requests,
+      [Map options]) {
+    throw UnimplementedError();
+  }
+
+  Future<BackgroundFetchRegistration> get(String id) =>
+      throw UnimplementedError();
+
+  Future<List<String>> getIds() => throw UnimplementedError();
+}
+
+class BackgroundFetchRegistration extends EventTarget {
+  final int downloadTotal;
+
+  final int downloaded;
+
+  final String id;
+
+  final String title;
+
+  final int totalDownloadSize;
+
+  final int uploadTotal;
+
+  final int uploaded;
+
+  factory BackgroundFetchRegistration._() {
+    throw UnimplementedError();
+  }
+
+  Future<bool> abort() => throw UnimplementedError();
 }
 
 class Body {
@@ -104,7 +155,6 @@ class Clients {
 }
 
 class ForeignFetchEvent extends ExtendableEvent {
-  // To suppress missing implicit constructor warnings.
   final String origin;
 
   factory ForeignFetchEvent(String type, Map eventInitDict) {
@@ -150,6 +200,18 @@ class Headers {
   factory Headers([Object init]) {
     throw UnimplementedError();
   }
+}
+
+class NavigationPreloadManager {
+  factory NavigationPreloadManager._() {
+    throw UnimplementedError();
+  }
+
+  Future disable() => throw UnimplementedError();
+
+  Future enable() => throw UnimplementedError();
+
+  Future<Map<String, dynamic>> getState() => throw UnimplementedError();
 }
 
 abstract class PushManager {
@@ -317,24 +379,23 @@ class ServiceWorkerGlobalScope extends WorkerGlobalScope {
 }
 
 class ServiceWorkerRegistration extends EventTarget {
-  // To suppress missing implicit constructor warnings.
   final ServiceWorker active;
 
   final ServiceWorker installing;
 
-  // final BackgroundFetchManager backgroundFetch;
-
   final PushManager pushManager;
-
-  // final NavigationPreloadManager navigationPreload;
-
-  // final PaymentManager paymentManager;
 
   final String scope;
 
   final ServiceWorker waiting;
 
-  // final SyncManager sync;
+  final BackgroundFetchManager backgroundFetch;
+
+  final NavigationPreloadManager navigationPreload;
+
+  final PaymentManager paymentManager;
+
+  final SyncManager sync;
 
   factory ServiceWorkerRegistration._() {
     throw UnsupportedError("Not supported");
@@ -357,6 +418,16 @@ class ServiceWorkerRegistration extends EventTarget {
   }
 }
 
+class SyncManager {
+  factory SyncManager._() {
+    throw UnimplementedError();
+  }
+
+  Future<List<String>> getTags() => throw UnimplementedError();
+
+  Future register(String tag) => throw UnimplementedError();
+}
+
 class WindowClient extends Client {
   final bool focused;
 
@@ -376,7 +447,6 @@ class WindowClient extends Client {
 }
 
 class WorkerGlobalScope extends EventTarget {
-  // To suppress missing implicit constructor warnings.
   /// Static factory designed to expose `error` events to event
   /// handlers that are not necessarily instances of [WorkerGlobalScope].
   ///
@@ -433,7 +503,6 @@ class WorkerGlobalScope extends EventTarget {
 }
 
 class _Request extends Body {
-  // To suppress missing implicit constructor warnings.
   final String cache;
 
   final String credentials;

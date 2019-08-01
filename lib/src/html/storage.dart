@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,40 +44,104 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
-class Storage {
-  /// IMPORTANT: Not part of 'dart:html' API.
-  Storage.internal();
+/// The type used by the
+/// [Window.localStorage] and [Window.sessionStorage] properties.
+/// Storage is implemented as a Map&lt;String, String>.
+///
+/// To store and get values, use Dart's built-in map syntax:
+///
+///     window.localStorage['key1'] = 'val1';
+///     window.localStorage['key2'] = 'val2';
+///     window.localStorage['key3'] = 'val3';
+///     assert(window.localStorage['key3'] == 'val3');
+///
+/// You can use [Map](http://api.dartlang.org/dart_core/Map.html) APIs
+/// such as containsValue(), clear(), and length:
+///
+///     assert(window.localStorage.containsValue('does not exist') == false);
+///     window.localStorage.clear();
+///     assert(window.localStorage.length == 0);
+///
+/// For more examples of using this API, see
+/// [localstorage_test.dart](http://code.google.com/p/dart/source/browse/branches/bleeding_edge/dart/tests/html/localstorage_test.dart).
+/// For details on using the Map API, see the
+/// [Maps](https://www.dartlang.org/guides/libraries/library-tour#maps)
+/// section of the library tour.
+class Storage extends DelegatingMap<String, String> {
+  final Window _window;
 
-  final Map<String, String> _map = <String, String>{};
+  Storage._(this._window) : super(<String, String>{});
 
+  @override
+  void operator []=(String key, String value) {
+    final oldValue = this[key];
+    super[key] = value;
+    final event = StorageEvent(
+      "StorageEvent",
+      key: key,
+      oldValue: oldValue,
+      newValue: value,
+      storageArea: this,
+    );
+    _window.dispatchEvent(event);
+  }
+
+  @override
   void addAll(Map<String, String> other) {
-    _map.addAll(other);
+    for (var entry in other.entries.toList()) {
+      this[entry.key] = entry.value;
+    }
   }
 
-  String remove(Object key) {
-    return _map.remove(key);
-  }
-
-  String putIfAbsent(String key, String ifAbsent()) {
-    return _map.putIfAbsent(key, ifAbsent);
-  }
-
-  void forEach(void f(String key, String value)) {
-    _map.forEach(f);
-  }
-
-  bool containsValue(Object value) {
-    return _map.containsValue(value);
-  }
-
-  bool containsKey(Object key) {
-    return _map.containsKey(key);
-  }
-
+  @override
   void clear() {
-    _map.clear();
+    for (var key in keys) {
+      remove(key);
+    }
+  }
+
+  @override
+  String remove(Object key) {
+    final oldValue = super.remove(key);
+    final event = StorageEvent(
+      "StorageEvent",
+      key: key,
+      oldValue: oldValue,
+      newValue: null,
+      storageArea: this,
+    );
+    _window.dispatchEvent(event);
+    return key;
+  }
+
+  @override
+  void removeWhere(bool test(String key, String value)) {
+    for (var entry in entries.toList()) {
+      if (test(entry.key, entry.value)) {
+        remove(entry.key);
+      }
+    }
+  }
+
+  @override
+  String update(String key, String update(String value), {String ifAbsent()}) {
+    var value = this[key];
+    if (ifAbsent != null && value == null && !containsKey(key)) {
+      value = ifAbsent();
+    } else {
+      value = update(value);
+    }
+    this[key] = value;
+    return value;
+  }
+
+  @override
+  void updateAll(String update(String key, String value)) {
+    for (var entry in entries.toList()) {
+      this[entry.key] = update(entry.key, entry.value);
+    }
   }
 }
 
@@ -75,7 +152,18 @@ class StorageEvent extends Event {
   final Storage storageArea;
   final String url;
 
-  StorageEvent(String type,
-      {this.key, this.newValue, this.oldValue, this.storageArea, this.url})
-      : super.internalConstructor(type);
+  StorageEvent(
+    String type, {
+    this.key,
+    this.newValue,
+    this.oldValue,
+    this.storageArea,
+    this.url,
+    bool canBubble = false,
+    bool cancelable = false,
+  }) : super.internal(
+          type,
+          canBubble: canBubble,
+          cancelable: cancelable,
+        );
 }

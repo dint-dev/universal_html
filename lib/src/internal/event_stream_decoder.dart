@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 import 'dart:async';
 import 'dart:typed_data';
 
@@ -8,12 +21,15 @@ import 'dart:convert';
 /// Decodes "application/event-stream" streams.
 class EventStreamDecoder
     extends StreamTransformerBase<Uint8List, MessageEvent> {
+  final String origin;
   final void Function(Duration timeout) onReceivedTimeout;
-  EventStreamDecoder({this.onReceivedTimeout});
+
+  EventStreamDecoder({this.origin, this.onReceivedTimeout});
 
   @override
   Stream<MessageEvent> bind(Stream<Uint8List> stream) async* {
-    var sb = StringBuffer();
+    var dataBuilder = StringBuffer();
+    bool hasData = false;
     String id;
     String type;
 
@@ -36,13 +52,17 @@ class EventStreamDecoder
         final line = utf8.decode(buffer);
         buffer.clear();
         if (line.isEmpty) {
-          // End of message
-          yield (MessageEvent(
-            type ?? "message",
-            lastEventId: id,
-            data: sb.toString(),
-          ));
-          sb.clear();
+          if (hasData) {
+            // End of message
+            yield (MessageEvent(
+              type ?? "message",
+              lastEventId: id,
+              data: dataBuilder.toString(),
+              origin: origin,
+              ports: const <MessagePort>[],
+            ));
+          }
+          dataBuilder.clear();
           id = null;
           type = null;
         } else if (line.startsWith(":")) {
@@ -67,17 +87,18 @@ class EventStreamDecoder
               break;
 
             case "data":
-              if (sb.length > 0) {
-                sb.write("\n");
+              hasData = true;
+              if (dataBuilder.length > 0) {
+                dataBuilder.write("\n");
               }
-              sb.write(value);
+              dataBuilder.write(value);
               break;
 
             case "id":
               id = value;
               break;
 
-            case "type":
+            case "event":
               type = value;
               break;
           }

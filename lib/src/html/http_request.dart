@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -30,7 +43,8 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html;
+
+part of universal_html.internal;
 
 /// A client-side XHR request for getting data from a URL,
 /// formally known as XMLHttpRequest.
@@ -239,7 +253,7 @@ class HttpRequest extends HttpRequestEventTarget {
     }
     switch (responseType ?? "text") {
       case "arraybuffer":
-        return data;
+        return data.buffer;
       case "blob":
         return Blob([data]);
       case "json":
@@ -260,7 +274,12 @@ class HttpRequest extends HttpRequestEventTarget {
   Map<String, String> get responseHeaders => _responseHeaders;
 
   /// The response in String form or empty String on failure.
-  String get responseText => utf8.decode(_responseData);
+  String get responseText {
+    if (_responseData == null) {
+      return "";
+    }
+    return utf8.decode(_responseData);
+  }
 
   String get responseUrl => throw UnimplementedError();
 
@@ -379,7 +398,7 @@ class HttpRequest extends HttpRequestEventTarget {
   /// * [XMLHttpRequest.send](https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest#send%28%29)
   ///   from MDN.
   void send([body_OR_data]) {
-    final requestId = this._requestId;
+    // Read request body
     Uint8List data;
     if (body_OR_data != null) {
       if (body_OR_data is String) {
@@ -390,12 +409,19 @@ class HttpRequest extends HttpRequestEventTarget {
         throw ArgumentError.value(body_OR_data);
       }
     }
-    this._status = null;
-    this._statusText = null;
+
+    // Get internal request ID
+    this._requestId++;
+    final requestId = this._requestId;
+
+    // Reset response fields
+    this._status = 0;
+    this._statusText = "";
     this._responseHeaders = null;
     this._responseData = null;
+
+    // Send
     _send(requestId, data);
-    _setReadyState(OPENED);
   }
 
   /// Sets the value of an HTTP request header.
@@ -423,7 +449,7 @@ class HttpRequest extends HttpRequestEventTarget {
       return;
     }
 
-    final httpClient = HtmlDriver.current.newHttpClient();
+    final httpClient = HtmlDriver.current.browserClassFactory.newHttpClient();
     try {
       // Wait for request
       final httpRequest = await httpClient.openUrl(_requestMethod, _requestUrl);
@@ -452,6 +478,10 @@ class HttpRequest extends HttpRequestEventTarget {
         return;
       }
 
+      // Set response status
+      _status = httpResponse.statusCode;
+      _statusText = httpResponse.reasonPhrase;
+
       // Set response headers
       final responseHeaders = <String, String>{};
       httpResponse.headers.forEach((name, values) {
@@ -473,18 +503,18 @@ class HttpRequest extends HttpRequestEventTarget {
       // Set response data
       this._responseData = responseData;
     } catch (error) {
-      dispatchEvent(Event.internalConstructor("error"));
+      dispatchEvent(ProgressEvent("error"));
     } finally {
       if (_requestId == requestId) {
         _setReadyState(DONE);
       }
+      dispatchEvent(ProgressEvent("loadend"));
     }
   }
 
   void _setReadyState(int readyState) {
     _readyState = readyState;
-    _readyStateStreamController
-        .add(Event.internalConstructor("readystatechange"));
+    _readyStateStreamController.add(Event.internal("readystatechange"));
   }
 
   /// Creates a GET request for the specified [url].
@@ -696,8 +726,6 @@ class HttpRequest extends HttpRequestEventTarget {
 }
 
 class HttpRequestEventTarget extends EventTarget {
-  HttpRequestEventTarget._();
-
   /// Static factory designed to expose `abort` events to event
   /// handlers that are not necessarily instances of [HttpRequestEventTarget].
   ///
@@ -747,6 +775,8 @@ class HttpRequestEventTarget extends EventTarget {
   static const EventStreamProvider<ProgressEvent> timeoutEvent =
       EventStreamProvider<ProgressEvent>('timeout');
 
+  HttpRequestEventTarget._() : super._created();
+
   /// Stream of `abort` events handled by this [HttpRequestEventTarget].
   Stream<ProgressEvent> get onAbort => abortEvent.forTarget(this);
 
@@ -757,24 +787,18 @@ class HttpRequestEventTarget extends EventTarget {
   Stream<ProgressEvent> get onLoad => loadEvent.forTarget(this);
 
   /// Stream of `loadend` events handled by this [HttpRequestEventTarget].
-  @SupportedBrowser(SupportedBrowser.CHROME)
-  @SupportedBrowser(SupportedBrowser.FIREFOX)
-  @SupportedBrowser(SupportedBrowser.IE, '10')
-  @SupportedBrowser(SupportedBrowser.SAFARI)
   Stream<ProgressEvent> get onLoadEnd => loadEndEvent.forTarget(this);
 
   /// Stream of `loadstart` events handled by this [HttpRequestEventTarget].
   Stream<ProgressEvent> get onLoadStart => loadStartEvent.forTarget(this);
 
   /// Stream of `progress` events handled by this [HttpRequestEventTarget].
-  @SupportedBrowser(SupportedBrowser.CHROME)
-  @SupportedBrowser(SupportedBrowser.FIREFOX)
-  @SupportedBrowser(SupportedBrowser.IE, '10')
-  @SupportedBrowser(SupportedBrowser.SAFARI)
   Stream<ProgressEvent> get onProgress => progressEvent.forTarget(this);
 
   /// Stream of `timeout` events handled by this [HttpRequestEventTarget].
   Stream<ProgressEvent> get onTimeout => timeoutEvent.forTarget(this);
 }
 
-abstract class HttpRequestUpload {}
+abstract class HttpRequestUpload {
+  HttpRequestUpload._();
+}

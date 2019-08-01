@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,33 +44,123 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 class Notification extends EventTarget {
+  /// Static factory designed to expose `click` events to event
+  /// handlers that are not necessarily instances of [Notification].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<Event> clickEvent =
+      EventStreamProvider<Event>('click');
+
+  /// Static factory designed to expose `close` events to event
+  /// handlers that are not necessarily instances of [Notification].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<Event> closeEvent =
+      EventStreamProvider<Event>('close');
+
+  /// Static factory designed to expose `error` events to event
+  /// handlers that are not necessarily instances of [Notification].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<Event> errorEvent =
+      EventStreamProvider<Event>('error');
+
+  /// Static factory designed to expose `show` events to event
+  /// handlers that are not necessarily instances of [Notification].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<Event> showEvent =
+      EventStreamProvider<Event>('show');
+
   static int get maxActions => 0;
 
   static String get permission => "denied";
 
+  /// Checks if this type is supported on the current platform.
   static bool get supported => false;
+
+  final List actions;
+
+  final String badge;
+
   final String body;
+
+  final Object data;
+
   final String dir;
+
   final String icon;
+
+  final String image;
+
   final String lang;
-  final Stream<Event> onClick = Stream<Event>.empty();
-  final Stream<Event> onClose = Stream<Event>.empty();
-  final Stream<Event> onError = Stream<Event>.empty();
-  final Stream<Event> onShow = Stream<Event>.empty();
+
+  final bool renotify;
+
+  final bool requireInteraction;
+
+  final bool silent;
+
   final String tag;
+
+  final int timestamp;
+
   final String title;
 
+  final List<int> vibrate;
+
   Notification(
+    String title, {
+    String dir,
+    String body,
+    String lang,
+    String tag,
+    String icon,
+  }) : this._(
+          title,
+          dir: dir,
+          body: body,
+          lang: lang,
+          tag: tag,
+          icon: icon,
+        );
+
+  Notification._(
     this.title, {
-    this.dir,
+    this.actions,
+    this.badge,
     this.body,
-    this.lang,
-    this.tag,
+    this.data,
+    this.dir,
     this.icon,
-  });
+    this.lang,
+    this.image,
+    this.renotify,
+    this.requireInteraction,
+    this.silent,
+    this.tag,
+    this.timestamp,
+    this.vibrate,
+  }) : super._created();
+
+  /// Stream of `click` events handled by this [Notification].
+  Stream<Event> get onClick => clickEvent.forTarget(this);
+
+  /// Stream of `close` events handled by this [Notification].
+  Stream<Event> get onClose => closeEvent.forTarget(this);
+
+  /// Stream of `error` events handled by this [Notification].
+  Stream<Event> get onError => errorEvent.forTarget(this);
+
+  /// Stream of `show` events handled by this [Notification].
+  Stream<Event> get onShow => showEvent.forTarget(this);
+
+  void close() {
+    throw UnimplementedError();
+  }
 
   static Future<String> requestPermission() async => "denied";
 }

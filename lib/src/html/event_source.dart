@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 class EventSource extends EventTarget {
   /// Static factory designed to expose `error` events to event
@@ -76,7 +89,7 @@ class EventSource extends EventTarget {
   /// Used by [readyState].
   int _readyState = CONNECTING;
 
-  EventSource(this.url, {this.withCredentials = false}) {
+  EventSource(this.url, {this.withCredentials = false}) : super._created() {
     // Parse URI
     var parsedUri = Uri.tryParse(url);
     if (parsedUri == null) {
@@ -125,18 +138,14 @@ class EventSource extends EventTarget {
     }
   }
 
-  void _addError(Object error, [StackTrace stackTrace]) {
-    this.dispatchEvent(ErrorEvent.internalConstructor(
-        error: error, message: "Error:\n$error\n\nStack trace:\n$stackTrace"));
-  }
-
   Future<void> _connect() async {
     Stream<Uint8List> nonListenedStream;
     try {
       String lastEventId;
       while (_readyState != CLOSED) {
         // Create a HTTP request
-        final httpClient = HtmlDriver.current.newHttpClient();
+        final httpClient =
+            HtmlDriver.current.browserClassFactory.newHttpClient();
         final httpRequest = await httpClient.getUrl(_parsedUri);
 
         // Add HTTP header "Accept"
@@ -176,14 +185,22 @@ class EventSource extends EventTarget {
           return;
         }
 
-        // We are ready
+        // The connection is open
         _readyState = OPEN;
+        dispatchEvent(Event.internal("open"));
 
         // Transform to event stream
         var timeout = Duration(seconds: 5);
-        final transformer = EventStreamDecoder(onReceivedTimeout: (newTimeout) {
-          timeout = newTimeout;
-        });
+        final origin = _parsedUri.origin;
+        if (origin == null) {
+          throw StateError("Origin is null for URI: $_parsedUri");
+        }
+        final transformer = EventStreamDecoder(
+          origin: origin,
+          onReceivedTimeout: (newTimeout) {
+            timeout = newTimeout;
+          },
+        );
         final eventStream = httpResponse.map((data) {
           // TODO: Remove this when Dart SDK 2.5 becomes stable
           return data is Uint8List ? data : Uint8List.fromList(data);
@@ -196,8 +213,17 @@ class EventSource extends EventTarget {
           this.dispatchEvent(event);
         });
         await _eventSubscription.asFuture();
+        if (_readyState == CLOSED) {
+          return;
+        }
 
-        // Wait timeout
+        // Update state
+        this._readyState = CONNECTING;
+
+        // Dispatch "stream interruption" event
+        this.dispatchEvent(Event.internal("error"));
+
+        // Reconnect after a timeout
         await Future.delayed(timeout);
       }
     } catch (error, stackTrace) {
@@ -205,9 +231,15 @@ class EventSource extends EventTarget {
       if (_readyState == CLOSED) {
         return;
       }
+      this._readyState = CLOSED;
 
       // Add error
-      _addError(error, stackTrace);
+      this.dispatchEvent(
+        ErrorEvent._(
+          error: error,
+          message: "Error:\n  $error\n\nStack trace:\n  $stackTrace",
+        ),
+      );
     } finally {
       // Close
       close();

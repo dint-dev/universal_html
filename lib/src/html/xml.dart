@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,36 +44,29 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 class XmlDocument extends Document {
   /// IMPORTANT: Not part of 'dart:html' API.
-  @visibleForTesting
-  XmlDocument.internal(HtmlDriver htmlDriver, {@required String contentType})
+  XmlDocument._(
+      {@required HtmlDriver htmlDriver,
+      @required String contentType,
+      String origin})
       : assert(contentType != null),
-        super._(htmlDriver, contentType);
+        super._(
+          htmlDriver: htmlDriver,
+          contentType: contentType,
+          origin: origin,
+        );
 
   @override
   bool get _isCaseSensitive => true;
 
-  List<StyleSheet> get styleSheets {
-    // TODO: Fix style sheet search
-    final nodes = getElementsByTagName("style");
-    final result = <StyleSheet>[];
-    for (var node in nodes) {
-      if (node is StyleElement) {
-        final sheet = node.sheet;
-        if (sheet != null) {
-          result.add(node.sheet);
-        }
-      }
-    }
-    return result;
-  }
-
+  @visibleForTesting
   @override
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
-    final clone = XmlDocument.internal(_htmlDriver, contentType: contentType);
+    final clone =
+        XmlDocument._(htmlDriver: _htmlDriver, contentType: contentType);
     if (deep != false) {
       Node._cloneChildrenFrom(clone, clone, this);
     }

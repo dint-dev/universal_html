@@ -1,0 +1,11 @@
+builders:
+  infoBuilder:
+    import: "package:generate_reflection/builder.dart"
+    builder_factories: ["infoBuilder"]
+    build_extensions: {".dart": ["-generated-data.dart"]}
+    build_to: source
+    auto_apply: root_package
+    defaults:
+      generate_for:
+        include:
+          - web/main.dart

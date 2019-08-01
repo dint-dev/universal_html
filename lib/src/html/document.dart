@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 HtmlDocument get document => HtmlDriver.current.document;
 
@@ -70,7 +83,7 @@ ElementList<T> querySelectorAll<T extends Element>(String s) =>
     document.querySelectorAll<T>(s);
 
 abstract class Document extends Node
-    with _ElementOrDocument, DocumentOrShadowRoot, _DocumentOrFragment {
+    with _ElementOrDocument, _DocumentOrFragment {
   static const EventStreamProvider<Event> pointerLockChangeEvent =
       EventStreamProvider<Event>('pointerlockchange');
 
@@ -101,13 +114,24 @@ abstract class Document extends Node
       EventStreamProvider<Event>('selectionchange');
 
   final HtmlDriver _htmlDriver;
+
   final String contentType;
 
+  String _readyState = "complete";
+
+  final String origin;
+
   factory Document() {
-    return XmlDocument.internal(HtmlDriver.current, contentType: "text/html");
+    return XmlDocument._(
+        htmlDriver: HtmlDriver.current, contentType: "text/html");
   }
 
-  Document._(this._htmlDriver, this.contentType) : super._document();
+  Document._({
+    @required HtmlDriver htmlDriver,
+    @required this.contentType,
+    this.origin,
+  })  : this._htmlDriver = htmlDriver,
+        super._document();
 
   /// Outside the browser, returns null.
   Element get activeElement => null;
@@ -339,6 +363,19 @@ abstract class Document extends Node
 
   Stream<Event> get onWaiting => Element.waitingEvent.forTarget(this);
 
+  String get readyState => _readyState;
+
+  bool get supportsRegister => false;
+
+  bool get supportsRegisterElement => false;
+
+  @override
+  String get text => null;
+
+  DocumentTimeline get timeline => throw UnimplementedError();
+
+  Window get window => this._htmlDriver.window;
+
   bool get _isCaseSensitive => false;
 
   Node adoptNode(Node node) {
@@ -348,7 +385,7 @@ abstract class Document extends Node
   }
 
   DocumentFragment createDocumentFragment() {
-    return DocumentFragment.internal(this);
+    return DocumentFragment._(this);
   }
 
   Element createElement(String tagName, [String typeExtension]) {
@@ -360,6 +397,14 @@ abstract class Document extends Node
     return Element.internalTagNS(
         this, namespaceUri, qualifiedName, typeExtension);
   }
+
+  bool execCommand(String commandId, [bool showUI, String value]) {
+    return false;
+  }
+
+  void exitFullscreen() {}
+
+  void exitPointerLock() {}
 
   List<Node> getElementsByClassName(String classNames) {
     final result = <Node>[];
@@ -405,6 +450,8 @@ abstract class Document extends Node
     return result;
   }
 
+  Node importNode(Node node, [bool deep]) => throw UnimplementedError();
+
   @override
   void insertBefore(Node node, Node before) {
     if (node is Element) {
@@ -416,7 +463,7 @@ abstract class Document extends Node
           "Only one element on document allowed.",
         );
       }
-    } else if (node is DocumentType) {
+    } else if (node is _DocumentType) {
       // OK
     } else if (node is Comment) {
       // OK
@@ -446,6 +493,65 @@ abstract class Document extends Node
     super.insertBefore(node, before);
   }
 
+  bool queryCommandEnabled(String commandId) => throw UnimplementedError();
+
+  bool queryCommandIndeterm(String commandId) => throw UnimplementedError();
+
+  bool queryCommandState(String commandId) => throw UnimplementedError();
+
+  bool queryCommandSupported(String commandId) => throw UnimplementedError();
+
+  String queryCommandValue(String commandId) => throw UnimplementedError();
+
+  void registerElement(String tag, Type customElementClass,
+      {String extendsTag}) {
+    registerElement2(
+        tag, {'prototype': customElementClass, 'extends': extendsTag});
+  }
+
+  /// Register a custom subclass of Element to be instantiatable by the DOM.
+  ///
+  /// This is necessary to allow the construction of any custom elements.
+  ///
+  /// The class being registered must either subclass HtmlElement or SvgElement.
+  /// If they subclass these directly then they can be used as:
+  ///
+  ///     class FooElement extends HtmlElement{
+  ///        void created() {
+  ///          print('FooElement created!');
+  ///        }
+  ///     }
+  ///
+  ///     main() {
+  ///       document.registerElement('x-foo', FooElement);
+  ///       var myFoo = new Element.tag('x-foo');
+  ///       // prints 'FooElement created!' to the console.
+  ///     }
+  ///
+  /// The custom element can also be instantiated via HTML using the syntax
+  /// `<x-foo></x-foo>`
+  ///
+  /// Other elements can be subclassed as well:
+  ///
+  ///     class BarElement extends InputElement{
+  ///        void created() {
+  ///          print('BarElement created!');
+  ///        }
+  ///     }
+  ///
+  ///     main() {
+  ///       document.registerElement('x-bar', BarElement);
+  ///       var myBar = new Element.tag('input', 'x-bar');
+  ///       // prints 'BarElement created!' to the console.
+  ///     }
+  ///
+  /// This custom element can also be instantiated via HTML using the syntax
+  /// `<input is="x-bar"></input>`
+  ///
+  Function registerElement2(String tag, [Map options]) {
+    throw UnimplementedError();
+  }
+
   @override
   void remove() {
     throw UnsupportedError("Can't be removed");
@@ -453,11 +559,19 @@ abstract class Document extends Node
 }
 
 abstract class DocumentOrShadowRoot {
-  Element get activeElement => null;
+  DocumentOrShadowRoot._();
 
-  Element get fullscreenElement => null;
+  Element get activeElement;
 
-  Element get pointerLockElement => null;
+  Element get fullscreenElement;
+
+  Element get pointerLockElement;
+
+  List<StyleSheet> get styleSheets;
+
+  Element elementFromPoint(int x, int y);
+
+  List<Element> elementsFromPoint(int x, int y);
 }
 
 class DomImplementation {
@@ -466,8 +580,9 @@ class DomImplementation {
   DomImplementation._(this._htmlDriver);
 
   XmlDocument createDocument(
-      String namespaceURI, String qualifiedName, DocumentType doctype) {
-    final result = XmlDocument.internal(_htmlDriver, contentType: "text/xml");
+      String namespaceURI, String qualifiedName, _DocumentType doctype) {
+    final result =
+        XmlDocument._(htmlDriver: _htmlDriver, contentType: "text/xml");
     if (doctype != null) {
       result.append(doctype.internalCloneWithOwnerDocument(result, true));
     }
@@ -478,23 +593,21 @@ class DomImplementation {
     return result;
   }
 
-  DocumentType createDocumentType(
+  _DocumentType createDocumentType(
       String qualifiedName, String publicId, String systemId) {
-    return DocumentType.internal(null, null);
+    return _DocumentType._(null, null);
   }
 
   HtmlDocument createHtmlDocument([String title]) {
-    return HtmlDocument.internal(
-      _htmlDriver,
+    return HtmlDocument._(
+      htmlDriver: _htmlDriver,
       contentType: "text/html",
       filled: false,
     );
   }
 }
 
-class HtmlDocument extends Document {
-  /// IMPORTANT: Not part 'dart:html'.
-  ///
+class HtmlDocument extends Document with _DocumentOrShadowRoot implements DocumentOrShadowRoot {
   /// If [filled] is true, returns document:
   ///
   ///     <doctype html>
@@ -502,11 +615,18 @@ class HtmlDocument extends Document {
   ///     <head></head>
   ///     <body></body>
   ///     </html>
-  HtmlDocument.internal(HtmlDriver driver,
-      {@required String contentType, @required bool filled})
-      : super._(driver, contentType) {
+  HtmlDocument._(
+      {@required HtmlDriver htmlDriver,
+      @required String contentType,
+      @required bool filled,
+      String origin})
+      : super._(
+          htmlDriver: htmlDriver,
+          contentType: contentType,
+          origin: origin,
+        ) {
     if (filled) {
-      final docType = DocumentType.internal(this, "html");
+      final docType = _DocumentType._(this, "html");
       append(docType);
       final htmlElement = HtmlHtmlElement._(this);
       append(htmlElement);
@@ -559,15 +679,7 @@ class HtmlDocument extends Document {
     return null;
   }
 
-  set head(HeadElement newValue) {
-    final existing = this.head;
-    if (existing == null) {
-      _html?.append(newValue);
-    } else {
-      existing.replaceWith(newValue);
-    }
-    assert(identical(this.head, newValue));
-  }
+  String get referrer => null;
 
   List<StyleSheet> get styleSheets {
     final list = <StyleSheet>[];
@@ -590,10 +702,11 @@ class HtmlDocument extends Document {
     return null;
   }
 
+  @visibleForTesting
   @override
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
-    final clone = HtmlDocument.internal(
-      _htmlDriver,
+    final clone = HtmlDocument._(
+      htmlDriver: _htmlDriver,
       contentType: contentType,
       filled: false,
     );
@@ -619,4 +732,18 @@ abstract class _DocumentOrFragment implements Node, _ElementOrDocument {
   void remove() {
     throw UnsupportedError("Can't be removed");
   }
+}
+
+abstract class _DocumentOrShadowRoot implements DocumentOrShadowRoot {
+  Element get activeElement => null;
+
+  Element get fullscreenElement => null;
+
+  Element get pointerLockElement => null;
+
+  List<StyleSheet> get styleSheets => <StyleSheet>[];
+
+  Element elementFromPoint(int x, int y) => null;
+
+  List<Element> elementsFromPoint(int x, int y) => <Element>[];
 }

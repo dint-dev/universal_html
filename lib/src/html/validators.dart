@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,7 +44,34 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
+
+/// Performs sanitization of a node tree after construction to ensure that it
+/// does not contain any disallowed elements or attributes.
+///
+/// In general custom implementations of this class should not be necessary and
+/// all validation customization should be done in custom NodeValidators, but
+/// custom implementations of this class can be created to perform more complex
+/// tree sanitization.
+abstract class NodeTreeSanitizer {
+  /// A sanitizer for trees that we trust. It does no validation and allows
+  /// any elements. It is also more efficient, since it can pass the text
+  /// directly through to the underlying APIs without creating a document
+  /// fragment to be sanitized.
+  static const trusted = _TrustedHtmlTreeSanitizer();
+
+  /// Constructs a default tree sanitizer which will remove all elements and
+  /// attributes which are not allowed by the provided validator.
+  factory NodeTreeSanitizer(NodeValidator validator) =>
+      _ValidatingTreeSanitizer(validator);
+
+  /// Called with the root of the tree which is to be sanitized.
+  ///
+  /// This method needs to walk the entire tree and either remove elements and
+  /// attributes which are not recognized as safe or throw an exception which
+  /// will mark the entire tree as unsafe.
+  void sanitizeTree(Node node);
+}
 
 /// Interface used to validate that only accepted elements and attributes are
 /// allowed while parsing HTML strings into DOM nodes.
@@ -50,50 +90,15 @@ abstract class NodeValidator {
   factory NodeValidator.throws(NodeValidator base) =>
       _ThrowsNodeValidator(base);
 
-  /// Returns true if the tagName is an accepted type.
-  bool allowsElement(Element element);
-
   /// Returns true if the attribute is allowed.
   ///
   /// The attributeName parameter will always be in lowercase.
   ///
   /// See [allowsElement] for format of tagName.
   bool allowsAttribute(Element element, String attributeName, String value);
-}
 
-/// Performs sanitization of a node tree after construction to ensure that it
-/// does not contain any disallowed elements or attributes.
-///
-/// In general custom implementations of this class should not be necessary and
-/// all validation customization should be done in custom NodeValidators, but
-/// custom implementations of this class can be created to perform more complex
-/// tree sanitization.
-abstract class NodeTreeSanitizer {
-  /// Constructs a default tree sanitizer which will remove all elements and
-  /// attributes which are not allowed by the provided validator.
-  factory NodeTreeSanitizer(NodeValidator validator) =>
-      _ValidatingTreeSanitizer(validator);
-
-  /// Called with the root of the tree which is to be sanitized.
-  ///
-  /// This method needs to walk the entire tree and either remove elements and
-  /// attributes which are not recognized as safe or throw an exception which
-  /// will mark the entire tree as unsafe.
-  void sanitizeTree(Node node);
-
-  /// A sanitizer for trees that we trust. It does no validation and allows
-  /// any elements. It is also more efficient, since it can pass the text
-  /// directly through to the underlying APIs without creating a document
-  /// fragment to be sanitized.
-  static const trusted = _TrustedHtmlTreeSanitizer();
-}
-
-/// A sanitizer for trees that we trust. It does no validation and allows
-/// any elements.
-class _TrustedHtmlTreeSanitizer implements NodeTreeSanitizer {
-  const _TrustedHtmlTreeSanitizer();
-
-  sanitizeTree(Node node) {}
+  /// Returns true if the tagName is an accepted type.
+  bool allowsElement(Element element);
 }
 
 /// Defines the policy for what types of uris are allowed for particular
@@ -138,13 +143,6 @@ class _ThrowsNodeValidator implements NodeValidator {
 
   _ThrowsNodeValidator(this.validator);
 
-  bool allowsElement(Element element) {
-    if (!validator.allowsElement(element)) {
-      throw ArgumentError(Element._safeTagName(element));
-    }
-    return true;
-  }
-
   bool allowsAttribute(Element element, String attributeName, String value) {
     if (!validator.allowsAttribute(element, attributeName, value)) {
       throw ArgumentError(
@@ -152,6 +150,21 @@ class _ThrowsNodeValidator implements NodeValidator {
     }
     return true;
   }
+
+  bool allowsElement(Element element) {
+    if (!validator.allowsElement(element)) {
+      throw ArgumentError(Element._safeTagName(element));
+    }
+    return true;
+  }
+}
+
+/// A sanitizer for trees that we trust. It does no validation and allows
+/// any elements.
+class _TrustedHtmlTreeSanitizer implements NodeTreeSanitizer {
+  const _TrustedHtmlTreeSanitizer();
+
+  sanitizeTree(Node node) {}
 }
 
 /// Standard tree sanitizer which validates a node tree against the provided
@@ -160,6 +173,22 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
   NodeValidator validator;
 
   _ValidatingTreeSanitizer(this.validator);
+
+  /// Sanitize the node and its children recursively.
+  void sanitizeNode(Node node, Node parent) {
+    switch (node.nodeType) {
+      case Node.ELEMENT_NODE:
+        _sanitizeUntrustedElement(node, parent);
+        break;
+      case Node.COMMENT_NODE:
+      case Node.DOCUMENT_FRAGMENT_NODE:
+      case Node.TEXT_NODE:
+      case Node.CDATA_SECTION_NODE:
+        break;
+      default:
+        _removeNode(node, parent);
+    }
+  }
 
   void sanitizeTree(Node node) {
     void walk(Node node, Node parent) {
@@ -197,6 +226,51 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
       node.remove();
     } else {
       parent._removeChild(node);
+    }
+  }
+
+  /// Having done basic sanity checking on the element, and computed the
+  /// important attributes we want to check, remove it if it's not valid
+  /// or not allowed, either as a whole or particular attributes.
+  void _sanitizeElement(Element element, Node parent, bool corrupted,
+      String text, String tag, Map attrs, String isAttr) {
+    if (false != corrupted) {
+      _removeNode(element, parent);
+      window.console
+          .warn('Removing element due to corrupted attributes on <$text>');
+      return;
+    }
+    if (!validator.allowsElement(element)) {
+      _removeNode(element, parent);
+      window.console.warn('Removing disallowed element <$tag> from $parent');
+      return;
+    }
+
+    if (isAttr != null) {
+      if (!validator.allowsAttribute(element, 'is', isAttr)) {
+        _removeNode(element, parent);
+        window.console.warn('Removing disallowed type extension '
+            '<$tag is="$isAttr">');
+        return;
+      }
+    }
+
+    // TODO(blois): Need to be able to get all attributes, irrespective of
+    // XMLNS.
+    var keys = attrs.keys.toList();
+    for (var i = attrs.length - 1; i >= 0; --i) {
+      var name = keys[i];
+      if (!validator.allowsAttribute(
+          element, name.toLowerCase(), attrs[name])) {
+        window.console.warn('Removing disallowed attribute '
+            '<$tag $name="${attrs[name]}">');
+        attrs.remove(name);
+      }
+    }
+
+    if (element is TemplateElement) {
+      TemplateElement template = element;
+      sanitizeTree(template.content);
     }
   }
 
@@ -248,67 +322,6 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
       // Unexpected exception sanitizing -> remove
       _removeNode(element, parent);
       window.console.warn('Removing corrupted element $elementText');
-    }
-  }
-
-  /// Having done basic sanity checking on the element, and computed the
-  /// important attributes we want to check, remove it if it's not valid
-  /// or not allowed, either as a whole or particular attributes.
-  void _sanitizeElement(Element element, Node parent, bool corrupted,
-      String text, String tag, Map attrs, String isAttr) {
-    if (false != corrupted) {
-      _removeNode(element, parent);
-      window.console
-          .warn('Removing element due to corrupted attributes on <$text>');
-      return;
-    }
-    if (!validator.allowsElement(element)) {
-      _removeNode(element, parent);
-      window.console.warn('Removing disallowed element <$tag> from $parent');
-      return;
-    }
-
-    if (isAttr != null) {
-      if (!validator.allowsAttribute(element, 'is', isAttr)) {
-        _removeNode(element, parent);
-        window.console.warn('Removing disallowed type extension '
-            '<$tag is="$isAttr">');
-        return;
-      }
-    }
-
-    // TODO(blois): Need to be able to get all attributes, irrespective of
-    // XMLNS.
-    var keys = attrs.keys.toList();
-    for (var i = attrs.length - 1; i >= 0; --i) {
-      var name = keys[i];
-      if (!validator.allowsAttribute(
-          element, name.toLowerCase(), attrs[name])) {
-        window.console.warn('Removing disallowed attribute '
-            '<$tag $name="${attrs[name]}">');
-        attrs.remove(name);
-      }
-    }
-
-    if (element is TemplateElement) {
-      TemplateElement template = element;
-      sanitizeTree(template.content);
-    }
-  }
-
-  /// Sanitize the node and its children recursively.
-  void sanitizeNode(Node node, Node parent) {
-    switch (node.nodeType) {
-      case Node.ELEMENT_NODE:
-        _sanitizeUntrustedElement(node, parent);
-        break;
-      case Node.COMMENT_NODE:
-      case Node.DOCUMENT_FRAGMENT_NODE:
-      case Node.TEXT_NODE:
-      case Node.CDATA_SECTION_NODE:
-        break;
-      default:
-        _removeNode(node, parent);
     }
   }
 }

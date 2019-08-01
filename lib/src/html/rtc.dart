@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,11 +44,14 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
+
+typedef RtcPeerConnectionErrorCallback = void Function(DomException exception);
 
 typedef VoidCallback = void Function();
 
 abstract class RtcDataChannel extends EventTarget {
+
   static const EventStreamProvider<Event> closeEvent =
       EventStreamProvider<Event>("close");
 
@@ -47,6 +63,8 @@ abstract class RtcDataChannel extends EventTarget {
 
   static const EventStreamProvider<Event> openEvent =
       EventStreamProvider<Event>("open");
+
+  RtcDataChannel._() : super._created();
 
   Stream<Event> get onClose;
 
@@ -74,12 +92,14 @@ abstract class RtcDataChannel extends EventTarget {
 }
 
 class RtcDataChannelEvent extends Event {
-  RtcDataChannelEvent(String type) : super.internalConstructor(type);
+  RtcDataChannelEvent(String type) : super.internal(type);
 
   RtcDataChannel get channel => null;
 }
 
-abstract class RtcDtmfSender {}
+abstract class RtcDtmfSender {
+  RtcDtmfSender._();
+}
 
 abstract class RtcPeerConnection extends EventTarget {
   static const EventStreamProvider<MediaStreamEvent> addStreamEvent =
@@ -100,6 +120,8 @@ abstract class RtcPeerConnection extends EventTarget {
 
   static const EventStreamProvider<Event> signalingStateChangeEvent =
       EventStreamProvider<Event>("signalignstatechange");
+
+  RtcPeerConnection._() : super._created();
 
   String get iceConnectionState => null;
 
@@ -162,18 +184,24 @@ abstract class RtcPeerConnection extends EventTarget {
   Future setRemoteDescription(Map description);
 }
 
-abstract class RtcPeerConnectionErrorCallback {}
-
 class RtcPeerConnectionIceEvent extends Event {
-  RtcPeerConnectionIceEvent(String type) : super.internalConstructor(type);
+  RtcPeerConnectionIceEvent(String type) : super.internal(type);
 }
 
-abstract class RtcRtpReceiver {}
+abstract class RtcRtpReceiver {
+  RtcRtpReceiver._();
+}
 
-abstract class RtcRtpSender {}
+abstract class RtcRtpSender {
+  RtcRtpSender._();
+}
 
 abstract class RtcSessionDescription {}
 
-abstract class RtcStatsReport {}
+abstract class RtcStatsReport {
+  RtcStatsReport._();
+}
 
-abstract class RtcStatsResponse {}
+abstract class RtcStatsResponse {
+  RtcStatsResponse._();
+}

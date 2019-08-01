@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,58 +44,69 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html;
+part of universal_html.internal;
 
 abstract class CharacterData extends Node
-    with ChildNode, NonDocumentTypeChildNode {
-  final String nodeValue;
+    with _ChildNode, _NonDocumentTypeChildNode
+    implements ChildNode, NonDocumentTypeChildNode {
+  String data;
 
-  CharacterData._(Document ownerDocument, this.nodeValue)
-      : super._(ownerDocument);
+  CharacterData._(Document ownerDocument, this.data) : super._(ownerDocument) {
+    if (data == null) {
+      throw ArgumentError.notNull("data");
+    }
+  }
+
+  int get length => data.length;
+
+  Element get nextElementSibling {
+    var node = this.nextNode;
+    while (node != null && node is! Element) {
+      node = node.nextNode;
+    }
+    return node;
+  }
+
+  @override
+  String get nodeValue => data;
+
+  Element get previousElementSibling {
+    var node = this.previousNode;
+    while (node != null && node is! Element) {
+      node = node.previousNode;
+    }
+    return node;
+  }
 
   @override
   String toString() => nodeValue;
 }
 
-abstract class ChildNode implements Node {}
+abstract class ChildNode {
+  ChildNode._();
+  void after(Object nodes);
+  void before(Object nodes);
+  void remove();
+}
 
 class Comment extends CharacterData {
   factory Comment([String value]) {
     if (value != null && value.contains("-->")) {
       throw ArgumentError.value(value);
     }
-    return Comment.internal(null, value);
+    return Comment._(null, value);
   }
 
-  /// IMPORTANT: Not part of 'dart:hml'.
-  Comment.internal(Document ownerDocument, String value)
+  Comment._(Document ownerDocument, String value)
       : super._(ownerDocument, value ?? "");
 
   @override
   int get nodeType => Node.COMMENT_NODE;
 
+  @visibleForTesting
   @override
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      Comment.internal(ownerDocument, nodeValue);
-}
-
-/// IMPORTANT: Not part 'dart:html'.
-class DocumentType extends Node {
-  final String _value;
-
-  /// IMPORTANT: Not part 'dart:html'.
-  DocumentType.internal(Document ownerDocument, this._value)
-      : super._(ownerDocument);
-
-  @override
-  String get nodeName => _value;
-
-  @override
-  int get nodeType => Node.DOCUMENT_TYPE_NODE;
-
-  @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      DocumentType.internal(ownerDocument, this._value);
+      Comment._(ownerDocument, nodeValue);
 }
 
 abstract class Node extends EventTarget {
@@ -105,10 +129,15 @@ abstract class Node extends EventTarget {
   Node _nextNode;
   Node _previousNode;
 
+  /// Constructor for most subclasses.
   Node._(Document ownerDocument)
-      : this.ownerDocument = ownerDocument ?? document;
+      : this.ownerDocument = ownerDocument ?? document,
+        super._created();
 
-  Node._document() : this.ownerDocument = null;
+  /// Constructor used by [Document].
+  Node._document()
+      : this.ownerDocument = null,
+        super._created();
 
   String get baseUri {
     return ownerDocument.baseUri;
@@ -127,6 +156,13 @@ abstract class Node extends EventTarget {
   String get nodeName => null;
 
   List<Node> get nodes => _ChildNodeListLazy(this);
+
+  set nodes(List<Node> nodes) {
+    this._clearChildren();
+    for (var node in nodes) {
+      append(node);
+    }
+  }
 
   int get nodeType;
 
@@ -166,6 +202,18 @@ abstract class Node extends EventTarget {
     return null;
   }
 
+  /// Returns instance of the [HtmlDriver] that should be used.
+  HtmlDriver get _htmlDriver {
+    final ownerDocument = this.ownerDocument;
+    if (ownerDocument != null) {
+      final result = ownerDocument._htmlDriver;
+      if (result != null) {
+        return result;
+      }
+    }
+    return HtmlDriver.current;
+  }
+
   /// Used by error messages.
   String get _nodeTypeName {
     switch (nodeType) {
@@ -196,6 +244,8 @@ abstract class Node extends EventTarget {
 
   @override
   EventTarget get _parentEventTarget => this.parent;
+
+  RenderData get _renderData => parent?._renderData;
 
   Node append(Node node) {
     this.insertBefore(node, null);
@@ -247,14 +297,17 @@ abstract class Node extends EventTarget {
     throw DomException._invalidMethod("Node", "insertBefore");
   }
 
-  @protected
+  @visibleForTesting
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep);
 
   void remove() {
     final parent = this._parent;
     if (parent == null) {
-      throw _NodeMissingParent();
+      return;
     }
+
+    // Mark node as dirty
+    _markDirty();
 
     // Get previous and next
     final previous = this._previousNode;
@@ -287,8 +340,13 @@ abstract class Node extends EventTarget {
   void replaceWith(Node node) {
     final parent = this._parent;
     if (parent == null) {
-      throw _NodeMissingParent();
+      return;
     }
+
+    // Mark nodes as dirty
+    _markDirty();
+    node._markDirty();
+
     // Get previous and next
     final previous = this._previousNode;
     final next = this._nextNode;
@@ -329,10 +387,17 @@ abstract class Node extends EventTarget {
   }
 
   void _clearChildren() {
-    Node child = this.firstChild;
-    while (child != null) {
+    while (true) {
+      final child = this.firstChild;
+      if (child == null) {
+        break;
+      }
       child.remove();
     }
+  }
+
+  void _markDirty() {
+    _renderData?.markDirty();
   }
 
   /// Invoked when this is:
@@ -372,49 +437,48 @@ abstract class Node extends EventTarget {
   }
 }
 
-/// For accessing underlying node lists, for dart:js interop.
-abstract class NodeListWrapper {
-  List<Node> get rawList;
+abstract class NonDocumentTypeChildNode {
+  NonDocumentTypeChildNode._();
+  Element get nextElementSibling;
+  Element get previousElementSibling;
 }
 
-abstract class NonDocumentTypeChildNode implements Node {
-  Element get nextElementSibling {
-    Node node = this.nextNode;
-    while (node != null) {
-      if (Node.ELEMENT_NODE == node.nodeType) {
-        return node as Element;
-      }
-      node = node.nextNode;
-    }
-    return null;
-  }
-
-  Element get previousElementSibling {
-    Node node = this.previousNode;
-    while (node != null) {
-      if (Node.ELEMENT_NODE == node.nodeType) {
-        return node as Element;
-      }
-      node = node.previousNode;
-    }
-    return null;
-  }
-}
-
-abstract class ParentNode implements Node {
+abstract class ParentNode {
+  ParentNode._();
   Element querySelector(String selectors);
+}
+
+class ProcessingInstruction extends Node {
+  final StyleSheet sheet;
+  final String target;
+
+  ProcessingInstruction._(Document ownerDocument, {this.sheet, this.target})
+      : super._(ownerDocument);
+
+  @override
+  int get nodeType => Node.PROCESSING_INSTRUCTION_NODE;
+
+  @visibleForTesting
+  @override
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
+    return ProcessingInstruction._(
+      ownerDocument,
+      sheet: sheet,
+      target: target,
+    );
+  }
 }
 
 class Range {}
 
 class Text extends CharacterData {
   factory Text(String value) {
-    return Text.internal(null, value);
+    return Text._(null, value);
   }
 
-  /// IMPORTANT: Not part 'dart:html'.
-  Text.internal(Document ownerDocument, String value)
-      : super._(ownerDocument, value);
+  Text._(Document ownerDocument, String value) : super._(ownerDocument, value);
+
+  int get length => nodeValue.length;
 
   @override
   int get nodeType => Node.TEXT_NODE;
@@ -422,14 +486,24 @@ class Text extends CharacterData {
   @override
   String get text => nodeValue;
 
+  @visibleForTesting
   @override
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      Text.internal(ownerDocument, nodeValue);
+      Text._(ownerDocument, nodeValue);
 
   @override
   void _buildText(StringBuffer sb) {
     sb.write(nodeValue);
   }
+}
+
+abstract class _ChildNode implements ChildNode {
+  @override
+  void after(Object nodes) {}
+  @override
+  void before(Object nodes) {}
+  @override
+  void remove();
 }
 
 class _ChildNodeIterator extends Iterator<Node> {
@@ -465,6 +539,23 @@ class _ChildNodeIterator extends Iterator<Node> {
   }
 }
 
+class _DocumentType extends Node {
+  final String _value;
+
+  _DocumentType._(Document ownerDocument, this._value) : super._(ownerDocument);
+
+  @override
+  String get nodeName => _value;
+
+  @override
+  int get nodeType => Node.DOCUMENT_TYPE_NODE;
+
+  @visibleForTesting
+  @override
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
+      _DocumentType._(ownerDocument, this._value);
+}
+
 /// Mixin for [Element] and [Document].
 abstract class _ElementOrDocument implements Node, ParentNode {
   Node _firstChild;
@@ -475,10 +566,23 @@ abstract class _ElementOrDocument implements Node, ParentNode {
 
   Node get lastChild => _lastChild;
 
+  Iterable<Element> get _ancestors sync* {
+    var ancestor = this.parent;
+    while (ancestor != null) {
+      yield (ancestor);
+      ancestor = ancestor.parent;
+    }
+  }
+
   @override
   void insertAllBefore(Iterable<Node> nodes, Node before) {
     Node previous = before == null ? this.lastChild : before.previousNode;
+    var isFirstIteration = true;
     for (var node in nodes) {
+      if (isFirstIteration) {
+        _markDirty();
+        isFirstIteration = false;
+      }
       if (node.parentNode != null) {
         node.remove();
       }
@@ -501,6 +605,9 @@ abstract class _ElementOrDocument implements Node, ParentNode {
     if (before != null && !identical(before._parent, this)) {
       throw ArgumentError.value(before, "before");
     }
+
+    // Mark as dirty
+    _markDirty();
 
     // Remove from old parent
     if (node.parentNode != null) {
@@ -608,6 +715,34 @@ abstract class _ElementOrDocument implements Node, ParentNode {
   }
 }
 
-class _NodeMissingParent extends StateError {
-  _NodeMissingParent() : super("Node doesn't have a parent");
+/// For accessing underlying node lists, for dart:js interop.
+abstract class _NodeListWrapper {
+  List<Node> get rawList;
+}
+
+abstract class _NonDocumentTypeChildNode
+    implements Node, NonDocumentTypeChildNode {
+  @override
+  Element get nextElementSibling {
+    Node node = this.nextNode;
+    while (node != null) {
+      if (Node.ELEMENT_NODE == node.nodeType) {
+        return node as Element;
+      }
+      node = node.nextNode;
+    }
+    return null;
+  }
+
+  @override
+  Element get previousElementSibling {
+    Node node = this.previousNode;
+    while (node != null) {
+      if (Node.ELEMENT_NODE == node.nodeType) {
+        return node as Element;
+      }
+      node = node.previousNode;
+    }
+    return null;
+  }
 }

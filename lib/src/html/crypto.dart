@@ -1,3 +1,16 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -30,55 +43,31 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+part of universal_html.internal;
 
-part of universal_html;
+class Crypto {
+  /// Checks if this type is supported on the current platform.
+  static bool get supported => false;
 
-class Coordinates {
-  final num accuracy;
-  final num altitude;
-  final num altitudeAccuracy;
-  final num heading;
-  final num latitude;
-  final num longitude;
-  final num speed;
+  Crypto._();
 
-  /// IMPORTANT: Not part 'dart:html'.
-  const Coordinates.internal({
-    this.accuracy = 0.0,
-    this.altitude = 0.0,
-    this.altitudeAccuracy = 0.0,
-    this.heading = 0.0,
-    this.latitude = 0.0,
-    this.longitude = 0.0,
-    this.speed = 0.0,
-  });
-}
+  Object get subtle => null;
 
-class Geolocation {
-  final Geoposition _geoPosition;
-
-  /// IMPORTANT: Not part 'dart:html'.
-  Geolocation.internal({Geoposition geoposition})
-      : this._geoPosition = geoposition ?? Geoposition.internal();
-
-  Future<Geoposition> getCurrentPosition(
-      {bool enableHighAccuracy, Duration timeout, Duration maximumAge}) {
-    return Future<Geoposition>.value(_geoPosition);
-  }
-
-  Stream<Geoposition> watchPosition(
-      {bool enableHighAccuracy, Duration timeout, Duration maximumAge}) {
-    return Stream<Geoposition>.fromIterable(<Geoposition>[_geoPosition]);
+  TypedData getRandomValues(TypedData array) {
+    throw UnimplementedError();
   }
 }
 
-class Geoposition {
-  final Coordinates coords;
+class CryptoKey {
+  final Object algorithm;
 
-  final int timestamp;
+  final bool extractable;
 
-  /// IMPORTANT: Not part 'dart:html'.
-  Geoposition.internal({Coordinates coords, int timestamp})
-      : this.coords = coords ?? const Coordinates.internal(),
-        this.timestamp = timestamp ?? DateTime.now().millisecondsSinceEpoch;
+  final String type;
+
+  final Object usages;
+
+  factory CryptoKey._() {
+    throw UnimplementedError();
+  }
 }

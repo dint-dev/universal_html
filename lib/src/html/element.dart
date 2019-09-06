@@ -1652,7 +1652,7 @@ abstract class Element extends Node
   @override
   RenderData get _renderData {
     return this._renderDataField ??=
-        _htmlDriver.browserClassFactory.newRenderData(this);
+        _htmlDriver.browserImplementation.newRenderData(this);
   }
 
   /// Creates a new AnimationEffect object whose target element is the object

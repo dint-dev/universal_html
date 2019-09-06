@@ -84,7 +84,7 @@ class Navigator extends NavigatorConcurrentHardware
 
   Geolocation get geolocation {
     return _geoLocation ??
-        (_geoLocation = _htmlDriver.browserClassFactory.newGeolocation());
+        (_geoLocation = _htmlDriver.browserImplementation.newGeolocation());
   }
 
   String get language {
@@ -108,6 +108,9 @@ class Navigator extends NavigatorConcurrentHardware
 
   bool get onLine => false;
 
+  @deprecated
+  DeprecatedStorageQuota get persistentStorage  => null;
+
   String get platform => "Win32";
 
   Presentation get presentation => null;
@@ -121,6 +124,9 @@ class Navigator extends NavigatorConcurrentHardware
   }
 
   StorageManager get storage => null;
+
+  @deprecated
+  DeprecatedStorageQuota get temporaryStorage => null;
 
   String get userAgent => _htmlDriver.userAgent.string;
 

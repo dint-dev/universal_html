@@ -289,6 +289,7 @@ class BRElement extends HtmlElement {
 
 class ButtonElement extends HtmlElement
     with _DisabledElement, _FormFieldElement {
+
   String formAction;
 
   String formEnctype;
@@ -302,6 +303,18 @@ class ButtonElement extends HtmlElement
   factory ButtonElement() => ButtonElement._(null);
 
   ButtonElement._(Document ownerDocument) : super._(ownerDocument, "BUTTON");
+
+  bool get autofocus => _getAttributeBool("autofocus");
+
+  set autofocus(bool value) {
+    _setAttributeBool(name, value);
+  }
+
+  String get name => _getAttribute("name");
+
+  set name(String value) {
+    _setAttribute(name, value);
+  }
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -339,7 +352,7 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
   /// An API for drawing on this canvas.
   CanvasRenderingContext2D get context2D {
     return _context2D ??=
-        _htmlDriver.browserClassFactory.newCanvasRenderingContext2D(this);
+        _htmlDriver.browserImplementation.newCanvasRenderingContext2D(this);
   }
 
   /// The height of this canvas element in CSS pixels.
@@ -485,6 +498,8 @@ class DataElement extends HtmlElement {
 }
 
 class DataListElement extends HtmlElement {
+  static bool get supported => true;
+
   factory DataListElement() => DataListElement._(null);
 
   DataListElement._(Document ownerDocument)
@@ -496,6 +511,8 @@ class DataListElement extends HtmlElement {
 }
 
 class DetailsElement extends HtmlElement {
+  static bool get supported => true;
+
   factory DetailsElement() => DetailsElement._(null);
 
   DetailsElement._(Document ownerDocument) : super._(ownerDocument, "DETAILS");
@@ -580,6 +597,8 @@ class DomTokenList {
 }
 
 class EmbedElement extends HtmlElement {
+  static bool get supported => true;
+
   factory EmbedElement() => EmbedElement._(null);
 
   EmbedElement._(Document ownerDocument) : super._(ownerDocument, "EMBED");
@@ -683,12 +702,18 @@ class FormElement extends HtmlElement {
 
   void requestAutocomplete(Map details) {}
 
+  /// Resets the form.
+  ///
+  /// When this method is called, no event is dispatched.
   void reset() {
-    throw UnimplementedError();
+    this._htmlDriver.browserImplementation.handleFormReset(this);
   }
 
+  /// Resets the form.
+  ///
+  /// When this method is called, no event is dispatched.
   void submit() {
-    throw UnimplementedError();
+    this._htmlDriver.browserImplementation.handleFormSubmit(this);
   }
 
   @override
@@ -987,6 +1012,9 @@ class InputElement extends HtmlElement
   @override
   int selectionEnd;
 
+  @override
+  List<File> files;
+
   factory InputElement({String type}) {
     InputElement e = InputElement._(null);
     if (type != null) {
@@ -1042,7 +1070,7 @@ class InputElement extends HtmlElement
   }
 
   @override
-  bool get checked => _checked ?? false;
+  bool get checked => _checked ?? defaultChecked;
 
   @override
   set checked(bool value) {
@@ -1052,7 +1080,7 @@ class InputElement extends HtmlElement
     }
   }
 
-  bool get defaultChecked => _getAttributeBool("checked") ?? "";
+  bool get defaultChecked => _getAttributeBool("checked");
 
   set defaultChecked(bool value) {
     _setAttributeBool("checked", value);
@@ -1078,14 +1106,6 @@ class InputElement extends HtmlElement
   @SupportedBrowser(SupportedBrowser.CHROME)
   @SupportedBrowser(SupportedBrowser.SAFARI)
   List<Entry> get entries => const <Entry>[];
-
-  @override
-  List<File> get files => throw UnimplementedError();
-
-  @override
-  set files(List<File> files) {
-    throw UnimplementedError();
-  }
 
   @override
   int get height => _getAttributeInt("height");
@@ -1448,6 +1468,8 @@ class MapElement extends HtmlElement {
 }
 
 abstract class MediaElement extends HtmlElement {
+  bool _muted;
+
   MediaElement._(Document ownerDocument, String tag)
       : super._(ownerDocument, tag);
 
@@ -1457,16 +1479,28 @@ abstract class MediaElement extends HtmlElement {
     _setAttributeBool("autoplay", value);
   }
 
+  String get crossOrigin => _getAttribute("crossorigin");
+
+  set crossOrigin(String value) {
+    _setAttribute("crossorigin", value);
+  }
+
+  bool get defaultMuted => _getAttributeBool("muted");
+
+  set defaultMuted(bool value) {
+    _setAttributeBool("muted", value);
+  }
+
   bool get loop => _getAttributeBool("loop");
 
   set loop(bool value) {
     _setAttributeBool("loop", value);
   }
 
-  bool get muted => _getAttributeBool("muted");
+  bool get muted => _muted ?? false;
 
   set muted(bool value) {
-    _setAttributeBool("muted", value);
+    this._muted = value;
   }
 
   String get preload => _getAttribute("preload");
@@ -1625,6 +1659,8 @@ class NoncedElement {
 }
 
 class ObjectElement extends HtmlElement with _FormFieldElement {
+  static bool get supported => true;
+
   factory ObjectElement() => ObjectElement._(null);
 
   ObjectElement._(Document ownerDocument) : super._(ownerDocument, "OBJECT");
@@ -1746,14 +1782,16 @@ class OptionElement extends HtmlElement
 }
 
 class OutputElement extends HtmlElement with _FormFieldElement {
+  static bool get supported => true;
+
   factory OutputElement() => OutputElement._(null);
 
   OutputElement._(Document ownerDocument) : super._(ownerDocument, "OUTPUT");
 
-  String get defaultValue => _getAttribute("defaultvalue");
+  String get defaultValue => _getAttribute("value");
 
   set defaultValue(String value) {
-    _setAttribute("defaultvalue", value);
+    _setAttribute("value", value);
   }
 
   String get name => _getAttribute("name");
@@ -1819,6 +1857,8 @@ class PreElement extends HtmlElement {
 }
 
 class ProgressElement extends HtmlElement {
+  static bool get supported => true;
+
   factory ProgressElement() => ProgressElement._(null);
 
   ProgressElement._(Document ownerDocument, {String nodeName = "PROGRESS"})
@@ -1921,6 +1961,15 @@ class SelectElement extends HtmlElement
   }
 
   int get length => options.length;
+
+  set length(int newLength) {
+    while (options.length < newLength) {
+      append(OptionElement());
+    }
+    while (options.length > newLength) {
+      options.last.remove();
+    }
+  }
 
   bool get multiple => _getAttributeBool("multiple");
 
@@ -2053,6 +2102,8 @@ class SelectElement extends HtmlElement
 }
 
 class ShadowElement extends HtmlElement {
+  static bool get supported => true;
+
   ShadowElement._(Document ownerDocument) : super._(ownerDocument, "SHADOW");
 
   @override
@@ -2620,6 +2671,8 @@ class TitleElement extends HtmlElement {
 }
 
 class TrackElement extends HtmlElement {
+  static bool get supported => true;
+
   factory TrackElement() => TrackElement._(null);
 
   TrackElement._(Document ownerDocument) : super._(ownerDocument, "TRACK");

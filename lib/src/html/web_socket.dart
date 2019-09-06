@@ -99,7 +99,8 @@ class WebSocket extends EventTarget {
   final String url;
 
   factory WebSocket(String url, [Object protocols]) {
-    return HtmlDriver.current.browserClassFactory.newWebSocket(url, protocols);
+    return HtmlDriver.current.browserImplementation
+        .newWebSocket(url, protocols);
   }
 
   factory WebSocket._() {

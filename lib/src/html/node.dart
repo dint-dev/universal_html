@@ -202,8 +202,9 @@ abstract class Node extends EventTarget {
     return null;
   }
 
-  /// Returns instance of the [HtmlDriver] that should be used.
+  @override
   HtmlDriver get _htmlDriver {
+    // We store HtmlDriver instance in the owner document.
     final ownerDocument = this.ownerDocument;
     if (ownerDocument != null) {
       final result = ownerDocument._htmlDriver;

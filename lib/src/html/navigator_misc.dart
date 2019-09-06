@@ -47,6 +47,13 @@ part of universal_html.internal;
 
 typedef MediaSessionActionHandler = void Function();
 
+typedef void StorageErrorCallback(DomError error);
+
+typedef void StorageQuotaCallback(int grantedQuotaInBytes);
+
+typedef void StorageUsageCallback(
+    int currentUsageInBytes, int currentQuotaInBytes);
+
 class Credential {
   final String id;
 
@@ -75,6 +82,20 @@ class CredentialsContainer {
   Future requireUserMediation() => throw UnimplementedError();
 
   Future store(Credential credential) => throw UnimplementedError();
+}
+
+@deprecated
+class DeprecatedStorageQuota {
+  factory DeprecatedStorageQuota._() {
+    throw UnimplementedError();
+  }
+
+  void queryUsageAndQuota(StorageUsageCallback usageCallback,
+      [StorageErrorCallback errorCallback]) => throw UnimplementedError();
+
+  void requestQuota(int newQuotaInBytes,
+      [StorageQuotaCallback quotaCallback,
+        StorageErrorCallback errorCallback]) => throw UnimplementedError();
 }
 
 class Gamepad {

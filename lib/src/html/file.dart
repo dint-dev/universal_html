@@ -164,6 +164,8 @@ abstract class FileEntry extends Entry {
 
   bool get isFile => true;
 
+  Future<FileWriter> createWriter();
+
   Future<File> file();
 
   Future remove();

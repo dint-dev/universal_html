@@ -52,6 +52,8 @@ abstract class Animation {
     throw UnimplementedError();
   }
 
+  static bool get supported => false;
+
   void cancel();
 
   void finish();

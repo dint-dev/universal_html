@@ -60,7 +60,7 @@ void _testHtmlDriver() {
       final userAgent = UserAgent("Example");
       final driver = HtmlDriver(userAgent: userAgent);
       expect(driver.userAgent, userAgent);
-      expect(driver.browserClassFactory.newHttpClient().userAgent, "Example");
+      expect(driver.browserImplementation.newHttpClient().userAgent, "Example");
     });
 
     test("window.navigator.userAgent uses htmlDriver.userAgent", () {

@@ -607,7 +607,9 @@ class DomImplementation {
   }
 }
 
-class HtmlDocument extends Document with _DocumentOrShadowRoot implements DocumentOrShadowRoot {
+class HtmlDocument extends Document
+    with _DocumentOrShadowRoot
+    implements DocumentOrShadowRoot {
   /// If [filled] is true, returns document:
   ///
   ///     <doctype html>

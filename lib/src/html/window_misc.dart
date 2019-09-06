@@ -110,7 +110,7 @@ class IdleDeadline {
 
   bool get didTimeout => DateTime.now().isAfter(_deadline);
 
-  double get timeRemaining {
+  double timeRemaining() {
     final now = DateTime.now();
     if (now.isAfter(_deadline)) {
       return 0.0;
@@ -187,24 +187,93 @@ class ScreenOrientation extends EventTarget {
   }
 }
 
-abstract class Selection {
-  Selection._();
+class Selection {
+  final Node anchorNode;
 
-  Node get anchorNode;
+  final int anchorOffset;
 
-  int get anchorOffset;
+  final Node baseNode;
 
-  Node get baseNode;
+  final int baseOffset;
 
-  int get baseOffset;
+  final Node extentNode;
 
-  Node get extentNode;
+  final int extentOffset;
 
-  int get extentOffset;
+  final Node focusNode;
 
-  Node get focusNode;
+  final int focusOffset;
 
-  int get focusOffset;
+  final bool isCollapsed;
+
+  final int rangeCount;
+
+  final String type;
+
+  factory Selection._() {
+    throw UnimplementedError();
+  }
+
+  void addRange(Range range) {
+    throw UnimplementedError();
+  }
+
+  void collapse(Node node, [int offset]) {
+    throw UnimplementedError();
+  }
+
+  void collapseToEnd() {
+    throw UnimplementedError();
+  }
+
+  void collapseToStart() {
+    throw UnimplementedError();
+  }
+
+  bool containsNode(Node node, [bool allowPartialContainment]) {
+    throw UnimplementedError();
+  }
+
+  void deleteFromDocument() {
+    throw UnimplementedError();
+  }
+
+  void empty() {
+    throw UnimplementedError();
+  }
+
+  void extend(Node node, [int offset])  {
+    throw UnimplementedError();
+  }
+
+  Range getRangeAt(int index) {
+    throw UnimplementedError();
+  }
+
+  void modify(String alter, String direction, String granularity) {
+    throw UnimplementedError();
+  }
+
+  void removeAllRanges() {
+    throw UnimplementedError();
+  }
+
+  void removeRange(Range range) {
+    throw UnimplementedError();
+  }
+
+  void selectAllChildren(Node node) {
+    throw UnimplementedError();
+  }
+
+  void setBaseAndExtent(
+      Node baseNode, int baseOffset, Node extentNode, int extentOffset) {
+    throw UnimplementedError();
+  }
+
+  void setPosition(Node node, [int offset]) {
+    throw UnimplementedError();
+  }
 }
 
 class StyleMedia {

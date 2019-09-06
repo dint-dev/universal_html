@@ -145,7 +145,7 @@ class EventSource extends EventTarget {
       while (_readyState != CLOSED) {
         // Create a HTTP request
         final httpClient =
-            HtmlDriver.current.browserClassFactory.newHttpClient();
+            HtmlDriver.current.browserImplementation.newHttpClient();
         final httpRequest = await httpClient.getUrl(_parsedUri);
 
         // Add HTTP header "Accept"

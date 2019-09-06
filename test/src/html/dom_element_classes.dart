@@ -113,6 +113,21 @@ void _testElementClasses() {
   });
 
   // ---------------------------------------------------------------------------
+  // ButtonElement
+  // ---------------------------------------------------------------------------
+  group("ButtonElement: ", () {
+    ButtonElement element;
+    setUp(() {
+      element = ButtonElement();
+    });
+
+    test("click", () {
+      element.onClick.listen(expectAsync1((event) => null));
+      element.click();
+    });
+  });
+
+  // ---------------------------------------------------------------------------
   // Element
   // ---------------------------------------------------------------------------
   group("Element: ", () {
@@ -406,12 +421,76 @@ void _testElementClasses() {
   });
 
   // ---------------------------------------------------------------------------
+  // MediaElement
+  // ---------------------------------------------------------------------------
+  group("MediaElement: ", () {
+    MediaElement element;
+    setUp(() {
+      element = AudioElement();
+    });
+
+    test("defaultMuted", () {
+      _testAttributeBool<MediaElement>(
+        "muted",
+        element,
+        (e) => e.defaultMuted,
+        (e, v) => e.defaultMuted = v,
+      );
+    });
+
+    test("muted", () {
+      expect(element.muted, isFalse);
+      element.defaultMuted = true;
+      expect(element.defaultMuted, true);
+      expect(element.muted, isFalse);
+      element.muted = true;
+      expect(element.muted, isTrue);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // OptionElement
+  // ---------------------------------------------------------------------------
+  group("OptionElement: ", () {
+    OptionElement element;
+    setUp(() {
+      element = OptionElement();
+    });
+
+    test("defaultSelected", () {
+      _testAttributeBool<OptionElement>(
+        "selected",
+        element,
+        (e) => e.defaultSelected,
+        (e, v) => e.defaultSelected = v,
+      );
+    });
+  });
+
+  // ---------------------------------------------------------------------------
   // SelectElement
   // ---------------------------------------------------------------------------
   group("SelectElement: ", () {
     SelectElement element;
     setUp(() {
       element = SelectElement();
+    });
+
+    test("length", () {
+      expect(element.length, 0);
+      element.append(OptionElement());
+      expect(element.length, 1);
+      element.append(OptionElement());
+      expect(element.length, 2);
+    });
+
+    test("length=", () {
+      element.append(OptionElement());
+      element.append(OptionElement());
+      expect(element.length, 2);
+      element.length = 1;
+      expect(element.length, 1);
+      expect(element.children.length, 1);
     });
 
     test("multiple", () {

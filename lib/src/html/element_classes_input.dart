@@ -58,6 +58,9 @@ abstract class CheckboxInputElement implements InputElementBase {
 }
 
 abstract class DateInputElement implements RangeInputElementBase {
+
+  static bool get supported => true;
+
   bool readOnly;
   bool required;
   DateTime valueAsDate;
@@ -174,6 +177,9 @@ abstract class MonthInputElement implements RangeInputElementBase {
 }
 
 abstract class NumberInputElement implements RangeInputElementBase {
+
+  static bool get supported => true;
+
   String placeholder;
   bool readOnly;
   bool required;
@@ -194,6 +200,8 @@ abstract class RadioButtonInputElement implements InputElementBase {
 }
 
 abstract class RangeInputElement implements RangeInputElementBase {
+  static bool get supported => true;
+
   factory RangeInputElement() => InputElement(type: "range");
 }
 

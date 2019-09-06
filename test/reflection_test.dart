@@ -1,10 +1,7 @@
 @TestOn("vm")
 library reflection_test;
 
-import 'dart:mirrors';
 import 'package:test/test.dart';
-import 'package:universal_html/src/html.dart' as html;
-import 'package:meta/meta.dart';
 import 'reflection_data.dart';
 
 void main() {
@@ -39,6 +36,10 @@ void main() {
   });
 }
 
-final elementsForSdkHtml = (reflectionData["dart.dom.html"] as Map<String,Object>).keys.toSet();
+final elementsForSdkHtml =
+    (reflectionData["dart.dom.html"] as Map<String, Object>).keys.toSet();
 
-final elementsForUniversalHtml = (reflectionData["universal_html.without_internals"] as Map<String,Object>).keys.toSet();
+final elementsForUniversalHtml =
+    (reflectionData["universal_html.without_internals"] as Map<String, Object>)
+        .keys
+        .toSet();

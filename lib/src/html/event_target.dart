@@ -132,6 +132,9 @@ abstract class EventTarget {
 
   Events get on => Events(this);
 
+  /// Returns instance of the [HtmlDriver] that should be used.
+  HtmlDriver get _htmlDriver => HtmlDriver.current;
+
   EventTarget get _parentEventTarget => null;
 
   void addEventListener(String type, EventListener listener,
@@ -167,6 +170,11 @@ abstract class EventTarget {
       _invokeBubblingListeners(event);
     }
 
+    // Invoke default behavior
+    if (!event._defaultPrevented) {
+      _htmlDriver.browserImplementation.handleEventDefault(this, event);
+    }
+
     // Return
     return event._defaultPrevented;
   }
@@ -180,6 +188,7 @@ abstract class EventTarget {
         e._useCapture == useCapture);
   }
 
+  /// Called by [BrowserImplementation].
   void _invokeBubblingListeners(Event event) {
     // Does this target have event listeners?
     final listeners = this._listeners;
@@ -222,6 +231,7 @@ abstract class EventTarget {
     }
   }
 
+  /// Called by [BrowserImplementation].
   void _invokeCapturingListeners(Event event) {
     // Call parent target
     final parent = this._parentEventTarget;

@@ -13,7 +13,7 @@ void _generateAPIs() {
 
   // Write documentation
   final sb = StringBuffer();
-  sb.writeln("# Missing APIs");
+  sb.writeln("# List of APIs");
   for (var element in universalHtml.toList()..sort()) {
     sb.writeln("  * $element");
   }

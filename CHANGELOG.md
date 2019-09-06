@@ -1,3 +1,14 @@
+## 1.1.1
+* EventTarget now has a private getter `_htmlDriver`.
+* _BrowserImplementation_ now receives events unless `event.preventDefault()` is called.
+* Replaced _BrowserImplementation_ getter _browserClassFactory_ with getter _browserImplementation_. Deprecated the old method.
+* Improved tests of various elements and fixed a few small bugs.
+* Improved tests that compare 'dart:html' and 'package:universal_html'.
+* Added various missing classes/class members.
+* Improved documentation and formatting.
+* Improved explanation that 'src/html/html_common/*.dart' were adopted from Dart SDK without much
+  modifications.
+
 ## 1.1.0
 * The sole copyright owner (except for code derived from the Dart SDK as noted in the relevant
   files) decided to publish the source code the Apache License 2.0. to make the project more

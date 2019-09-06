@@ -106,7 +106,6 @@ abstract class OffscreenCanvas extends EventTarget {
 }
 
 abstract class OffscreenCanvasRenderingContext2D {
-
   String direction;
   Object fillStyle;
   String filter;

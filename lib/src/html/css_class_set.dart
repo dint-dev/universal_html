@@ -283,12 +283,15 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   void removeWhere(bool test(String name)) {
     modify((s) => s.removeWhere(test));
   }
+
   void retainAll(Iterable<Object> iterable) {
     modify((s) => s.retainAll(iterable));
   }
+
   void retainWhere(bool test(String name)) {
     modify((s) => s.retainWhere(test));
   }
+
   String singleWhere(bool test(String value), {String orElse()}) =>
       readClasses().singleWhere(test, orElse: orElse);
   Iterable<String> skip(int n) => readClasses().skip(n);
@@ -297,6 +300,7 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   Iterable<String> take(int n) => readClasses().take(n);
   Iterable<String> takeWhile(bool test(String value)) =>
       readClasses().takeWhile(test);
+
   /// Adds the class [value] to the element if it is not on it, removes it if it
   /// is.
   ///
@@ -316,6 +320,7 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
     writeClasses(s);
     return result;
   }
+
   /// Toggles all classes specified in [iterable] on element.
   ///
   /// Iterate through [iterable]'s items, and add it if it is not on it, or
@@ -327,6 +332,7 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   void toggleAll(Iterable<String> iterable, [bool shouldAdd]) {
     iterable.forEach((e) => toggle(e, shouldAdd));
   }
+
   List<String> toList({bool growable = true}) =>
       readClasses().toList(growable: growable);
   Set<String> toSet() => readClasses().toSet();
@@ -363,6 +369,7 @@ class _ElementCssClassSet extends CssClassSetImpl {
   bool add(String value) {
     throw UnimplementedError();
   }
+
   void addAll(Iterable<String> iterable) {}
 
   void clear() {

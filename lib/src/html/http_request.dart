@@ -449,7 +449,7 @@ class HttpRequest extends HttpRequestEventTarget {
       return;
     }
 
-    final httpClient = HtmlDriver.current.browserClassFactory.newHttpClient();
+    final httpClient = HtmlDriver.current.browserImplementation.newHttpClient();
     try {
       // Wait for request
       final httpRequest = await httpClient.openUrl(_requestMethod, _requestUrl);

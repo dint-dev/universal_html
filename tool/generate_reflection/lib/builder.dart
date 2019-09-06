@@ -52,7 +52,9 @@ class InfoBuilder implements Builder {
             member.hasVisibleForTemplate) {
           continue;
         }
-        if (member is ClassElement) {
+        if (member is FunctionTypeAliasElement) {
+          libraryInfo["${member.name} (typedef)"] = null;
+        } else if (member is ClassElement) {
           libraryInfo["${member.name} (class)"] = null;
           _addClassMembers(libraryInfo, member.name, member, false);
         } else {
@@ -64,10 +66,13 @@ class InfoBuilder implements Builder {
     return result;
   }
 
-  static void _addClassMembers(Map<String, Object> set, String className,
+  static void _addClassMembers(Map<String, Object> result, String className,
       ClassElement classElement, bool isInherited) {
     if (classElement.name == "Object") {
       return;
+    }
+    if (className != classElement.name) {
+      result["$className implements ${classElement.name}"];
     }
 
     // ------------
@@ -77,7 +82,7 @@ class InfoBuilder implements Builder {
       final constructors = classElement.constructors;
       if (constructors.isEmpty) {
         // Implicit constructor
-        set["$className.$className"] = "";
+        result["$className.$className"] = "";
       } else {
         for (var member in constructors) {
           if (member.isPrivate ||
@@ -90,10 +95,11 @@ class InfoBuilder implements Builder {
           if (name == "") {
             name = className;
           }
-          set["$className.$name"] = null;
+          result["$className.$name"] = null;
         }
       }
     }
+
     // ------
     // Fields
     // ------
@@ -101,9 +107,9 @@ class InfoBuilder implements Builder {
       if (_isIgnoredClassMember(member, isInherited)) {
         continue;
       }
-      set["$className.${member.name}"] = "";
+      result["$className.${member.name}"] = "";
       if (!(member.isFinal || member.isConst)) {
-        set["$className.${member.name}="] = null;
+        result["$className.${member.name}="] = null;
       }
     }
 
@@ -119,7 +125,7 @@ class InfoBuilder implements Builder {
           _ignoredMembers.contains(member.name)) {
         continue;
       }
-      set["$className.${member.name}"] = null;
+      result["$className.${member.displayName}"] = null;
     }
 
     // -------
@@ -129,18 +135,18 @@ class InfoBuilder implements Builder {
       if (_isIgnoredClassMember(member, isInherited)) {
         continue;
       }
-      set["$className.${member.name}"] = null;
+      result["$className.${member.displayName}(...)"] = null;
     }
 
     // -----------------
     // Inherited members
     // -----------------
-    _addClassMembers(set, className, classElement.supertype.element, true);
+    _addClassMembers(result, className, classElement.supertype.element, true);
     for (var type in classElement.mixins) {
-      _addClassMembers(set, className, type.element, true);
+      _addClassMembers(result, className, type.element, true);
     }
     for (var type in classElement.interfaces) {
-      _addClassMembers(set, className, type.element, true);
+      _addClassMembers(result, className, type.element, true);
     }
   }
 

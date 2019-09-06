@@ -46,15 +46,78 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
-// IMPORTANT: This is NOT exported by 'package:universal/html.dart'.
-// The method declared here so it will have access to private members.
-//
-// The method is exported by 'package:universal/html_driver.dart'.
-//
+// -----------------------------------------------------------------------------
+// This API is:
+//  * Part of library '/src/html.dart' so we have access to private fields/methods.
+//  * Hidden in library '/html.dart'
+//  * Exported by library '/driver.dart'
+// -----------------------------------------------------------------------------
+/// Implementation of browser functions. The instance is usually obtained via
+/// [HtmlDriver.browserImplementation].
+///
+/// [BrowserImplementation] contains functionality such as:
+///   * Class factories (e.g. [newWindow])
+///   * Special event handling code (e.g. [handleFileUploadInputElementClick])
+///
+/// Sometimes it may not clear whether functionality should be written in
+/// [HtmlDriver] or [BrowserImplementation]. The general rule is that if
+/// developers may override a method, it should be in [BrowserImplementation.
 class BrowserImplementation {
   final HtmlDriver htmlDriver;
 
   BrowserImplementation(this.htmlDriver);
+
+  /// Called by [EventTarget] when default behavior of an event should occur.
+  ///
+  /// In other words:
+  ///   * Capturing and bubbling phases of event handling are already done when
+  ///     this method is invoked.
+  ///   * This method is not invoked if [Event.preventDefault] was called by
+  ///     an event handler.
+  ///
+  /// The default implementation handles the following events:
+  ///   * [InputElement] clicks
+  void handleEventDefault(EventTarget eventTarget, Event event) {
+    switch (event.type) {
+      case "click":
+        if (eventTarget is InputElement) {
+          switch (eventTarget.type.toLowerCase()) {
+            case "file":
+              handleFileUploadInputElementClick(eventTarget, event);
+              break;
+
+            case "reset":
+              eventTarget.form?.reset();
+              break;
+
+            case "submit":
+              eventTarget.form?.submit();
+              break;
+
+            default:
+              eventTarget.focus();
+              break;
+          }
+        }
+        break;
+    }
+  }
+
+  /// Called by [FormElement.reset].
+  void handleFormReset(FormElement element) {
+    throw UnimplementedError();
+  }
+
+  /// Called by [FormElement.submit].
+  void handleFormSubmit(FormElement element) {
+    throw UnimplementedError();
+  }
+
+  /// Called when [FileUploadInputElement] is clicked.
+  void handleFileUploadInputElementClick(
+      FileUploadInputElement element, Event event) {
+    throw UnimplementedError();
+  }
 
   ApplicationCache newApplicationCache() => throw UnimplementedError();
 
@@ -102,13 +165,21 @@ class BrowserImplementation {
 
   /// Constructs 'dart:html' _window_.
   Window newWindow() => Window._(htmlDriver);
+
+  /// Called by [window.windowRequestFileSystem]. Default implementation throws
+  /// [UnimplementedError].
+  Future<FileSystem> windowRequestFileSystem(int size,
+      {bool persistent = false}) {
+    throw UnimplementedError();
+  }
 }
 
-// IMPORTANT: This is NOT exported by 'package:universal/html.dart'.
-// The method declared here so it will have access to private members.
-//
-// The method is exported by 'package:universal/html_driver.dart'.
-//
+// -----------------------------------------------------------------------------
+// This API is:
+//  * Part of library '/src/html.dart' so we have access to private fields/methods.
+//  * Hidden in library '/html.dart'
+//  * Exported by library '/driver.dart'
+// -----------------------------------------------------------------------------
 /// Provides access to private fields of DOM classes.
 class BrowserImplementationUtils {
   BrowserImplementationUtils._();
@@ -235,6 +306,12 @@ class BrowserImplementationUtils {
   }
 }
 
+// -----------------------------------------------------------------------------
+// This API is:
+//  * Part of library '/src/html.dart' so we have access to private fields/methods.
+//  * Hidden in library '/html.dart'
+//  * Exported by library '/driver.dart'
+// -----------------------------------------------------------------------------
 /// Contains data for layout queries.
 ///
 /// Elements request this object from [HtmlDriver],  which can use [setAttached]

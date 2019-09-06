@@ -49,6 +49,7 @@ part of universal_html.internal;
 const _printingAttributeNamespaces = 2;
 
 const _printingHtml = 1;
+
 /// Empty elements from:
 /// https://developer.mozilla.org/en-US/docs/Glossary/empty_element
 final Set<String> _singleTagNamesInLowerCase = Set<String>.from(const [

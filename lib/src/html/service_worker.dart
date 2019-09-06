@@ -362,6 +362,14 @@ class ServiceWorkerGlobalScope extends WorkerGlobalScope {
     throw UnimplementedError();
   }
 
+  ApplicationCache get caches => throw UnimplementedError();
+
+  Crypto get crypto => throw UnimplementedError();
+
+  Location get location => throw UnimplementedError();
+
+  Navigator get navigator => throw UnimplementedError();
+
   Stream<Event> get onActivate => activateEvent.forTarget(this);
 
   Stream<Event> get onFetch => fetchEvent.forTarget(this);
@@ -372,6 +380,8 @@ class ServiceWorkerGlobalScope extends WorkerGlobalScope {
   Stream<Event> get onInstall => installEvent.forTarget(this);
 
   Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
+
+  Performance get performance => throw UnimplementedError();
 
   Future skipWaiting() {
     throw UnimplementedError();

@@ -71,6 +71,26 @@ class AnimationEvent extends Event {
       : super.internal(type);
 }
 
+class AnimationPlaybackEvent extends Event {
+  AnimationPlaybackEvent(String type) : super.internal(type);
+}
+
+class BackgroundFetchedEvent extends Event {
+  BackgroundFetchedEvent(String type) : super.internal(type);
+}
+
+class BackgroundFetchEvent extends Event {
+  BackgroundFetchEvent(String type) : super.internal(type);
+}
+
+class BackgroundFetchFailEvent extends Event {
+  BackgroundFetchFailEvent(String type) : super.internal(type);
+}
+
+class BeforeInstallPromptEvent extends Event {
+  BeforeInstallPromptEvent(String type) : super.internal(type);
+}
+
 class BeforeUnloadEvent extends Event {
   BeforeUnloadEvent._(String type) : super.internal(type);
 
@@ -134,6 +154,10 @@ class CloseEvent extends Event {
 
   CloseEvent._(String type, {this.code, this.reason, this.wasClean})
       : super.internal(type);
+}
+
+class CompositionEvent extends Event {
+  CompositionEvent(String type) : super.internal(type);
 }
 
 class CustomEvent extends Event {
@@ -375,7 +399,6 @@ class MessageEvent extends Event {
   })  : this.lastEventId = lastEventId ?? "",
         super.internal(type);
 }
-
 abstract class MessagePort extends EventTarget {
   static const EventStreamProvider<MessageEvent> messageEvent =
       EventStreamProvider<MessageEvent>('message');
@@ -557,6 +580,18 @@ class NotificationEvent extends ExtendableEvent {
   }) : super._(type);
 }
 
+class PageTransitionEvent extends Event {
+  PageTransitionEvent(String type) : super.internal(type);
+}
+
+class PaymentRequestEvent extends Event {
+  PaymentRequestEvent(String type) : super.internal(type);
+}
+
+class PaymentRequestUpdateEvent extends Event {
+  PaymentRequestUpdateEvent(String type) : super.internal(type);
+}
+
 class PointerEvent extends MouseEvent {
   final num height;
   final bool isPrimary;
@@ -621,6 +656,10 @@ class ProgressEvent extends Event {
   ProgressEvent(String type) : super.internal(type);
 }
 
+class PushEvent extends Event {
+  PushEvent(String type) : super.internal(type);
+}
+
 class SecurityPolicyViolationEvent extends Event {
   final String blockedUri;
 
@@ -661,6 +700,18 @@ class SecurityPolicyViolationEvent extends Event {
     this.statusCode,
     this.violatedDirective,
   }) : super.internal(type);
+}
+
+class SensorErrorEvent extends Event {
+  SensorErrorEvent(String type) : super.internal(type);
+}
+
+class SyncEvent extends Event {
+  SyncEvent(String type) : super.internal(type);
+}
+
+class TextEvent extends Event {
+  TextEvent(String type) : super.internal(type);
 }
 
 class Touch {
@@ -716,6 +767,10 @@ class TouchList extends DelegatingList<Touch> {
   Touch elementAt(int index) => this[index];
 
   Touch item(int index) => this[index];
+}
+
+class TrackEvent extends Event {
+  TrackEvent(String type) : super.internal(type);
 }
 
 class TransitionEvent extends Event {

@@ -8,22 +8,28 @@ import 'package:zone_local/zone_local.dart';
 
 /// Simulates a browser window.
 class HtmlDriver {
+  /// Enables forking zones with a different zone-local instance.
   static final ZoneLocal<HtmlDriver> zoneLocal =
       ZoneLocal<HtmlDriver>(defaultValue: HtmlDriver());
 
+  /// Default value of [uri] when it hasn't been specified.
+  ///
+  /// Currently "memory:/", but it may be changed in future.
   static final Uri defaultUri = Uri(scheme: "memory", path: "/");
 
-  /// Default string for:
+  /// Default value of:
   ///   * HTTP request header "User-Agent"
-  ///   * _navigator.userAgent_
+  ///   * [Navigator.userAgent]
   static const UserAgent defaultUserAgent = UserAgent("Browser");
 
+  /// Instance of the current zone.
   static HtmlDriver get current => zoneLocal.value;
 
+  /// Style sheets that have been loaded.
   final Map<String, Future<StyleSheet>> loadedStyleSheets =
       <String, Future<StyleSheet>>{};
 
-  BrowserImplementation _browserClassFactory;
+  BrowserImplementation _browserImplementation;
 
   Uri _uri = defaultUri;
 
@@ -53,15 +59,21 @@ class HtmlDriver {
   ///   * HTTP request header "User-Agent"
   ///   * _window.navigator.userAgent_
   HtmlDriver({
-    BrowserImplementation browserClassFactory,
+    BrowserImplementation browserImplementation,
+    @deprecated BrowserImplementation browserClassFactory,
     this.languages = const <String>["en-US"],
     this.userAgent = defaultUserAgent,
-  }) : this._browserClassFactory = browserClassFactory;
-
-  BrowserImplementation get browserClassFactory {
-    return _browserClassFactory ??
-        (_browserClassFactory = BrowserImplementation(this));
+  }) {
+    this._browserImplementation = browserImplementation ?? browserClassFactory;
   }
+
+  BrowserImplementation get browserImplementation {
+    return _browserImplementation ??
+        (_browserImplementation = BrowserImplementation(this));
+  }
+
+  @Deprecated("Please use 'browserImplementation' instead")
+  BrowserImplementation get browserClassFactory => browserImplementation;
 
   /// Used by 'dart:html' _document_.
   HtmlDocument get document {
@@ -91,7 +103,7 @@ class HtmlDriver {
   Window get window {
     var window = this._window;
     if (window == null) {
-      this._window = window = browserClassFactory.newWindow();
+      this._window = window = browserImplementation.newWindow();
     }
     return window;
   }
@@ -168,7 +180,7 @@ class HtmlDriver {
     String mime,
     ContentTypeSniffer contentTypeSniffer = const ContentTypeSniffer(),
   }) async {
-    final httpClient = browserClassFactory.newHttpClient();
+    final httpClient = browserImplementation.newHttpClient();
     final httpRequest = await httpClient.getUrl(uri);
     final httpResponse = await httpRequest.close();
     if (onHttpResponse != null) {

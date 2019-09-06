@@ -51,7 +51,6 @@ typedef RtcPeerConnectionErrorCallback = void Function(DomException exception);
 typedef VoidCallback = void Function();
 
 abstract class RtcDataChannel extends EventTarget {
-
   static const EventStreamProvider<Event> closeEvent =
       EventStreamProvider<Event>("close");
 

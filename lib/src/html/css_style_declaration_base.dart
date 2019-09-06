@@ -50,6 +50,7 @@ abstract class CssStyleDeclarationBase {
 
   /// Gets the value of "align-content"
   String get alignContent => getPropertyValue('align-content');
+
   /// Sets the value of "align-content"
   set alignContent(String value) {
     setProperty('align-content', value, '');

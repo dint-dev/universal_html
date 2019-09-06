@@ -246,7 +246,8 @@ class Window extends EventTarget
   /// *Deprecated*.
   String status;
 
-  Window._(this._htmlDriver, {this.outerWidth = 0, this.outerHeight = 0}) : super._created();
+  Window._(this._htmlDriver, {this.outerWidth = 0, this.outerHeight = 0})
+      : super._created();
 
   /// Returns a Future that completes just before the window is about to
   /// repaint so the user can draw an animation frame.
@@ -284,7 +285,7 @@ class Window extends EventTarget
   ApplicationCache get applicationCache =>
       _applicationCache ??
       (_applicationCache =
-          _htmlDriver.browserClassFactory.newApplicationCache());
+          _htmlDriver.browserImplementation.newApplicationCache());
 
   _Worklet get audioWorklet => throw UnimplementedError();
 
@@ -294,7 +295,7 @@ class Window extends EventTarget
 
   /// The debugging console for this window.
   Console get console =>
-      _console ?? (_console = _htmlDriver.browserClassFactory.newConsole());
+      _console ?? (_console = _htmlDriver.browserImplementation.newConsole());
 
   CookieStore get cookieStore => CookieStore._();
 
@@ -335,7 +336,7 @@ class Window extends EventTarget
   External get external => External._();
 
   History get history =>
-      _history ?? (_history = _htmlDriver.browserClassFactory.newHistory());
+      _history ?? (_history = _htmlDriver.browserImplementation.newHistory());
 
   /// Gets an instance of the Indexed DB factory to being using Indexed DB.
   ///
@@ -373,14 +374,15 @@ class Window extends EventTarget
   ///   from W3C.
   Storage get localStorage =>
       _localStorage ??
-      (_localStorage = _htmlDriver.browserClassFactory.newStorage());
+      (_localStorage = _htmlDriver.browserImplementation.newStorage());
 
   /// The current location of this window.
   ///
   ///     Location currentLocation = window.location;
   ///     print(currentLocation.href); // 'http://www.example.com:80/'
   Location get location =>
-      _location ?? (_location = _htmlDriver.browserClassFactory.newLocation());
+      _location ??
+      (_location = _htmlDriver.browserImplementation.newLocation());
 
   /// Sets the window's location, which causes the browser to navigate to the new
   /// location. [value] may be a Location object or a String.
@@ -415,7 +417,7 @@ class Window extends EventTarget
   ///   from WHATWG.
   Navigator get navigator =>
       _navigator ??
-      (_navigator = _htmlDriver.browserClassFactory.newNavigator());
+      (_navigator = _htmlDriver.browserImplementation.newNavigator());
 
   /// Whether objects are drawn offscreen before being displayed.
   ///
@@ -774,7 +776,7 @@ class Window extends EventTarget
   Storage get sessionStorage =>
       _sessionStorage ??
       (_sessionStorage =
-          _htmlDriver.browserClassFactory.newStorage(sessionStorage: true));
+          _htmlDriver.browserImplementation.newStorage(sessionStorage: true));
 
   /// Access to speech synthesis in the browser.
   ///
@@ -979,7 +981,10 @@ class Window extends EventTarget
   /// the sandboxed file system for use. Because the file system is sandboxed,
   /// applications cannot access file systems created in other web pages.
   Future<FileSystem> requestFileSystem(int size, {bool persistent = false}) {
-    throw UnimplementedError();
+    return _htmlDriver.browserImplementation.windowRequestFileSystem(
+      size,
+      persistent: false,
+    );
   }
 
   int requestIdleCallback(IdleRequestCallback callback, [Map options]) {

@@ -1,4 +1,6 @@
 [![Pub Package](https://img.shields.io/pub/v/universal_html.svg)](https://pub.dartlang.org/packages/universal_html)
+[![Build Status](https://travis-ci.org/gohilla/universal_html.svg?branch=master)](https://travis-ci.org/gohilla/universal_html)
+
 # Introduction
 Cross-platform _dart:html_. Works in browser, server-side (Dart VM or Node.JS), and Flutter.
  

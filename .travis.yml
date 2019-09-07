@@ -1,11 +1,7 @@
 language: dart
 
 dart:
-  - dev
+  - "dev/release/2.5.0-dev.2.0"
 
 branches:
   only: [master]
-
-cache:
-  directories:
-    - $HOME/.pub-cache

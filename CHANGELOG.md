@@ -1,4 +1,8 @@
 ## 1.1.2
+* Fixed problematic dependency constraints.
+* Improved developer scripts.
+
+## 1.1.2
 * Fixed a test failure caused by Dart SDK 2.5.0-dev-2.0.
 * Improved documentation.
 

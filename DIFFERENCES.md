@@ -791,6 +791,7 @@
   * PluginArray (class)
   * PointerEvent.getCoalescedEvents(...)
   * PointerEvent.isTrusted
+  * PointerEvent.supported
   * PopStateEvent.isTrusted
   * PositionError (class)
   * PreElement.created

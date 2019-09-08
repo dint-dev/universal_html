@@ -1,7 +1,7 @@
 // IMPORTANT: DO NOT MODIFY
 // This file has been generated with 'tool/generate_reflection.sh'.
-const Map<String,Object> reflectionData = <String,Object>{
-  'dart.dom.html': <String,Object>{
+const Map<String, Object> reflectionData = <String, Object>{
+  'dart.dom.html': <String, Object>{
     'DivElement (class)': null,
     'DivElement.DivElement': null,
     'DivElement.created': null,
@@ -19773,7 +19773,8 @@ const Map<String,Object> reflectionData = <String,Object>{
     'Selection.setBaseAndExtent(...)': null,
     'Selection.setPosition(...)': null,
     'PresentationConnectionAvailableEvent (class)': null,
-    'PresentationConnectionAvailableEvent.PresentationConnectionAvailableEvent': null,
+    'PresentationConnectionAvailableEvent.PresentationConnectionAvailableEvent':
+        null,
     'PresentationConnectionAvailableEvent.connection': null,
     'PresentationConnectionAvailableEvent.bubbles': null,
     'PresentationConnectionAvailableEvent.cancelable': null,
@@ -32709,7 +32710,7 @@ const Map<String,Object> reflectionData = <String,Object>{
     'TableElement.removeEventListener(...)': null,
     'TableElement.dispatchEvent(...)': null,
   },
-  'universal_html.without_internals': <String,Object>{
+  'universal_html.without_internals': <String, Object>{
     'NavigatorID (class)': null,
     'NavigatorID.appCodeName': null,
     'NavigatorID.appName': null,
@@ -39466,7 +39467,8 @@ const Map<String,Object> reflectionData = <String,Object>{
     'Selection.setBaseAndExtent(...)': null,
     'Selection.setPosition(...)': null,
     'PresentationConnectionAvailableEvent (class)': null,
-    'PresentationConnectionAvailableEvent.PresentationConnectionAvailableEvent': null,
+    'PresentationConnectionAvailableEvent.PresentationConnectionAvailableEvent':
+        null,
     'PresentationConnectionAvailableEvent.connection': null,
     'PresentationConnectionAvailableEvent.type': null,
     'PresentationConnectionAvailableEvent.bubbles': null,

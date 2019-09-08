@@ -109,7 +109,7 @@ class Navigator extends NavigatorConcurrentHardware
   bool get onLine => false;
 
   @deprecated
-  DeprecatedStorageQuota get persistentStorage  => null;
+  DeprecatedStorageQuota get persistentStorage => null;
 
   String get platform => "Win32";
 

@@ -399,6 +399,7 @@ class MessageEvent extends Event {
   })  : this.lastEventId = lastEventId ?? "",
         super.internal(type);
 }
+
 abstract class MessagePort extends EventTarget {
   static const EventStreamProvider<MessageEvent> messageEvent =
       EventStreamProvider<MessageEvent>('message');

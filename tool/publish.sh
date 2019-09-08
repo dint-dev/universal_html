@@ -3,8 +3,7 @@
 # Exit on error
 set -e
 
-TMP=tmp
-DIR=$TMP/published
+PUBLISHED=published
 
 cd `dirname $0`/..
 
@@ -19,14 +18,14 @@ echo ""
 echo "----------------------------------------------------------------------------------------------------"
 echo "Preparing to publish"
 echo "----------------------------------------------------------------------------------------------------"
-if [ -e $DIR ]; then
+if [ -e $PUBLISHED ]; then
   echo "Deleting '$DIR'."
-  rm -R $DIR
+  rm -R $PUBLISHED/
 fi
-mkdir -p $DIR || exit
-echo "Copying files to '$DIR'."
-cp -R .gitignore LICENSE *.md pubspec.yaml analysis_options.yaml dart_test.yaml example lib test $DIR/
-cd $DIR
+mkdir -p $PUBLISHED/ || exit
+echo "Copying files to '$PUBLISHED'."
+cp -R .gitignore LICENSE *.md pubspec.yaml analysis_options.yaml dart_test.yaml example lib test $PUBLISHED/
+cd $PUBLISHED/
 pub get --offline
 
 
@@ -44,5 +43,5 @@ echo "--------------------------------------------------------------------------
 echo "Removing temporary files"
 echo "----------------------------------------------------------------------------------------------------"
 read -s -p "Press [enter] to delete the temporary files"
-cd `dirname $0`/..
-rm -R $TMP
+cd ..
+rm -R $PUBLISHED/

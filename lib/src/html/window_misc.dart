@@ -242,7 +242,7 @@ class Selection {
     throw UnimplementedError();
   }
 
-  void extend(Node node, [int offset])  {
+  void extend(Node node, [int offset]) {
     throw UnimplementedError();
   }
 

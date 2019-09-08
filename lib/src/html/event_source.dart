@@ -139,7 +139,6 @@ class EventSource extends EventTarget {
   }
 
   Future<void> _connect() async {
-    Stream<Uint8List> nonListenedStream;
     try {
       String lastEventId;
       while (_readyState != CLOSED) {
@@ -158,61 +157,28 @@ class EventSource extends EventTarget {
 
         // Send the HTTP request
         final httpResponse = await httpRequest.close();
-        nonListenedStream = httpResponse;
-
-        // Check HTTP status
-        final statusCode = httpResponse.statusCode;
-        if (statusCode != 200) {
-          throw StateError(
-            "Server returned HTTP status $statusCode",
-          );
-        }
-
-        // Check HTTP header "Content-Type"
-        final mimeType = httpResponse.headers.contentType.mimeType;
-        switch (mimeType) {
-          case _mediaType:
-            break;
-
-          default:
-            throw StateError(
-              "Server returned MIME type '$mimeType': $_parsedUri",
-            );
-        }
-
-        // Did we close the stream already?
-        if (_readyState == CLOSED) {
+        if (httpResponse == null) {
           return;
         }
 
-        // The connection is open
-        _readyState = OPEN;
-        dispatchEvent(Event.internal("open"));
-
-        // Transform to event stream
+        // Validate and parse HTTP response
         var timeout = Duration(seconds: 5);
-        final origin = _parsedUri.origin;
-        if (origin == null) {
-          throw StateError("Origin is null for URI: $_parsedUri");
-        }
-        final transformer = EventStreamDecoder(
-          origin: origin,
-          onReceivedTimeout: (newTimeout) {
+        final eventStream = _readHttpResponse(
+          httpResponse,
+          (newTimeout) {
             timeout = newTimeout;
           },
         );
-        final eventStream = httpResponse.map((data) {
-          // TODO: Remove this when Dart SDK 2.5 becomes stable
-          return data is Uint8List ? data : Uint8List.fromList(data);
-        }).transform(transformer);
 
         // Listen the event stream
-        nonListenedStream = null;
         _eventSubscription = eventStream.listen((event) {
           lastEventId = event.lastEventId;
           this.dispatchEvent(event);
         });
+
+        // Wait for
         await _eventSubscription.asFuture();
+
         if (_readyState == CLOSED) {
           return;
         }
@@ -243,10 +209,62 @@ class EventSource extends EventTarget {
     } finally {
       // Close
       close();
-
-      // To avoid leaking memory, dart:io instructs to read HTTP response body.
-      // ignore: unawaited_futures
-      nonListenedStream?.listen((data) {})?.cancel();
     }
+  }
+
+  Stream<MessageEvent> _readHttpResponse(
+      io.HttpClientResponse httpResponse, void onTimeout(Duration d)) {
+    var close = false;
+    EventStreamDecoder transformer;
+    try {
+      // Check HTTP status
+      final statusCode = httpResponse.statusCode;
+      if (statusCode != 200) {
+        throw StateError(
+          "Server returned HTTP status $statusCode",
+        );
+      }
+
+      // Check HTTP header "Content-Type"
+      final mimeType = httpResponse.headers.contentType.mimeType;
+      switch (mimeType) {
+        case _mediaType:
+          break;
+
+        default:
+          throw StateError(
+            "Server returned MIME type '$mimeType': $_parsedUri",
+          );
+      }
+
+      // Did we close the stream already?
+      if (_readyState == CLOSED) {
+        return null;
+      }
+
+      // The connection is open
+      _readyState = OPEN;
+      dispatchEvent(Event.internal("open"));
+
+      // Transform to event stream
+      final origin = _parsedUri.origin;
+      if (origin == null) {
+        throw StateError("Origin is null for URI: $_parsedUri");
+      }
+      transformer = EventStreamDecoder(
+        origin: origin,
+        onReceivedTimeout: onTimeout,
+      );
+    } finally {
+      if (close) {
+        // To avoid leaking memory, dart:io instructs to read HTTP response body.
+        // ignore: unawaited_futures
+        httpResponse.listen((_) {}).cancel();
+      }
+    }
+    return httpResponse.map((data) {
+      // TODO: Remove this when Dart SDK 2.5 becomes stable
+      return data is Uint8List ? data : Uint8List.fromList(data);
+    }).transform(transformer);
   }
 }

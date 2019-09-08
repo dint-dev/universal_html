@@ -47,11 +47,11 @@ part of universal_html.internal;
 
 typedef MediaSessionActionHandler = void Function();
 
-typedef void StorageErrorCallback(DomError error);
+typedef StorageErrorCallback = void Function(DomError error);
 
-typedef void StorageQuotaCallback(int grantedQuotaInBytes);
+typedef StorageQuotaCallback = void Function(int grantedQuotaInBytes);
 
-typedef void StorageUsageCallback(
+typedef StorageUsageCallback = void Function(
     int currentUsageInBytes, int currentQuotaInBytes);
 
 class Credential {
@@ -91,11 +91,13 @@ class DeprecatedStorageQuota {
   }
 
   void queryUsageAndQuota(StorageUsageCallback usageCallback,
-      [StorageErrorCallback errorCallback]) => throw UnimplementedError();
+          [StorageErrorCallback errorCallback]) =>
+      throw UnimplementedError();
 
   void requestQuota(int newQuotaInBytes,
-      [StorageQuotaCallback quotaCallback,
-        StorageErrorCallback errorCallback]) => throw UnimplementedError();
+          [StorageQuotaCallback quotaCallback,
+          StorageErrorCallback errorCallback]) =>
+      throw UnimplementedError();
 }
 
 class Gamepad {

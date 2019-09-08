@@ -1,3 +1,7 @@
+## 1.1.2
+* Fixed a test failure caused by Dart SDK 2.5.0-dev-2.0.
+* Improved documentation.
+
 ## 1.1.1
 * EventTarget now has a private getter `_htmlDriver`.
 * _BrowserImplementation_ now receives events unless `event.preventDefault()` is called.

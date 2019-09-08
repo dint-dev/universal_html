@@ -2,23 +2,22 @@
 [![Build Status](https://travis-ci.org/gohilla/universal_html.svg?branch=master)](https://travis-ci.org/gohilla/universal_html)
 
 # Introduction
-Cross-platform _dart:html_. Works in browser, server-side (Dart VM or Node.JS), and Flutter.
- 
-The project is licensed under the [Apache License 2.0](LICENSE).
+Cross-platform _dart:html_ that works in the browser, Dart VM, and Flutter.
+
+Typical use cases are:
+  * Cross-platform application development (e.g. Flutter mobile and web versions).
+  * Web crawling and scraping
+
+The project is licensed under the [Apache License 2.0](LICENSE). Some of the source code was adopted
+from the original [dart:html](https://github.com/dart-lang/sdk/tree/master/tools/dom), which is
+documented in the relevant files.
 
 ## Contributing
-  * This is an open-source project that welcomes new contributors. Don't be afraid to change things.
-    Both small and big changes are welcome.
-  * Bugs and enhancements are discussed in the [Github issue tracker](https://github.com/terrier989/universal_html/issues).
+  * This project welcomes all sorts of contributions. You don't need to be an expert.
+  * Found a bug? Proposing something? [Create an issue](https://github.com/terrier989/universal_html/issues).
   * Have a contribution? [Create a pull request](https://github.com/terrier989/universal_html/pull/new/master).
-    A contributor may be welcomed to become an administrator who can push changes without code
-    review process.
 
-### Credits
-  * [terrier989](https://github.com/terrier989)
-  * _Contributor? You can add your name._
-
-## Similar projects
+## Similar projects?
   * [universal_io](https://pub.dev/packages/universal_io) (cross-platform _dart:io_)
   * [jsdom](https://www.npmjs.com/package/jsdom) (DOM implementation in Javascript).
 

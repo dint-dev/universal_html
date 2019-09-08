@@ -218,9 +218,9 @@ abstract class FileReader extends EventTarget {
   static const EventStreamProvider<ProgressEvent> progressEvent =
       EventStreamProvider<ProgressEvent>('progress');
 
-  FileReader() : super._created();
+  factory FileReader() = FileReader._;
 
-  Error get error;
+  FileReader._() : super._created();
 
   /// Stream of `abort` events handled by this [FileReader].
   Stream<ProgressEvent> get onAbort => abortEvent.forTarget(this);
@@ -240,17 +240,63 @@ abstract class FileReader extends EventTarget {
   /// Stream of `progress` events handled by this [FileReader].
   Stream<ProgressEvent> get onProgress => progressEvent.forTarget(this);
 
-  int get readyState;
+  int _readyState = FileReader.EMPTY;
+  Object _result;
+  Error _error;
+  Object _id;
 
-  Object get result;
+  Error get error => _error;
 
-  void abort();
+  int get readyState => _readyState;
 
-  void readAsArrayBuffer(Blob blob);
+  Object get result => _result;
 
-  void readAsDataUrl(Blob blob);
+  void abort() {
+    this._id = null;
+  }
 
-  void readAsText(Blob blob, [String label]);
+  void readAsArrayBuffer(Blob blob) {
+    _perform(() async {
+      return BrowserImplementationUtils.getBlobData(blob);
+    });
+  }
+
+  void readAsDataUrl(Blob blob) {
+    _perform(() async {
+      final data = await BrowserImplementationUtils.getBlobData(blob);
+      return Uri.dataFromBytes(data).toString();
+    });
+  }
+
+  void readAsText(Blob blob, [String label]) {
+    _perform(() async {
+      final data = await BrowserImplementationUtils.getBlobData(blob);
+      return utf8.decode(data);
+    });
+  }
+
+  void _perform(Future<Object> f()) {
+    this._readyState = FileReader.LOADING;
+    this._result = null;
+    this._error = null;
+    final id = Object();
+    this._id = id;
+    f().then((result) {
+      // Check that the task wasn't aborted or replaced with another
+      if (!identical(id, this._id)) {
+        return;
+      }
+      this._readyState = FileReader.DONE;
+      this._result = result;
+    }, onError: (error) {
+      // Check that the task wasn't aborted or replaced with another
+      if (!identical(id, this._id)) {
+        return;
+      }
+      this._readyState = FileReader.DONE;
+      this._error = Error();
+    });
+  }
 }
 
 abstract class FileSystem {
@@ -312,9 +358,7 @@ abstract class FileWriter extends EventTarget {
 
   static const int WRITING = 1;
 
-  factory FileWriter._() {
-    throw UnimplementedError();
-  }
+  FileWriter._() : super._created();
 
   Error get error;
 

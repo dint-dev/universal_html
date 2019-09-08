@@ -23,4 +23,9 @@ export 'src/driver/html_driver.dart';
 export 'src/driver/server_side_renderer.dart';
 export 'src/driver/user_agent.dart';
 export 'src/html_with_internals.dart'
-    show BrowserImplementation, BrowserImplementationUtils, RenderData;
+    show
+        BrowserImplementation,
+        BrowserImplementationUtils,
+        FileReaderBase,
+        FileWriterBase,
+        RenderData;

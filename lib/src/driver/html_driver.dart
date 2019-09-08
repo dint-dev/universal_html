@@ -67,13 +67,13 @@ class HtmlDriver {
     this._browserImplementation = browserImplementation ?? browserClassFactory;
   }
 
+  @Deprecated("Please use 'browserImplementation' instead")
+  BrowserImplementation get browserClassFactory => browserImplementation;
+
   BrowserImplementation get browserImplementation {
     return _browserImplementation ??
         (_browserImplementation = BrowserImplementation(this));
   }
-
-  @Deprecated("Please use 'browserImplementation' instead")
-  BrowserImplementation get browserClassFactory => browserImplementation;
 
   /// Used by 'dart:html' _document_.
   HtmlDocument get document {

@@ -27,6 +27,7 @@ import 'package:universal_html/src/internal/event_stream_decoder.dart';
 
 import 'src/libraries.dart';
 
+part 'src/html/blob.dart';
 part 'src/html/css.dart';
 part 'src/html/dom.dart';
 part 'src/html/dom_cloning.dart';
@@ -73,6 +74,8 @@ void _sharedTests() {
 
   // Networking
   _testNetworking();
+
+  _testBlob();
 
   testLibraries();
 }

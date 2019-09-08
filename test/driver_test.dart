@@ -17,13 +17,16 @@ library driver_test;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:async/async.dart' show StreamQueue;
 import 'package:test/test.dart';
 import 'package:universal_html/driver.dart';
 import 'package:universal_html/src/html.dart' hide HttpRequest;
+import 'package:universal_html/src/html.dart' as prefix0;
 import 'package:universal_io/io.dart';
 
+part 'src/driver/browser_implementation_utils.dart';
 part 'src/driver/content_security_policy.dart';
 part 'src/driver/content_type_sniffer.dart';
 part 'src/driver/dom_parser_driver.dart';
@@ -36,4 +39,5 @@ void main() {
   _testContentSecurityPolicy();
   _testContentTypeSniffer();
   _testServerSideRenderer();
+  _testBrowserImplementationUtils();
 }

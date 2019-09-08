@@ -52,6 +52,32 @@ part of universal_html.internal;
 //  * Hidden in library '/html.dart'
 //  * Exported by library '/driver.dart'
 // -----------------------------------------------------------------------------
+abstract class BlobBase implements Blob {
+  @override
+  Blob slice([int start, int end, String contentType]) {
+    start ??= 0;
+    end ??= size;
+    if (start < 0 || start > size) {
+      throw ArgumentError.value(end, "start");
+    }
+    if (end < start || end > size) {
+      throw ArgumentError.value(end, "end");
+    }
+    return _SlicedBlob(this, start, end);
+  }
+
+  Future<Uint8List> toBytesFuture();
+
+  @override
+  String toString() => "Blob(...)";
+}
+
+// -----------------------------------------------------------------------------
+// This API is:
+//  * Part of library '/src/html.dart' so we have access to private fields/methods.
+//  * Hidden in library '/html.dart'
+//  * Exported by library '/driver.dart'
+// -----------------------------------------------------------------------------
 /// Implementation of browser functions. The instance is usually obtained via
 /// [HtmlDriver.browserImplementation].
 ///
@@ -103,6 +129,12 @@ class BrowserImplementation {
     }
   }
 
+  /// Called when [FileUploadInputElement] is clicked.
+  void handleFileUploadInputElementClick(
+      FileUploadInputElement element, Event event) {
+    throw UnimplementedError();
+  }
+
   /// Called by [FormElement.reset].
   void handleFormReset(FormElement element) {
     throw UnimplementedError();
@@ -110,12 +142,6 @@ class BrowserImplementation {
 
   /// Called by [FormElement.submit].
   void handleFormSubmit(FormElement element) {
-    throw UnimplementedError();
-  }
-
-  /// Called when [FileUploadInputElement] is clicked.
-  void handleFileUploadInputElementClick(
-      FileUploadInputElement element, Event event) {
     throw UnimplementedError();
   }
 
@@ -174,15 +200,16 @@ class BrowserImplementation {
   }
 }
 
-// -----------------------------------------------------------------------------
-// This API is:
-//  * Part of library '/src/html.dart' so we have access to private fields/methods.
-//  * Hidden in library '/html.dart'
-//  * Exported by library '/driver.dart'
-// -----------------------------------------------------------------------------
 /// Provides access to private fields of DOM classes.
 class BrowserImplementationUtils {
   BrowserImplementationUtils._();
+
+  static Future<Uint8List> getBlobData(Blob blob) {
+    if (blob is BlobBase) {
+      return blob.toBytesFuture();
+    }
+    throw ArgumentError.value(blob);
+  }
 
   static RenderData getElementRenderData(Element element) {
     return element._renderDataField;
@@ -308,7 +335,34 @@ class BrowserImplementationUtils {
 
 // -----------------------------------------------------------------------------
 // This API is:
-//  * Part of library '/src/html.dart' so we have access to private fields/methods.
+//  * Part of library '/src/html.dart' so we have access to private
+//    fields/methods.
+//  * Hidden in library '/html.dart'
+//  * Exported by library '/driver.dart'
+// -----------------------------------------------------------------------------
+abstract class FileBase extends BlobBase implements File {
+  @override
+  String toString() => "File(...)";
+
+  FileBase();
+}
+
+// -----------------------------------------------------------------------------
+// This API is:
+//  * Part of library '/src/html.dart' so we have access to private
+//    fields/methods.
+//  * Hidden in library '/html.dart'
+//  * Exported by library '/driver.dart'
+// -----------------------------------------------------------------------------
+/// Base class for [FileWriter] implementations.
+abstract class FileWriterBase extends FileWriter {
+  FileWriterBase() : super._();
+}
+
+// -----------------------------------------------------------------------------
+// This API is:
+//  * Part of library '/src/html.dart' so we have access to private
+//    fields/methods.
 //  * Hidden in library '/html.dart'
 //  * Exported by library '/driver.dart'
 // -----------------------------------------------------------------------------
@@ -328,5 +382,32 @@ class RenderData {
 
   static void setAttached(Element element, RenderData data) {
     element._renderDataField = data;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// This API is:
+//  * Part of library '/src/html.dart' so we have access to private
+//    fields/methods.
+//  * Hidden in library '/html.dart'
+//  * Exported by library '/driver.dart'
+// -----------------------------------------------------------------------------
+class _SlicedBlob extends BlobBase {
+  final BlobBase blob;
+  final int start;
+  final int end;
+
+  _SlicedBlob(this.blob, this.start, this.end);
+
+  @override
+  int get size => end - start;
+
+  @override
+  String get type => blob.type;
+
+  @override
+  Future<Uint8List> toBytesFuture() async {
+    final data = await blob.toBytesFuture();
+    return Uint8List.view(data.buffer, this.start, this.end - this.start);
   }
 }

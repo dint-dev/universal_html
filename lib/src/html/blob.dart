@@ -50,6 +50,12 @@ typedef BlobCallback = void Function(Blob blob);
 
 abstract class Blob {
   factory Blob(List blobParts, [String type, String encoding]) {
+    for (var i = 0; i < blobParts.length; i++) {
+      final part = blobParts[i];
+      if (part is String && i + 1 < blobParts.length) {
+        blobParts[i] = part + "\x00";
+      }
+    }
     List<List<int>> parts = List<List<int>>.from(blobParts.map((part) {
       if (part is String) {
         return utf8.encode(part);
@@ -92,7 +98,7 @@ abstract class Blob {
   Blob slice([int start, int end, String contentType]);
 }
 
-class _Blob implements Blob {
+class _Blob extends BlobBase {
   final Uint8List _data;
 
   @override
@@ -104,20 +110,7 @@ class _Blob implements Blob {
   int get size => _data.length;
 
   @override
-  Blob slice([int start, int end, String contentType]) {
-    start ??= 0;
-    end ??= size;
-    if (start < 0 || start > size) {
-      throw ArgumentError.value(end, "start");
-    }
-    if (end < start || end > size) {
-      throw ArgumentError.value(end, "end");
-    }
-    final oldData = this._data;
-    return _Blob(Uint8List.view(
-      oldData.buffer,
-      oldData.offsetInBytes + start,
-      end - start,
-    ));
+  Future<Uint8List> toBytesFuture() {
+    return Future<Uint8List>.value(_data);
   }
 }

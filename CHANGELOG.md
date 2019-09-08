@@ -1,6 +1,9 @@
-## 1.1.2
+## 1.1.4
+* Made it easier to implement file access APIs.
+
+## 1.1.3
 * Fixed problematic dependency constraints.
-* Improved developer scripts.
+* Improved documentation and developer scripts.
 
 ## 1.1.2
 * Fixed a test failure caused by Dart SDK 2.5.0-dev-2.0.

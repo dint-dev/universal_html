@@ -26,7 +26,7 @@ documented in the relevant files.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^1.1.0
+  universal_html: ^1.1.4
 ```
 
 Now you can replace usage of "dart:html" with "package:universal_html/html.dart".

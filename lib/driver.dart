@@ -26,6 +26,6 @@ export 'src/html_with_internals.dart'
     show
         BrowserImplementation,
         BrowserImplementationUtils,
-        FileReaderBase,
+        FileBase,
         FileWriterBase,
         RenderData;

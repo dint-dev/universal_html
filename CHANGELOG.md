@@ -1,4 +1,4 @@
-## 1.1.4
+## 1.1.5
 * Made it easier to implement file access APIs.
 
 ## 1.1.3

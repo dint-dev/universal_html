@@ -20,7 +20,7 @@ export 'html_with_internals.dart'
     hide
         BrowserImplementation,
         BrowserImplementationUtils,
-        FileReaderBase,
+        FileBase,
         FileWriterBase,
         RenderData,
         CssClassSetImpl;

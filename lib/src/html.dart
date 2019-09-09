@@ -18,6 +18,7 @@ library universal_html.without_internals;
 
 export 'html_with_internals.dart'
     hide
+        BlobBase,
         BrowserImplementation,
         BrowserImplementationUtils,
         FileBase,

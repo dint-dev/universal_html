@@ -289,11 +289,24 @@ class BRElement extends HtmlElement {
 
 class ButtonElement extends HtmlElement
     with _DisabledElement, _FormFieldElement {
-  String formAction;
 
-  String formEnctype;
+  String get formAction => _getAttributeResolvedUri("formaction") ?? "";
 
-  String formMethod;
+  set formAction(String value) {
+    _setAttribute("formaction", value);
+  }
+
+  String get formEnctype => _getAttribute("formenctype");
+
+  set formEnctype(String value) {
+    _setAttribute("formenctype", value);
+  }
+
+  String get formMethod => _getAttribute("formmethod");
+
+  set formMethod(String value) {
+    _setAttribute("formmethod", value);
+  }
 
   bool formNoValidate;
 
@@ -633,7 +646,7 @@ class FormElement extends HtmlElement {
     _setAttribute("acceptcharset", value);
   }
 
-  String get action => _getAttribute("action");
+  String get action => _getAttributeResolvedUri("action") ?? "";
 
   set action(String value) {
     _setAttribute("action", value);
@@ -683,8 +696,12 @@ class FormElement extends HtmlElement {
     _setAttribute("target", value);
   }
 
-  Iterable<Element> get _items {
-    throw UnimplementedError();
+  Iterable<Element> get _items sync* {
+    for (var element in BrowserImplementationUtils.descendingElements(this)) {
+      if (element is InputElement && identical(element.form, this)) {
+        yield (element);
+      }
+    }
   }
 
   bool checkValidity() {
@@ -703,20 +720,246 @@ class FormElement extends HtmlElement {
 
   /// Resets the form.
   ///
-  /// When this method is called, no event is dispatched.
+  /// No event is dispatched.
   void reset() {
     this._htmlDriver.browserImplementation.handleFormReset(this);
   }
 
   /// Resets the form.
   ///
-  /// When this method is called, no event is dispatched.
+  /// No event is dispatched.
   void submit() {
     this._htmlDriver.browserImplementation.handleFormSubmit(this);
   }
 
+  /// Gets the URL where the form should be sent.
+  String _getFormAction(Element button) {
+    String action;
+    if (button is ButtonElement) {
+      action = button.formAction;
+    } else if (button is InputElement) {
+      action = button.formAction;
+    }
+    if (action == null || action.isEmpty) {
+      action = this.action;
+    }
+
+    return action;
+  }
+
   @override
   Element _newInstance(Document ownerDocument) => FormElement._(ownerDocument);
+
+  void _reset() {
+    for (var element in _items) {
+      if (element is InputElement) {
+        element._reset();
+      }
+    }
+  }
+
+  /// Sends values in 'multipart/form-data' format.
+  Future<void> _sendMultiPart(
+    Uri uri,
+  ) async {
+    final httpClient = _htmlDriver.browserImplementation.newHttpClient();
+    final httpRequest = await httpClient.openUrl(method, uri);
+
+    final writer = MultipartFormWriter(httpRequest);
+
+    httpRequest.headers.contentType = io.ContentType(
+      "multipart",
+      "form-data",
+      parameters: {
+        "boundary": writer.boundary,
+      },
+    );
+
+    for (var item in this._items) {
+      _sendMultiPartElement(writer, item);
+    }
+
+    // Load response page
+    await _htmlDriver.setDocumentFromHttpClientRequest(httpRequest);
+  }
+
+  /// Sends an element in 'multipart/form-data' format.
+  /// Called by [_sendMultiPart].
+  void _sendMultiPartElement(
+      MultipartFormWriter writer, Element element) async {
+    if (element is InputElement) {
+      final name = element.name;
+      if (name.isEmpty) {
+        return;
+      }
+      final value = element.value;
+      switch (element.type.toLowerCase()) {
+        case "button":
+          break;
+
+        case "reset":
+          break;
+
+        case "submit":
+          break;
+
+        case "file":
+          for (var file in element.files ?? []) {
+            writer.writeFile(name, file, fileName: file.name);
+          }
+          break;
+
+        case "checkbox":
+          if (element.checked) {
+            writer.writeFieldValue(name, value);
+          }
+          break;
+
+        case "radio":
+          if (element.checked) {
+            writer.writeFieldValue(name, value);
+          }
+          break;
+
+        default:
+          writer.writeFieldValue(name, value);
+          break;
+      }
+    }
+  }
+
+  /// Sends values in 'application/x-www-form-urlencoded' format.
+  Future<void> _sendUrlEncoded(
+    String method,
+    Uri uri,
+  ) async {
+    switch (method) {
+      case "get":
+        uri = uri.replace(
+          queryParameters: _valuesToQueryParameters(uri.queryParameters),
+        );
+        final httpClient = _htmlDriver.browserImplementation.newHttpClient();
+        final httpRequest = await httpClient.openUrl(method, uri);
+        await _htmlDriver.setDocumentFromHttpClientRequest(httpRequest);
+        break;
+
+      case "post":
+        final httpClient = _htmlDriver.browserImplementation.newHttpClient();
+        final httpRequest = await httpClient.openUrl(method, uri);
+        httpRequest.headers.contentType = io.ContentType(
+          "application",
+          "x-www-form-urlencoded",
+        );
+        final tmpUri = Uri(queryParameters: _valuesToQueryParameters());
+        final s = tmpUri.toString().substring(1);
+        httpRequest.write(s);
+        await _htmlDriver.setDocumentFromHttpClientRequest(httpRequest);
+        break;
+
+      default:
+        throw StateError("Unsupported HTTP method: '$method'");
+    }
+  }
+
+  /// Submits the form.
+  Future<void> _submit(Element buttonElement) async {
+    // Get method
+    var method = this.method.toLowerCase();
+    if (method == "") {
+      method = "get";
+    }
+
+    // Get URI
+    var uriString = _getFormAction(buttonElement);
+    if (uriString.isEmpty) {
+      uriString = this.baseUri;
+    }
+    final uri = Uri.parse(uriString);
+    switch (uri.scheme) {
+      case "http":
+        break;
+      case "https":
+        break;
+      default:
+        return;
+    }
+
+    // Open HTTP request
+    final encType = enctype?.toLowerCase();
+    switch (encType ?? "") {
+      case "":
+        await _sendUrlEncoded(method, uri);
+        break;
+
+      case "multipart/form-data":
+        await _sendMultiPart(uri);
+        break;
+
+      case "application/x-www-form-urlencoded":
+        await _sendUrlEncoded(method, uri);
+        break;
+
+      default:
+        throw StateError("Unsupported encoding type: '$encType'");
+    }
+  }
+
+  /// Builds a map that contains all field values.
+  Map<String, dynamic> _valuesToQueryParameters([Map<String, dynamic> args]) {
+    final result = <String, dynamic>{};
+    if (args != null) {
+      result.addAll(args);
+    }
+    elementLoop:
+    for (var element in this._items) {
+      if (element is InputElement) {
+        // Ignore empty keys
+        final name = element.name;
+        if (name.isEmpty) {
+          continue;
+        }
+        final value = element.value;
+
+        switch (element.type.toLowerCase()) {
+          case "button":
+            continue elementLoop;
+
+          case "submit":
+            continue elementLoop;
+
+          case "reset":
+            continue elementLoop;
+
+          case "file":
+            continue elementLoop;
+
+          case "radio":
+            if (!element.checked) {
+              continue elementLoop;
+            }
+            break;
+
+          case "checkbox":
+            if (!element.checked) {
+              continue elementLoop;
+            }
+            break;
+
+          default:
+            break;
+        }
+        var existing = result[name];
+        if (existing == null) {
+          result[name] = value;
+        } else if (existing is String) {
+          result[name] = <String>[existing, value];
+        } else {
+          (existing as List<String>).add(value);
+        }
+      }
+    }
+    return result;
+  }
 }
 
 class HeadElement extends HtmlElement {
@@ -992,16 +1235,6 @@ class InputElement extends HtmlElement
 
   bool directory;
 
-  String formAction;
-
-  String formEnctype;
-
-  String formMethod;
-
-  bool formNoValidate;
-
-  String formTarget;
-
   @override
   String selectionDirection;
 
@@ -1011,8 +1244,7 @@ class InputElement extends HtmlElement
   @override
   int selectionEnd;
 
-  @override
-  List<File> files;
+  List<File> _files;
 
   factory InputElement({String type}) {
     InputElement e = InputElement._(null);
@@ -1105,6 +1337,45 @@ class InputElement extends HtmlElement
   @SupportedBrowser(SupportedBrowser.CHROME)
   @SupportedBrowser(SupportedBrowser.SAFARI)
   List<Entry> get entries => const <Entry>[];
+
+  @override
+  List<File> get files => _files;
+
+  @override
+  set files(List<File> value) {
+    _markDirty();
+    this._files = value;
+  }
+
+  String get formAction => _getAttributeResolvedUri("formaction") ?? "";
+
+  set formAction(String value) {
+    _setAttribute("formaction", value);
+  }
+
+  String get formEnctype => _getAttribute("formenctype");
+
+  set formEnctype(String value) {
+    _setAttribute("formenctype", value);
+  }
+
+  String get formMethod => _getAttribute("formmethod");
+
+  set formMethod(String value) {
+    _setAttribute("formmethod", value);
+  }
+
+  bool get formNoValidate => _getAttributeBool("formnovalidate");
+
+  set formNoValidate(bool value) {
+    _setAttributeBool("formnovalidate", value);
+  }
+
+  String get formTarget => _getAttribute("formtarget");
+
+  set formTarget(String value) {
+    _setAttribute("formtarget", value);
+  }
 
   @override
   int get height => _getAttributeInt("height");
@@ -1375,6 +1646,13 @@ class InputElement extends HtmlElement
 
   @override
   Element _newInstance(Document ownerDocument) => InputElement._(ownerDocument);
+
+  /// Resets values.
+  void _reset() {
+    _value = null;
+    _checked = null;
+    files = null;
+  }
 }
 
 class LabelElement extends HtmlElement with _FormFieldElement {

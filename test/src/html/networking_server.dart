@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:stream_channel/stream_channel.dart';
-import 'dart:io';
 
 /// For debugging in the console.
 ///
@@ -63,7 +63,6 @@ Future<void> hybridMain(StreamChannel channel, Object message) async {
       }
 
       switch (request.uri.path) {
-
         // -----------------
         // HttpRequest tests
         // -----------------

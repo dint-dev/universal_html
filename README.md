@@ -119,8 +119,8 @@ Future main() async {
 ## Implemented APIs
 ### Strategy
   * Our goal is that _universal_html_ behaves identically to _dart:html_ running in Chrome.
-  * [DIFFERENCES.md](DIFFERENCES.md) contains automatically generated list of _dart:html_ APIs that
-    are not yet declared by this package.
+  * [DIFFERENCES.md](DIFFERENCES.md) contains an automatically generated list of _dart:html_ APIs
+    that are not yet declared by this package yet.
   * Some APIs are declared, but not implemented. These will either throw `UnimplementedError` or
     (when appropriate) fail silently.
 
@@ -183,34 +183,41 @@ generally returns 0. If you want to implement layout engine, you can override
 _BrowserImplementation.newRenderData(element)_.
 
 ### Networking
+  * __Form submitting__
+    * Implemented and tested, but doesn't support all encodings yet.
+    * Ways to use:
+      * _formElement.submit()_
+      * _submitButtonElement.click()_
+  * __HttpRequest__ (XMLHttpRequest)
+    * Implemented and tested.
+  * __EventSource__ ("application/event-stream" client)
+    * Implemented and tested.
+
 Currently, networking classes don't implement same-origin policies, CORS, and other security
 specifications. We hope to fix this in future.
 
-The package supports:
-  * __HttpRequest__
-    * Full support.
-  * __EventSource__
-    * Full support.
+### Nevigator
+  * _locale_
+  * All APIs are declared
 
-### Various browser APIs
-  * __Navigator__
-    * _locale_, _userAgent_, etc.
-  * __Window__
-    * _console_
-    * _history_
-      * _back(...)_, _pushState(...)_, etc.
-    * _location_
-      * _origin_, _href_, etc.
-    * _localStorage_ / _sessionStorage_
-      * Stores values in the heap.
+### Window
+  * _console_
+  * _history_
+    * _back(...)_, _pushState(...)_, etc.
+  * _location_
+    * _origin_, _href_, etc.
+  * _localStorage_ / _sessionStorage_
+    * Implemented and tested.
+    * Stores values in the heap.
+  * All APIs are declared.
 
 ### Other SDK libraries
 We wrote mock implementation of the following SDK libraries:
-  * dart:indexed_db
-  * dart:js
-  * dart:js_util
-  * dart:svg
-  * dart:web_gl
+  * _dart:indexed_db_
+  * _dart:js_
+  * _dart:js_util_
+  * _dart:svg_
+  * _dart:web_gl_
 
 Any attempt to use these APIs will ead to _UnimplementedException_. The libraries are available in:
   * package:universal_html/(libraryName).dart

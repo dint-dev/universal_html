@@ -49,7 +49,8 @@ class BrowserImplementation {
     switch (event.type) {
       case "click":
         if (eventTarget is InputElement) {
-          switch (eventTarget.type.toLowerCase()) {
+          final type = eventTarget.type.toLowerCase();
+          switch (type) {
             case "file":
               handleFileUploadInputElementClick(eventTarget, event);
               break;
@@ -59,7 +60,24 @@ class BrowserImplementation {
               break;
 
             case "submit":
-              eventTarget.form?.submit();
+              final form = eventTarget.form;
+              if (form != null) {
+                handleFormSubmit(form, button: eventTarget);
+              }
+              break;
+
+            case "radio":
+              final name = eventTarget.name;
+              for (var item in eventTarget.form._items) {
+                if (item is InputElement && item.name == name) {
+                  item.checked = false;
+                }
+              }
+              eventTarget.checked = true;
+              break;
+
+            case "checkbox":
+              eventTarget.checked = !eventTarget.checked;
               break;
 
             default:
@@ -79,12 +97,12 @@ class BrowserImplementation {
 
   /// Called by [FormElement.reset].
   void handleFormReset(FormElement element) {
-    throw UnimplementedError();
+    element._reset();
   }
 
   /// Called by [FormElement.submit].
-  void handleFormSubmit(FormElement element) {
-    throw UnimplementedError();
+  void handleFormSubmit(FormElement element, {Element button}) {
+    element._submit(button);
   }
 
   ApplicationCache newApplicationCache() => throw UnimplementedError();

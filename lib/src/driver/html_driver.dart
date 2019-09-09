@@ -1,9 +1,25 @@
+// Copyright 2019 terrier989@gmail.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:async/async.dart';
+import 'package:meta/meta.dart';
 import 'package:universal_html/driver.dart';
 import 'package:universal_html/src/html.dart';
-import 'package:universal_io/io.dart' show HttpClientResponse;
+import 'package:universal_io/io.dart' as io;
 import 'package:zone_local/zone_local.dart';
 
 /// Simulates a browser window.
@@ -161,6 +177,20 @@ class HtmlDriver {
     }
   }
 
+  Future<void> setDocumentFromHttpClientRequest(
+      io.HttpClientRequest request) async {
+    final response = await request.close();
+    return setDocumentFromHttpClientResponse(response, request: request);
+  }
+
+  Future<void> setDocumentFromHttpClientResponse(
+    io.HttpClientResponse response, {
+    @required io.HttpClientRequest request,
+  }) async {
+    final data = await collectBytes(response);
+    setDocumentFromContent(utf8.decode(data), uri: request.uri);
+  }
+
   /// Loads document from the string and calls [setDocument].
   void setDocumentFromContent(
     String input, {
@@ -176,7 +206,7 @@ class HtmlDriver {
   /// Loads document from the URI and calls [setDocumentFromContent].
   Future<void> setDocumentFromUri(
     Uri uri, {
-    FutureOr<void> onHttpResponse(HttpClientResponse response),
+    FutureOr<void> onHttpResponse(io.HttpClientResponse response),
     String mime,
     ContentTypeSniffer contentTypeSniffer = const ContentTypeSniffer(),
   }) async {

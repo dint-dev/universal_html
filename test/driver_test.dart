@@ -30,6 +30,7 @@ part 'src/driver/content_security_policy.dart';
 part 'src/driver/content_type_sniffer.dart';
 part 'src/driver/dom_parser_driver.dart';
 part 'src/driver/html_driver.dart';
+part 'src/driver/navigation.dart';
 part 'src/driver/server_side_renderer.dart';
 
 void main() {
@@ -39,4 +40,5 @@ void main() {
   _testContentTypeSniffer();
   _testServerSideRenderer();
   _testBrowserImplementationUtils();
+  _testNavigationNetworking();
 }

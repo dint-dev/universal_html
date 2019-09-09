@@ -18,6 +18,15 @@ part of universal_html.internal;
 class BrowserImplementationUtils {
   BrowserImplementationUtils._();
 
+  /// Returns all descending elements.
+  static Iterable<Element> descendingElements(Element root) sync* {
+    for (var child in root.children) {
+      yield (child);
+      yield* (descendingElements(child));
+    }
+  }
+
+  /// Returns data of a [Blob] (or [File]).
   static Future<Uint8List> getBlobData(Blob blob) {
     if (blob is BlobBase) {
       return blob.toBytesFuture();
@@ -25,14 +34,17 @@ class BrowserImplementationUtils {
     throw ArgumentError.value(blob);
   }
 
+  /// Returns [RenderData] of an element (a private field).
   static RenderData getElementRenderData(Element element) {
     return element._renderDataField;
   }
 
+  /// Constructs [Comment], which only has a private constructor.
   static Comment newComment(Document ownerDocument, String value) {
     return Comment._(ownerDocument, value);
   }
 
+  /// Constructs [Coordinates], which only has a private constructor.
   static Coordinates newCoordinates({
     num accuracy = 0.0,
     num altitude = 0.0,
@@ -53,10 +65,20 @@ class BrowserImplementationUtils {
     );
   }
 
+  static void setInputElementValue(InputElement element, String value) {
+    element._value = value;
+  }
+
+  static void setInputElementChecked(InputElement element, bool value) {
+    element._checked = value;
+  }
+
+  /// Constructs [DocumentFragment], which only has a private constructor.
   static DocumentFragment newDocumentFragment(Document ownerDocument) {
     return DocumentFragment._(ownerDocument);
   }
 
+  /// Constructs [_DocumentType], which only has a private constructor.
   static _DocumentType newDocumentType(Document ownerDocument, String value) {
     return _DocumentType._(ownerDocument, value);
   }
@@ -73,6 +95,7 @@ class BrowserImplementationUtils {
         ownerDocument, namespaceUri, name, typeExtension);
   }
 
+  /// Constructs [ErrorEvent], which only has a private constructor.
   static ErrorEvent newErrorEvent(
       {int colno, Object error, String filename, int lineno, String message}) {
     return ErrorEvent._(
@@ -102,6 +125,7 @@ class BrowserImplementationUtils {
     );
   }
 
+  /// Constructs [ProcessingInstruction], which only has a private constructor.
   static ProcessingInstruction newProcessingInstruction(Document ownerDocument,
       {StyleSheet sheet, String target}) {
     return ProcessingInstruction._(
@@ -111,10 +135,12 @@ class BrowserImplementationUtils {
     );
   }
 
+  /// Constructs [Text], which only has a private constructor.
   static Text newText(Document ownerDocument, String value) {
     return Text._(ownerDocument, value);
   }
 
+  /// Constructs [UnknownComment], which only has a private constructor.
   static UnknownElement newUnknownElement(
       Document ownerDocument, String namespaceUri, String tag) {
     return UnknownElement._(ownerDocument, namespaceUri, tag);
@@ -142,6 +168,7 @@ class BrowserImplementationUtils {
     return sb.toString();
   }
 
+  /// Sets [RenderData] of an element (a private field).
   static void setElementRenderData(Element element, RenderData renderData) {
     element._renderDataField = renderData;
   }

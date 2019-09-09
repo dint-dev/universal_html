@@ -35,6 +35,7 @@ import 'package:universal_io/io.dart' as io;
 
 import 'html/html_common/metadata.dart';
 import 'internal/event_stream_decoder.dart';
+import 'internal/multipart_form_writer.dart';
 import 'web_gl.dart' as gl;
 
 export 'dart:math' show Point, Rectangle;

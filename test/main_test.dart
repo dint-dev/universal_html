@@ -27,22 +27,22 @@ import 'package:universal_html/src/internal/event_stream_decoder.dart';
 
 import 'src/libraries.dart';
 
-part 'src/html/blob.dart';
-part 'src/html/css.dart';
-part 'src/html/dom.dart';
-part 'src/html/dom_cloning.dart';
-part 'src/html/dom_document.dart';
-part 'src/html/dom_element.dart';
-part 'src/html/dom_element_classes.dart';
-part 'src/html/dom_parsing.dart';
-part 'src/html/event.dart';
-part 'src/html/helpers.dart';
-part 'src/html/history.dart';
-part 'src/html/navigator.dart';
-part 'src/html/networking.dart';
-part 'src/html/networking_event_source.dart';
-part 'src/html/networking_http_request.dart';
-part 'src/html/window.dart';
+part 'src/html/api/blob.dart';
+part 'src/html/api/event_target.dart';
+part 'src/html/api/history.dart';
+part 'src/html/api/networking.dart';
+part 'src/html/api/networking_event_source.dart';
+part 'src/html/api/networking_http_request.dart';
+part 'src/html/dom/css.dart';
+part 'src/html/dom/node.dart';
+part 'src/html/dom/cloning.dart';
+part 'src/html/dom/document.dart';
+part 'src/html/dom/element.dart';
+part 'src/html/dom/element_classes.dart';
+part 'src/html/dom/parsing.dart';
+part 'src/html/api/navigator.dart';
+part 'src/html/api/window.dart';
+part 'src/html/dom/helpers.dart';
 
 void main() {
   group("In VM: ", () {

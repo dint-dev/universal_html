@@ -1,3 +1,6 @@
+## 1.1.6
+* Implemented anchor clicks and form submission.
+
 ## 1.1.5
 * Made it easier to implement file access APIs.
 

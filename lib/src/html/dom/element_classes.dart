@@ -289,7 +289,6 @@ class BRElement extends HtmlElement {
 
 class ButtonElement extends HtmlElement
     with _DisabledElement, _FormFieldElement {
-
   String get formAction => _getAttributeResolvedUri("formaction") ?? "";
 
   set formAction(String value) {

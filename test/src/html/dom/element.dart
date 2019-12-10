@@ -62,6 +62,13 @@ void _testElement() {
         final expected = "a<!--b-->c";
         expect(input.innerHtml, equals(expected));
       });
+
+      test("setting works", () {
+        final input = DivElement();
+        input.innerHtml = "<span>a</span><span>b</span>";
+        expect(input.firstChild.text, 'a');
+        expect(input.lastChild.text, 'b');
+      });
     });
 
     group("outerHtml:", () {

@@ -323,7 +323,7 @@ class _HtmlParser {
     String html, {
     NodeValidator validator,
     NodeTreeSanitizer treeSanitizer,
-    String container,
+    String container = 'div',
   }) {
     if (html == null) {
       throw ArgumentError.notNull();
@@ -337,11 +337,12 @@ class _HtmlParser {
       }
     } else if (validator != null) {
       throw ArgumentError(
-          'validator can only be passed if treeSanitizer is null');
+        'validator can only be passed if treeSanitizer is null',
+      );
     }
     final node = _newNodeFrom(
       null,
-      html_parsing.parseFragment(html, container: container),
+      html_parsing.parseFragment(html, container: container ?? 'div'),
     );
     final fragment = node as DocumentFragment;
     var child = fragment.firstChild;

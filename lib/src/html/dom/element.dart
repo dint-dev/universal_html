@@ -1755,23 +1755,6 @@ abstract class Element extends Node
     NodeValidator validator,
     NodeTreeSanitizer treeSanitizer,
   }) {
-    if (treeSanitizer == null) {
-      if (validator == null) {
-        if (_defaultValidator == null) {
-          _defaultValidator = NodeValidatorBuilder.common();
-        }
-        validator = _defaultValidator;
-      }
-      if (_defaultSanitizer == null) {
-        _defaultSanitizer = _ValidatingTreeSanitizer(validator);
-      } else {
-        _defaultSanitizer.validator = validator;
-      }
-      treeSanitizer = _defaultSanitizer;
-    } else if (validator != null) {
-      throw ArgumentError(
-          'validator can only be passed if treeSanitizer is null');
-    }
     final fragment = DocumentFragment.html(
       html,
       validator: validator,
@@ -2150,11 +2133,18 @@ abstract class Element extends Node
     while (this.firstChild != null) {
       this.firstChild.remove();
     }
-    append(createFragment(
+    final fragment = createFragment(
       html,
       validator: validator,
       treeSanitizer: treeSanitizer,
-    ));
+    );
+    while (true) {
+      final firstChild = fragment.firstChild;
+      if (firstChild == null) {
+        break;
+      }
+      this.append(firstChild);
+    }
   }
 
   void setPointerCapture(int pointerId) {}

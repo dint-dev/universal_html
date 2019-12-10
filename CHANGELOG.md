@@ -1,3 +1,7 @@
+## 1.1.7
+* Fixed element.innerHtml.
+* Added PositionError and a test for navigator.geolocation.
+
 ## 1.1.6
 * Implemented anchor clicks and form submission.
 

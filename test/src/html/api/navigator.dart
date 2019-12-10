@@ -26,6 +26,20 @@ void _testNavigator() {
     test("appVersion", () {
       expect(navigator.appVersion, anyOf("5.0", matches(r"5.0 \(.*")));
     });
+    test("geolocation", () async {
+      final future = navigator.geolocation.getCurrentPosition(
+        enableHighAccuracy: true,
+        timeout: const Duration(milliseconds: 1),
+        maximumAge: const Duration(hours: 1),
+      );
+      try {
+        await future;
+      } on TimeoutException {
+        // Ignore
+      } on PositionError {
+        // Ignore
+      }
+    });
     test("product", () {
       expect(navigator.product, "Gecko");
     });

@@ -516,10 +516,6 @@ abstract class Element extends Node
   static final _normalizedAttributeNameRegExp =
       RegExp(r"^[a-z_\:][a-z0-9_\-\:]*$");
 
-  static NodeValidatorBuilder _defaultValidator;
-
-  static _ValidatingTreeSanitizer _defaultSanitizer;
-
   /// Static factory designed to expose `mousewheel` events to event
   /// handlers that are not necessarily instances of [Element].
   ///
@@ -994,7 +990,7 @@ abstract class Element extends Node
   set classes(Iterable<String> value) {
     // TODO(sra): Do this without reading the classes in clear() and addAll(),
     // or writing the classes in clear().
-    CssClassSet classSet = classes;
+    var classSet = classes;
     classSet.clear();
     classSet.addAll(value);
   }
@@ -1069,9 +1065,9 @@ abstract class Element extends Node
   Map<String, String> get dataset => _DataAttributeMap(attributes);
 
   set dataset(Map<String, String> value) {
-    final data = this.dataset;
+    final data = dataset;
     data.clear();
-    for (String key in value.keys) {
+    for (var key in value.keys) {
       data[key] = value[key];
     }
   }
@@ -1118,7 +1114,7 @@ abstract class Element extends Node
   String get innerHtml {
     final sb = StringBuffer();
     final flags = _getPrintingFlags(this);
-    Node next = this.firstChild;
+    var next = this.firstChild;
     while (next != null) {
       _printNode(sb, flags, next);
       next = next.nextNode;
@@ -1176,8 +1172,9 @@ abstract class Element extends Node
 
   String get namespaceUri => null;
 
+  @override
   Element get nextElementSibling {
-    Node sibling = nextNode;
+    var sibling = nextNode;
     while (sibling != null) {
       if (sibling is Element) {
         return sibling;
@@ -1188,6 +1185,7 @@ abstract class Element extends Node
   }
 
   /// Returns node name in uppercase.
+  @override
   String get nodeName {
     final name = _nodeName;
     final namespaceUri = this.namespaceUri;
@@ -1224,6 +1222,7 @@ abstract class Element extends Node
   Events get on => ElementEvents(this);
 
   /// Stream of `abort` events handled by this [Element].
+  @override
   ElementStream<Event> get onAbort => abortEvent.forElement(this);
 
   /// Stream of `beforecopy` events handled by this [Element].
@@ -1236,20 +1235,26 @@ abstract class Element extends Node
   ElementStream<Event> get onBeforePaste => beforePasteEvent.forElement(this);
 
   /// Stream of `blur` events handled by this [Element].
+  @override
   ElementStream<Event> get onBlur => blurEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onCanPlay => canPlayEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onCanPlayThrough =>
       canPlayThroughEvent.forElement(this);
 
   /// Stream of `change` events handled by this [Element].
+  @override
   ElementStream<Event> get onChange => changeEvent.forElement(this);
 
   /// Stream of `click` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onClick => clickEvent.forElement(this);
 
   /// Stream of `contextmenu` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onContextMenu =>
       contextMenuEvent.forElement(this);
 
@@ -1261,6 +1266,7 @@ abstract class Element extends Node
 
   /// Stream of `doubleclick` events handled by this [Element].
   @DomName('Element.ondblclick')
+  @override
   ElementStream<Event> get onDoubleClick => doubleClickEvent.forElement(this);
 
   /// A stream of `drag` events fired when this element currently being dragged.
@@ -1278,6 +1284,7 @@ abstract class Element extends Node
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDrag => dragEvent.forElement(this);
 
   /// A stream of `dragend` events fired when this element completes a drag
@@ -1292,6 +1299,7 @@ abstract class Element extends Node
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDragEnd => dragEndEvent.forElement(this);
 
   /// A stream of `dragenter` events fired when a dragged object is first dragged
@@ -1306,6 +1314,7 @@ abstract class Element extends Node
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDragEnter => dragEnterEvent.forElement(this);
 
   /// A stream of `dragleave` events fired when an object being dragged over this
@@ -1320,6 +1329,7 @@ abstract class Element extends Node
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDragLeave => dragLeaveEvent.forElement(this);
 
   /// A stream of `dragover` events fired when a dragged object is currently
@@ -1334,6 +1344,7 @@ abstract class Element extends Node
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDragOver => dragOverEvent.forElement(this);
 
   /// A stream of `dragstart` events fired when this element starts being
@@ -1348,6 +1359,7 @@ abstract class Element extends Node
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDragStart => dragStartEvent.forElement(this);
 
   /// A stream of `drop` events fired when a dragged object is dropped on this
@@ -1362,19 +1374,25 @@ abstract class Element extends Node
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDrop => dropEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onDurationChange =>
       durationChangeEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onEmptied => emptiedEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onEnded => endedEvent.forElement(this);
 
   /// Stream of `error` events handled by this [Element].
+  @override
   ElementStream<Event> get onError => errorEvent.forElement(this);
 
   /// Stream of `focus` events handled by this [Element].
+  @override
   ElementStream<Event> get onFocus => focusEvent.forElement(this);
 
   /// Stream of `fullscreenchange` events handled by this [Element].
@@ -1386,101 +1404,133 @@ abstract class Element extends Node
       fullscreenErrorEvent.forElement(this);
 
   /// Stream of `input` events handled by this [Element].
+  @override
   ElementStream<Event> get onInput => inputEvent.forElement(this);
 
   /// Stream of `invalid` events handled by this [Element].
+  @override
   ElementStream<Event> get onInvalid => invalidEvent.forElement(this);
 
   /// Stream of `keydown` events handled by this [Element].
+  @override
   ElementStream<KeyboardEvent> get onKeyDown => keyDownEvent.forElement(this);
 
   /// Stream of `keypress` events handled by this [Element].
+  @override
   ElementStream<KeyboardEvent> get onKeyPress => keyPressEvent.forElement(this);
 
   /// Stream of `keyup` events handled by this [Element].
+  @override
   ElementStream<KeyboardEvent> get onKeyUp => keyUpEvent.forElement(this);
 
   /// Stream of `load` events handled by this [Element].
+  @override
   ElementStream<Event> get onLoad => loadEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onLoadedData => loadedDataEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onLoadedMetadata =>
       loadedMetadataEvent.forElement(this);
 
   /// Stream of `mousedown` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseDown => mouseDownEvent.forElement(this);
 
   /// Stream of `mouseenter` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseEnter =>
       mouseEnterEvent.forElement(this);
 
   /// Stream of `mouseleave` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseLeave =>
       mouseLeaveEvent.forElement(this);
 
   /// Stream of `mousemove` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseMove => mouseMoveEvent.forElement(this);
 
   /// Stream of `mouseout` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseOut => mouseOutEvent.forElement(this);
 
   /// Stream of `mouseover` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseOver => mouseOverEvent.forElement(this);
 
   /// Stream of `mouseup` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseUp => mouseUpEvent.forElement(this);
 
   /// Stream of `mousewheel` events handled by this [Element].
+  @override
   ElementStream<WheelEvent> get onMouseWheel =>
       mouseWheelEvent.forElement(this);
 
   /// Stream of `paste` events handled by this [Element].
   ElementStream<ClipboardEvent> get onPaste => pasteEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onPause => pauseEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onPlay => playEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onPlaying => playingEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onRateChange => rateChangeEvent.forElement(this);
 
   /// Stream of `reset` events handled by this [Element].
+  @override
   ElementStream<Event> get onReset => resetEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onResize => resizeEvent.forElement(this);
 
   /// Stream of `scroll` events handled by this [Element].
+  @override
   ElementStream<Event> get onScroll => scrollEvent.forElement(this);
 
   /// Stream of `search` events handled by this [Element].
   ElementStream<Event> get onSearch => searchEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onSeeked => seekedEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onSeeking => seekingEvent.forElement(this);
 
   /// Stream of `select` events handled by this [Element].
+  @override
   ElementStream<Event> get onSelect => selectEvent.forElement(this);
 
   /// Stream of `selectstart` events handled by this [Element].
   ElementStream<Event> get onSelectStart => selectStartEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onStalled => stalledEvent.forElement(this);
 
   /// Stream of `submit` events handled by this [Element].
+  @override
   ElementStream<Event> get onSubmit => submitEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onSuspend => suspendEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onTimeUpdate => timeUpdateEvent.forElement(this);
 
   /// Stream of `touchcancel` events handled by this [Element].
+  @override
   ElementStream<TouchEvent> get onTouchCancel =>
       touchCancelEvent.forElement(this);
 
   /// Stream of `touchend` events handled by this [Element].
+  @override
   ElementStream<TouchEvent> get onTouchEnd => touchEndEvent.forElement(this);
 
   /// Stream of `touchenter` events handled by this [Element].
@@ -1492,9 +1542,11 @@ abstract class Element extends Node
       touchLeaveEvent.forElement(this);
 
   /// Stream of `touchmove` events handled by this [Element].
+  @override
   ElementStream<TouchEvent> get onTouchMove => touchMoveEvent.forElement(this);
 
   /// Stream of `touchstart` events handled by this [Element].
+  @override
   ElementStream<TouchEvent> get onTouchStart =>
       touchStartEvent.forElement(this);
 
@@ -1506,10 +1558,13 @@ abstract class Element extends Node
   ElementStream<TransitionEvent> get onTransitionEnd =>
       transitionEndEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onVolumeChange => volumeChangeEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onWaiting => waitingEvent.forElement(this);
 
+  @override
   ElementStream<WheelEvent> get onWheel => wheelEvent.forElement(this);
 
   String get outerHtml {
@@ -1536,8 +1591,9 @@ abstract class Element extends Node
   /// [Browser Reflow](https://developers.google.com/speed/articles/reflow)
   CssRect get paddingEdge => _PaddingCssRect(this);
 
+  @override
   Element get previousElementSibling {
-    Node sibling = previousNode;
+    var sibling = previousNode;
     while (sibling != null) {
       if (sibling is Element) {
         return sibling;
@@ -1629,7 +1685,7 @@ abstract class Element extends Node
 
   /// Returns read-only list of attribute names.
   List<String> get _attributeNames {
-    final result = <String>[]..addAll(_attributesWithoutLatestValues.keys);
+    final result = <String>[..._attributesWithoutLatestValues.keys];
     final style = this._style;
     if (style != null && (style._sourceIsLatest || style._map.isNotEmpty)) {
       result.add("style");
@@ -1639,6 +1695,7 @@ abstract class Element extends Node
 
   LinkedHashMap<String, String> get _attributesWithoutLatestValues {
     return this._attributesPartialViewOrNull ??
+        // ignore: prefer_collection_literals
         (this._attributesPartialViewOrNull = LinkedHashMap<String, String>());
   }
 
@@ -1958,7 +2015,11 @@ abstract class Element extends Node
 
     // Clone children
     if (deep != false) {
-      Node._cloneChildrenFrom(ownerDocument, clone, this);
+      Node._cloneChildrenFrom(
+        ownerDocument,
+        newParent: clone,
+        oldParent: this,
+      );
     }
 
     return clone;
@@ -1969,7 +2030,7 @@ abstract class Element extends Node
   }
 
   bool matchesWithAncestors(String selectors) {
-    Element element = this;
+    var element = this;
     do {
       if (_matches(element, selectors, null)) {
         return true;
@@ -2245,7 +2306,7 @@ abstract class Element extends Node
   }
 
   _CssStyleDeclaration _getOrCreateStyle() {
-    _CssStyleDeclaration result = this._style;
+    var result = this._style;
     if (result == null) {
       result = _CssStyleDeclaration._();
       final value = this._attributesWithoutLatestValues["style"];
@@ -2330,15 +2391,17 @@ abstract class Element extends Node
     // offsetParent, "tops out" at BODY. But people could conceivably pass in
     // the document.documentElement and I want it to return an absolute offset,
     // so we have the special case checking for HTML.
-    bool sameAsParent = identical(current, parent);
-    bool foundAsParent = sameAsParent || parent.tagName == 'HTML';
+    var sameAsParent = identical(current, parent);
+    var foundAsParent = sameAsParent || parent.tagName == 'HTML';
     if (current == null || sameAsParent) {
       if (foundAsParent) return Point(0, 0);
-      throw ArgumentError("Specified element is not a transitive offset "
-          "parent of this element.");
+      throw ArgumentError(
+        "Specified element is not a transitive offset "
+        "parent of this element.",
+      );
     }
-    Element parentOffset = current.offsetParent;
-    Point p = Element._offsetToHelper(parentOffset, parent);
+    final parentOffset = current.offsetParent;
+    final p = Element._offsetToHelper(parentOffset, parent);
     return Point(p.x + current.offsetLeft, p.y + current.offsetTop);
   }
 

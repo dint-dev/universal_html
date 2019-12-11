@@ -89,6 +89,10 @@ class _SlicedBlob extends BlobBase {
   @override
   Future<Uint8List> toBytesFuture() async {
     final data = await blob.toBytesFuture();
-    return Uint8List.view(data.buffer, this.start, this.end - this.start);
+    return Uint8List.view(
+      data.buffer,
+      start,
+      end - start,
+    );
   }
 }

@@ -298,6 +298,7 @@ class ServiceWorker extends EventTarget implements AbstractWorker {
     throw UnsupportedError("Not supported");
   }
 
+  @override
   Stream<Event> get onError => errorEvent.forTarget(this);
 
   void postMessage(/*any*/ message, [List<Object> transfer]) {

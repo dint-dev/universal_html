@@ -63,10 +63,13 @@ class Navigator extends NavigatorConcurrentHardware
 
   Navigator._(this._htmlDriver, {this.deviceMemory}) : super._();
 
+  @override
   String get appCodeName => null;
 
+  @override
   String get appName => _htmlDriver.userAgent.appName;
 
+  @override
   String get appVersion => _htmlDriver.userAgent.appVersion;
 
   _Clipboard get clipboard => throw UnimplementedError();
@@ -74,10 +77,12 @@ class Navigator extends NavigatorConcurrentHardware
   NetworkInformation get connection => throw UnimplementedError();
 
   @Unstable()
+  @override
   bool get cookieEnabled => false;
 
   CredentialsContainer get credentials => throw UnimplementedError();
 
+  @override
   bool get dartEnabled => false;
 
   String get doNotTrack => throw UnimplementedError();
@@ -87,11 +92,13 @@ class Navigator extends NavigatorConcurrentHardware
         (_geoLocation = _htmlDriver.browserImplementation.newGeolocation());
   }
 
+  @override
   String get language {
     final languages = this.languages;
     return languages.isEmpty ? null : languages.first;
   }
 
+  @override
   List<String> get languages => _htmlDriver.languages;
 
   int get maxTouchPoints => throw UnimplementedError();
@@ -106,15 +113,18 @@ class Navigator extends NavigatorConcurrentHardware
 
   Object get nfc => null;
 
+  @override
   bool get onLine => false;
 
   @deprecated
   DeprecatedStorageQuota get persistentStorage => null;
 
+  @override
   String get platform => "Win32";
 
   Presentation get presentation => null;
 
+  @override
   String get product => _htmlDriver.userAgent.product;
 
   String get productSub => _htmlDriver.userAgent.productSub;
@@ -128,6 +138,7 @@ class Navigator extends NavigatorConcurrentHardware
   @deprecated
   DeprecatedStorageQuota get temporaryStorage => null;
 
+  @override
   String get userAgent => _htmlDriver.userAgent.string;
 
   String get vendor => _htmlDriver.userAgent.vendor;
@@ -136,6 +147,7 @@ class Navigator extends NavigatorConcurrentHardware
 
   VR get vr => null;
 
+  @override
   bool get webdriver => null;
 
   void cancelKeyboardLock() {

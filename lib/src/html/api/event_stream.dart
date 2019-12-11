@@ -157,9 +157,11 @@ class _ElementEventStreamImpl<T extends Event> extends _EventStream<T>
   _ElementEventStreamImpl(target, eventType, useCapture)
       : super(target, eventType, useCapture);
 
+  @override
   StreamSubscription<T> capture(void onData(T event)) =>
       throw UnimplementedError();
 
+  @override
   Stream<T> matches(String selector) => throw UnimplementedError();
 }
 

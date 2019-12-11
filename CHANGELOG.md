@@ -1,3 +1,7 @@
+## 1.1.8
+* A large number of linter fixes.
+* Some additional assertions/tests.
+
 ## 1.1.7
 * Fixed element.innerHtml.
 * Added PositionError and a test for navigator.geolocation.

@@ -152,7 +152,7 @@ class HttpRequest extends HttpRequestEventTarget {
 
   int _requestId = 0;
 
-  StreamController<Event> _readyStateStreamController = StreamController();
+  final _readyStateStreamController = StreamController<Event>();
 
   /// [String] telling the server the desired response format.
   ///
@@ -578,9 +578,7 @@ class HttpRequest extends HttpRequestEventTarget {
     });
     var formData = parts.join('&');
 
-    if (requestHeaders == null) {
-      requestHeaders = <String, String>{};
-    }
+    requestHeaders ??= <String, String>{};
     requestHeaders.putIfAbsent('Content-Type',
         () => 'application/x-www-form-urlencoded; charset=UTF-8');
 
@@ -658,9 +656,7 @@ class HttpRequest extends HttpRequestEventTarget {
     var completer = Completer<HttpRequest>();
 
     var xhr = HttpRequest();
-    if (method == null) {
-      method = 'GET';
-    }
+    method ??= 'GET';
     xhr.open(method, url, async: true);
 
     if (withCredentials != null) {

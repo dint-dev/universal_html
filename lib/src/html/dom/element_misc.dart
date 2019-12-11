@@ -54,6 +54,7 @@ class ScrollAlignment {
 
   const ScrollAlignment._(this._name);
 
+  @override
   String toString() => _name;
 }
 
@@ -102,11 +103,14 @@ class _DataAttributeMap extends MapBase<String, String> {
 
   // interface Map
 
+  @override
   bool get isEmpty => length == 0;
 
+  @override
   bool get isNotEmpty => !isEmpty;
 
   // TODO: Use lazy iterator when it is available on Map.
+  @override
   Iterable<String> get keys {
     final keys = <String>[];
     _attributes.forEach((String key, String value) {
@@ -117,8 +121,10 @@ class _DataAttributeMap extends MapBase<String, String> {
     return keys;
   }
 
+  @override
   int get length => keys.length;
 
+  @override
   Iterable<String> get values {
     final values = <String>[];
     _attributes.forEach((String key, String value) {
@@ -129,31 +135,39 @@ class _DataAttributeMap extends MapBase<String, String> {
     return values;
   }
 
+  @override
   String operator [](Object key) => _attributes[_attr(key)];
 
+  @override
   void operator []=(String key, String value) {
     _attributes[_attr(key)] = value;
   }
 
+  @override
   void addAll(Map<String, String> other) {
     other.forEach((k, v) {
       this[k] = v;
     });
   }
 
+  @override
   Map<K, V> cast<K, V>() => Map.castFrom<String, String, K, V>(this);
 
+  @override
   void clear() {
     // Needs to operate on a snapshot since we are mutating the collection.
-    for (String key in keys) {
+    for (var key in keys) {
       remove(key);
     }
   }
 
+  @override
   bool containsKey(Object key) => _attributes.containsKey(_attr(key));
 
+  @override
   bool containsValue(Object value) => values.any((v) => v == value);
 
+  @override
   void forEach(void f(String key, String value)) {
     _attributes.forEach((String key, String value) {
       if (_matches(key)) {
@@ -163,9 +177,11 @@ class _DataAttributeMap extends MapBase<String, String> {
   }
 
   // TODO: Use lazy iterator when it is available on Map.
+  @override
   String putIfAbsent(String key, String ifAbsent()) =>
       _attributes.putIfAbsent(_attr(key), ifAbsent);
 
+  @override
   String remove(Object key) => _attributes.remove(_attr(key));
 
   // Helpers.
@@ -180,8 +196,8 @@ class _DataAttributeMap extends MapBase<String, String> {
   /// capitalize the first letter.
   String _toCamelCase(String hyphenedName, {bool startUppercase = false}) {
     var segments = hyphenedName.split('-');
-    int start = startUppercase ? 0 : 1;
-    for (int i = start; i < segments.length; i++) {
+    final start = startUppercase ? 0 : 1;
+    for (var i = start; i < segments.length; i++) {
       var segment = segments[i];
       if (segment.isNotEmpty) {
         // Character between 'a'..'z' mapped to 'A'..'Z'
@@ -194,7 +210,7 @@ class _DataAttributeMap extends MapBase<String, String> {
   /// Reverse of [toCamelCase].
   String _toHyphenedName(String word) {
     var sb = StringBuffer();
-    for (int i = 0; i < word.length; i++) {
+    for (var i = 0; i < word.length; i++) {
       var lower = word[i].toLowerCase();
       if (word[i] != lower && i > 0) sb.write('-');
       sb.write(lower);
@@ -215,8 +231,8 @@ class _ElementChildren extends ListBase<Element> {
 
   @override
   int get length {
-    Node node = _element.firstChild;
-    int length = 0;
+    var node = _element.firstChild;
+    var length = 0;
     while (node != null) {
       if (node is Element) {
         length++;
@@ -251,7 +267,7 @@ class _ElementChildren extends ListBase<Element> {
 
   @override
   Element operator [](int index) {
-    Node node = _element.firstChild;
+    var node = _element.firstChild;
     while (node != null) {
       if (node is Element) {
         if (index == 0) {

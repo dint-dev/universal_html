@@ -116,6 +116,7 @@ class JsObject {
     throw UnimplementedError();
   }
 
+  @override
   int get hashCode => 0;
 
   /// Returns `true` if the JavaScript object contains the specified property
@@ -147,6 +148,7 @@ class JsObject {
   }
 
   /// Returns the result of the JavaScript objects `toString` method.
+  @override
   String toString() {
     throw UnimplementedError();
   }
@@ -197,46 +199,57 @@ class JsArray<E> extends JsObject with ListMixin<E> {
     throw UnimplementedError();
   }
 
+  @override
   void operator []=(dynamic index, dynamic value) {
     throw UnimplementedError();
   }
 
+  @override
   int get length {
     throw UnimplementedError();
   }
 
+  @override
   set length(int length) {
     throw UnimplementedError();
   }
 
+  @override
   void add(E value) {
     throw UnimplementedError();
   }
 
+  @override
   void addAll(Iterable<E> iterable) {
     throw UnimplementedError();
   }
 
+  @override
   void insert(int index, E element) {
     throw UnimplementedError();
   }
 
+  @override
   E removeAt(int index) {
     throw UnimplementedError();
   }
 
+  @override
   E removeLast() {
     throw UnimplementedError();
   }
 
+  @override
   void removeRange(int start, int end) {
     throw UnimplementedError();
   }
 
+  @override
   void setRange(int start, int end, Iterable<E> iterable, [int skipCount = 0]) {
     throw UnimplementedError();
   }
 
+  @override
   void sort([int compare(E a, E b)]) {
     throw UnimplementedError();
   }

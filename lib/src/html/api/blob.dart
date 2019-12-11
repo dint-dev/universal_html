@@ -56,7 +56,7 @@ abstract class Blob {
         blobParts[i] = part + "\x00";
       }
     }
-    List<List<int>> parts = List<List<int>>.from(blobParts.map((part) {
+    var parts = List<List<int>>.from(blobParts.map((part) {
       if (part is String) {
         return utf8.encode(part);
       }

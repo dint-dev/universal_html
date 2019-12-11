@@ -65,6 +65,7 @@ abstract class CanvasRenderingContext {
 }
 
 abstract class CanvasRenderingContext2D extends _CanvasRenderingContext2DBase {
+  @override
   final CanvasElement canvas;
 
   CanvasRenderingContext2D._(this.canvas);

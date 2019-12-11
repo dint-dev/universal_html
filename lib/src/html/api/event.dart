@@ -83,15 +83,16 @@ class Event {
 
   final bool cancelable;
 
-  bool _composed = false;
+  final bool _composed = false;
 
   EventTarget _currentTarget;
 
   bool _defaultPrevented = false;
 
+  // ignore: prefer_final_fields
   int _eventPhase = _INITIAL_PHASE;
 
-  bool _stoppedImmediatePropagation = false;
+  final bool _stoppedImmediatePropagation = false;
 
   bool _stoppedPropagation = false;
 

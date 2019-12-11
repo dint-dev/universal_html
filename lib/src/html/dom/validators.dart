@@ -126,6 +126,7 @@ class _SameOriginUriPolicy implements UriPolicy {
   final AnchorElement _hiddenAnchor = AnchorElement();
   final Location _loc = window.location;
 
+  @override
   bool allowsUri(String uri) {
     _hiddenAnchor.href = uri;
     // IE leaves an empty hostname for same-origin URIs.
@@ -143,6 +144,7 @@ class _ThrowsNodeValidator implements NodeValidator {
 
   _ThrowsNodeValidator(this.validator);
 
+  @override
   bool allowsAttribute(Element element, String attributeName, String value) {
     if (!validator.allowsAttribute(element, attributeName, value)) {
       throw ArgumentError(
@@ -151,6 +153,7 @@ class _ThrowsNodeValidator implements NodeValidator {
     return true;
   }
 
+  @override
   bool allowsElement(Element element) {
     if (!validator.allowsElement(element)) {
       throw ArgumentError(Element._safeTagName(element));
@@ -164,7 +167,10 @@ class _ThrowsNodeValidator implements NodeValidator {
 class _TrustedHtmlTreeSanitizer implements NodeTreeSanitizer {
   const _TrustedHtmlTreeSanitizer();
 
-  sanitizeTree(Node node) {}
+  @override
+  void sanitizeTree(Node node) {
+    // Ignore
+  }
 }
 
 /// Standard tree sanitizer which validates a node tree against the provided
@@ -190,6 +196,7 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
     }
   }
 
+  @override
   void sanitizeTree(Node node) {
     void walk(Node node, Node parent) {
       sanitizeNode(node, parent);
@@ -269,7 +276,7 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
     }
 
     if (element is TemplateElement) {
-      TemplateElement template = element;
+      var template = element;
       sanitizeTree(template.content);
     }
   }

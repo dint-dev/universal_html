@@ -53,11 +53,11 @@ The original files in the Dart SDK had the following license:
 /// converted. Maps and Iterables are copied to a new JavaScript object.
 /// Primitives and other transferable values are directly converted to their
 /// JavaScript type, and all other objects are proxied.
-jsify(object) {
+dynamic jsify(object) {
   throw UnimplementedError();
 }
 
-newObject() {
+dynamic newObject() {
   throw UnimplementedError();
 }
 
@@ -65,15 +65,15 @@ bool hasProperty(o, name) {
   throw UnimplementedError();
 }
 
-getProperty(o, name) {
+Object getProperty(o, name) {
   throw UnimplementedError();
 }
 
-setProperty(o, name, value) {
+void setProperty(o, name, value) {
   throw UnimplementedError();
 }
 
-callMethod(o, String method, List args) {
+dynamic callMethod(o, String method, List args) {
   throw UnimplementedError();
 }
 
@@ -81,6 +81,6 @@ bool instanceof(o, Function type) {
   throw UnimplementedError();
 }
 
-callConstructor(Function constr, List arguments) {
+dynamic callConstructor(Function constr, List arguments) {
   throw UnimplementedError();
 }

@@ -54,23 +54,27 @@ class _ChildNodeListLazy extends ListBase<Node> {
 
   _ChildNodeListLazy(this._this);
 
+  @override
   Node get first {
-    Node result = _this.firstChild;
+    final result = _this.firstChild;
     if (result == null) throw StateError("No elements");
     return result;
   }
 
+  @override
   Iterator<Node> get iterator => _ChildNodeIterator(_this);
 
+  @override
   Node get last {
-    Node result = _this.lastChild;
+    var result = _this.lastChild;
     if (result == null) throw StateError("No elements");
     return result;
   }
 
+  @override
   int get length {
-    int result = 0;
-    Node node = _this.firstChild;
+    var result = 0;
+    var node = _this.firstChild;
     while (node != null) {
       result++;
       node = node.nextNode;
@@ -78,21 +82,24 @@ class _ChildNodeListLazy extends ListBase<Node> {
     return result;
   }
 
+  @override
   set length(int value) {
     throw UnsupportedError("Cannot set length on immutable List.");
   }
 
   List<Node> get rawList => _this.childNodes;
 
+  @override
   Node get single {
-    Node result = _this.firstChild;
+    final result = _this.firstChild;
     if (result == null) throw StateError("No elements");
     if (result.nextNode != null) throw StateError("More than one element");
     return result;
   }
 
+  @override
   Node operator [](int index) {
-    Node node = _this.firstChild;
+    var node = _this.firstChild;
     while (node != null) {
       if (0 == index) {
         return node;
@@ -103,17 +110,20 @@ class _ChildNodeListLazy extends ListBase<Node> {
     throw StateError("Index out of bounds");
   }
 
+  @override
   void operator []=(int index, Node value) {
     this[index].replaceWith(value);
   }
 
+  @override
   void add(Node value) {
     _this.append(value);
   }
 
+  @override
   void addAll(Iterable<Node> iterable) {
     if (iterable is _ChildNodeListLazy) {
-      _ChildNodeListLazy otherList = iterable;
+      final otherList = iterable;
       if (!identical(otherList._this, _this)) {
         // Optimized route for copying between nodes.
         for (var i = 0, len = otherList.length; i < len; ++i) {
@@ -122,19 +132,22 @@ class _ChildNodeListLazy extends ListBase<Node> {
       }
       return;
     }
-    for (Node node in iterable) {
+    for (var node in iterable) {
       _this.append(node);
     }
   }
 
+  @override
   void clear() {
     _this._clearChildren();
   }
 
+  @override
   void fillRange(int start, int end, [Node fill]) {
     throw UnsupportedError("Cannot fillRange on Node list");
   }
 
+  @override
   void insert(int index, Node node) {
     if (index < 0 || index > length) {
       throw RangeError.range(index, 0, length);
@@ -146,6 +159,7 @@ class _ChildNodeListLazy extends ListBase<Node> {
     }
   }
 
+  @override
   void insertAll(int index, Iterable<Node> iterable) {
     if (index == length) {
       addAll(iterable);
@@ -155,6 +169,7 @@ class _ChildNodeListLazy extends ListBase<Node> {
     }
   }
 
+  @override
   bool remove(Object object) {
     if (object is! Node) return false;
     Node node = object;
@@ -163,6 +178,7 @@ class _ChildNodeListLazy extends ListBase<Node> {
     return true;
   }
 
+  @override
   Node removeAt(int index) {
     var result = this[index];
     if (result != null) {
@@ -171,6 +187,7 @@ class _ChildNodeListLazy extends ListBase<Node> {
     return result;
   }
 
+  @override
   Node removeLast() {
     final result = last;
     if (result != null) {
@@ -179,31 +196,38 @@ class _ChildNodeListLazy extends ListBase<Node> {
     return result;
   }
 
+  @override
   void removeRange(int start, int end) {
     throw UnsupportedError("Cannot removeRange on Node list");
   }
 
+  @override
   void removeWhere(bool test(Node node)) {
     _filter(test, true);
   }
 
+  @override
   void retainWhere(bool test(Node node)) {
     _filter(test, false);
   }
 
+  @override
   void setAll(int index, Iterable<Node> iterable) {
     throw UnsupportedError("Cannot setAll on Node list");
   }
 
+  @override
   void setRange(int start, int end, Iterable<Node> iterable,
       [int skipCount = 0]) {
     throw UnsupportedError("Cannot setRange on Node list");
   }
 
+  @override
   void shuffle([Random random]) {
     throw UnsupportedError("Cannot shuffle Node list");
   }
 
+  @override
   void sort([Comparator<Node> compare]) {
     throw UnsupportedError("Cannot sort Node list");
   }
@@ -212,9 +236,9 @@ class _ChildNodeListLazy extends ListBase<Node> {
     // This implementation of removeWhere/retainWhere is more efficient
     // than the default in ListBase. Child nodes can be removed in constant
     // time.
-    Node child = _this.firstChild;
+    var child = _this.firstChild;
     while (child != null) {
-      Node nextChild = child.nextNode;
+      final nextChild = child.nextNode;
       if (test(child) == removeMatching) {
         _this._removeChild(child);
       }

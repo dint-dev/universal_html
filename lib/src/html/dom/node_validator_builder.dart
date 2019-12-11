@@ -111,9 +111,7 @@ class NodeValidatorBuilder implements NodeValidator {
         ?.map<String>((name) => '$tagNameUpper::${name.toLowerCase()}');
     var uriAttrs = uriAttributes
         ?.map<String>((name) => '$tagNameUpper::${name.toLowerCase()}');
-    if (uriPolicy == null) {
-      uriPolicy = UriPolicy();
-    }
+    uriPolicy ??= UriPolicy();
 
     add(_CustomElementNodeValidator(
         uriPolicy, [tagNameUpper], attrs, uriAttrs, false, true));
@@ -145,9 +143,7 @@ class NodeValidatorBuilder implements NodeValidator {
   /// The UriPolicy can be used to restrict the locations the images may be
   /// loaded from. By default this will use the default [UriPolicy].
   void allowImages([UriPolicy uriPolicy]) {
-    if (uriPolicy == null) {
-      uriPolicy = UriPolicy();
-    }
+    uriPolicy ??= UriPolicy();
     add(_SimpleNodeValidator.allowImages(uriPolicy));
   }
 
@@ -170,17 +166,17 @@ class NodeValidatorBuilder implements NodeValidator {
   /// The UriPolicy can be used to restrict the locations the navigation elements
   /// are allowed to direct to. By default this will use the default [UriPolicy].
   void allowNavigation([UriPolicy uriPolicy]) {
-    if (uriPolicy == null) {
-      uriPolicy = UriPolicy();
-    }
+    uriPolicy ??= UriPolicy();
     add(_SimpleNodeValidator.allowNavigation(uriPolicy));
   }
 
+  @override
   bool allowsAttribute(Element element, String attributeName, String value) {
     return _validators
         .any((v) => v.allowsAttribute(element, attributeName, value));
   }
 
+  @override
   bool allowsElement(Element element) {
     return _validators.any((v) => v.allowsElement(element));
   }
@@ -206,9 +202,7 @@ class NodeValidatorBuilder implements NodeValidator {
         ?.map<String>((name) => '$baseNameUpper::${name.toLowerCase()}');
     var uriAttrs = uriAttributes
         ?.map<String>((name) => '$baseNameUpper::${name.toLowerCase()}');
-    if (uriPolicy == null) {
-      uriPolicy = UriPolicy();
-    }
+    uriPolicy ??= UriPolicy();
 
     add(_CustomElementNodeValidator(uriPolicy, [tagNameUpper, baseNameUpper],
         attrs, uriAttrs, true, false));
@@ -268,6 +262,7 @@ class _CustomElementNodeValidator extends _SimpleNodeValidator {
             allowedAttributes: allowedAttributes,
             allowedUriAttributes: allowedUriAttributes);
 
+  @override
   bool allowsAttribute(Element element, String attributeName, String value) {
     if (allowsElement(element)) {
       if (allowTypeExtension &&
@@ -280,6 +275,7 @@ class _CustomElementNodeValidator extends _SimpleNodeValidator {
     return false;
   }
 
+  @override
   bool allowsElement(Element element) {
     if (allowTypeExtension) {
       var isAttr = element.attributes['is'];
@@ -294,9 +290,9 @@ class _CustomElementNodeValidator extends _SimpleNodeValidator {
 }
 
 class _SimpleNodeValidator implements NodeValidator {
-  final Set<String> allowedElements = Set<String>();
-  final Set<String> allowedAttributes = Set<String>();
-  final Set<String> allowedUriAttributes = Set<String>();
+  final Set<String> allowedElements = <String>{};
+  final Set<String> allowedAttributes = <String>{};
+  final Set<String> allowedUriAttributes = <String>{};
   final UriPolicy uriPolicy;
 
   /// Elements must be uppercased tag names. For example `'IMG'`.
@@ -385,6 +381,7 @@ class _SimpleNodeValidator implements NodeValidator {
     ]);
   }
 
+  @override
   bool allowsAttribute(Element element, String attributeName, String value) {
     var tagName = Element._safeTagName(element);
     if (allowedUriAttributes.contains('$tagName::$attributeName')) {
@@ -403,12 +400,14 @@ class _SimpleNodeValidator implements NodeValidator {
     return false;
   }
 
+  @override
   bool allowsElement(Element element) {
     return allowedElements.contains(Element._safeTagName(element));
   }
 }
 
 class _SvgNodeValidator implements NodeValidator {
+  @override
   bool allowsAttribute(Element element, String attributeName, String value) {
     if (attributeName == 'is' || attributeName.startsWith('on')) {
       return false;
@@ -416,6 +415,7 @@ class _SvgNodeValidator implements NodeValidator {
     return allowsElement(element);
   }
 
+  @override
   bool allowsElement(Element element) {
     if (element is svg.ScriptElement) {
       return false;
@@ -453,6 +453,7 @@ class _TemplatingNodeValidator extends _SimpleNodeValidator {
             allowedAttributes:
                 _TEMPLATE_ATTRS.map((attr) => 'TEMPLATE::$attr'));
 
+  @override
   bool allowsAttribute(Element element, String attributeName, String value) {
     if (super.allowsAttribute(element, attributeName, value)) {
       return true;

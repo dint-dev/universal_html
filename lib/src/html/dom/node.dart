@@ -59,6 +59,7 @@ abstract class CharacterData extends Node
 
   int get length => data.length;
 
+  @override
   Element get nextElementSibling {
     var node = this.nextNode;
     while (node != null && node is! Element) {
@@ -70,6 +71,7 @@ abstract class CharacterData extends Node
   @override
   String get nodeValue => data;
 
+  @override
   Element get previousElementSibling {
     var node = this.previousNode;
     while (node != null && node is! Element) {
@@ -192,7 +194,7 @@ abstract class Node extends EventTarget {
   }
 
   Element get _firstElementChild {
-    Node node = this.firstChild;
+    var node = this.firstChild;
     while (node != null) {
       if (node is Element) {
         return node;
@@ -278,7 +280,7 @@ abstract class Node extends EventTarget {
   }
 
   Node getRootNode() {
-    Node current = this;
+    var current = this;
     while (true) {
       final parent = current.parentNode;
       if (parent == null) {
@@ -304,6 +306,8 @@ abstract class Node extends EventTarget {
   void remove() {
     final parent = this._parent;
     if (parent == null) {
+      assert(_previousNode == null);
+      assert(_nextNode == null);
       return;
     }
 
@@ -341,6 +345,8 @@ abstract class Node extends EventTarget {
   void replaceWith(Node node) {
     final parent = this._parent;
     if (parent == null) {
+      assert(_previousNode == null);
+      assert(_nextNode == null);
       return;
     }
 
@@ -380,7 +386,7 @@ abstract class Node extends EventTarget {
 
   /// Used by [_ChildNodeListLazy].
   void _buildText(StringBuffer sb) {
-    Node current = this.firstChild;
+    var current = this.firstChild;
     while (current != null) {
       current._buildText(sb);
       current = current.nextNode;
@@ -416,25 +422,30 @@ abstract class Node extends EventTarget {
   }
 
   /// Clones all siblings starting from the argument.
-  static void _cloneChildrenFrom(Document ownerDocument,
-      _ElementOrDocument newParent, _ElementOrDocument oldParent) {
-    Node newPrevious;
-    Node oldChild = oldParent._firstChild;
+  static void _cloneChildrenFrom(
+    Document ownerDocument, {
+    @required _ElementOrDocument newParent,
+    @required _ElementOrDocument oldParent,
+  }) {
+    Node newChildPrevious;
+    var oldChild = oldParent._firstChild;
     while (oldChild != null) {
-      final newChild =
-          oldChild.internalCloneWithOwnerDocument(ownerDocument, true);
+      final newChild = oldChild.internalCloneWithOwnerDocument(
+        ownerDocument,
+        true,
+      );
       newChild._parent = newParent;
-      newChild._previousNode = newPrevious;
-      if (newPrevious == null) {
+      newChild._previousNode = newChildPrevious;
+      if (newChildPrevious == null) {
         newParent._firstChild = newChild;
       } else {
-        newPrevious._nextNode = newChild;
-        newChild._previousNode = newPrevious;
+        newChildPrevious._nextNode = newChild;
+        newChild._previousNode = newChildPrevious;
       }
-      newPrevious = newChild;
+      newChildPrevious = newChild;
       oldChild = oldChild._nextNode;
     }
-    newParent._lastChild = newPrevious;
+    newParent._lastChild = newChildPrevious;
   }
 }
 
@@ -479,6 +490,7 @@ class Text extends CharacterData {
 
   Text._(Document ownerDocument, String value) : super._(ownerDocument, value);
 
+  @override
   int get length => nodeValue.length;
 
   @override
@@ -518,9 +530,9 @@ class _ChildNodeIterator extends Iterator<Node> {
 
   @override
   bool moveNext() {
-    Node current = this._current;
+    var current = this._current;
     if (current == null) {
-      Node node = _parent.firstChild;
+      var node = _parent.firstChild;
       if (node == null) {
         return false;
       }
@@ -565,6 +577,7 @@ abstract class _ElementOrDocument implements Node, ParentNode {
   @override
   Node get firstChild => _firstChild;
 
+  @override
   Node get lastChild => _lastChild;
 
   Iterable<Element> get _ancestors sync* {
@@ -577,7 +590,7 @@ abstract class _ElementOrDocument implements Node, ParentNode {
 
   @override
   void insertAllBefore(Iterable<Node> nodes, Node before) {
-    Node previous = before == null ? this.lastChild : before.previousNode;
+    var previous = before == null ? this.lastChild : before.previousNode;
     var isFirstIteration = true;
     for (var node in nodes) {
       if (isFirstIteration) {
@@ -600,9 +613,22 @@ abstract class _ElementOrDocument implements Node, ParentNode {
 
   @override
   void insertBefore(Node node, Node before) {
-    if (node is Document) {
-      throw ArgumentError.value(node);
+    // Can't add null
+    if (node == null) {
+      throw ArgumentError.notNull("node");
     }
+
+    // Can't add document
+    if (node is Document) {
+      throw ArgumentError.value(node, "node");
+    }
+
+    // Can't add node into itself
+    if (identical(node, this)) {
+      throw ArgumentError.value(node, "node");
+    }
+
+    // If 'before' is non-null, it must be a child
     if (before != null && !identical(before._parent, this)) {
       throw ArgumentError.value(before, "before");
     }
@@ -652,6 +678,7 @@ abstract class _ElementOrDocument implements Node, ParentNode {
     }
   }
 
+  @override
   Element querySelector(String selectors) {
     final all = querySelectorAll(selectors);
     if (all.isEmpty) return null;
@@ -687,7 +714,7 @@ abstract class _ElementOrDocument implements Node, ParentNode {
   }
 
   void _forEachTreeElement(void f(Element element)) {
-    Node node = this.firstChild;
+    var node = this.firstChild;
     if (node == null) {
       return;
     }
@@ -725,7 +752,7 @@ abstract class _NonDocumentTypeChildNode
     implements Node, NonDocumentTypeChildNode {
   @override
   Element get nextElementSibling {
-    Node node = this.nextNode;
+    var node = this.nextNode;
     while (node != null) {
       if (Node.ELEMENT_NODE == node.nodeType) {
         return node as Element;
@@ -737,7 +764,7 @@ abstract class _NonDocumentTypeChildNode
 
   @override
   Element get previousElementSibling {
-    Node node = this.previousNode;
+    var node = this.previousNode;
     while (node != null) {
       if (Node.ELEMENT_NODE == node.nodeType) {
         return node as Element;

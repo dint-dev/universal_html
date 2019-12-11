@@ -198,6 +198,7 @@ class Window extends EventTarget
   /// see http://dev.w3.org/csswg/cssom-view/#geometry
   static bool get supportsPointConversions => false;
 
+  @override
   final HtmlDriver _htmlDriver;
 
   Navigator _navigator;
@@ -291,6 +292,7 @@ class Window extends EventTarget
 
   CacheStorage get caches => CacheStorage._();
 
+  @override
   bool get closed => _closed;
 
   /// The debugging console for this window.
@@ -335,6 +337,7 @@ class Window extends EventTarget
 
   External get external => External._();
 
+  @override
   History get history =>
       _history ?? (_history = _htmlDriver.browserImplementation.newHistory());
 
@@ -380,6 +383,7 @@ class Window extends EventTarget
   ///
   ///     Location currentLocation = window.location;
   ///     print(currentLocation.href); // 'http://www.example.com:80/'
+  @override
   Location get location =>
       _location ??
       (_location = _htmlDriver.browserImplementation.newLocation());
@@ -513,6 +517,7 @@ class Window extends EventTarget
   Stream<Event> get onFocus => Element.focusEvent.forTarget(this);
 
   /// Stream of `hashchange` events handled by this [Window].
+  @override
   Stream<Event> get onHashChange => hashChangeEvent.forTarget(this);
 
   /// Stream of `input` events handled by this [Window].
@@ -541,6 +546,7 @@ class Window extends EventTarget
   Stream<Event> get onLoadStart => loadStartEvent.forTarget(this);
 
   /// Stream of `message` events handled by this [Window].
+  @override
   Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
 
   /// Stream of `mousedown` events handled by this [Window].
@@ -573,9 +579,11 @@ class Window extends EventTarget
       Element.mouseWheelEvent.forTarget(this);
 
   /// Stream of `offline` events handled by this [Window].
+  @override
   Stream<Event> get onOffline => offlineEvent.forTarget(this);
 
   /// Stream of `online` events handled by this [Window].
+  @override
   Stream<Event> get onOnline => onlineEvent.forTarget(this);
 
   /// Stream of `pagehide` events handled by this [Window].
@@ -591,6 +599,7 @@ class Window extends EventTarget
   Stream<Event> get onPlaying => Element.playingEvent.forTarget(this);
 
   /// Stream of `popstate` events handled by this [Window].
+  @override
   Stream<PopStateEvent> get onPopState => popStateEvent.forTarget(this);
 
   Stream<Event> get onProgress => progressEvent.forTarget(this);
@@ -619,6 +628,7 @@ class Window extends EventTarget
   Stream<Event> get onStalled => Element.stalledEvent.forTarget(this);
 
   /// Stream of `storage` events handled by this [Window].
+  @override
   Stream<StorageEvent> get onStorage => storageEvent.forTarget(this);
 
   /// Stream of `submit` events handled by this [Window].
@@ -647,6 +657,7 @@ class Window extends EventTarget
       Element.transitionEndEvent.forTarget(this);
 
   /// Stream of `unload` events handled by this [Window].
+  @override
   Stream<Event> get onUnload => unloadEvent.forTarget(this);
 
   Stream<Event> get onVolumeChange => Element.volumeChangeEvent.forTarget(this);
@@ -656,6 +667,7 @@ class Window extends EventTarget
   /// Stream of `wheel` events handled by this [Window].
   Stream<WheelEvent> get onWheel => Element.wheelEvent.forTarget(this);
 
+  @override
   WindowBase get opener => null;
 
   set opener(Window value) {
@@ -670,6 +682,7 @@ class Window extends EventTarget
 
   int get pageYOffset => 0;
 
+  @override
   WindowBase get parent => null;
 
   /// Timing and navigation data for this window.
@@ -814,6 +827,7 @@ class Window extends EventTarget
   ///   from WHATWG.
   _BarProp get toolbar => throw UnimplementedError();
 
+  @override
   WindowBase get top => null;
 
   VisualViewport get visualViewport => throw UnimplementedError();
@@ -844,6 +858,7 @@ class Window extends EventTarget
 
   void cancelIdleCallback(int handle) {}
 
+  @override
   void close() {
     _closed = true;
   }
@@ -938,6 +953,7 @@ class Window extends EventTarget
     return null;
   }
 
+  @override
   void postMessage(dynamic message, String targetOrigin,
       [List<Object> transfer]) {
     _htmlDriver.addOutgoingMessage(

@@ -64,6 +64,7 @@ abstract class CssClassSet implements Set<String> {
   /// [value] must be a valid 'token' representing a single class, i.e. a
   /// non-empty string containing no whitespace.  To add multiple classes use
   /// [addAll].
+  @override
   bool add(String value);
 
   /// Add all classes specified in [iterable] to element.
@@ -73,6 +74,7 @@ abstract class CssClassSet implements Set<String> {
   ///
   /// Each element of [iterable] must be a valid 'token' representing a single
   /// class, i.e. a non-empty string containing no whitespace.
+  @override
   void addAll(Iterable<String> iterable);
 
   /// Determine if this element contains the class [value].
@@ -82,6 +84,7 @@ abstract class CssClassSet implements Set<String> {
   ///
   /// [value] must be a valid 'token' representing a single class, i.e. a
   /// non-empty string containing no whitespace.
+  @override
   bool contains(Object value);
 
   /// Remove the class [value] from element, and return true on successful
@@ -93,6 +96,7 @@ abstract class CssClassSet implements Set<String> {
   /// [value] must be a valid 'token' representing a single class, i.e. a
   /// non-empty string containing no whitespace.  To remove multiple classes, use
   /// [removeAll].
+  @override
   bool remove(Object value);
 
   /// Remove all classes specified in [iterable] from element.
@@ -102,6 +106,7 @@ abstract class CssClassSet implements Set<String> {
   ///
   /// Each element of [iterable] must be a valid 'token' representing a single
   /// class, i.e. a non-empty string containing no whitespace.
+  @override
   void removeAll(Iterable<Object> iterable);
 
   /// Adds the class [value] to the element if it is not on it, removes it if it
@@ -138,31 +143,40 @@ abstract class CssClassSet implements Set<String> {
 abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   static final RegExp _validTokenRE = RegExp(r'^\S+$');
 
+  @override
   String get first => readClasses().first;
 
   /// Returns [:true:] if classes cannot be added or removed from this
   /// [:CssClassSet:].
+  @override
   bool get frozen => false;
 
+  @override
   bool get isEmpty => readClasses().isEmpty;
 
+  @override
   bool get isNotEmpty => readClasses().isNotEmpty;
 
   // interface Iterable - BEGIN
+  @override
   Iterator<String> get iterator => readClasses().iterator;
   // interface Iterable - END
 
   // interface Collection - BEGIN
+  @override
   String get last => readClasses().last;
 
+  @override
   int get length => readClasses().length;
 
+  @override
   String get single => readClasses().single;
 
   /// Add the class [value] to element.
   ///
   /// This is the Dart equivalent of jQuery's
   /// [addClass](http://api.jquery.com/addClass/).
+  @override
   bool add(String value) {
     _validateToken(value);
     // TODO - figure out if we need to do any validation here
@@ -174,13 +188,16 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   /// This is the Dart equivalent of jQuery's
   /// [addClass](http://api.jquery.com/addClass/).
+  @override
   void addAll(Iterable<String> iterable) {
     // TODO - see comment above about validation.
     modify((s) => s.addAll(iterable.map(_validateToken)));
   }
 
+  @override
   bool any(bool f(String element)) => readClasses().any(f);
 
+  @override
   void clear() {
     // TODO(sra): Do this without reading the classes.
     modify((s) => s.clear());
@@ -190,49 +207,63 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   /// This is the Dart equivalent of jQuery's
   /// [hasClass](http://api.jquery.com/hasClass/).
+  @override
   bool contains(Object value) {
     if (value is! String) return false;
     _validateToken(value);
     return readClasses().contains(value);
   }
 
+  @override
   bool containsAll(Iterable<Object> collection) =>
       readClasses().containsAll(collection);
 
+  @override
   Set<String> difference(Set<Object> other) => readClasses().difference(other);
 
+  @override
   String elementAt(int index) => readClasses().elementAt(index);
 
+  @override
   bool every(bool f(String element)) => readClasses().every(f);
 
   // interface Collection - END
 
   // interface Set - BEGIN
+  @override
   Iterable<T> expand<T>(Iterable<T> f(String element)) =>
       readClasses().expand<T>(f);
 
+  @override
   String firstWhere(bool test(String value), {String orElse()}) =>
       readClasses().firstWhere(test, orElse: orElse);
 
+  @override
   T fold<T>(T initialValue, T combine(T previousValue, String element)) {
     return readClasses().fold<T>(initialValue, combine);
   }
 
+  @override
   void forEach(void f(String element)) {
     readClasses().forEach(f);
   }
 
+  @override
   Set<String> intersection(Set<Object> other) =>
       readClasses().intersection(other);
 
+  @override
   String join([String separator = ""]) => readClasses().join(separator);
 
+  @override
   String lastWhere(bool test(String value), {String orElse()}) =>
       readClasses().lastWhere(test, orElse: orElse);
 
   /// Lookup from the Set interface. Not interesting for a String set.
+  @override
   String lookup(Object value) => contains(value) ? value : null;
 
+  @override
   Iterable<T> map<T>(T f(String e)) => readClasses().map<T>(f);
 
   /// Helper method used to modify the set of css classes on this element.
@@ -242,8 +273,8 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   ///   After f returns, the modified set is written to the
   ///       className property of this element.
-  modify(f(Set<String> s)) {
-    Set<String> s = readClasses();
+  Object modify(f(Set<String> s)) {
+    final s = readClasses();
     var ret = f(s);
     writeClasses(s);
     return ret;
@@ -254,6 +285,7 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   /// This is intended to be overridden by specific implementations.
   Set<String> readClasses();
 
+  @override
   String reduce(String combine(String value, String element)) {
     return readClasses().reduce(combine);
   }
@@ -263,11 +295,12 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   /// This is the Dart equivalent of jQuery's
   /// [removeClass](http://api.jquery.com/removeClass/).
+  @override
   bool remove(Object value) {
     _validateToken(value);
     if (value is! String) return false;
-    Set<String> s = readClasses();
-    bool result = s.remove(value);
+    final s = readClasses();
+    final result = s.remove(value);
     writeClasses(s);
     return result;
   }
@@ -276,28 +309,41 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   /// This is the Dart equivalent of jQuery's
   /// [removeClass](http://api.jquery.com/removeClass/).
+  @override
   void removeAll(Iterable<Object> iterable) {
     modify((s) => s.removeAll(iterable));
   }
 
+  @override
   void removeWhere(bool test(String name)) {
     modify((s) => s.removeWhere(test));
   }
 
+  @override
   void retainAll(Iterable<Object> iterable) {
     modify((s) => s.retainAll(iterable));
   }
 
+  @override
   void retainWhere(bool test(String name)) {
     modify((s) => s.retainWhere(test));
   }
 
+  @override
   String singleWhere(bool test(String value), {String orElse()}) =>
       readClasses().singleWhere(test, orElse: orElse);
+
+  @override
   Iterable<String> skip(int n) => readClasses().skip(n);
+
+  @override
   Iterable<String> skipWhile(bool test(String value)) =>
       readClasses().skipWhile(test);
+
+  @override
   Iterable<String> take(int n) => readClasses().take(n);
+
+  @override
   Iterable<String> takeWhile(bool test(String value)) =>
       readClasses().takeWhile(test);
 
@@ -306,11 +352,12 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   /// If [shouldAdd] is true, then we always add that [value] to the element. If
   /// [shouldAdd] is false then we always remove [value] from the element.
+  @override
   bool toggle(String value, [bool shouldAdd]) {
     _validateToken(value);
-    Set<String> s = readClasses();
-    bool result = false;
-    if (shouldAdd == null) shouldAdd = !s.contains(value);
+    final s = readClasses();
+    var result = false;
+    shouldAdd ??= !s.contains(value);
     if (shouldAdd) {
       s.add(value);
       result = true;
@@ -329,20 +376,28 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   /// If [shouldAdd] is true, then we always add all the classes in [iterable]
   /// element. If [shouldAdd] is false then we always remove all the classes in
   /// [iterable] from the element.
+  @override
   void toggleAll(Iterable<String> iterable, [bool shouldAdd]) {
     iterable.forEach((e) => toggle(e, shouldAdd));
   }
 
+  @override
   List<String> toList({bool growable = true}) =>
       readClasses().toList(growable: growable);
+
+  @override
   Set<String> toSet() => readClasses().toSet();
+
+  @override
   String toString() {
     return readClasses().join(' ');
   }
 
+  @override
   Set<String> union(Set<String> other) => readClasses().union(other);
   // interface Set - END
 
+  @override
   Iterable<String> where(bool f(String element)) => readClasses().where(f);
 
   /// Join all the elements of a set into one string and write
@@ -361,31 +416,40 @@ class _ElementCssClassSet extends CssClassSetImpl {
 
   _ElementCssClassSet(this._element);
 
+  @override
   bool get isEmpty => length == 0;
 
+  @override
   bool get isNotEmpty => length != 0;
 
+  @override
   int get length => throw UnimplementedError();
+
+  @override
   bool add(String value) {
     throw UnimplementedError();
   }
 
+  @override
   void addAll(Iterable<String> iterable) {}
 
+  @override
   void clear() {
     _element.className = '';
   }
 
+  @override
   bool contains(Object value) {
     throw UnimplementedError();
   }
 
+  @override
   Set<String> readClasses() {
-    var s = LinkedHashSet<String>();
+    var s = <String>{};
     var classname = _element.className;
 
-    for (String name in classname.split(' ')) {
-      String trimmed = name.trim();
+    for (final name in classname.split(' ')) {
+      final trimmed = name.trim();
       if (trimmed.isNotEmpty) {
         s.add(trimmed);
       }
@@ -393,22 +457,29 @@ class _ElementCssClassSet extends CssClassSetImpl {
     return s;
   }
 
+  @override
   bool remove(Object value) {
     throw UnimplementedError();
   }
 
+  @override
   void removeAll(Iterable<Object> iterable) {}
 
+  @override
   void removeWhere(bool test(String name)) {}
 
+  @override
   void retainAll(Iterable<Object> iterable) {}
 
+  @override
   void retainWhere(bool test(String name)) {}
 
+  @override
   bool toggle(String value, [bool shouldAdd]) {
     throw UnimplementedError();
   }
 
+  @override
   void writeClasses(Set<String> s) {
     _element.className = s.join(' ');
   }
@@ -436,12 +507,15 @@ class _MultiElementCssClassSet extends CssClassSetImpl {
   ///
   ///   After f returns, the modified set is written to the
   ///       className property of this element.
-  modify(f(Set<String> s)) {
+  @override
+  Object modify(f(Set<String> s)) {
     _sets.forEach((CssClassSetImpl e) => e.modify(f));
+    return null;
   }
 
+  @override
   Set<String> readClasses() {
-    var s = LinkedHashSet<String>();
+    var s = <String>{};
     _sets.forEach((CssClassSetImpl e) => s.addAll(e.readClasses()));
     return s;
   }
@@ -451,6 +525,7 @@ class _MultiElementCssClassSet extends CssClassSetImpl {
   ///
   /// This is the Dart equivalent of jQuery's
   /// [removeClass](http://api.jquery.com/removeClass/).
+  @override
   bool remove(Object value) => _sets.fold(
       false, (bool changed, CssClassSetImpl e) => e.remove(value) || changed);
 
@@ -459,14 +534,16 @@ class _MultiElementCssClassSet extends CssClassSetImpl {
   ///
   /// TODO(sra): It seems wrong to collect a 'changed' flag like this when the
   /// underlying toggle returns an 'is set' flag.
+  @override
   bool toggle(String value, [bool shouldAdd]) => _sets.fold(
       false,
       (bool changed, CssClassSetImpl e) =>
           e.toggle(value, shouldAdd) || changed);
 
+  @override
   void writeClasses(Set<String> s) {
     var classes = s.join(' ');
-    for (Element e in _elementIterable) {
+    for (var e in _elementIterable) {
       e.className = classes;
     }
   }

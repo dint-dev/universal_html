@@ -68,7 +68,11 @@ class XmlDocument extends Document {
     final clone =
         XmlDocument._(htmlDriver: _htmlDriver, contentType: contentType);
     if (deep != false) {
-      Node._cloneChildrenFrom(clone, clone, this);
+      Node._cloneChildrenFrom(
+        clone,
+        newParent: clone,
+        oldParent: this,
+      );
     }
     return clone;
   }

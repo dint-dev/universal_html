@@ -34,7 +34,7 @@ class Csp {
   int get hashCode => const DeepCollectionEquality().hash(_rules);
 
   @override
-  operator ==(other) =>
+  bool operator ==(other) =>
       other is Csp &&
       const DeepCollectionEquality().equals(_rules, other._rules);
 

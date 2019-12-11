@@ -25,6 +25,14 @@ void _testNode() {
       e.append(Text("c"));
       expect(e.outerHtml, '<e>abc</e>');
     });
+    test("append null fails", () {
+      final e = Element.tag("e");
+      expect(() => e.append(null), throwsA(anything));
+    });
+    test("append self fails", () {
+      final e = Element.tag("e");
+      expect(() => e.append(e), throwsA(anything));
+    });
     test("appendText", () {
       final input = Element.tag("a")..appendText("abc");
       final expected = '<a>abc</a>';

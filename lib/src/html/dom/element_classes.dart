@@ -237,41 +237,54 @@ class BodyElement extends HtmlElement implements WindowEventHandlers {
   BodyElement._(Document ownerDocument) : super._(ownerDocument, "BODY");
 
   /// Stream of `blur` events handled by this [BodyElement].
+  @override
   ElementStream<Event> get onBlur => blurEvent.forElement(this);
 
   /// Stream of `error` events handled by this [BodyElement].
+  @override
   ElementStream<Event> get onError => errorEvent.forElement(this);
 
   /// Stream of `focus` events handled by this [BodyElement].
+  @override
   ElementStream<Event> get onFocus => focusEvent.forElement(this);
 
   /// Stream of `hashchange` events handled by this [BodyElement].
+  @override
   ElementStream<Event> get onHashChange => hashChangeEvent.forElement(this);
 
   /// Stream of `load` events handled by this [BodyElement].
+  @override
   ElementStream<Event> get onLoad => loadEvent.forElement(this);
 
   /// Stream of `message` events handled by this [BodyElement].
+  @override
   ElementStream<MessageEvent> get onMessage => messageEvent.forElement(this);
 
   /// Stream of `offline` events handled by this [BodyElement].
+  @override
   ElementStream<Event> get onOffline => offlineEvent.forElement(this);
 
   /// Stream of `online` events handled by this [BodyElement].
+  @override
   ElementStream<Event> get onOnline => onlineEvent.forElement(this);
 
   /// Stream of `popstate` events handled by this [BodyElement].
+  @override
   ElementStream<PopStateEvent> get onPopState => popStateEvent.forElement(this);
 
   /// Stream of `resize` events handled by this [BodyElement].
+  @override
   ElementStream<Event> get onResize => resizeEvent.forElement(this);
 
+  @override
   ElementStream<Event> get onScroll => scrollEvent.forElement(this);
 
   /// Stream of `storage` events handled by this [BodyElement].
+  @override
   ElementStream<StorageEvent> get onStorage => storageEvent.forElement(this);
 
   /// Stream of `unload` events handled by this [BodyElement].
+  @override
   ElementStream<Event> get onUnload => unloadEvent.forElement(this);
 
   @override
@@ -421,9 +434,7 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
       'preserveDrawingBuffer': preserveDrawingBuffer,
     };
     var context = getContext('webgl', options);
-    if (context == null) {
-      context = getContext('experimental-webgl', options);
-    }
+    context ??= getContext('experimental-webgl', options);
     return context;
   }
 
@@ -1010,8 +1021,10 @@ abstract class HtmlElement extends Element implements NoncedElement {
   HtmlElement._(Document ownerDocument, String tagName)
       : super._(ownerDocument, tagName);
 
+  @override
   String get nonce => _getAttribute("nonce");
 
+  @override
   set nonce(String value) {
     _setAttribute("nonce", value);
   }
@@ -1246,7 +1259,7 @@ class InputElement extends HtmlElement
   List<File> _files;
 
   factory InputElement({String type}) {
-    InputElement e = InputElement._(null);
+    final e = InputElement._(null);
     if (type != null) {
       e.type = type;
     }
@@ -1322,8 +1335,10 @@ class InputElement extends HtmlElement
     _setAttribute("value", value);
   }
 
+  @override
   String get dirName => _getAttribute("dirname");
 
+  @override
   set dirName(String value) {
     _setAttribute("dirname", value);
   }
@@ -1346,32 +1361,42 @@ class InputElement extends HtmlElement
     this._files = value;
   }
 
+  @override
   String get formAction => _getAttributeResolvedUri("formaction") ?? "";
 
+  @override
   set formAction(String value) {
     _setAttribute("formaction", value);
   }
 
+  @override
   String get formEnctype => _getAttribute("formenctype");
 
+  @override
   set formEnctype(String value) {
     _setAttribute("formenctype", value);
   }
 
+  @override
   String get formMethod => _getAttribute("formmethod");
 
+  @override
   set formMethod(String value) {
     _setAttribute("formmethod", value);
   }
 
+  @override
   bool get formNoValidate => _getAttributeBool("formnovalidate");
 
+  @override
   set formNoValidate(bool value) {
     _setAttributeBool("formnovalidate", value);
   }
 
+  @override
   String get formTarget => _getAttribute("formtarget");
 
+  @override
   set formTarget(String value) {
     _setAttribute("formtarget", value);
   }
@@ -1516,6 +1541,7 @@ class InputElement extends HtmlElement
     return null;
   }
 
+  @override
   ValidityState get validity {
     return ValidityState._();
   }
@@ -1596,19 +1622,24 @@ class InputElement extends HtmlElement
     return checkValidity();
   }
 
+  @override
   void select() {}
 
+  @override
   void setCustomValidity(String error) {}
 
   void setRangeText(String replacement,
       {int start, int end, String selectionMode}) {}
 
+  @override
   void setSelectionRange(int start, int end, [String direction]) {}
 
+  @override
   void stepDown([int n]) {
     valueAsNumber -= n;
   }
 
+  @override
   void stepUp([int n]) {
     valueAsNumber += n;
   }
@@ -2825,6 +2856,7 @@ class TextAreaElement extends HtmlElement
     _setAttribute("value", value);
   }
 
+  @override
   List<Node> get labels => <Node>[];
 
   int get maxLength => _getAttributeInt("maxlength") ?? -1;
@@ -3122,6 +3154,7 @@ abstract class _HtmlHyperlinkElementUtils implements _UrlBase {
   @override
   Uri get _uri => Uri.parse(href);
 
+  @override
   set _uri(Uri value) {
     this.href = value?.toString();
   }

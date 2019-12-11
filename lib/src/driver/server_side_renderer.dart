@@ -134,7 +134,7 @@ class ServerSideRenderer {
     }
 
     // Render
-    final String content = await renderUri(httpRequest.uri);
+    final content = await renderUri(httpRequest.uri);
 
     // Serve HTTP request
     httpResponse.write(content);

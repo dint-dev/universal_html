@@ -227,7 +227,7 @@ class _HtmlParser {
       // -------
       // Element
       // -------
-      Element result = _newElementWithoutChildrenFrom(ownerDocument, input);
+      var result = _newElementWithoutChildrenFrom(ownerDocument, input);
 
       // Set attributes
       final inputAttributes = input.attributes;
@@ -388,9 +388,7 @@ class _XmlParser {
           continue;
         }
         var namespaceUri = attribute.name.namespaceUri;
-        if (namespaceUri == null) {
-          namespaceUri = "xmlns";
-        }
+        namespaceUri ??= "xmlns";
         result.setAttributeNS(
           namespaceUri,
           attribute.name.local,

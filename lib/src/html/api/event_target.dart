@@ -66,6 +66,7 @@ class ElementEvents extends Events {
 
   ElementEvents(Element ptr) : super(ptr);
 
+  @override
   Stream<Event> operator [](String type) {
     if (webkitEvents.keys.contains(type.toLowerCase())) {
       if (_Device.isWebKit) {

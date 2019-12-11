@@ -63,18 +63,22 @@ final _WIDTH = ['right', 'left'];
 /// animation frame is discouraged. See also:
 /// [Browser Reflow](https://developers.google.com/speed/articles/reflow)
 abstract class CssRect implements Rectangle<num> {
-  Element _element;
+  final Element _element;
 
   CssRect(this._element);
 
   /// The y-coordinate of the bottom edge.
+  @override
   num get bottom => top + height;
 
+  @override
   Point<num> get bottomLeft => Point<num>(this.left, this.top + this.height);
 
+  @override
   Point<num> get bottomRight =>
       Point<num>(this.left + this.width, this.top + this.height);
 
+  @override
   int get hashCode => _JenkinsSmiHash.hash4(
       left.hashCode, top.hashCode, right.hashCode, bottom.hashCode);
 
@@ -84,6 +88,7 @@ abstract class CssRect implements Rectangle<num> {
   /// `height` CSS value, converted to a dimensionless num in pixels. Unlike
   /// [getBoundingClientRect], `height` will return the same numerical width if
   /// the element is hidden or not.
+  @override
   num get height;
 
   /// Set the height to `newHeight`.
@@ -99,18 +104,23 @@ abstract class CssRect implements Rectangle<num> {
     throw UnsupportedError("Can only set height for content rect.");
   }
 
+  @override
   num get left;
 
   // TODO(jacobr): these methods are duplicated from _RectangleBase in dart:math
   // Ideally we would provide a RectangleMixin class that provides this implementation.
   // In an ideal world we would exp
   /// The x-coordinate of the right edge.
+  @override
   num get right => left + width;
 
+  @override
   num get top;
 
+  @override
   Point<num> get topLeft => Point<num>(this.left, this.top);
 
+  @override
   Point<num> get topRight => Point<num>(this.left + this.width, this.top);
 
   /// The width of this rectangle.
@@ -119,6 +129,7 @@ abstract class CssRect implements Rectangle<num> {
   /// `width` CSS value, converted to a dimensionless num in pixels. Unlike
   /// [getBoundingClientRect], `width` will return the same numerical width if
   /// the element is hidden or not.
+  @override
   num get width;
 
   /// Set the current computed width in pixels of this element.
@@ -133,6 +144,7 @@ abstract class CssRect implements Rectangle<num> {
     throw UnsupportedError("Can only set width for content rect.");
   }
 
+  @override
   bool operator ==(other) {
     if (other is! Rectangle) return false;
     return left == other.left &&
@@ -142,6 +154,7 @@ abstract class CssRect implements Rectangle<num> {
   }
 
   /// Returns a new rectangle which completely contains `this` and [other].
+  @override
   Rectangle<num> boundingBox(Rectangle<num> other) {
     var right = max(this.left + this.width, other.left + other.width);
     var bottom = max(this.top + this.height, other.top + other.height);
@@ -153,6 +166,7 @@ abstract class CssRect implements Rectangle<num> {
   }
 
   /// Tests whether [another] is inside or along the edges of `this`.
+  @override
   bool containsPoint(Point<num> another) {
     return another.x >= left &&
         another.x <= left + width &&
@@ -161,6 +175,7 @@ abstract class CssRect implements Rectangle<num> {
   }
 
   /// Tests whether `this` entirely contains [another].
+  @override
   bool containsRectangle(Rectangle<num> another) {
     return left <= another.left &&
         left + width >= another.left + another.width &&
@@ -175,6 +190,7 @@ abstract class CssRect implements Rectangle<num> {
   ///
   /// Returns the intersection of this and `other`, or `null` if they don't
   /// intersect.
+  @override
   Rectangle<num> intersection(Rectangle<num> other) {
     var x0 = max(left, other.left);
     var x1 = min(left + width, other.left + other.width);
@@ -191,6 +207,7 @@ abstract class CssRect implements Rectangle<num> {
   }
 
   /// Returns true if `this` intersects [other].
+  @override
   bool intersects(Rectangle<num> other) {
     return (left <= other.left + other.width &&
         other.left <= left + width &&
@@ -198,6 +215,7 @@ abstract class CssRect implements Rectangle<num> {
         other.top <= top + height);
   }
 
+  @override
   String toString() {
     return 'Rectangle ($left, $top) $width x $height';
   }
@@ -214,7 +232,7 @@ abstract class CssRect implements Rectangle<num> {
 
     var val = 0;
 
-    for (String measurement in dimensions) {
+    for (var measurement in dimensions) {
       // The border-box and default box model both exclude margin in the regular
       // height/width calculation, so add it if we want it for this measurement.
       if (augmentingMeasurement == _MARGIN) {
@@ -248,10 +266,16 @@ abstract class CssRect implements Rectangle<num> {
 /// [box model](http://www.w3.org/TR/CSS2/box.html).
 class _BorderCssRect extends CssRect {
   _BorderCssRect(element) : super(element);
+  @override
   num get height => _element.offsetHeight;
+
+  @override
   num get left => _element.getBoundingClientRect().left;
 
+  @override
   num get top => _element.getBoundingClientRect().top;
+
+  @override
   num get width => _element.offsetWidth;
 }
 
@@ -270,6 +294,7 @@ class _ContentCssListRect extends _ContentCssRect {
   /// setting the height to 0. This is equivalent to the `height`
   /// function in jQuery and the calculated `height` CSS value, converted to a
   /// num in pixels.
+  @override
   set height(newHeight) {
     _elementList.forEach((e) => e.contentEdge.height = newHeight);
   }
@@ -278,6 +303,7 @@ class _ContentCssListRect extends _ContentCssRect {
   ///
   /// This is equivalent to the `width` function in jQuery and the calculated
   /// `width` CSS value, converted to a dimensionless num in pixels.
+  @override
   set width(newWidth) {
     _elementList.forEach((e) => e.contentEdge.width = newWidth);
   }
@@ -288,6 +314,7 @@ class _ContentCssListRect extends _ContentCssRect {
 class _ContentCssRect extends CssRect {
   _ContentCssRect(Element element) : super(element);
 
+  @override
   num get height =>
       _element.offsetHeight + _addOrSubtractToBoxModel(_HEIGHT, _CONTENT);
 
@@ -298,6 +325,7 @@ class _ContentCssRect extends CssRect {
   /// converted to effectively setting the height to 0. This is equivalent to the
   /// `height` function in jQuery and the calculated `height` CSS value,
   /// converted to a num in pixels.
+  @override
   set height(dynamic newHeight) {
     if (newHeight is Dimension) {
       Dimension newHeightAsDimension = newHeight;
@@ -311,14 +339,17 @@ class _ContentCssRect extends CssRect {
     }
   }
 
+  @override
   num get left =>
       _element.getBoundingClientRect().left -
       _addOrSubtractToBoxModel(['left'], _CONTENT);
 
+  @override
   num get top =>
       _element.getBoundingClientRect().top -
       _addOrSubtractToBoxModel(['top'], _CONTENT);
 
+  @override
   num get width =>
       _element.offsetWidth + _addOrSubtractToBoxModel(_WIDTH, _CONTENT);
 
@@ -328,6 +359,7 @@ class _ContentCssRect extends CssRect {
   /// [Dimension] object. This is equivalent to the `width` function in jQuery
   /// and the calculated
   /// `width` CSS value, converted to a dimensionless num in pixels.
+  @override
   set width(dynamic newWidth) {
     if (newWidth is Dimension) {
       Dimension newWidthAsDimension = newWidth;
@@ -382,15 +414,21 @@ class _JenkinsSmiHash {
 /// [box model](http://www.w3.org/TR/CSS2/box.html).
 class _MarginCssRect extends CssRect {
   _MarginCssRect(element) : super(element);
+  @override
   num get height =>
       _element.offsetHeight + _addOrSubtractToBoxModel(_HEIGHT, _MARGIN);
+
+  @override
   num get left =>
       _element.getBoundingClientRect().left -
       _addOrSubtractToBoxModel(['left'], _MARGIN);
 
+  @override
   num get top =>
       _element.getBoundingClientRect().top -
       _addOrSubtractToBoxModel(['top'], _MARGIN);
+
+  @override
   num get width =>
       _element.offsetWidth + _addOrSubtractToBoxModel(_WIDTH, _MARGIN);
 }
@@ -400,15 +438,22 @@ class _MarginCssRect extends CssRect {
 /// [box model](http://www.w3.org/TR/CSS2/box.html).
 class _PaddingCssRect extends CssRect {
   _PaddingCssRect(element) : super(element);
+
+  @override
   num get height =>
       _element.offsetHeight + _addOrSubtractToBoxModel(_HEIGHT, _PADDING);
+
+  @override
   num get left =>
       _element.getBoundingClientRect().left -
       _addOrSubtractToBoxModel(['left'], _PADDING);
 
+  @override
   num get top =>
       _element.getBoundingClientRect().top -
       _addOrSubtractToBoxModel(['top'], _PADDING);
+
+  @override
   num get width =>
       _element.offsetWidth + _addOrSubtractToBoxModel(_WIDTH, _PADDING);
 }

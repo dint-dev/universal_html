@@ -223,6 +223,7 @@ abstract class GlobalEventHandlers implements EventTarget {
     throw UnsupportedError("Not supported");
   }
 
+  @override
   Events get on;
 
   Stream<Event> get onAbort => abortEvent.forTarget(this);
@@ -340,11 +341,14 @@ abstract class GlobalEventHandlers implements EventTarget {
 
   Stream<WheelEvent> get onWheel => wheelEvent.forTarget(this);
 
+  @override
   void addEventListener(String type, dynamic listener(Event event),
       [bool useCapture]);
 
+  @override
   bool dispatchEvent(Event event);
 
+  @override
   void removeEventListener(String type, dynamic listener(Event event),
       [bool useCapture]);
 }

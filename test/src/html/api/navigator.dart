@@ -27,13 +27,16 @@ void _testNavigator() {
       expect(navigator.appVersion, anyOf("5.0", matches(r"5.0 \(.*")));
     });
     test("geolocation", () async {
+      final timeout = const Duration(milliseconds: 1);
       final future = navigator.geolocation.getCurrentPosition(
         enableHighAccuracy: true,
-        timeout: const Duration(milliseconds: 1),
+        timeout: timeout,
         maximumAge: const Duration(hours: 1),
       );
       try {
-        await future;
+        final location = await future.timeout(timeout);
+        expect(location.coords.latitude, isNotNull);
+        expect(location.coords.longitude, isNotNull);
       } on TimeoutException {
         // Ignore
       } on PositionError {

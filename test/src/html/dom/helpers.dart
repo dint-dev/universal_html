@@ -91,7 +91,7 @@ void _expectSaneTree(Node node,
 
   // Test that children are sane too.
   Node previousChild;
-  Node nextChild = node.firstChild;
+  var nextChild = node.firstChild;
   while (nextChild != null) {
     _expectSaneTree(nextChild,
         expectedOwnerDocument: expectedOwnerDocument, expectedParentNode: node);

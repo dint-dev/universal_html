@@ -315,12 +315,12 @@ bool _matchesSimpleSelector(
   } else if (selector is css.PseudoElementFunctionSelector) {
     return false;
   } else if (selector is css.AttributeSelector) {
-    String actualValue = element.getAttribute(selector.name);
+    final actualValue = element.getAttribute(selector.name);
     if (actualValue == null) {
       return false;
     }
 
-    String expectationValue = selector.value as String;
+    var expectationValue = selector.value as String;
 
     // Note: Csslib doesn't seem support case-insensitive attributes
     // like '[name="value" i]'

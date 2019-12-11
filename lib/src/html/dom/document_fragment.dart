@@ -130,7 +130,11 @@ class DocumentFragment extends Node
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
     final clone = DocumentFragment();
     if (deep != false) {
-      Node._cloneChildrenFrom(ownerDocument, clone, this);
+      Node._cloneChildrenFrom(
+        ownerDocument,
+        newParent: clone,
+        oldParent: this,
+      );
     }
     return clone;
   }
@@ -155,8 +159,6 @@ class ShadowRoot extends DocumentFragment {
   final bool delegatesFocus;
 
   final Element host;
-
-  String innerHtml;
 
   final String mode;
 

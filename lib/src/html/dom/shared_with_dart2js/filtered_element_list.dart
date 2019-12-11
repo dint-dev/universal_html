@@ -54,16 +54,19 @@ class FilteredElementList extends ListBase<Element> implements NodeListWrapper {
   Iterable<Element> get _iterable => _childNodes.whereType<Element>();
   List<Element> get _filtered => List<Element>.from(_iterable, growable: false);
 
+  @override
   void forEach(void f(Element element)) {
     // This cannot use the iterator, because operations during iteration might
     // modify the collection, e.g. addAll might append a node to another parent.
     _filtered.forEach(f);
   }
 
+  @override
   void operator []=(int index, Element value) {
     this[index].replaceWith(value);
   }
 
+  @override
   set length(int newLength) {
     final len = this.length;
     if (newLength >= len) {
@@ -75,52 +78,63 @@ class FilteredElementList extends ListBase<Element> implements NodeListWrapper {
     removeRange(newLength, len);
   }
 
+  @override
   void add(Element value) {
     _childNodes.add(value);
   }
 
+  @override
   void addAll(Iterable<Element> iterable) {
-    for (Element element in iterable) {
+    for (var element in iterable) {
       add(element);
     }
   }
 
+  @override
   bool contains(Object needle) {
     if (needle is! Element) return false;
     Element element = needle;
     return element.parentNode == _node;
   }
 
+  @override
   Iterable<Element> get reversed => _filtered.reversed;
 
+  @override
   void sort([int compare(Element a, Element b)]) {
     throw UnsupportedError('Cannot sort filtered list');
   }
 
+  @override
   void setRange(int start, int end, Iterable<Element> iterable,
       [int skipCount = 0]) {
     throw UnsupportedError('Cannot setRange on filtered list');
   }
 
+  @override
   void fillRange(int start, int end, [Element fillValue]) {
     throw UnsupportedError('Cannot fillRange on filtered list');
   }
 
+  @override
   void replaceRange(int start, int end, Iterable<Element> iterable) {
     throw UnsupportedError('Cannot replaceRange on filtered list');
   }
 
+  @override
   void removeRange(int start, int end) {
     List.from(_iterable.skip(start).take(end - start))
         .forEach((el) => el.remove());
   }
 
+  @override
   void clear() {
     // Currently, ElementList#clear clears even non-element nodes, so we follow
     // that behavior.
     _childNodes.clear();
   }
 
+  @override
   Element removeLast() {
     final result = _iterable.last;
     if (result != null) {
@@ -129,6 +143,7 @@ class FilteredElementList extends ListBase<Element> implements NodeListWrapper {
     return result;
   }
 
+  @override
   void insert(int index, Element value) {
     if (index == length) {
       add(value);
@@ -138,6 +153,7 @@ class FilteredElementList extends ListBase<Element> implements NodeListWrapper {
     }
   }
 
+  @override
   void insertAll(int index, Iterable<Element> iterable) {
     if (index == length) {
       addAll(iterable);
@@ -147,12 +163,14 @@ class FilteredElementList extends ListBase<Element> implements NodeListWrapper {
     }
   }
 
+  @override
   Element removeAt(int index) {
     final result = this[index];
     result.remove();
     return result;
   }
 
+  @override
   bool remove(Object element) {
     if (element is! Element) return false;
     if (contains(element)) {
@@ -163,11 +181,17 @@ class FilteredElementList extends ListBase<Element> implements NodeListWrapper {
     }
   }
 
+  @override
   int get length => _iterable.length;
+
+  @override
   Element operator [](int index) => _iterable.elementAt(index);
+
   // This cannot use the iterator, because operations during iteration might
   // modify the collection, e.g. addAll might append a node to another parent.
+  @override
   Iterator<Element> get iterator => _filtered.iterator;
 
+  @override
   List<Node> get rawList => _node.childNodes;
 }

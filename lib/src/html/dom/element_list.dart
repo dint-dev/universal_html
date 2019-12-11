@@ -405,14 +405,19 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   final List<Node> _nodeList;
 
   _FrozenElementList._wrap(this._nodeList) {
-    assert(this._nodeList.every((element) => element is E),
-        "Query expects only HTML elements of type $E but found ${this._nodeList.firstWhere((e) => e is! E)}");
+    assert(
+      this._nodeList.every((element) => element is E),
+      "Query expects only HTML elements of type $E but found ${this._nodeList.firstWhere((e) => e is! E)}",
+    );
   }
 
+  @override
   CssRect get borderEdge => this.first.borderEdge;
 
+  @override
   CssClassSet get classes => _MultiElementCssClassSet(this);
 
+  @override
   set classes(Iterable<String> value) {
     // TODO(sra): This might be faster for Sets:
     //
@@ -423,66 +428,85 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
     forEach((e) => e.classes = value);
   }
 
+  @override
   CssRect get contentEdge => _ContentCssListRect(this);
 
+  @override
   E get first => _nodeList.first;
 
+  @override
   E get last => _nodeList.last;
 
+  @override
   int get length => _nodeList.length;
 
+  @override
   set length(int newLength) {
     throw UnsupportedError('Cannot modify list');
   }
 
+  @override
   CssRect get marginEdge => this.first.marginEdge;
 
   /// Stream of `abort` events handled by this [Element].
+  @override
   ElementStream<Event> get onAbort => Element.abortEvent._forElementList(this);
 
   /// Stream of `beforecopy` events handled by this [Element].
+  @override
   ElementStream<Event> get onBeforeCopy =>
       Element.beforeCopyEvent._forElementList(this);
 
   /// Stream of `beforecut` events handled by this [Element].
+  @override
   ElementStream<Event> get onBeforeCut =>
       Element.beforeCutEvent._forElementList(this);
 
   /// Stream of `beforepaste` events handled by this [Element].
+  @override
   ElementStream<Event> get onBeforePaste =>
       Element.beforePasteEvent._forElementList(this);
 
   /// Stream of `blur` events handled by this [Element].
+  @override
   ElementStream<Event> get onBlur => Element.blurEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onCanPlay =>
       Element.canPlayEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onCanPlayThrough =>
       Element.canPlayThroughEvent._forElementList(this);
 
   /// Stream of `change` events handled by this [Element].
+  @override
   ElementStream<Event> get onChange =>
       Element.changeEvent._forElementList(this);
 
   /// Stream of `click` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onClick =>
       Element.clickEvent._forElementList(this);
 
   /// Stream of `contextmenu` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onContextMenu =>
       Element.contextMenuEvent._forElementList(this);
 
   /// Stream of `copy` events handled by this [Element].
+  @override
   ElementStream<ClipboardEvent> get onCopy =>
       Element.copyEvent._forElementList(this);
 
   /// Stream of `cut` events handled by this [Element].
+  @override
   ElementStream<ClipboardEvent> get onCut =>
       Element.cutEvent._forElementList(this);
 
   /// Stream of `doubleclick` events handled by this [Element].
   @DomName('Element.ondblclick')
+  @override
   ElementStream<Event> get onDoubleClick =>
       Element.doubleClickEvent._forElementList(this);
 
@@ -501,6 +525,7 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDrag =>
       Element.dragEvent._forElementList(this);
 
@@ -516,6 +541,7 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDragEnd =>
       Element.dragEndEvent._forElementList(this);
 
@@ -531,6 +557,7 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDragEnter =>
       Element.dragEnterEvent._forElementList(this);
 
@@ -546,6 +573,7 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDragLeave =>
       Element.dragLeaveEvent._forElementList(this);
 
@@ -561,6 +589,7 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDragOver =>
       Element.dragOverEvent._forElementList(this);
 
@@ -576,6 +605,7 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDragStart =>
       Element.dragStartEvent._forElementList(this);
 
@@ -591,167 +621,214 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   /// * [Drag and drop
   ///   specification](https://html.spec.whatwg.org/multipage/interaction.html#dnd)
   ///   from WHATWG.
+  @override
   ElementStream<MouseEvent> get onDrop =>
       Element.dropEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onDurationChange =>
       Element.durationChangeEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onEmptied =>
       Element.emptiedEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onEnded => Element.endedEvent._forElementList(this);
 
   /// Stream of `error` events handled by this [Element].
+  @override
   ElementStream<Event> get onError => Element.errorEvent._forElementList(this);
 
   /// Stream of `focus` events handled by this [Element].
+  @override
   ElementStream<Event> get onFocus => Element.focusEvent._forElementList(this);
 
   /// Stream of `fullscreenchange` events handled by this [Element].
+  @override
   ElementStream<Event> get onFullscreenChange =>
       Element.fullscreenChangeEvent._forElementList(this);
 
   /// Stream of `fullscreenerror` events handled by this [Element].
+  @override
   ElementStream<Event> get onFullscreenError =>
       Element.fullscreenErrorEvent._forElementList(this);
 
   /// Stream of `input` events handled by this [Element].
+  @override
   ElementStream<Event> get onInput => Element.inputEvent._forElementList(this);
 
   /// Stream of `invalid` events handled by this [Element].
+  @override
   ElementStream<Event> get onInvalid =>
       Element.invalidEvent._forElementList(this);
 
   /// Stream of `keydown` events handled by this [Element].
+  @override
   ElementStream<KeyboardEvent> get onKeyDown =>
       Element.keyDownEvent._forElementList(this);
 
   /// Stream of `keypress` events handled by this [Element].
+  @override
   ElementStream<KeyboardEvent> get onKeyPress =>
       Element.keyPressEvent._forElementList(this);
 
   /// Stream of `keyup` events handled by this [Element].
+  @override
   ElementStream<KeyboardEvent> get onKeyUp =>
       Element.keyUpEvent._forElementList(this);
 
   /// Stream of `load` events handled by this [Element].
+  @override
   ElementStream<Event> get onLoad => Element.loadEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onLoadedData =>
       Element.loadedDataEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onLoadedMetadata =>
       Element.loadedMetadataEvent._forElementList(this);
 
   /// Stream of `mousedown` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseDown =>
       Element.mouseDownEvent._forElementList(this);
 
   /// Stream of `mouseenter` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseEnter =>
       Element.mouseEnterEvent._forElementList(this);
 
   /// Stream of `mouseleave` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseLeave =>
       Element.mouseLeaveEvent._forElementList(this);
 
   /// Stream of `mousemove` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseMove =>
       Element.mouseMoveEvent._forElementList(this);
 
   /// Stream of `mouseout` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseOut =>
       Element.mouseOutEvent._forElementList(this);
 
   /// Stream of `mouseover` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseOver =>
       Element.mouseOverEvent._forElementList(this);
 
   /// Stream of `mouseup` events handled by this [Element].
+  @override
   ElementStream<MouseEvent> get onMouseUp =>
       Element.mouseUpEvent._forElementList(this);
 
   /// Stream of `mousewheel` events handled by this [Element].
+  @override
   ElementStream<WheelEvent> get onMouseWheel =>
       Element.mouseWheelEvent._forElementList(this);
 
   /// Stream of `paste` events handled by this [Element].
+  @override
   ElementStream<ClipboardEvent> get onPaste =>
       Element.pasteEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onPause => Element.pauseEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onPlay => Element.playEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onPlaying =>
       Element.playingEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onRateChange =>
       Element.rateChangeEvent._forElementList(this);
 
   /// Stream of `reset` events handled by this [Element].
+  @override
   ElementStream<Event> get onReset => Element.resetEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onResize =>
       Element.resizeEvent._forElementList(this);
 
   /// Stream of `scroll` events handled by this [Element].
+  @override
   ElementStream<Event> get onScroll =>
       Element.scrollEvent._forElementList(this);
 
   /// Stream of `search` events handled by this [Element].
+  @override
   ElementStream<Event> get onSearch =>
       Element.searchEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onSeeked =>
       Element.seekedEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onSeeking =>
       Element.seekingEvent._forElementList(this);
 
   /// Stream of `select` events handled by this [Element].
+  @override
   ElementStream<Event> get onSelect =>
       Element.selectEvent._forElementList(this);
 
   /// Stream of `selectstart` events handled by this [Element].
+  @override
   ElementStream<Event> get onSelectStart =>
       Element.selectStartEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onStalled =>
       Element.stalledEvent._forElementList(this);
 
   /// Stream of `submit` events handled by this [Element].
+  @override
   ElementStream<Event> get onSubmit =>
       Element.submitEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onSuspend =>
       Element.suspendEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onTimeUpdate =>
       Element.timeUpdateEvent._forElementList(this);
 
   /// Stream of `touchcancel` events handled by this [Element].
+  @override
   ElementStream<TouchEvent> get onTouchCancel =>
       Element.touchCancelEvent._forElementList(this);
 
   /// Stream of `touchend` events handled by this [Element].
+  @override
   ElementStream<TouchEvent> get onTouchEnd =>
       Element.touchEndEvent._forElementList(this);
 
   /// Stream of `touchenter` events handled by this [Element].
+  @override
   ElementStream<TouchEvent> get onTouchEnter =>
       Element.touchEnterEvent._forElementList(this);
 
   /// Stream of `touchleave` events handled by this [Element].
+  @override
   ElementStream<TouchEvent> get onTouchLeave =>
       Element.touchLeaveEvent._forElementList(this);
 
   /// Stream of `touchmove` events handled by this [Element].
+  @override
   ElementStream<TouchEvent> get onTouchMove =>
       Element.touchMoveEvent._forElementList(this);
 
   /// Stream of `touchstart` events handled by this [Element].
+  @override
   ElementStream<TouchEvent> get onTouchStart =>
       Element.touchStartEvent._forElementList(this);
 
@@ -760,36 +837,48 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   @SupportedBrowser(SupportedBrowser.FIREFOX)
   @SupportedBrowser(SupportedBrowser.IE, '10')
   @SupportedBrowser(SupportedBrowser.SAFARI)
+  @override
   ElementStream<TransitionEvent> get onTransitionEnd =>
       Element.transitionEndEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onVolumeChange =>
       Element.volumeChangeEvent._forElementList(this);
 
+  @override
   ElementStream<Event> get onWaiting =>
       Element.waitingEvent._forElementList(this);
 
+  @override
   ElementStream<WheelEvent> get onWheel =>
       Element.wheelEvent._forElementList(this);
 
+  @override
   CssRect get paddingEdge => this.first.paddingEdge;
 
+  @override
   List<Node> get rawList => _nodeList;
 
+  @override
   E get single => _nodeList.single;
 
+  @override
   CssStyleDeclarationBase get style => _CssStyleDeclarationSet(this);
 
+  @override
   E operator [](int index) => _nodeList[index];
 
+  @override
   void operator []=(int index, E value) {
     throw UnsupportedError('Cannot modify list');
   }
 
+  @override
   void shuffle([Random random]) {
     throw UnsupportedError('Cannot shuffle list');
   }
 
+  @override
   void sort([Comparator<E> compare]) {
     throw UnsupportedError('Cannot sort list');
   }

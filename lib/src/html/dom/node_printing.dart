@@ -52,7 +52,7 @@ const _printingHtml = 1;
 
 /// Empty elements from:
 /// https://developer.mozilla.org/en-US/docs/Glossary/empty_element
-final Set<String> _singleTagNamesInLowerCase = Set<String>.from(const [
+final Set<String> _singleTagNamesInLowerCase = <String>{
   "area",
   "base",
   "br",
@@ -67,10 +67,10 @@ final Set<String> _singleTagNamesInLowerCase = Set<String>.from(const [
   "source",
   "track",
   "wbr",
-]);
+};
 
 int _getPrintingFlags(Node node) {
-  int flags = 0;
+  var flags = 0;
   final doc = node.ownerDocument;
   if (doc == null) {
     return _printingHtml;
@@ -160,7 +160,7 @@ void _printAttribute(
 }
 
 void _printChildren(StringBuffer sb, int flags, Node node) {
-  Node next = node.firstChild;
+  var next = node.firstChild;
   while (next != null) {
     _printNode(sb, flags, next);
     next = next._nextNode;

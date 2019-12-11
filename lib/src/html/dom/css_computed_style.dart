@@ -79,7 +79,7 @@ class _ComputedStyle extends CssStyleDeclaration {
         for (var rule in sheet.cssRules) {
           if (rule is CssStyleRule) {
             // Find highest priority selector of this rule
-            int highestPriority = 0;
+            var highestPriority = 0;
 
             // For each selector
             for (var parsedSelector in rule._parsedSelectors) {

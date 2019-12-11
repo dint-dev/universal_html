@@ -47,27 +47,49 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 abstract class DomMatrix extends DomMatrixReadOnly {
+  @override
   int a = 0;
+  @override
   int b = 0;
+  @override
   int c = 0;
+  @override
   int d = 0;
+  @override
   int e = 0;
+  @override
   int f = 0;
+  @override
   int m11 = 0;
+  @override
   int m12 = 0;
+  @override
   int m13 = 0;
+  @override
   int m14 = 0;
+  @override
   int m21 = 0;
+  @override
   int m22 = 0;
+  @override
   int m23 = 0;
+  @override
   int m24 = 0;
+  @override
   int m31 = 0;
+  @override
   int m32 = 0;
+  @override
   int m33 = 0;
+  @override
   int m34 = 0;
+  @override
   int m41 = 0;
+  @override
   int m42 = 0;
+  @override
   int m43 = 0;
+  @override
   int m44 = 0;
 
   static DomMatrix fromFloat32Array(Float32List list) {

@@ -113,11 +113,12 @@ abstract class Document extends Node
   static const EventStreamProvider<Event> selectionChangeEvent =
       EventStreamProvider<Event>('selectionchange');
 
+  @override
   final HtmlDriver _htmlDriver;
 
   final String contentType;
 
-  String _readyState = "complete";
+  final String _readyState = "complete";
 
   final String origin;
 
@@ -650,7 +651,7 @@ class HtmlDocument extends Document
   }
 
   BodyElement get body {
-    Element element = this._html?._firstElementChild;
+    var element = this._html?._firstElementChild;
     while (element != null) {
       if (element is BodyElement) {
         return element;
@@ -671,7 +672,7 @@ class HtmlDocument extends Document
   }
 
   HeadElement get head {
-    Element element = this._html?._firstElementChild;
+    var element = this._html?._firstElementChild;
     while (element != null) {
       if (element is HeadElement) {
         return element;
@@ -683,6 +684,7 @@ class HtmlDocument extends Document
 
   String get referrer => null;
 
+  @override
   List<StyleSheet> get styleSheets {
     final list = <StyleSheet>[];
     _forEachTreeElement((element) {
@@ -694,7 +696,7 @@ class HtmlDocument extends Document
   }
 
   HtmlHtmlElement get _html {
-    Element element = this._firstElementChild;
+    var element = this._firstElementChild;
     while (element != null) {
       if (element is HtmlHtmlElement) {
         return element;
@@ -713,7 +715,11 @@ class HtmlDocument extends Document
       filled: false,
     );
     if (deep != false) {
-      Node._cloneChildrenFrom(clone, clone, this);
+      Node._cloneChildrenFrom(
+        clone,
+        newParent: clone,
+        oldParent: this,
+      );
     }
     return clone;
   }
@@ -737,15 +743,21 @@ abstract class _DocumentOrFragment implements Node, _ElementOrDocument {
 }
 
 abstract class _DocumentOrShadowRoot implements DocumentOrShadowRoot {
+  @override
   Element get activeElement => null;
 
+  @override
   Element get fullscreenElement => null;
 
+  @override
   Element get pointerLockElement => null;
 
+  @override
   List<StyleSheet> get styleSheets => <StyleSheet>[];
 
+  @override
   Element elementFromPoint(int x, int y) => null;
 
+  @override
   List<Element> elementsFromPoint(int x, int y) => <Element>[];
 }

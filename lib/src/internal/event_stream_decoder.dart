@@ -29,7 +29,7 @@ class EventStreamDecoder
   @override
   Stream<MessageEvent> bind(Stream<Uint8List> stream) async* {
     var dataBuilder = StringBuffer();
-    bool hasData = false;
+    var hasData = false;
     String id;
     String type;
 

@@ -55,7 +55,7 @@ part of universal_html.internal;
 ///
 /// * <https://code.google.com/p/google-caja/wiki/CajaWhitelists>
 class _Html5NodeValidator implements NodeValidator {
-  static final Set<String> _allowedElements = Set.from([
+  static final Set<String> _allowedElements = <String>{
     'A',
     'ABBR',
     'ACRONYM',
@@ -156,9 +156,9 @@ class _Html5NodeValidator implements NodeValidator {
     'VAR',
     'VIDEO',
     'WBR',
-  ]);
+  };
 
-  static const _standardAttributes = <String>[
+  static const _standardAttributes = <String>{
     '*::class',
     '*::dir',
     '*::draggable',
@@ -421,7 +421,7 @@ class _Html5NodeValidator implements NodeValidator {
     'VIDEO::muted',
     'VIDEO::preload',
     'VIDEO::width',
-  ];
+  };
 
   static const _uriAttributes = <String>[
     'A::href',
@@ -445,7 +445,7 @@ class _Html5NodeValidator implements NodeValidator {
   /// All known URI attributes will be validated against the UriPolicy, if
   /// [uriPolicy] is null then a default UriPolicy will be used.
   _Html5NodeValidator({UriPolicy uriPolicy})
-      : uriPolicy = uriPolicy != null ? uriPolicy : UriPolicy() {
+      : uriPolicy = uriPolicy ?? UriPolicy() {
     if (_attributeValidators.isEmpty) {
       for (var attr in _standardAttributes) {
         _attributeValidators[attr] = _standardAttributeValidator;
@@ -457,18 +457,18 @@ class _Html5NodeValidator implements NodeValidator {
     }
   }
 
+  @override
   bool allowsAttribute(Element element, String attributeName, String value) {
     var tagName = Element._safeTagName(element);
     var validator = _attributeValidators['$tagName::$attributeName'];
-    if (validator == null) {
-      validator = _attributeValidators['*::$attributeName'];
-    }
+    validator ??= _attributeValidators['*::$attributeName'];
     if (validator == null) {
       return false;
     }
     return validator(element, attributeName, value, this);
   }
 
+  @override
   bool allowsElement(Element element) {
     return _allowedElements.contains(Element._safeTagName(element));
   }

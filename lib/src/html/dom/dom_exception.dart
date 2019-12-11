@@ -52,6 +52,7 @@ class DomError implements Exception {
 
   DomError(this.name, [this.message]);
 
+  @override
   String toString() => "${name}: ${message}";
 }
 
@@ -117,5 +118,6 @@ class DomException implements Exception {
         "Nodes of type '#${node._nodeTypeName}' may not be inserted inside nodes of type '#${parent._nodeTypeName}'.");
   }
 
+  @override
   String toString() => "${name}: ${message}";
 }

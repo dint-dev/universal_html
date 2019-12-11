@@ -63,7 +63,7 @@ class CssStyleRule extends CssRule {
 
   factory CssStyleRule._(CssStyleSheet parentStyleSheet, css.RuleSet node) {
     final selectorText = node.selectorGroup.span.text;
-    final List<_PriotizedSelector> priotizedSelectors = <_PriotizedSelector>[];
+    final priotizedSelectors = <_PriotizedSelector>[];
     for (var selector in node.selectorGroup.selectors) {
       priotizedSelectors.add(_PriotizedSelector(selector));
     }
@@ -193,6 +193,7 @@ class Dimension {
   num get value => this._value;
 
   /// Print out the CSS String representation of this value.
+  @override
   String toString() {
     return '${_value}${_unit}';
   }
@@ -252,7 +253,7 @@ class _PriotizedSelector {
   // Just a quick, ad-hoc implementation.
   static int _priorityForSelector(css.Selector selector) {
     final sequences = selector.simpleSelectorSequences;
-    int sum = 0;
+    var sum = 0;
     for (var i = sequences.length - 1; i >= 0; i--) {
       final sequence = sequences[i];
       if (sequence.combinator == css.TokenKind.COMBINATOR_NONE) {

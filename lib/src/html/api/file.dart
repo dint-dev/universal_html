@@ -51,6 +51,7 @@ abstract class DirectoryEntry extends Entry {
     throw UnimplementedError();
   }
 
+  @override
   bool get isDirectory => true;
 
   /// Create a new directory with the specified `path`. If `exclusive` is true,
@@ -151,10 +152,13 @@ class File implements Blob {
 
   String get relativePath => throw UnimplementedError();
 
+  @override
   int get size => throw UnimplementedError();
 
+  @override
   String get type => throw UnimplementedError();
 
+  @override
   Blob slice([int start, int end, String contentType]) =>
       throw UnimplementedError();
 }
@@ -162,12 +166,14 @@ class File implements Blob {
 abstract class FileEntry extends Entry {
   FileEntry._() : super._();
 
+  @override
   bool get isFile => true;
 
   Future<FileWriter> createWriter();
 
   Future<File> file();
 
+  @override
   Future remove();
 }
 

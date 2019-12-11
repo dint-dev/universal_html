@@ -83,12 +83,14 @@ abstract class CssStyleDeclaration extends CssStyleDeclarationBase {
   /// returns an empty string.
   ///
   /// Please note the property name uses camelCase, not-hyphens.
+  @override
   String getPropertyValue(String propertyName);
 
   String item(int index);
 
   String removeProperty(String property);
 
+  @override
   void setProperty(String propertyName, String value, [String priority]);
 
   /// Returns true if the provided *CSS* property name is supported on this
@@ -101,6 +103,7 @@ abstract class CssStyleDeclaration extends CssStyleDeclarationBase {
     return true;
   }
 
+  @override
   String toString();
 }
 
@@ -201,7 +204,7 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
     if (source == null) {
       return;
     }
-    int offset = 0;
+    var offset = 0;
     while (offset < source.length) {
       final endOfName = source.indexOf(":", offset);
       if (endOfName < 0) {

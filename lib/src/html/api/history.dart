@@ -152,7 +152,7 @@ class Location extends Object with _UrlBase {
 
 class Url extends _UrlBase {
   @override
-  Uri _uri;
+  Uri _uri; // ignore: prefer_final_fields
 
   Url._(this._uri);
 

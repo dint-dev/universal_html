@@ -352,7 +352,10 @@ class KeyboardEvent extends UIEvent {
 }
 
 class KeyEvent extends KeyboardEvent {
+  @override
   final int charCode;
+
+  @override
   final EventTarget currentTarget;
 
   KeyEvent(
@@ -765,6 +768,7 @@ class TouchList extends DelegatingList<Touch> {
     throw UnsupportedError("Not supported");
   }
 
+  @override
   Touch elementAt(int index) => this[index];
 
   Touch item(int index) => this[index];

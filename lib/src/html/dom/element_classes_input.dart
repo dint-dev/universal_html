@@ -70,22 +70,30 @@ abstract class DateInputElement implements RangeInputElementBase {
 abstract class EmailInputElement implements TextInputElementBase {
   static bool get supported => true;
 
+  @override
   String autocomplete;
 
+  @override
   bool autofocus;
 
+  @override
   int maxLength;
 
   bool multiple;
 
+  @override
   String pattern;
 
+  @override
   String placeholder;
 
+  @override
   bool readOnly;
 
+  @override
   bool required;
 
+  @override
   int size;
 
   factory EmailInputElement() => InputElement(type: "email");
@@ -181,6 +189,7 @@ abstract class NumberInputElement implements RangeInputElementBase {
   String placeholder;
   bool readOnly;
   bool required;
+  @override
   num valueAsNumber;
 
   factory NumberInputElement() => InputElement(type: "number");

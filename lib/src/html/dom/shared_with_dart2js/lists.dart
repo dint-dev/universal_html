@@ -44,7 +44,7 @@ class Lists {
     if (startIndex < 0) {
       startIndex = 0;
     }
-    for (int i = startIndex; i < endIndex; i++) {
+    for (var i = startIndex; i < endIndex; i++) {
       if (a[i] == element) {
         return i;
       }
@@ -62,7 +62,7 @@ class Lists {
     if (startIndex >= a.length) {
       startIndex = a.length - 1;
     }
-    for (int i = startIndex; i >= 0; i--) {
+    for (var i = startIndex; i >= 0; i--) {
       if (a[i] == element) {
         return i;
       }
@@ -79,7 +79,7 @@ class Lists {
     if (start < 0) throw RangeError.value(start);
     if (end < start) throw RangeError.value(end);
     if (end > a.length) throw RangeError.value(end);
-    for (int i = start; i < end; i++) {
+    for (var i = start; i < end; i++) {
       accumulator.add(a[i]);
     }
     return accumulator;

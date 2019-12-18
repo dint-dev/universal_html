@@ -1,3 +1,8 @@
+## 1.1.9
+* Improved test coverage.
+* Fixed a bug in _window.localStorage_.
+* Fixed an analysis error in _JsArray_ ([issue #8](https://github.com/dart-browser/universal_html/issues/8)).
+
 ## 1.1.8
 * A large number of linter fixes.
 * Some additional assertions/tests.

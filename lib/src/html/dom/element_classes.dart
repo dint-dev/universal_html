@@ -3153,11 +3153,6 @@ abstract class _HtmlHyperlinkElementUtils implements _UrlBase {
 
   @override
   Uri get _uri => Uri.parse(href);
-
-  @override
-  set _uri(Uri value) {
-    this.href = value?.toString();
-  }
 }
 
 abstract class _LabelsElement implements HtmlElement {

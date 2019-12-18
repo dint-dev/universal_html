@@ -45,8 +45,6 @@ The original files in the Dart SDK had the following license:
 
 library dart.js;
 
-import 'dart:collection' show ListMixin;
-
 bool isBrowserObject(dynamic o) => false;
 
 Object convertFromBrowserObject(dynamic o) => o;

@@ -129,11 +129,6 @@ class Location extends Object with _UrlBase {
   @override
   Uri get _uri => _htmlDriver.uri;
 
-  @override
-  set _uri(Uri value) {
-    _htmlDriver.uri = value;
-  }
-
   void assign([String url]) {
     if (url == null) {
       return;
@@ -238,6 +233,4 @@ abstract class _UrlBase {
   }
 
   Uri get _uri;
-
-  set _uri(Uri value);
 }

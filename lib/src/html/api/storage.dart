@@ -74,6 +74,7 @@ class Storage extends DelegatingMap<String, String> {
 
   Storage._(this._window) : super(<String, String>{});
 
+  // We need to override this to ensure we dispatch StorageEvent events.
   @override
   void operator []=(String key, String value) {
     final oldValue = this[key];
@@ -88,6 +89,7 @@ class Storage extends DelegatingMap<String, String> {
     _window.dispatchEvent(event);
   }
 
+  // We need to override this to ensure we dispatch StorageEvent events.
   @override
   void addAll(Map<String, String> other) {
     for (var entry in other.entries.toList()) {
@@ -95,27 +97,32 @@ class Storage extends DelegatingMap<String, String> {
     }
   }
 
+  // We need to override this to ensure we dispatch StorageEvent events.
   @override
   void clear() {
-    for (var key in keys) {
+    for (var key in keys.toList(growable: false)) {
       remove(key);
     }
   }
 
+  // We need to override this to ensure we dispatch StorageEvent events.
   @override
   String remove(Object key) {
-    final oldValue = super.remove(key);
-    final event = StorageEvent(
-      "StorageEvent",
-      key: key,
-      oldValue: oldValue,
-      newValue: null,
-      storageArea: this,
-    );
-    _window.dispatchEvent(event);
+    if (containsKey(key)) {
+      final oldValue = super.remove(key);
+      final event = StorageEvent(
+        "StorageEvent",
+        key: key,
+        oldValue: oldValue,
+        newValue: null,
+        storageArea: this,
+      );
+      _window.dispatchEvent(event);
+    }
     return key;
   }
 
+  // We need to override this to ensure we dispatch StorageEvent events.
   @override
   void removeWhere(bool test(String key, String value)) {
     for (var entry in entries.toList()) {
@@ -125,6 +132,7 @@ class Storage extends DelegatingMap<String, String> {
     }
   }
 
+  // We need to override this to ensure we dispatch StorageEvent events.
   @override
   String update(String key, String update(String value), {String ifAbsent()}) {
     var value = this[key];
@@ -137,6 +145,7 @@ class Storage extends DelegatingMap<String, String> {
     return value;
   }
 
+  // We need to override this to ensure we dispatch StorageEvent events.
   @override
   void updateAll(String update(String key, String value)) {
     for (var entry in entries.toList()) {

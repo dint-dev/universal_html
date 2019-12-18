@@ -20,18 +20,31 @@ void _testWindow() {
       expect(window.console, isNotNull);
     });
 
-    test("localStorage", () {
-      final storage = window.localStorage;
-      expect(storage["key"], isNull);
-      storage["key"] = "value";
-      expect(storage["key"], "value");
-    });
+    test("localStorage / sessionStorage", () {
+      final storages = [
+        window.localStorage,
+        window.sessionStorage,
+      ];
+      for (var storage in storages) {
+        expect(storage.length, 0);
+        expect(storage["k0"], isNull);
 
-    test("sessionStorage", () {
-      final storage = window.sessionStorage;
-      expect(storage["key"], isNull);
-      storage["key"] = "value";
-      expect(storage["key"], "value");
+        storage["k0"] = 'v0';
+        expect(storage.length, 1);
+        expect(storage['k0'], 'v0');
+
+        storage["k1"] = 'v1';
+        expect(storage.length, 2);
+        expect(storage['k0'], 'v0');
+        expect(storage['k1'], 'v1');
+
+        storage["k2"] = 'v2';
+        expect(storage.length, 3);
+        storage.remove('k2');
+        expect(storage.length, 2);
+        storage.clear();
+        expect(storage.length, 0);
+      }
     });
   });
 }

@@ -21,7 +21,10 @@ int httpServerPort = 0;
 const httpServerWrongPort = 314;
 
 void _testNetworking() {
-  group("HttpRequest", () {
+  if (_isFlutter) {
+    return;
+  }
+  group("Networking:", () {
     StreamChannel streamChannel;
     setUpAll(() async {
       if (httpServerPort == 0) {

@@ -34,11 +34,13 @@ part 'src/driver/navigation.dart';
 part 'src/driver/server_side_renderer.dart';
 
 void main() {
-  _testHtmlDriver();
-  _testDomParserDriver();
-  _testContentSecurityPolicy();
-  _testContentTypeSniffer();
-  _testServerSideRenderer();
-  _testBrowserImplementationUtils();
-  _testNavigationNetworking();
+  group('driver:', () {
+    _testHtmlDriver();
+    _testDomParserDriver();
+    _testContentSecurityPolicy();
+    _testContentTypeSniffer();
+    _testServerSideRenderer();
+    _testBrowserImplementationUtils();
+    _testNavigationNetworking();
+  });
 }

@@ -30,21 +30,24 @@ import 'src/libraries.dart';
 part 'src/html/api/blob.dart';
 part 'src/html/api/event_target.dart';
 part 'src/html/api/history.dart';
+part 'src/html/api/navigator.dart';
 part 'src/html/api/networking.dart';
 part 'src/html/api/networking_event_source.dart';
 part 'src/html/api/networking_http_request.dart';
-part 'src/html/dom/css.dart';
-part 'src/html/dom/node.dart';
+part 'src/html/api/window.dart';
 part 'src/html/dom/cloning.dart';
+part 'src/html/dom/css.dart';
 part 'src/html/dom/document.dart';
 part 'src/html/dom/element.dart';
 part 'src/html/dom/element_classes.dart';
-part 'src/html/dom/parsing.dart';
-part 'src/html/api/navigator.dart';
-part 'src/html/api/window.dart';
 part 'src/html/dom/helpers.dart';
+part 'src/html/dom/node.dart';
+part 'src/html/dom/parsing.dart';
 
-void main() {
+var _isFlutter = false;
+
+void main({bool isFlutter = false}) {
+  _isFlutter = isFlutter;
   group("In VM: ", () {
     _sharedTests();
   }, testOn: "vm");
@@ -55,7 +58,7 @@ void main() {
 }
 
 void _sharedTests() {
-  // Core DOM
+  // DOM
   _testCloning();
   _testNode();
   _testDocument();
@@ -65,17 +68,17 @@ void _sharedTests() {
   _testCss();
   _testEvents();
 
+  //
+  // APIs
+  //
   _testWindow();
-
   _testNavigator();
-
-  // History
   _testHistory();
-
-  // Networking
   _testNetworking();
-
   _testBlob();
 
+  //
+  // Mocked libraries
+  //
   testLibraries();
 }

@@ -84,3 +84,17 @@ bool instanceof(o, Function type) {
 dynamic callConstructor(Function constr, List arguments) {
   throw UnimplementedError();
 }
+
+/// Converts a JavaScript Promise to a Dart [Future].
+///
+/// ```dart
+/// @JS()
+/// external Promise<num> get threePromise; // Resolves to 3
+///
+/// final Future<num> threeFuture = promiseToFuture(threePromise);
+///
+/// final three = await threeFuture; // == 3
+/// ```
+Future<T> promiseToFuture<T>(jsPromise) {
+  throw UnimplementedError();
+}

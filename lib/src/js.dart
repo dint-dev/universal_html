@@ -57,7 +57,7 @@ final JsObject context = JsObject(null);
 ///
 /// The properties of the JavaScript object are accessible via the `[]` and
 /// `[]=` operators. Methods are callable via [callMethod].
-class JsObject {
+abstract class JsObject {
   /// Constructs a new JavaScript object from [constructor] and returns a proxy
   /// to it.
   factory JsObject(JsFunction constructor, [List arguments]) {
@@ -98,7 +98,7 @@ class JsObject {
   /// object.
   ///
   /// The type of [property] must be either [String] or [num].
-  dynamic operator [](property) {
+  Object operator [](Object property) {
     if (property is! String && property is! num) {
       throw ArgumentError("property is not a String or num");
     }
@@ -109,7 +109,7 @@ class JsObject {
   /// object.
   ///
   /// The type of [property] must be either [String] or [num].
-  operator []=(dynamic property, dynamic value) {
+  void operator []=(Object property, Object value) {
     if (property is! String && property is! num) {
       throw ArgumentError("property is not a String or num");
     }
@@ -166,7 +166,7 @@ class JsObject {
 }
 
 /// Proxies a JavaScript Function object.
-class JsFunction extends JsObject {
+abstract class JsFunction extends JsObject {
   /// Returns a [JsFunction] that captures its 'this' binding and calls [f]
   /// with the value of this passed as the first argument.
   factory JsFunction.withThis(Function f) {
@@ -181,7 +181,7 @@ class JsFunction extends JsObject {
 }
 
 /// A [List] that proxies a JavaScript array.
-class JsArray<E> extends JsObject with ListMixin<E> {
+abstract class JsArray<E> implements JsObject, List<E> {
   /// Creates a new JavaScript array.
   factory JsArray() {
     throw UnimplementedError();

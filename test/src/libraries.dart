@@ -19,14 +19,39 @@ import 'package:universal_html/prefer_universal/html.dart'
     as prefer_universal_html;
 import 'package:universal_html/prefer_universal/svg.dart'
     as prefer_universal_svg;
+import 'package:universal_html/prefer_sdk/js.dart' as prefer_sdk_js;
+import 'package:universal_html/prefer_universal/js.dart' as prefer_universal_js;
+import 'package:universal_html/prefer_sdk/js_util.dart' as prefer_sdk_js_util;
+import 'package:universal_html/prefer_universal/js_util.dart'
+    as prefer_universal_js_util;
 
 void testLibraries() {
   test("'package:_/prefer_sdk/X.dart", () {
     expect(prefer_sdk_html.EventSource, isNotNull);
     expect(prefer_sdk_svg.SvgElement, isNotNull);
+
+    // js
+    expect(prefer_sdk_js.allowInterop, isNotNull);
+    expect(prefer_sdk_js.allowInteropCaptureThis, isNotNull);
+    expect(prefer_sdk_js.JsFunction, isNotNull);
+    expect(prefer_sdk_js.JsArray, isNotNull);
+    expect(prefer_sdk_js.JsObject, isNotNull);
+
+    // js
+    expect(prefer_sdk_js_util.promiseToFuture, isNotNull);
   });
   test("'package:_/prefer_universal/X.dart", () {
     expect(prefer_universal_html.EventSource, isNotNull);
     expect(prefer_universal_svg.SvgElement, isNotNull);
+
+    // js
+    expect(prefer_universal_js.allowInterop, isNotNull);
+    expect(prefer_universal_js.allowInteropCaptureThis, isNotNull);
+    expect(prefer_universal_js.JsFunction, isNotNull);
+    expect(prefer_universal_js.JsArray, isNotNull);
+    expect(prefer_universal_js.JsObject, isNotNull);
+
+    // js
+    expect(prefer_universal_js_util.promiseToFuture, isNotNull);
   });
 }

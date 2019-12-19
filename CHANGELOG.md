@@ -1,3 +1,6 @@
+## 1.1.10
+* Raised minimum SDK to 2.6 and updated dependencies.
+
 ## 1.1.9
 * Improved test coverage.
 * Fixed a bug in _window.localStorage_.

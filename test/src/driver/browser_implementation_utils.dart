@@ -15,18 +15,18 @@
 part of driver_test;
 
 void _testBrowserImplementationUtils() {
-  test("FileBase", () {
+  test('FileBase', () {
     expect(_ExampleFile(), isNotNull);
   });
 
-  test("FileWriterBase", () {
+  test('FileWriterBase', () {
     expect(_ExampleFileWriter(), isNotNull);
   });
 
-  group("BrowserImplementationUtils", () {
-    test("getBlobData", () async {
+  group('BrowserImplementationUtils', () {
+    test('getBlobData', () async {
       final actual = Blob([
-        "ab",
+        'ab',
         [1, 2],
         Uint8List.fromList([3, 4])
       ]);
@@ -35,8 +35,8 @@ void _testBrowserImplementationUtils() {
       final data = await BrowserImplementationUtils.getBlobData(actual);
       expect(data, [
         // String
-        "a".codeUnitAt(0),
-        "b".codeUnitAt(0),
+        'a'.codeUnitAt(0),
+        'b'.codeUnitAt(0),
         0,
 
         // List<int>
@@ -49,29 +49,29 @@ void _testBrowserImplementationUtils() {
       ]);
     });
 
-    test("newComment", () {
-      final actual = BrowserImplementationUtils.newComment(null, "value");
+    test('newComment', () {
+      final actual = BrowserImplementationUtils.newComment(null, 'value');
       expect(actual, isA<Comment>());
-      expect(actual.nodeValue, "value");
+      expect(actual.nodeValue, 'value');
     });
 
-    test("newCoordinates", () {
+    test('newCoordinates', () {
       final actual = BrowserImplementationUtils.newCoordinates(
           latitude: 2.0, longitude: 3.0);
       expect(actual.latitude, 2.0);
       expect(actual.longitude, 3.0);
     });
 
-    test("newGeoposition", () {
+    test('newGeoposition', () {
       final coords = BrowserImplementationUtils.newCoordinates();
       final actual = BrowserImplementationUtils.newGeoposition(coords: coords);
       expect(actual.coords, same(coords));
     });
 
-    test("newText", () {
-      final node = BrowserImplementationUtils.newText(null, "value");
+    test('newText', () {
+      final node = BrowserImplementationUtils.newText(null, 'value');
       expect(node, isA<Text>());
-      expect(node.nodeValue, "value");
+      expect(node.nodeValue, 'value');
     });
   });
 }

@@ -19,7 +19,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -39,11 +39,11 @@ library metadata;
 /// If an API is not annotated with [SupportedBrowser] then it is assumed to
 /// work on all browsers Dart supports.
 class SupportedBrowser {
-  static const String CHROME = "Chrome";
-  static const String FIREFOX = "Firefox";
-  static const String IE = "Internet Explorer";
-  static const String OPERA = "Opera";
-  static const String SAFARI = "Safari";
+  static const String CHROME = 'Chrome';
+  static const String FIREFOX = 'Firefox';
+  static const String IE = 'Internet Explorer';
+  static const String OPERA = 'Opera';
+  static const String SAFARI = 'Safari';
 
   /// The name of the browser.
   final String browserName;

@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -106,7 +106,7 @@ class CssStyleSheet extends StyleSheet {
   void insertRule(int index) {
     cssRules.insert(
       index,
-      CssStyleRule._constructor(this, "", _CssStyleDeclaration._(), []),
+      CssStyleRule._constructor(this, '', _CssStyleDeclaration._(), []),
     );
   }
 }
@@ -167,7 +167,7 @@ class Dimension {
   /// Set this CSS Dimension to the specified number of x-heights.
   ///
   /// One ex is equal to the x-height of a font's baseline to its mean line,
-  /// generally the height of the letter "x" in the font, which is usually about
+  /// generally the height of the letter 'x' in the font, which is usually about
   /// half the font-size.
   Dimension.ex(this._value) : _unit = 'ex';
 
@@ -190,7 +190,7 @@ class Dimension {
   Dimension.px(this._value) : _unit = 'px';
 
   /// Return a unitless, numerical value of this CSS value.
-  num get value => this._value;
+  num get value => _value;
 
   /// Print out the CSS String representation of this value.
   @override
@@ -287,7 +287,7 @@ class _PriotizedSelector {
       return 4;
     } else {
       throw UnsupportedError(
-        "Unsupported selector: '${selector.span.text}'",
+        'Unsupported selector: "${selector.span.text}"',
       );
     }
   }

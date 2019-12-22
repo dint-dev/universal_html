@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -120,7 +120,7 @@ class Navigator extends NavigatorConcurrentHardware
   DeprecatedStorageQuota get persistentStorage => null;
 
   @override
-  String get platform => "Win32";
+  String get platform => 'Win32';
 
   Presentation get presentation => null;
 
@@ -232,6 +232,6 @@ class Navigator extends NavigatorConcurrentHardware
   }
 
   Future<void> _sendBeacon(String url, Object data) async {
-    await HttpRequest.request(url, method: "POST", sendData: data);
+    await HttpRequest.request(url, method: 'POST', sendData: data);
   }
 }

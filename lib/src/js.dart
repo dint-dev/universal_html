@@ -31,7 +31,7 @@ The original files in the Dart SDK had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -73,7 +73,7 @@ abstract class JsObject {
   /// `bool`, `num`, or `String`.
   factory JsObject.fromBrowserObject(object) {
     if (object is num || object is String || object is bool || object == null) {
-      throw ArgumentError("object cannot be a num, string, bool, or null");
+      throw ArgumentError('object cannot be a num, string, bool, or null');
     }
     throw UnimplementedError();
   }
@@ -87,7 +87,7 @@ abstract class JsObject {
   /// JavaScript type, and all other objects are proxied.
   factory JsObject.jsify(object) {
     if ((object is! Map) && (object is! Iterable)) {
-      throw ArgumentError("object must be a Map or Iterable");
+      throw ArgumentError('object must be a Map or Iterable');
     }
     throw UnimplementedError();
   }
@@ -98,7 +98,7 @@ abstract class JsObject {
   /// The type of [property] must be either [String] or [num].
   Object operator [](Object property) {
     if (property is! String && property is! num) {
-      throw ArgumentError("property is not a String or num");
+      throw ArgumentError('property is not a String or num');
     }
     throw UnimplementedError();
   }
@@ -109,7 +109,7 @@ abstract class JsObject {
   /// The type of [property] must be either [String] or [num].
   void operator []=(Object property, Object value) {
     if (property is! String && property is! num) {
-      throw ArgumentError("property is not a String or num");
+      throw ArgumentError('property is not a String or num');
     }
     throw UnimplementedError();
   }
@@ -123,7 +123,7 @@ abstract class JsObject {
   /// This is the equivalent of the `in` operator in JavaScript.
   bool hasProperty(property) {
     if (property is! String && property is! num) {
-      throw ArgumentError("property is not a String or num");
+      throw ArgumentError('property is not a String or num');
     }
     throw UnimplementedError();
   }
@@ -133,7 +133,7 @@ abstract class JsObject {
   /// This is the equivalent of the `delete` operator in JavaScript.
   void deleteProperty(property) {
     if (property is! String && property is! num) {
-      throw ArgumentError("property is not a String or num");
+      throw ArgumentError('property is not a String or num');
     }
     throw UnimplementedError();
   }
@@ -157,7 +157,7 @@ abstract class JsObject {
   /// The type of [method] must be either [String] or [num].
   dynamic callMethod(method, [List args]) {
     if (method is! String && method is! num) {
-      throw ArgumentError("method is not a String or num");
+      throw ArgumentError('method is not a String or num');
     }
     throw UnimplementedError();
   }
@@ -248,7 +248,7 @@ abstract class JsArray<E> implements JsObject, List<E> {
   }
 
   @override
-  void sort([int compare(E a, E b)]) {
+  void sort([int Function(E a, E b) compare]) {
     throw UnimplementedError();
   }
 }

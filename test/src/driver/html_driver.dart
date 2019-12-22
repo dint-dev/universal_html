@@ -16,8 +16,8 @@ part of driver_test;
 
 void _testHtmlDriver() {
   final nodeToString = BrowserImplementationUtils.nodeToString;
-  group("HtmlDriver", () {
-    test("setDocument(null) resets the state", () {
+  group('HtmlDriver', () {
+    test('setDocument(null) resets the state', () {
       final driver = HtmlDriver();
       final oldDocument = driver.document;
       final oldWindow = driver.window;
@@ -26,48 +26,48 @@ void _testHtmlDriver() {
       expect(driver.window, isNot(same(oldWindow)));
     });
 
-    test("setDocumentFromContent(...) supports HTML", () {
+    test('setDocumentFromContent(...) supports HTML', () {
       final driver = HtmlDriver();
       driver.setDocumentFromContent(
-        "<html><body><div>Example</div></body></html>",
+        '<html><body><div>Example</div></body></html>',
       );
       expect(driver.document.body, isNotNull);
       expect(driver.document.body.children, hasLength(1));
       expect(driver.document.body.children.single, TypeMatcher<DivElement>());
-      expect(driver.document.body.innerHtml, "<div>Example</div>");
+      expect(driver.document.body.innerHtml, '<div>Example</div>');
     });
 
-    test("setDocumentFromContent(...) supports XML", () {
+    test('setDocumentFromContent(...) supports XML', () {
       final driver = HtmlDriver();
       driver.setDocumentFromContent(
-        """
+        '''
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root><product>Example</product></root>
-""",
+''',
       );
       final document = driver.document;
       expect(
         nodeToString(document),
-        "<root><product>Example</product></root>",
+        '<root><product>Example</product></root>',
       );
       expect(
         driver.document.documentElement.outerHtml,
-        "<root><product>Example</product></root>",
+        '<root><product>Example</product></root>',
       );
     });
 
-    test("newHttpClient() uses htmlDriver.userAgent", () {
-      final userAgent = UserAgent("Example");
+    test('newHttpClient() uses htmlDriver.userAgent', () {
+      final userAgent = UserAgent('Example');
       final driver = HtmlDriver(userAgent: userAgent);
       expect(driver.userAgent, userAgent);
-      expect(driver.browserImplementation.newHttpClient().userAgent, "Example");
+      expect(driver.browserImplementation.newHttpClient().userAgent, 'Example');
     });
 
-    test("window.navigator.userAgent uses htmlDriver.userAgent", () {
-      final userAgent = UserAgent("Example");
+    test('window.navigator.userAgent uses htmlDriver.userAgent', () {
+      final userAgent = UserAgent('Example');
       final driver = HtmlDriver(userAgent: userAgent);
       expect(driver.userAgent, userAgent);
-      expect(driver.window.navigator.userAgent, "Example");
+      expect(driver.window.navigator.userAgent, 'Example');
     });
   });
 }

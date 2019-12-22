@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -220,7 +220,7 @@ abstract class GlobalEventHandlers implements EventTarget {
       EventStreamProvider<WheelEvent>('wheel');
 
   factory GlobalEventHandlers._() {
-    throw UnsupportedError("Not supported");
+    throw UnsupportedError('Not supported');
   }
 
   @override
@@ -342,13 +342,13 @@ abstract class GlobalEventHandlers implements EventTarget {
   Stream<WheelEvent> get onWheel => wheelEvent.forTarget(this);
 
   @override
-  void addEventListener(String type, dynamic listener(Event event),
+  void addEventListener(String type, dynamic Function(Event event) listener,
       [bool useCapture]);
 
   @override
   bool dispatchEvent(Event event);
 
   @override
-  void removeEventListener(String type, dynamic listener(Event event),
+  void removeEventListener(String type, dynamic Function(Event event) listener,
       [bool useCapture]);
 }

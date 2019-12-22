@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -57,7 +57,7 @@ class _ChildNodeListLazy extends ListBase<Node> {
   @override
   Node get first {
     final result = _this.firstChild;
-    if (result == null) throw StateError("No elements");
+    if (result == null) throw StateError('No elements');
     return result;
   }
 
@@ -67,7 +67,7 @@ class _ChildNodeListLazy extends ListBase<Node> {
   @override
   Node get last {
     var result = _this.lastChild;
-    if (result == null) throw StateError("No elements");
+    if (result == null) throw StateError('No elements');
     return result;
   }
 
@@ -84,7 +84,7 @@ class _ChildNodeListLazy extends ListBase<Node> {
 
   @override
   set length(int value) {
-    throw UnsupportedError("Cannot set length on immutable List.");
+    throw UnsupportedError('Cannot set length on immutable List.');
   }
 
   List<Node> get rawList => _this.childNodes;
@@ -92,8 +92,8 @@ class _ChildNodeListLazy extends ListBase<Node> {
   @override
   Node get single {
     final result = _this.firstChild;
-    if (result == null) throw StateError("No elements");
-    if (result.nextNode != null) throw StateError("More than one element");
+    if (result == null) throw StateError('No elements');
+    if (result.nextNode != null) throw StateError('More than one element');
     return result;
   }
 
@@ -107,7 +107,7 @@ class _ChildNodeListLazy extends ListBase<Node> {
       index--;
       node = node.nextNode;
     }
-    throw StateError("Index out of bounds");
+    throw StateError('Index out of bounds');
   }
 
   @override
@@ -144,7 +144,7 @@ class _ChildNodeListLazy extends ListBase<Node> {
 
   @override
   void fillRange(int start, int end, [Node fill]) {
-    throw UnsupportedError("Cannot fillRange on Node list");
+    throw UnsupportedError('Cannot fillRange on Node list');
   }
 
   @override
@@ -198,41 +198,41 @@ class _ChildNodeListLazy extends ListBase<Node> {
 
   @override
   void removeRange(int start, int end) {
-    throw UnsupportedError("Cannot removeRange on Node list");
+    throw UnsupportedError('Cannot removeRange on Node list');
   }
 
   @override
-  void removeWhere(bool test(Node node)) {
+  void removeWhere(bool Function(Node node) test) {
     _filter(test, true);
   }
 
   @override
-  void retainWhere(bool test(Node node)) {
+  void retainWhere(bool Function(Node node) test) {
     _filter(test, false);
   }
 
   @override
   void setAll(int index, Iterable<Node> iterable) {
-    throw UnsupportedError("Cannot setAll on Node list");
+    throw UnsupportedError('Cannot setAll on Node list');
   }
 
   @override
   void setRange(int start, int end, Iterable<Node> iterable,
       [int skipCount = 0]) {
-    throw UnsupportedError("Cannot setRange on Node list");
+    throw UnsupportedError('Cannot setRange on Node list');
   }
 
   @override
   void shuffle([Random random]) {
-    throw UnsupportedError("Cannot shuffle Node list");
+    throw UnsupportedError('Cannot shuffle Node list');
   }
 
   @override
   void sort([Comparator<Node> compare]) {
-    throw UnsupportedError("Cannot sort Node list");
+    throw UnsupportedError('Cannot sort Node list');
   }
 
-  void _filter(bool test(Node node), bool removeMatching) {
+  void _filter(bool Function(Node node) test, bool removeMatching) {
     // This implementation of removeWhere/retainWhere is more efficient
     // than the default in ListBase. Child nodes can be removed in constant
     // time.

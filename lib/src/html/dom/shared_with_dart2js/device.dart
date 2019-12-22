@@ -19,7 +19,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -49,22 +49,22 @@ class Device {
 
   /// Determines if the current device is running Opera.
   static bool get isOpera {
-    return _isOpera ??= userAgent.contains("Opera", 0);
+    return _isOpera ??= userAgent.contains('Opera', 0);
   }
 
   /// Determines if the current device is running Internet Explorer.
   static bool get isIE {
-    return _isIE ??= !isOpera && userAgent.contains("Trident/", 0);
+    return _isIE ??= !isOpera && userAgent.contains('Trident/', 0);
   }
 
   /// Determines if the current device is running Firefox.
   static bool get isFirefox {
-    return _isFirefox ??= userAgent.contains("Firefox", 0);
+    return _isFirefox ??= userAgent.contains('Firefox', 0);
   }
 
   /// Determines if the current device is running WebKit.
   static bool get isWebKit {
-    return _isWebKit ??= !isOpera && userAgent.contains("WebKit", 0);
+    return _isWebKit ??= !isOpera && userAgent.contains('WebKit', 0);
   }
 
   /// Gets the CSS property prefix for the current platform.

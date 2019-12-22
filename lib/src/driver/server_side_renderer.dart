@@ -56,8 +56,8 @@ class ServerSideRenderer {
   /// If [cacheAge] is non-null, it determines value for Cache-Control header.
   /// Default is 1 second.
   ///
-  /// If [csp] is non-null, it will be used to write a "Content-Security-Policy"
-  /// header. Otherwise no "Content-Security-Policy" header will be used.
+  /// If [csp] is non-null, it will be used to write a 'Content-Security-Policy'
+  /// header. Otherwise no 'Content-Security-Policy' header will be used.
   ServerSideRenderer(
     this.main, {
     this.fileUri,
@@ -72,7 +72,7 @@ class ServerSideRenderer {
   ///
   /// Calling [close] will close the server.
   Future<void> bind(Object address, int port,
-      {void onReady(HttpServer server)}) async {
+      {void Function(HttpServer server) onReady}) async {
     final server = await HttpServer.bind(address, port);
     onReady(server);
     _servers.add(server);
@@ -87,7 +87,7 @@ class ServerSideRenderer {
     Object address,
     int port,
     SecurityContext context, {
-    void onReady(HttpServer server),
+    void Function(HttpServer server) onReady,
   }) async {
     final server = await HttpServer.bindSecure(address, port, context);
     onReady(server);
@@ -106,30 +106,30 @@ class ServerSideRenderer {
   Future<void> handleHttpRequest(HttpRequest httpRequest) async {
     // Prepare HTTP response with security-related headers
     final httpResponse = httpRequest.response;
-    httpResponse.headers.set("Content-Type", "text/html; charset=UTF-8");
-    httpResponse.headers.set("X-Frame-Options", "DENY");
-    httpResponse.headers.set("X-Xss-Protection", "1; mode=block");
+    httpResponse.headers.set('Content-Type', 'text/html; charset=UTF-8');
+    httpResponse.headers.set('X-Frame-Options', 'DENY');
+    httpResponse.headers.set('X-Xss-Protection', '1; mode=block');
     if (csp != null) {
-      httpResponse.headers.set("Content-Security-Policy", csp.toString());
+      httpResponse.headers.set('Content-Security-Policy', csp.toString());
     }
 
     // Is it GET?
-    if (httpRequest.method != "GET") {
+    if (httpRequest.method != 'GET') {
       // No, return an error code
       httpResponse.statusCode = HttpStatus.methodNotAllowed;
       httpResponse.write(
-        "<html><body><h1>Unsupported HTTP method</h1></body></html>",
+        '<html><body><h1>Unsupported HTTP method</h1></body></html>',
       );
       await httpResponse.close();
       return;
     }
 
-    // Set "Cache-Control" header
+    // Set 'Cache-Control' header
     final cacheAge = this.cacheAge;
     if (cacheAge != null) {
       httpResponse.headers.set(
-        "Cache-Control",
-        "maxage=${cacheAge.inSeconds}, private, max-age=0",
+        'Cache-Control',
+        'maxage=${cacheAge.inSeconds}, private, max-age=0',
       );
     }
 
@@ -146,7 +146,7 @@ class ServerSideRenderer {
     await main();
 
     // Dispatch load event
-    document.dispatchEvent(Event("load"));
+    document.dispatchEvent(Event('load'));
 
     // Wait a fixed delay
     if (minDuration != null) {
@@ -183,16 +183,16 @@ class ServerSideRenderer {
     // Print error message
     final element = DivElement();
     element.append(
-      HeadingElement.h1()..appendText("Error!"),
+      HeadingElement.h1()..appendText('Error!'),
     );
     element.append(
-      HeadingElement.h3()..appendText("Message"),
+      HeadingElement.h3()..appendText('Message'),
     );
     element.append(
       ParagraphElement()..appendText(error.toString()),
     );
     element.append(
-      HeadingElement.h3()..appendText("Stacktrace"),
+      HeadingElement.h3()..appendText('Stacktrace'),
     );
     element.append(
       ParagraphElement()..appendText(stackTrace.toString()),

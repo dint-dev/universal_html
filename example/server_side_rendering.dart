@@ -8,47 +8,47 @@ Future main() async {
   final renderer = ServerSideRenderer(webApp);
 
   // Listen at an automatically chosen port.
-  await renderer.bind("localhost", 0, onReady: (server) {
-    print("Listening at: http://${server.address.host}:${server.port}");
+  await renderer.bind('localhost', 0, onReady: (server) {
+    print('Listening at: http://${server.address.host}:${server.port}');
   });
 }
 
 void webApp() {
   switch (window.location.pathname) {
-    case "/":
+    case '/':
       document.body.append(
-        HeadingElement.h1()..appendText("Choose an animal"),
+        HeadingElement.h1()..appendText('Choose an animal'),
       );
       final list = UListElement();
       document.body.append(
         AnchorElement()
-          ..href = "/cat"
-          ..appendText("Cat"),
+          ..href = '/cat'
+          ..appendText('Cat'),
       );
-      document.body.appendText(" | ");
+      document.body.appendText(' | ');
       document.body.append(
         AnchorElement()
-          ..href = "/dog"
-          ..appendText("Dog"),
+          ..href = '/dog'
+          ..appendText('Dog'),
       );
       document.body.append(list);
       break;
 
-    case "/dog":
-      document.body.append(HeadingElement.h1()..appendText("Dog!"));
+    case '/dog':
+      document.body.append(HeadingElement.h1()..appendText('Dog!'));
       document.body.append(AnchorElement()
-        ..href = "/"
-        ..appendText("Choose again"));
+        ..href = '/'
+        ..appendText('Choose again'));
       break;
 
-    case "/cat":
-      document.body.append(HeadingElement.h1()..appendText("Cat!"));
+    case '/cat':
+      document.body.append(HeadingElement.h1()..appendText('Cat!'));
       document.body.append(AnchorElement()
-        ..href = "/"
-        ..appendText("Choose again"));
+        ..href = '/'
+        ..appendText('Choose again'));
       break;
 
     default:
-      document.body.append(HeadingElement.h1()..appendText("404 :("));
+      document.body.append(HeadingElement.h1()..appendText('404 :('));
   }
 }

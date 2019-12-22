@@ -148,7 +148,7 @@ class BrowserImplementationUtils {
 
   static XmlDocument newXmlDocument({
     @required HtmlDriver htmlDriver,
-    String contentType = "text/xml",
+    String contentType = 'text/xml',
     String origin,
   }) {
     return XmlDocument._(
@@ -161,7 +161,7 @@ class BrowserImplementationUtils {
   /// Produces string representation of DOM tree.
   static String nodeToString(Node node) {
     if (node == null) {
-      return "";
+      return '';
     }
     final sb = StringBuffer();
     _printNode(sb, _getPrintingFlags(node), node);

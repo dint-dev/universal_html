@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -295,7 +295,7 @@ class ServiceWorker extends EventTarget implements AbstractWorker {
   final String state;
 
   factory ServiceWorker._() {
-    throw UnsupportedError("Not supported");
+    throw UnsupportedError('Not supported');
   }
 
   @override
@@ -313,7 +313,7 @@ class ServiceWorkerContainer extends EventTarget {
   final ServiceWorker controller;
 
   factory ServiceWorkerContainer._() {
-    throw UnsupportedError("Not supported");
+    throw UnsupportedError('Not supported');
   }
 
   Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
@@ -409,7 +409,7 @@ class ServiceWorkerRegistration extends EventTarget {
   final SyncManager sync;
 
   factory ServiceWorkerRegistration._() {
-    throw UnsupportedError("Not supported");
+    throw UnsupportedError('Not supported');
   }
 
   Future<List<Notification>> getNotifications([Map filter]) {
@@ -490,7 +490,7 @@ class WorkerGlobalScope extends EventTarget {
   final WorkerGlobalScope self;
 
   factory WorkerGlobalScope._() {
-    throw UnsupportedError("Not supported");
+    throw UnsupportedError('Not supported');
   }
 
   /// Stream of `error` events handled by this [WorkerGlobalScope].
@@ -537,7 +537,7 @@ class _Request extends Body {
   }
 
   factory _Request._() {
-    throw UnsupportedError("Not supported");
+    throw UnsupportedError('Not supported');
   }
 
   _Request clone() {

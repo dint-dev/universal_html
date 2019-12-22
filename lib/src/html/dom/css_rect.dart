@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -72,11 +72,10 @@ abstract class CssRect implements Rectangle<num> {
   num get bottom => top + height;
 
   @override
-  Point<num> get bottomLeft => Point<num>(this.left, this.top + this.height);
+  Point<num> get bottomLeft => Point<num>(left, top + height);
 
   @override
-  Point<num> get bottomRight =>
-      Point<num>(this.left + this.width, this.top + this.height);
+  Point<num> get bottomRight => Point<num>(left + width, top + height);
 
   @override
   int get hashCode => _JenkinsSmiHash.hash4(
@@ -101,7 +100,7 @@ abstract class CssRect implements Rectangle<num> {
   ///
   /// Note that only the content height can actually be set via this method.
   set height(dynamic newHeight) {
-    throw UnsupportedError("Can only set height for content rect.");
+    throw UnsupportedError('Can only set height for content rect.');
   }
 
   @override
@@ -118,10 +117,10 @@ abstract class CssRect implements Rectangle<num> {
   num get top;
 
   @override
-  Point<num> get topLeft => Point<num>(this.left, this.top);
+  Point<num> get topLeft => Point<num>(left, top);
 
   @override
-  Point<num> get topRight => Point<num>(this.left + this.width, this.top);
+  Point<num> get topRight => Point<num>(left + width, top);
 
   /// The width of this rectangle.
   ///
@@ -141,7 +140,7 @@ abstract class CssRect implements Rectangle<num> {
   ///
   /// Note that only the content width can be set via this method.
   set width(dynamic newWidth) {
-    throw UnsupportedError("Can only set width for content rect.");
+    throw UnsupportedError('Can only set width for content rect.');
   }
 
   @override
@@ -156,8 +155,8 @@ abstract class CssRect implements Rectangle<num> {
   /// Returns a new rectangle which completely contains `this` and [other].
   @override
   Rectangle<num> boundingBox(Rectangle<num> other) {
-    var right = max(this.left + this.width, other.left + other.width);
-    var bottom = max(this.top + this.height, other.top + other.height);
+    var right = max(this.left + width, other.left + other.width);
+    var bottom = max(this.top + height, other.top + other.height);
 
     var left = min(this.left, other.left);
     var top = min(this.top, other.top);
@@ -335,7 +334,7 @@ class _ContentCssRect extends CssRect {
       if (newHeight < 0) newHeight = 0;
       _element.style.height = '${newHeight}px';
     } else {
-      throw ArgumentError("newHeight is not a Dimension or num");
+      throw ArgumentError('newHeight is not a Dimension or num');
     }
   }
 
@@ -369,7 +368,7 @@ class _ContentCssRect extends CssRect {
       if (newWidth < 0) newWidth = 0;
       _element.style.width = '${newWidth}px';
     } else {
-      throw ArgumentError("newWidth is not a Dimension or num");
+      throw ArgumentError('newWidth is not a Dimension or num');
     }
   }
 }

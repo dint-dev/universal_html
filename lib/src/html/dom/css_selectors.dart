@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -51,12 +51,12 @@ bool _matches(Element element, String selector, String pseudoElement) {
     throw ArgumentError.notNull(selector);
   }
   if (selector.isEmpty) {
-    throw DomException._("invalidSelector", "Selector can't be blank");
+    throw DomException._('invalidSelector', 'Selector can\'t be blank');
   }
   final selectorGroup = css.parseSelectorGroup(selector);
   if (selectorGroup == null) {
     throw DomException._(
-        "invalidSelector", "Selector could not be parsed: '$selector'");
+        'invalidSelector', 'Selector could not be parsed: "$selector"');
   }
   return _matchesSelectorGroup(element, selectorGroup, null);
 }
@@ -92,12 +92,12 @@ bool _matchesNthChildSelector(
         return expectedIndex == index;
       } else if (term0 is css.LiteralTerm) {
         switch (term0.text) {
-          case "even":
+          case 'even':
             //
             // :nth-child(even)
             //
             return index % 2 == 0;
-          case "odd":
+          case 'odd':
             //
             // :nth-child(odd)
             //
@@ -112,7 +112,7 @@ bool _matchesNthChildSelector(
       //
       final term0 = expressions[0] as css.NumberTerm;
       final term1 = expressions[1] as css.LiteralTerm;
-      assert(term1.text == "n");
+      assert(term1.text == 'n');
 
       final mod = (term0.value as num).toInt();
       return (index % mod) == 1;
@@ -124,7 +124,7 @@ bool _matchesNthChildSelector(
       final term0 = expressions[0] as css.NumberTerm;
       final term1 = expressions[1] as css.LiteralTerm;
       final term2 = expressions[2] as css.NumberTerm;
-      assert(term1.text == "n");
+      assert(term1.text == 'n');
 
       final mod = (term0.value as num).toInt();
       final rem = (term2.value as num).toInt();
@@ -137,7 +137,7 @@ bool _matchesNthChildSelector(
 // We start from the innermost selector.
 //
 // Example:
-//   "#a < .b .c"
+//   '#a < .b .c'
 //     1.We match '.c'
 //     2.We try each parent that matches '.b'
 //     3.We match immediate parent for '#a'
@@ -230,7 +230,7 @@ bool _matchesSelector(
 
     default:
       throw UnsupportedError(
-          "Unsupported combinator ${combinator} in '${simpleSelectorSequence.span.text}'");
+          'Unsupported combinator "$combinator" in "${simpleSelectorSequence.span.text}"');
   }
 }
 
@@ -276,8 +276,8 @@ bool _matchesSimpleSelector(
     final className = element.className;
     if (className == null || className.isEmpty) return false;
     final expected = selector.name;
-    if (className.contains(" ")) {
-      return className.split(" ").contains(expected);
+    if (className.contains(' ')) {
+      return className.split(' ').contains(expected);
     } else {
       return className == expected;
     }
@@ -292,18 +292,18 @@ bool _matchesSimpleSelector(
     // :somePseudoSelector
     //
     switch (selector.name) {
-      case "disabled":
-        return element.getAttribute("disabled") != null;
-      case "first-child":
+      case 'disabled':
+        return element.getAttribute('disabled') != null;
+      case 'first-child':
         return identical(element.parent?.firstChild, element);
-      case "last-child":
+      case 'last-child':
         return element.parent != null && element.nextNode == null;
-      case "only-child":
+      case 'only-child':
         return element.nextElementSibling == null &&
             element.previousElementSibling == null;
-      case "root":
+      case 'root':
         return element is HtmlHtmlElement;
-      case "nth-child":
+      case 'nth-child':
         if (selector is css.PseudoClassFunctionSelector) {
           return _matchesNthChildSelector(element, selector);
         } else {
@@ -323,43 +323,43 @@ bool _matchesSimpleSelector(
     var expectationValue = selector.value as String;
 
     // Note: Csslib doesn't seem support case-insensitive attributes
-    // like '[name="value" i]'
+    // like '[name='value' i]'
     switch (selector.operatorKind) {
       //
-      // [name="value"]
+      // [name='value']
       //
       case css.TokenKind.EQUALS:
         return actualValue == expectationValue;
 
       //
-      // [name~="value"]
+      // [name~='value']
       //
       case css.TokenKind.INCLUDES:
-        return actualValue.split(" ").contains(expectationValue);
+        return actualValue.split(' ').contains(expectationValue);
 
       //
-      // [name|="value"]
+      // [name|='value']
       //
       case css.TokenKind.DASH_MATCH:
         final length = expectationValue.length;
         return actualValue.startsWith(expectationValue) &&
             (actualValue.length == length ||
-                actualValue.startsWith("-", length));
+                actualValue.startsWith('-', length));
 
       //
-      // [name^="value"]
+      // [name^='value']
       //
       case css.TokenKind.PREFIX_MATCH:
         return actualValue.startsWith(expectationValue);
 
       //
-      // [name$="value"]
+      // [name$='value']
       //
       case css.TokenKind.SUFFIX_MATCH:
         return actualValue.endsWith(expectationValue);
 
       //
-      // [name*="value"]
+      // [name*='value']
       //
       case css.TokenKind.SUBSTRING_MATCH:
         return actualValue.contains(expectationValue);
@@ -380,6 +380,5 @@ class _UnsupportedCssSelectorException implements Exception {
   _UnsupportedCssSelectorException(this.selector);
 
   @override
-  String toString() =>
-      "Unsupported (possibly valid) CSS selector: '${selector}'";
+  String toString() => 'Unsupported (possibly valid) CSS selector: "$selector"';
 }

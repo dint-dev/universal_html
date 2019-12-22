@@ -23,12 +23,12 @@ class UserAgent {
 
   const UserAgent(
     this.string, {
-    this.appName = "Netscape",
-    this.appVersion = "5.0",
-    this.product = "Gecko",
-    this.productSub = "20030107",
-    this.vendor = "-",
-    this.vendorSub = "",
+    this.appName = 'Netscape',
+    this.appVersion = '5.0',
+    this.product = 'Gecko',
+    this.productSub = '20030107',
+    this.vendor = '-',
+    this.vendorSub = '',
   });
 
   @override

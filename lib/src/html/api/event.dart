@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -127,15 +127,15 @@ class Event {
   factory Event.eventType(String type, String name,
       {bool canBubble = true, bool cancelable = true}) {
     switch (type) {
-      case "KeyboardEvent":
+      case 'KeyboardEvent':
         return KeyboardEvent(name);
-      case "MessageEvent":
+      case 'MessageEvent':
         return MessageEvent(name);
-      case "MouseEvent":
+      case 'MouseEvent':
         return MouseEvent(name);
-      case "PopStateEvent":
+      case 'PopStateEvent':
         return PopStateEvent(name);
-      case "TouchEvent":
+      case 'TouchEvent':
         return TouchEvent._(name);
       default:
         return Event.internal(type);
@@ -145,8 +145,8 @@ class Event {
   @visibleForTesting
   Event.internal(this.type, {bool canBubble = true, this.cancelable = true})
       : assert(type != null && type.isNotEmpty),
-        this.bubbles = canBubble,
-        this.timeStamp = DateTime.now().microsecondsSinceEpoch;
+        bubbles = canBubble,
+        timeStamp = DateTime.now().microsecondsSinceEpoch;
 
   bool get composed => _composed;
 

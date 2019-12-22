@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -52,16 +52,16 @@ typedef VoidCallback = void Function();
 
 abstract class RtcDataChannel extends EventTarget {
   static const EventStreamProvider<Event> closeEvent =
-      EventStreamProvider<Event>("close");
+      EventStreamProvider<Event>('close');
 
   static const EventStreamProvider<Event> errorEvent =
-      EventStreamProvider<Event>("error");
+      EventStreamProvider<Event>('error');
 
   static const EventStreamProvider<MessageEvent> messageEvent =
-      EventStreamProvider<MessageEvent>("message");
+      EventStreamProvider<MessageEvent>('message');
 
   static const EventStreamProvider<Event> openEvent =
-      EventStreamProvider<Event>("open");
+      EventStreamProvider<Event>('open');
 
   RtcDataChannel._() : super._created();
 
@@ -102,23 +102,23 @@ abstract class RtcDtmfSender {
 
 abstract class RtcPeerConnection extends EventTarget {
   static const EventStreamProvider<MediaStreamEvent> addStreamEvent =
-      EventStreamProvider<MediaStreamEvent>("addstream");
+      EventStreamProvider<MediaStreamEvent>('addstream');
 
   static const EventStreamProvider<RtcDataChannelEvent> dataChannelEvent =
-      EventStreamProvider<RtcDataChannelEvent>("datachannel");
+      EventStreamProvider<RtcDataChannelEvent>('datachannel');
 
   static const EventStreamProvider<RtcPeerConnectionIceEvent>
       iceCandidateEvent =
-      EventStreamProvider<RtcPeerConnectionIceEvent>("icecandidate");
+      EventStreamProvider<RtcPeerConnectionIceEvent>('icecandidate');
 
   static const EventStreamProvider<Event> iceConnectionStateChangeEvent =
-      EventStreamProvider<Event>("iceconnectionstatechange");
+      EventStreamProvider<Event>('iceconnectionstatechange');
 
   static const EventStreamProvider<MediaStreamEvent> removeStreamEvent =
-      EventStreamProvider<MediaStreamEvent>("removestream");
+      EventStreamProvider<MediaStreamEvent>('removestream');
 
   static const EventStreamProvider<Event> signalingStateChangeEvent =
-      EventStreamProvider<Event>("signalignstatechange");
+      EventStreamProvider<Event>('signalignstatechange');
 
   RtcPeerConnection._() : super._created();
 

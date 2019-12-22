@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -53,7 +53,7 @@ abstract class Blob {
     for (var i = 0; i < blobParts.length; i++) {
       final part = blobParts[i];
       if (part is String && i + 1 < blobParts.length) {
-        blobParts[i] = part + "\x00";
+        blobParts[i] = part + '\x00';
       }
     }
     var parts = List<List<int>>.from(blobParts.map((part) {
@@ -76,7 +76,7 @@ abstract class Blob {
       if (part is List<int>) {
         return part;
       }
-      throw ArgumentError("Encountered an invalid blob part");
+      throw ArgumentError('Encountered an invalid blob part');
     }));
     var n = 0;
     for (var part in parts) {

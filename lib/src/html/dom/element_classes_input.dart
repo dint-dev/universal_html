@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -47,14 +47,14 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 abstract class ButtonInputElement implements InputElementBase {
-  factory ButtonInputElement() => InputElement(type: "button");
+  factory ButtonInputElement() => InputElement(type: 'button');
 }
 
 abstract class CheckboxInputElement implements InputElementBase {
   bool checked;
   bool required;
 
-  factory CheckboxInputElement() => InputElement(type: "checkbox");
+  factory CheckboxInputElement() => InputElement(type: 'checkbox');
 }
 
 abstract class DateInputElement implements RangeInputElementBase {
@@ -64,7 +64,7 @@ abstract class DateInputElement implements RangeInputElementBase {
   bool required;
   DateTime valueAsDate;
 
-  factory DateInputElement() => InputElement(type: "date");
+  factory DateInputElement() => InputElement(type: 'date');
 }
 
 abstract class EmailInputElement implements TextInputElementBase {
@@ -96,7 +96,7 @@ abstract class EmailInputElement implements TextInputElementBase {
   @override
   int size;
 
-  factory EmailInputElement() => InputElement(type: "email");
+  factory EmailInputElement() => InputElement(type: 'email');
 
   Element get list;
 }
@@ -110,11 +110,11 @@ abstract class FileUploadInputElement implements InputElementBase {
 
   List<File> files;
 
-  factory FileUploadInputElement() => InputElement(type: "file");
+  factory FileUploadInputElement() => InputElement(type: 'file');
 }
 
 abstract class HiddenInputElement implements InputElementBase {
-  factory HiddenInputElement() => InputElement(type: "hidden");
+  factory HiddenInputElement() => InputElement(type: 'hidden');
 }
 
 abstract class ImageButtonInputElement implements InputElementBase {
@@ -133,7 +133,7 @@ abstract class ImageButtonInputElement implements InputElementBase {
 
   String formTarget;
 
-  factory ImageButtonInputElement() => InputElement(type: "image");
+  factory ImageButtonInputElement() => InputElement(type: 'image');
 }
 
 abstract class InputElementBase implements Element {
@@ -170,7 +170,7 @@ abstract class LocalDateTimeInputElement implements RangeInputElementBase {
   bool readOnly;
   bool required;
 
-  factory LocalDateTimeInputElement() => InputElement(type: "datetime-local");
+  factory LocalDateTimeInputElement() => InputElement(type: 'datetime-local');
 }
 
 abstract class MonthInputElement implements RangeInputElementBase {
@@ -180,7 +180,7 @@ abstract class MonthInputElement implements RangeInputElementBase {
   bool required;
   DateTime valueAsDate;
 
-  factory MonthInputElement() => InputElement(type: "month");
+  factory MonthInputElement() => InputElement(type: 'month');
 }
 
 abstract class NumberInputElement implements RangeInputElementBase {
@@ -192,24 +192,24 @@ abstract class NumberInputElement implements RangeInputElementBase {
   @override
   num valueAsNumber;
 
-  factory NumberInputElement() => InputElement(type: "number");
+  factory NumberInputElement() => InputElement(type: 'number');
 }
 
 abstract class PasswordInputElement implements TextInputElementBase {
-  factory PasswordInputElement() => InputElement(type: "password");
+  factory PasswordInputElement() => InputElement(type: 'password');
 }
 
 abstract class RadioButtonInputElement implements InputElementBase {
   bool checked;
   bool required;
 
-  factory RadioButtonInputElement() => InputElement(type: "radio");
+  factory RadioButtonInputElement() => InputElement(type: 'radio');
 }
 
 abstract class RangeInputElement implements RangeInputElementBase {
   static bool get supported => true;
 
-  factory RangeInputElement() => InputElement(type: "range");
+  factory RangeInputElement() => InputElement(type: 'range');
 }
 
 /// Base interface for all input element types which involve ranges.
@@ -230,13 +230,13 @@ abstract class RangeInputElementBase implements InputElementBase {
 }
 
 abstract class ResetButtonInputElement implements InputElementBase {
-  factory ResetButtonInputElement() => InputElement(type: "reset");
+  factory ResetButtonInputElement() => InputElement(type: 'reset');
 }
 
 abstract class SearchInputElement implements TextInputElementBase {
   static bool get supported => true;
 
-  factory SearchInputElement() => InputElement(type: "search");
+  factory SearchInputElement() => InputElement(type: 'search');
 }
 
 abstract class SubmitButtonInputElement implements InputElementBase {
@@ -250,19 +250,19 @@ abstract class SubmitButtonInputElement implements InputElementBase {
 
   String formTarget;
 
-  factory SubmitButtonInputElement() => InputElement(type: "submit");
+  factory SubmitButtonInputElement() => InputElement(type: 'submit');
 }
 
 abstract class TelephoneInputElement implements TextInputElementBase {
   static bool get supported => true;
 
-  factory TelephoneInputElement() => InputElement(type: "telephone");
+  factory TelephoneInputElement() => InputElement(type: 'telephone');
 }
 
 abstract class TextInputElement implements TextInputElementBase {
   String dirName;
 
-  factory TextInputElement() => InputElement(type: "text");
+  factory TextInputElement() => InputElement(type: 'text');
 
   Element get list;
 }
@@ -299,13 +299,13 @@ abstract class TimeInputElement implements RangeInputElementBase {
   bool readOnly;
   bool required;
 
-  factory TimeInputElement() => InputElement(type: "time");
+  factory TimeInputElement() => InputElement(type: 'time');
 }
 
 abstract class UrlInputElement implements TextInputElementBase {
   static bool get supported => true;
 
-  factory UrlInputElement() => InputElement(type: "url");
+  factory UrlInputElement() => InputElement(type: 'url');
 }
 
 abstract class WeekInputElement implements RangeInputElementBase {
@@ -315,5 +315,5 @@ abstract class WeekInputElement implements RangeInputElementBase {
   bool required;
   DateTime valueAsDate;
 
-  factory WeekInputElement() => InputElement(type: "week");
+  factory WeekInputElement() => InputElement(type: 'week');
 }

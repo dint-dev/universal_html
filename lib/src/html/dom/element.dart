@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -56,7 +56,7 @@ abstract class Element extends Node
   static const EventStreamProvider<Event> abortEvent =
       EventStreamProvider<Event>('abort');
 
-  static final _whitespaceRegExp = RegExp("\s");
+  static final _whitespaceRegExp = RegExp('\s');
 
   /// Static factory designed to expose `beforecopy` events to event
   /// handlers that are not necessarily instances of [Element].
@@ -511,24 +511,24 @@ abstract class Element extends Node
       EventStreamProvider<WheelEvent>('wheel');
 
   static final _normalizedElementNameRegExp =
-      RegExp(r"^[a-z_\:][a-z0-9_\-\:]*$");
+      RegExp(r'^[a-z_\:][a-z0-9_\-\:]*$');
 
   static final _normalizedAttributeNameRegExp =
-      RegExp(r"^[a-z_\:][a-z0-9_\-\:]*$");
+      RegExp(r'^[a-z_\:][a-z0-9_\-\:]*$');
 
   /// Static factory designed to expose `mousewheel` events to event
   /// handlers that are not necessarily instances of [Element].
   ///
   /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<WheelEvent> mouseWheelEvent =
-      EventStreamProvider<WheelEvent>("mousewheel");
+      EventStreamProvider<WheelEvent>('mousewheel');
 
   /// Static factory designed to expose `transitionend` events to event
   /// handlers that are not necessarily instances of [Element].
   ///
   /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<TransitionEvent> transitionEndEvent =
-      EventStreamProvider<TransitionEvent>("transition");
+      EventStreamProvider<TransitionEvent>('transition');
 
   /// For [nodeName] and [tagName].
   String _nodeName;
@@ -537,7 +537,7 @@ abstract class Element extends Node
 
   AccessibleNode _accessibleNode;
 
-  /// Contains all non-namespaced attributes except special cases like "style".
+  /// Contains all non-namespaced attributes except special cases like 'style'.
   /// The instance is allocated lazily.
   LinkedHashMap<String, String> _attributesPartialViewOrNull;
 
@@ -587,7 +587,7 @@ abstract class Element extends Node
   factory Element.canvas() = CanvasElement;
 
   Element.created()
-      : this._lowerCaseTagName = null,
+      : _lowerCaseTagName = null,
         super._(null) {
     throw UnimplementedError();
   }
@@ -614,7 +614,7 @@ abstract class Element extends Node
 
   /// Creates an HTML element from a valid fragment of HTML.
   ///
-  ///     var element = new Element.html('<div class="foo">content</div>');
+  ///     var element = new Element.html('<div class='foo'>content</div>');
   ///
   /// The HTML fragment should contain only one single root element, any
   /// leading or trailing text nodes will be removed.
@@ -778,155 +778,155 @@ abstract class Element extends Node
   /// Internal constructor that does not normalize or validate element name.
   /// Used by Element subclasses such as [AnchorElement].
   Element._(Document ownerDocument, String nodeName)
-      : this._nodeName = nodeName,
-        this._lowerCaseTagName = nodeName.toLowerCase(),
+      : _nodeName = nodeName,
+        _lowerCaseTagName = nodeName.toLowerCase(),
         super._(ownerDocument);
 
   factory Element._internalTag(Document ownerDocument, String name,
       [String typeExtension]) {
     final lowerCaseName = name.toLowerCase();
     switch (lowerCaseName) {
-      case "a":
+      case 'a':
         return AnchorElement._(ownerDocument);
-      case "area":
+      case 'area':
         return AreaElement._(ownerDocument);
-      case "audio":
+      case 'audio':
         return AudioElement._(ownerDocument);
-      case "base":
+      case 'base':
         return BaseElement._(ownerDocument);
-      case "body":
+      case 'body':
         return BodyElement._(ownerDocument);
-      case "br":
+      case 'br':
         return BRElement._(ownerDocument);
-      case "button":
+      case 'button':
         return ButtonElement._(ownerDocument);
-      case "canvas":
+      case 'canvas':
         return CanvasElement._(ownerDocument);
-      case "caption":
+      case 'caption':
         return TableCaptionElement._(ownerDocument);
-      case "col":
+      case 'col':
         return TableColElement._(ownerDocument);
-      case "content":
+      case 'content':
         return ContentElement._(ownerDocument);
-      case "data":
+      case 'data':
         return DataElement._(ownerDocument);
-      case "datalist":
+      case 'datalist':
         return DataListElement._(ownerDocument);
-      case "dialog":
+      case 'dialog':
         return DialogElement._(ownerDocument);
-      case "div":
+      case 'div':
         return DivElement._(ownerDocument);
-      case "embed":
+      case 'embed':
         return EmbedElement._(ownerDocument);
-      case "fieldset":
+      case 'fieldset':
         return FieldSetElement._(ownerDocument);
-      case "form":
+      case 'form':
         return FormElement._(ownerDocument);
-      case "head":
+      case 'head':
         return HeadElement._(ownerDocument);
-      case "h1":
+      case 'h1':
         return HeadingElement._(ownerDocument, name);
-      case "h2":
+      case 'h2':
         return HeadingElement._(ownerDocument, name);
-      case "h3":
+      case 'h3':
         return HeadingElement._(ownerDocument, name);
-      case "h4":
+      case 'h4':
         return HeadingElement._(ownerDocument, name);
-      case "h5":
+      case 'h5':
         return HeadingElement._(ownerDocument, name);
-      case "h6":
+      case 'h6':
         return HeadingElement._(ownerDocument, name);
-      case "hr":
+      case 'hr':
         return HRElement._(ownerDocument);
-      case "html":
+      case 'html':
         return HtmlHtmlElement._(ownerDocument);
-      case "iframe":
+      case 'iframe':
         return IFrameElement._(ownerDocument);
-      case "img":
+      case 'img':
         return ImageElement._(ownerDocument);
-      case "input":
+      case 'input':
         return InputElement._(ownerDocument);
-      case "label":
+      case 'label':
         return LabelElement._(ownerDocument);
-      case "legend":
+      case 'legend':
         return LegendElement._(ownerDocument);
-      case "li":
+      case 'li':
         return LIElement._(ownerDocument);
-      case "link":
+      case 'link':
         return LinkElement._(ownerDocument);
-      case "map":
+      case 'map':
         return MapElement._(ownerDocument);
-      case "menu":
+      case 'menu':
         return MenuElement._(ownerDocument);
-      case "meta":
+      case 'meta':
         return MetaElement._(ownerDocument);
-      case "meter":
+      case 'meter':
         return MeterElement._(ownerDocument);
-      case "object":
+      case 'object':
         return ObjectElement._(ownerDocument);
-      case "ol":
+      case 'ol':
         return OListElement._(ownerDocument);
-      case "option":
+      case 'option':
         return OptionElement._(ownerDocument);
-      case "optgroup":
+      case 'optgroup':
         return OptGroupElement._(ownerDocument);
-      case "p":
+      case 'p':
         return ParagraphElement._(ownerDocument);
-      case "param":
+      case 'param':
         return ParamElement._(ownerDocument);
-      case "picture":
+      case 'picture':
         return PictureElement._(ownerDocument);
-      case "pre":
+      case 'pre':
         return PreElement._(ownerDocument);
-      case "q":
+      case 'q':
         return QuoteElement._(ownerDocument);
-      case "select":
+      case 'select':
         return SelectElement._(ownerDocument);
-      case "script":
+      case 'script':
         return ScriptElement._(ownerDocument);
-      case "shadow":
+      case 'shadow':
         return ShadowElement._(ownerDocument);
-      case "slot":
+      case 'slot':
         return SlotElement._(ownerDocument);
-      case "source":
+      case 'source':
         return SourceElement._(ownerDocument);
-      case "span":
+      case 'span':
         return SpanElement._(ownerDocument);
-      case "style":
+      case 'style':
         return StyleElement._(ownerDocument);
-      case "table":
+      case 'table':
         return TableElement._(ownerDocument);
-      case "tbody":
+      case 'tbody':
         return TableSectionElement._(ownerDocument, name);
-      case "template":
+      case 'template':
         return TemplateElement._(ownerDocument);
-      case "td":
+      case 'td':
         return TableCellElement._(ownerDocument);
-      case "tfoot":
+      case 'tfoot':
         return TableSectionElement._(ownerDocument, name);
-      case "thead":
+      case 'thead':
         return TableSectionElement._(ownerDocument, name);
-      case "textarea":
+      case 'textarea':
         return TextAreaElement._(ownerDocument);
-      case "time":
+      case 'time':
         return TimeElement._(ownerDocument);
-      case "title":
+      case 'title':
         return TitleElement._(ownerDocument);
-      case "tr":
+      case 'tr':
         return TableRowElement._(ownerDocument);
-      case "track":
+      case 'track':
         return TrackElement._(ownerDocument);
-      case "ul":
+      case 'ul':
         return UListElement._(ownerDocument);
-      case "video":
+      case 'video':
         return VideoElement._(ownerDocument);
       default:
         if (!Element._normalizedElementNameRegExp.hasMatch(lowerCaseName)) {
           throw DomException._failedToExecute(
-            "ElementNameException",
-            "Element",
-            "tag",
-            "'$name' is an invalid element name.",
+            'ElementNameException',
+            'Element',
+            'tag',
+            '"$name" is an invalid element name.',
           );
         }
         return UnknownElement._(ownerDocument, null, name);
@@ -995,10 +995,10 @@ abstract class Element extends Node
     classSet.addAll(value);
   }
 
-  String get className => _getAttribute("class");
+  String get className => _getAttribute('class');
 
   set className(String newValue) {
-    _setAttribute("class", newValue);
+    _setAttribute('class', newValue);
   }
 
   Rectangle<int> get client => _renderData.client;
@@ -1033,11 +1033,11 @@ abstract class Element extends Node
   CssRect get contentEdge => _ContentCssRect(this);
 
   bool get contentEditable {
-    return _getAttributeBool("contenteditable");
+    return _getAttributeBool('contenteditable');
   }
 
   set contentEditable(bool value) {
-    _setAttributeBool("contentEditable", value);
+    _setAttributeBool('contentEditable', value);
   }
 
   /// Allows access to all custom data attributes (data-*) set on this element.
@@ -1072,10 +1072,10 @@ abstract class Element extends Node
     }
   }
 
-  String get dir => _getAttribute("dir");
+  String get dir => _getAttribute('dir');
 
   set dir(String value) {
-    _setAttribute("dir", value);
+    _setAttribute('dir', value);
   }
 
   /// Provides the coordinates of the element relative to the top of the
@@ -1085,36 +1085,36 @@ abstract class Element extends Node
   /// [offset](http://api.jquery.com/offset/) method.
   Point get documentOffset => offsetTo(document.documentElement);
 
-  bool get draggable => _getAttributeBoolString("draggable") ?? false;
+  bool get draggable => _getAttributeBoolString('draggable') ?? false;
 
   set draggable(bool value) {
-    _setAttributeBoolString("draggable", value);
+    _setAttributeBoolString('draggable', value);
   }
 
   bool get hidden {
-    return _getAttributeBool("hidden") ?? false;
+    return _getAttributeBool('hidden') ?? false;
   }
 
   set hidden(bool value) {
-    _setAttributeBool("hidden", value);
+    _setAttributeBool('hidden', value);
   }
 
-  String get id => _getAttribute("id");
+  String get id => _getAttribute('id');
 
   set id(String value) {
-    _setAttribute("id", value);
+    _setAttribute('id', value);
   }
 
-  bool get inert => _getAttributeBool("inert") ?? false;
+  bool get inert => _getAttributeBool('inert') ?? false;
 
   set inert(bool value) {
-    _setAttributeBool("inert", value);
+    _setAttributeBool('inert', value);
   }
 
   String get innerHtml {
     final sb = StringBuffer();
     final flags = _getPrintingFlags(this);
-    var next = this.firstChild;
+    var next = firstChild;
     while (next != null) {
       _printNode(sb, flags, next);
       next = next.nextNode;
@@ -1127,7 +1127,7 @@ abstract class Element extends Node
   /// This uses the default sanitization behavior to sanitize the HTML fragment,
   /// use [setInnerHtml] to override the default behavior.
   set innerHtml(String html) {
-    this.setInnerHtml(html);
+    setInnerHtml(html);
   }
 
   String get innerText {
@@ -1135,24 +1135,24 @@ abstract class Element extends Node
   }
 
   set innerText(String value) {
-    this.text = value.replaceAll("\n", "");
+    text = value.replaceAll('\n', '');
   }
 
-  String get inputMode => _getAttribute("inputmode");
+  String get inputMode => _getAttribute('inputmode');
 
   set inputMode(String value) {
-    _setAttribute("inputmode", value);
+    _setAttribute('inputmode', value);
   }
 
   bool get isContentEditable => false;
 
-  String get lang => getAttribute("lang");
+  String get lang => getAttribute('lang');
 
   set lang(String value) {
-    setAttribute("lang", value);
+    setAttribute('lang', value);
   }
 
-  String get localName => this.tagName;
+  String get localName => tagName;
 
   /// Access the dimensions and position of this element's content + padding +
   /// border + margin box.
@@ -1196,7 +1196,7 @@ abstract class Element extends Node
     if (prefix == null) {
       return name;
     }
-    return "$prefix:$name";
+    return '$prefix:$name';
   }
 
   @override
@@ -1629,14 +1629,14 @@ abstract class Element extends Node
   @SupportedBrowser(SupportedBrowser.CHROME, '25')
   ShadowRoot get shadowRoot => null;
 
-  String get slot => _getAttribute("slot");
+  String get slot => _getAttribute('slot');
 
   set slot(String value) {
-    _setAttribute("slot", value);
+    _setAttribute('slot', value);
   }
 
   bool get spellcheck {
-    final value = _getAttributeBoolString("spellcheck") ?? _defaultSpellcheck;
+    final value = _getAttributeBoolString('spellcheck') ?? _defaultSpellcheck;
     if (value != null) {
       return value;
     }
@@ -1648,55 +1648,55 @@ abstract class Element extends Node
   }
 
   set spellcheck(bool value) {
-    _setAttributeBoolString("spellcheck", value);
+    _setAttributeBoolString('spellcheck', value);
   }
 
   CssStyleDeclaration get style => _getOrCreateStyle();
 
   StylePropertyMap get styleMap => StylePropertyMap._();
 
-  int get tabIndex => _getAttributeInt("tabindex") ?? -1;
+  int get tabIndex => _getAttributeInt('tabindex') ?? -1;
 
   set tabIndex(int value) {
-    _setAttributeInt("tabindex", value ?? -1);
+    _setAttributeInt('tabindex', value ?? -1);
   }
 
   /// Returns node name in uppercase.
-  String get tagName => this.nodeName;
+  String get tagName => nodeName;
 
-  String get title => getAttribute("title");
+  String get title => getAttribute('title');
 
   set title(String value) {
-    setAttribute("title", value);
+    setAttribute('title', value);
   }
 
   bool get translate {
     final result = _getAttributeBoolString(
-      "translate",
-      falseValue: "no",
-      trueValue: "yes",
+      'translate',
+      falseValue: 'no',
+      trueValue: 'yes',
     );
     return result ?? true;
   }
 
   set translate(bool value) {
-    _setAttribute("translate", value ? "yes" : "no");
+    _setAttribute('translate', value ? 'yes' : 'no');
   }
 
   /// Returns read-only list of attribute names.
   List<String> get _attributeNames {
     final result = <String>[..._attributesWithoutLatestValues.keys];
-    final style = this._style;
+    final style = _style;
     if (style != null && (style._sourceIsLatest || style._map.isNotEmpty)) {
-      result.add("style");
+      result.add('style');
     }
     return result;
   }
 
   LinkedHashMap<String, String> get _attributesWithoutLatestValues {
-    return this._attributesPartialViewOrNull ??
+    return _attributesPartialViewOrNull ??
         // ignore: prefer_collection_literals
-        (this._attributesPartialViewOrNull = LinkedHashMap<String, String>());
+        (_attributesPartialViewOrNull = LinkedHashMap<String, String>());
   }
 
   /// Default value of [spellcheck]. Null means that it's inherited.
@@ -1708,7 +1708,7 @@ abstract class Element extends Node
 
   @override
   RenderData get _renderData {
-    return this._renderDataField ??=
+    return _renderDataField ??=
         _htmlDriver.browserImplementation.newRenderData(this);
   }
 
@@ -1720,11 +1720,11 @@ abstract class Element extends Node
   ///
   /// Examples
   ///
-  ///     var animation = elem.animate([{"opacity": 75}, {"opacity": 0}], 200);
+  ///     var animation = elem.animate([{'opacity': 75}, {'opacity': 0}], 200);
   ///
   ///     var animation = elem.animate([
-  ///       {"transform": "translate(100px, -100%)"},
-  ///       {"transform" : "translate(400px, 500px)"}
+  ///       {'transform': 'translate(100px, -100%)'},
+  ///       {'transform' : 'translate(400px, 500px)'}
   ///     ], 1500);
   ///
   /// The [frames] parameter is an Iterable<Map>, where the
@@ -1735,8 +1735,8 @@ abstract class Element extends Node
   @SupportedBrowser(SupportedBrowser.CHROME, '36')
   Animation animate(Iterable<Map<String, dynamic>> frames, [timing]) {
     if (frames is! Iterable || !(frames.every((x) => x is Map))) {
-      throw ArgumentError("The frames parameter should be a List of Maps "
-          "with frame information");
+      throw ArgumentError('The frames parameter should be a List of Maps '
+          'with frame information');
     }
     return Animation();
   }
@@ -1754,12 +1754,12 @@ abstract class Element extends Node
         return;
       }
       child.remove();
-      this.append(child);
+      append(child);
     }
   }
 
   void appendText(String value) {
-    this.insertBefore(Text(value), null);
+    insertBefore(Text(value), null);
   }
 
   /// Called by the DOM when this element has been inserted into the live
@@ -1778,11 +1778,11 @@ abstract class Element extends Node
   void attributeChanged(String name, String oldValue, String newValue) {}
 
   void blur() {
-    dispatchEvent(FocusEvent("blur"));
+    dispatchEvent(FocusEvent('blur'));
   }
 
   void click() {
-    dispatchEvent(MouseEvent("click"));
+    dispatchEvent(MouseEvent('click'));
   }
 
   Element closest(String selectors) {
@@ -1842,7 +1842,7 @@ abstract class Element extends Node
   void detached() {}
 
   void focus() {
-    dispatchEvent(FocusEvent("focus"));
+    dispatchEvent(FocusEvent('focus'));
   }
 
   List<Animation> getAnimations() {
@@ -1854,11 +1854,11 @@ abstract class Element extends Node
   }
 
   List<String> getAttributeNames() {
-    return this.attributes.keys.toList();
+    return attributes.keys.toList();
   }
 
   String getAttributeNS(String namespaceUri, String name) {
-    final namespaces = this._namespacedAttributes;
+    final namespaces = _namespacedAttributes;
     if (namespaces == null) {
       return null;
     }
@@ -1908,14 +1908,14 @@ abstract class Element extends Node
       throw ArgumentError.value(classNames);
     }
     return querySelectorAll(
-        classNames.split(_whitespaceRegExp).map((name) => ".$name").join());
+        classNames.split(_whitespaceRegExp).map((name) => '.$name').join());
   }
 
   Map<String, String> getNamespacedAttributes(String namespace) {
-    var namespaces = this._namespacedAttributes;
+    var namespaces = _namespacedAttributes;
     if (namespaces == null) {
       namespaces = <String, Map<String, String>>{};
-      this._namespacedAttributes = namespaces;
+      _namespacedAttributes = namespaces;
     }
     var result = namespaces[namespace];
     if (result == null) {
@@ -1930,7 +1930,7 @@ abstract class Element extends Node
   }
 
   bool hasAttributeNS(String namespaceUri, String name) {
-    final namespaces = this._namespacedAttributes;
+    final namespaces = _namespacedAttributes;
     if (namespaces == null) {
       return false;
     }
@@ -1967,7 +1967,7 @@ abstract class Element extends Node
   /// * 'beforeEnd': As the last child of this element.
   /// * 'afterEnd': Immediately after this element.
   ///
-  ///     var html = '<div class="something">content</div>';
+  ///     var html = '<div class='something'>content</div>';
   ///     // Inserts as the first child
   ///     document.body.insertAdjacentHtml('afterBegin', html);
   ///     var createdElement = document.body.children[0];
@@ -1999,10 +1999,10 @@ abstract class Element extends Node
   Element internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
     // Create a new instance of the same class
     final clone = _newInstance(ownerDocument);
-    clone._nodeName = this._nodeName;
+    clone._nodeName = _nodeName;
 
     // Clone attributes
-    final attributes = this._attributesPartialViewOrNull;
+    final attributes = _attributesPartialViewOrNull;
     if (attributes != null) {
       final cloneAttributes = clone._attributesWithoutLatestValues;
       attributes.forEach((k, v) {
@@ -2011,7 +2011,7 @@ abstract class Element extends Node
     }
 
     // Clone style
-    clone._style = this._style?._clone();
+    clone._style = _style?._clone();
 
     // Clone children
     if (deep != false) {
@@ -2058,8 +2058,9 @@ abstract class Element extends Node
   void removeAttribute(String name) {
     _attributesWithoutLatestValues.remove(name);
     switch (name) {
-      case "style":
-        this._style = null;
+      case 'style':
+        _style = null;
+        break;
     }
   }
 
@@ -2109,10 +2110,10 @@ abstract class Element extends Node
     // Validate name
     if (!_normalizedAttributeNameRegExp.hasMatch(normalizedName)) {
       throw DomException._failedToExecute(
-        "InvalidCharacterError",
-        "setAttribute",
-        "node",
-        "'$name' is not a valid attribute name.",
+        'InvalidCharacterError',
+        'setAttribute',
+        'node',
+        '"$name" is not a valid attribute name.',
       );
     }
 
@@ -2124,16 +2125,16 @@ abstract class Element extends Node
     // Validate namespace
     if (namespace == null ||
         !Element._normalizedAttributeNameRegExp.hasMatch(namespace)) {
-      throw ArgumentError.value(namespace, "namespace");
+      throw ArgumentError.value(namespace, 'namespace');
     }
 
     // Validate attribute name
     if (name == null ||
         !Element._normalizedAttributeNameRegExp.hasMatch(name)) {
-      throw ArgumentError.value(name, "name");
+      throw ArgumentError.value(name, 'name');
     }
 
-    var namespaces = this._namespacedAttributes;
+    var namespaces = _namespacedAttributes;
     if (value == null) {
       //
       // Remove attribute
@@ -2155,7 +2156,7 @@ abstract class Element extends Node
       //
       if (namespaces == null) {
         namespaces = <String, Map<String, String>>{};
-        this._namespacedAttributes = namespaces;
+        _namespacedAttributes = namespaces;
       }
       var map = namespaces[namespace];
       if (map == null) {
@@ -2191,8 +2192,8 @@ abstract class Element extends Node
   /// * [NodeTreeSanitizer]
   void setInnerHtml(String html,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    while (this.firstChild != null) {
-      this.firstChild.remove();
+    while (firstChild != null) {
+      firstChild.remove();
     }
     final fragment = createFragment(
       html,
@@ -2204,7 +2205,7 @@ abstract class Element extends Node
       if (firstChild == null) {
         break;
       }
-      this.append(firstChild);
+      append(firstChild);
     }
   }
 
@@ -2218,19 +2219,19 @@ abstract class Element extends Node
     }
     final id = this.id;
     final tagName = this.tagName.toLowerCase();
-    if (id == "") {
+    if (id == '') {
       return '<$tagName ...>...</$tagName>';
     }
     return '<$tagName id="$id" ...>...</$tagName>';
   }
 
   /// Returns value of the attribute. The name MUST be lowercase.
-  String _getAttribute(String name, {String defaultValue = ""}) {
+  String _getAttribute(String name, {String defaultValue = ''}) {
     switch (name) {
-      case "style":
+      case 'style':
         return _style?.toString() ?? defaultValue;
       default:
-        final map = this._attributesPartialViewOrNull;
+        final map = _attributesPartialViewOrNull;
         if (map == null) {
           return defaultValue;
         }
@@ -2247,12 +2248,12 @@ abstract class Element extends Node
   }
 
   /// Returns boolean value of the attribute. The name MUST be lowercase.
-  /// This is for attributes where the value is either "true" or "false".
+  /// This is for attributes where the value is either 'true' or 'false'.
   /// If the value is something else, returns null.
   ///
   /// See also [_getAttributeBool].
   bool _getAttributeBoolString(String name,
-      {String falseValue = "false", String trueValue = "true"}) {
+      {String falseValue = 'false', String trueValue = 'true'}) {
     final value = _getAttribute(name, defaultValue: null);
     if (value == falseValue) {
       return false;
@@ -2291,7 +2292,7 @@ abstract class Element extends Node
     if (uri == null) {
       return uriString;
     }
-    if (uri.scheme != "") {
+    if (uri.scheme != '') {
       return uriString;
     }
     final baseUriString = this.baseUri;
@@ -2306,24 +2307,24 @@ abstract class Element extends Node
   }
 
   _CssStyleDeclaration _getOrCreateStyle() {
-    var result = this._style;
+    var result = _style;
     if (result == null) {
       result = _CssStyleDeclaration._();
-      final value = this._attributesWithoutLatestValues["style"];
+      final value = _attributesWithoutLatestValues['style'];
       if (value != null) {
         result._parse(value);
       }
-      this._style = result;
+      _style = result;
     }
     return result;
   }
 
   bool _hasAttribute(String name) {
     switch (name) {
-      case "style":
+      case 'style':
         return _style != null;
       default:
-        final map = this._attributesPartialViewOrNull;
+        final map = _attributesPartialViewOrNull;
         if (map == null) {
           return false;
         }
@@ -2336,9 +2337,9 @@ abstract class Element extends Node
   /// Sets value of the attribute. The name MUST be lowercase.
   void _setAttribute(String name, String value) {
     name = name.toLowerCase();
-    value ??= "null";
+    value ??= 'null';
 
-    if (!_hasAttribute(name) || value != this._getAttribute(name)) {
+    if (!_hasAttribute(name) || value != _getAttribute(name)) {
       // Mark as dirty
       _markDirty();
 
@@ -2347,8 +2348,8 @@ abstract class Element extends Node
 
       // Field update for possible special case
       switch (name) {
-        case "style":
-          this._getOrCreateStyle()._parse(value);
+        case 'style':
+          _getOrCreateStyle()._parse(value);
           break;
       }
     }
@@ -2357,7 +2358,7 @@ abstract class Element extends Node
   /// Sets boolean value of the attribute. The name MUST be lowercase.
   void _setAttributeBool(String name, bool value) {
     if (value) {
-      _setAttribute(name, "");
+      _setAttribute(name, '');
     } else {
       _setAttribute(name, null);
     }
@@ -2365,7 +2366,7 @@ abstract class Element extends Node
 
   /// Sets boolean value of the attribute. The name MUST be lowercase.
   void _setAttributeBoolString(String name, bool value) {
-    _setAttribute(name, value ? "true" : "false");
+    _setAttribute(name, value ? 'true' : 'false');
   }
 
   /// Sets integer value of the attribute. The name MUST be lowercase.
@@ -2388,7 +2389,7 @@ abstract class Element extends Node
 
   static Point _offsetToHelper(Element current, Element parent) {
     // We're hopping from _offsetParent_ to offsetParent (not just parent), so
-    // offsetParent, "tops out" at BODY. But people could conceivably pass in
+    // offsetParent, 'tops out' at BODY. But people could conceivably pass in
     // the document.documentElement and I want it to return an absolute offset,
     // so we have the special case checking for HTML.
     var sameAsParent = identical(current, parent);
@@ -2396,8 +2397,8 @@ abstract class Element extends Node
     if (current == null || sameAsParent) {
       if (foundAsParent) return Point(0, 0);
       throw ArgumentError(
-        "Specified element is not a transitive offset "
-        "parent of this element.",
+        'Specified element is not a transitive offset '
+        'parent of this element.',
       );
     }
     final parentOffset = current.offsetParent;

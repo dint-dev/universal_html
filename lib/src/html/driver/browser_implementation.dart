@@ -47,26 +47,26 @@ class BrowserImplementation {
   ///   * [InputElement] clicks
   void handleEventDefault(EventTarget eventTarget, Event event) {
     switch (event.type) {
-      case "click":
+      case 'click':
         if (eventTarget is InputElement) {
           final type = eventTarget.type.toLowerCase();
           switch (type) {
-            case "file":
+            case 'file':
               handleFileUploadInputElementClick(eventTarget, event);
               break;
 
-            case "reset":
+            case 'reset':
               eventTarget.form?.reset();
               break;
 
-            case "submit":
+            case 'submit':
               final form = eventTarget.form;
               if (form != null) {
                 handleFormSubmit(form, button: eventTarget);
               }
               break;
 
-            case "radio":
+            case 'radio':
               final name = eventTarget.name;
               for (var item in eventTarget.form._items) {
                 if (item is InputElement && item.name == name) {
@@ -76,7 +76,7 @@ class BrowserImplementation {
               eventTarget.checked = true;
               break;
 
-            case "checkbox":
+            case 'checkbox':
               eventTarget.checked = !eventTarget.checked;
               break;
 

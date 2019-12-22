@@ -15,7 +15,7 @@
 part of main_test;
 
 void _testEvents() {
-  group("events:", () {
+  group('events:', () {
     List<String> registerStepListeners(List<Element> elements,
         {Element expectedTarget}) {
       // The list of steps will be built by listeners
@@ -27,18 +27,18 @@ void _testEvents() {
         final element = elements[i];
 
         // Choose an ID for debugging
-        element.id = "e$i";
+        element.id = 'e$i';
 
         // Add capturing listener
-        element.addEventListener("click", (event) {
-          steps.add("e$i-capturing");
+        element.addEventListener('click', (event) {
+          steps.add('e$i-capturing');
           expect(event.currentTarget, same(element));
           expect(event.target, same(expectedTarget));
         }, true);
 
         // Add bubbling listener
-        element.addEventListener("click", (event) {
-          steps.add("e$i-bubbling");
+        element.addEventListener('click', (event) {
+          steps.add('e$i-bubbling');
           expect(event.currentTarget, same(element));
           expect(event.target, same(expectedTarget));
         });
@@ -46,7 +46,7 @@ void _testEvents() {
       return steps;
     }
 
-    test("propagation", () async {
+    test('propagation', () async {
       final e2 = DivElement();
       final e1 = DivElement()..append(e2);
       final e0 = DivElement()..append(e1);
@@ -63,12 +63,12 @@ void _testEvents() {
       expect(
         steps,
         [
-          "e0-capturing",
-          "e1-capturing",
-          "e2-capturing",
-          "e2-bubbling",
-          "e1-bubbling",
-          "e0-bubbling",
+          'e0-capturing',
+          'e1-capturing',
+          'e2-capturing',
+          'e2-bubbling',
+          'e1-bubbling',
+          'e0-bubbling',
         ],
       );
     });

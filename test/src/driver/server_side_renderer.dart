@@ -21,13 +21,13 @@ class _RequestAndResponse {
 }
 
 void _testServerSideRenderer() {
-  group("ServerSideRenderer", () {
-    group("handleHttpRequest", () {
+  group('ServerSideRenderer', () {
+    group('handleHttpRequest', () {
       // Set up HTTP server for all tests in this group
       HttpServer httpServer;
       StreamQueue<HttpRequest> httpRequestQueue;
       setUpAll(() async {
-        httpServer = await HttpServer.bind("localhost", 0);
+        httpServer = await HttpServer.bind('localhost', 0);
         httpRequestQueue = StreamQueue<HttpRequest>(httpServer);
       });
       tearDownAll(() {
@@ -42,7 +42,7 @@ void _testServerSideRenderer() {
         final httpClientRequest = await httpClient.get(
           httpServer.address.host,
           httpServer.port,
-          "/",
+          '/',
         );
         final httpClientResponseFuture = httpClientRequest.close();
 
@@ -59,13 +59,13 @@ void _testServerSideRenderer() {
 
       ;
 
-      test("Basic use", () async {
+      test('Basic use', () async {
         final renderer = ServerSideRenderer(() {
-          document.body.appendText("Hello world!");
+          document.body.appendText('Hello world!');
         });
 
         // Render
-        final mock = await mockRequestAndResponse("/");
+        final mock = await mockRequestAndResponse('/');
         await renderer.handleHttpRequest(mock.request);
 
         // Get the HTTP response
@@ -78,38 +78,38 @@ void _testServerSideRenderer() {
         final content = await utf8.decodeStream(httpClientResponse);
         expect(
           content,
-          "<!doctype><html><head></head><body>Hello world!</body></html>",
+          '<!doctype><html><head></head><body>Hello world!</body></html>',
         );
 
         // -------
         // Headers
         // -------
         expect(
-          httpClientResponse.headers.value("Content-Type"),
-          "text/html; charset=UTF-8",
+          httpClientResponse.headers.value('Content-Type'),
+          'text/html; charset=UTF-8',
         );
 
         expect(
-          httpClientResponse.headers.value("X-Frame-Options"),
-          "DENY",
+          httpClientResponse.headers.value('X-Frame-Options'),
+          'DENY',
         );
 
         expect(
-          httpClientResponse.headers.value("X-Xss-Protection"),
-          "1; mode=block",
+          httpClientResponse.headers.value('X-Xss-Protection'),
+          '1; mode=block',
         );
 
         expect(
-          httpClientResponse.headers.value("Content-Security-Policy"),
+          httpClientResponse.headers.value('Content-Security-Policy'),
           null, // By default, no CSP
         );
       });
 
-      test("With CSP", () async {
+      test('With CSP', () async {
         final renderer = ServerSideRenderer(() {}, csp: Csp.allowNone);
 
         // Render
-        final mock = await mockRequestAndResponse("/");
+        final mock = await mockRequestAndResponse('/');
         await renderer.handleHttpRequest(mock.request);
 
         // Get the HTTP response
@@ -117,8 +117,8 @@ void _testServerSideRenderer() {
 
         // Is the header correct?
         expect(
-          httpClientResponse.headers.value("Content-Security-Policy"),
-          "default-src: 'none'",
+          httpClientResponse.headers.value('Content-Security-Policy'),
+          'default-src: \'none\'',
         );
       });
     });

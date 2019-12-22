@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -104,7 +104,7 @@ class BlobEvent extends Event {
   final num timecode;
 
   BlobEvent(String type, [Map dict])
-      : this._(type, data: dict["data"], timecode: dict["timecode"]);
+      : this._(type, data: dict['data'], timecode: dict['timecode']);
 
   BlobEvent._(String type, {this.data, this.timecode}) : super.internal(type);
 }
@@ -246,10 +246,10 @@ class ErrorEvent extends Event {
 
   ErrorEvent._(
       {this.colno, this.error, this.filename, this.lineno, this.message})
-      : super.internal("error");
+      : super.internal('error');
 
   @override
-  String toString() => "[ErrorEvent: $message]";
+  String toString() => '[ErrorEvent: $message]';
 }
 
 class ExtendableEvent extends Event {
@@ -276,7 +276,7 @@ class FetchEvent extends ExtendableEvent {
 
   FetchEvent._(
       {this.clientId, this.isReload, this.preloadResponse, this.request})
-      : super._("fetch");
+      : super._('fetch');
 
   void respondWith(Future r) {
     throw UnimplementedError();
@@ -399,7 +399,7 @@ class MessageEvent extends Event {
     String lastEventId,
     this.source,
     this.ports,
-  })  : this.lastEventId = lastEventId ?? "",
+  })  : lastEventId = lastEventId ?? '',
         super.internal(type);
 }
 
@@ -521,17 +521,17 @@ class MouseEvent extends UIEvent {
     bool cancelable = true,
     int detail = 0,
     Object view,
-  })  : this.buttons = 0,
-        this._screenX = screenX,
-        this._screenY = screenY,
-        this._clientX = clientX,
-        this._clientY = clientY,
-        this._layerX = layerX,
-        this._layerY = layerY,
-        this._movementX = movementX,
-        this._movementY = movementY,
-        this._pageX = pageX,
-        this._pageY = pageY,
+  })  : buttons = 0,
+        _screenX = screenX,
+        _screenY = screenY,
+        _clientX = clientX,
+        _clientY = clientY,
+        _layerX = layerX,
+        _layerY = layerY,
+        _movementX = movementX,
+        _movementY = movementY,
+        _pageX = pageX,
+        _pageY = pageY,
         super(
           type,
           canBubble: canBubble,
@@ -555,7 +555,7 @@ class MouseEvent extends UIEvent {
   /// it.
   Point get offset {
     Element target = this.target;
-    var point = (this.client - target.getBoundingClientRect().topLeft);
+    var point = (client - target.getBoundingClientRect().topLeft);
     return Point(point.x.toInt(), point.y.toInt());
   }
 
@@ -652,7 +652,7 @@ class PopStateEvent extends Event {
 
   PopStateEvent(String type) : this._(type: type);
 
-  PopStateEvent._({String type = "popstate", this.state})
+  PopStateEvent._({String type = 'popstate', this.state})
       : super.internal(type);
 }
 
@@ -765,7 +765,7 @@ class TouchList extends DelegatingList<Touch> {
   factory TouchList() => null;
 
   factory TouchList._() {
-    throw UnsupportedError("Not supported");
+    throw UnsupportedError('Not supported');
   }
 
   @override

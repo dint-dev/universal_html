@@ -55,7 +55,7 @@ class FilteredElementList extends ListBase<Element> implements NodeListWrapper {
   List<Element> get _filtered => List<Element>.from(_iterable, growable: false);
 
   @override
-  void forEach(void f(Element element)) {
+  void forEach(void Function(Element element) f) {
     // This cannot use the iterator, because operations during iteration might
     // modify the collection, e.g. addAll might append a node to another parent.
     _filtered.forEach(f);
@@ -68,14 +68,14 @@ class FilteredElementList extends ListBase<Element> implements NodeListWrapper {
 
   @override
   set length(int newLength) {
-    final len = this.length;
-    if (newLength >= len) {
+    final oldLength = length;
+    if (newLength >= oldLength) {
       return;
     } else if (newLength < 0) {
-      throw ArgumentError("Invalid list length");
+      throw ArgumentError('Invalid list length');
     }
 
-    removeRange(newLength, len);
+    removeRange(newLength, oldLength);
   }
 
   @override
@@ -101,7 +101,7 @@ class FilteredElementList extends ListBase<Element> implements NodeListWrapper {
   Iterable<Element> get reversed => _filtered.reversed;
 
   @override
-  void sort([int compare(Element a, Element b)]) {
+  void sort([int Function(Element a, Element b) compare]) {
     throw UnsupportedError('Cannot sort filtered list');
   }
 

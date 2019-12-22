@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -48,7 +48,7 @@ part of universal_html.internal;
 
 class History {
   final List<_HistoryState> _stack = [
-    _HistoryState(null, "", window.location.href),
+    _HistoryState(null, '', window.location.href),
   ];
 
   int _index = 0;
@@ -73,7 +73,7 @@ class History {
   }
 
   void go(int delta) {
-    final newIndex = this._index + delta;
+    final newIndex = _index + delta;
     if (newIndex < 0 || newIndex >= _stack.length) {
       // Fail silently
       return;
@@ -99,7 +99,7 @@ class History {
   }
 
   void _setStateAndDispatchEvent(_HistoryState state) {
-    this._state = state.data;
+    _state = state.data;
     window.location.replace(state.url);
     window.dispatchEvent(PopStateEvent._(state: state.data));
   }
@@ -141,11 +141,11 @@ class Location extends Object with _UrlBase {
   }
 
   void replace(String url) {
-    this.href = url;
+    href = url;
   }
 }
 
-class Url extends _UrlBase {
+class Url with _UrlBase {
   @override
   Uri _uri; // ignore: prefer_final_fields
 
@@ -178,13 +178,13 @@ class _HistoryState {
   _HistoryState(this.data, this.title, this.url);
 }
 
-abstract class _UrlBase {
+mixin _UrlBase {
   String get hash {
-    final uri = this._uri;
+    final uri = _uri;
     if (uri.hasFragment) {
-      return "#${uri.fragment}";
+      return '#${uri.fragment}';
     }
-    return "";
+    return '';
   }
 
   set hash(String value) {
@@ -192,28 +192,28 @@ abstract class _UrlBase {
   }
 
   String get host {
-    final uri = this._uri;
-    if (uri == null) return "";
-    final hostname = _uri.host ?? "";
+    final uri = _uri;
+    if (uri == null) return '';
+    final hostname = _uri.host ?? '';
     final port = _uri.port;
-    return port == null ? hostname : "${hostname}:${port}";
+    return port == null ? hostname : '${hostname}:${port}';
   }
 
-  String get hostname => _uri?.host ?? "";
+  String get hostname => _uri?.host ?? '';
 
   String get origin => _uri?.origin;
 
-  String get pathname => _uri?.path ?? "";
+  String get pathname => _uri?.path ?? '';
 
   set pathname(String value) {
     throw UnimplementedError();
   }
 
   String get port {
-    final uri = this._uri;
-    if (uri == null) return "";
+    final uri = _uri;
+    if (uri == null) return '';
     final port = uri.port;
-    return port == 0 ? "" : port.toString();
+    return port == 0 ? '' : port.toString();
   }
 
   set port(String value) {
@@ -222,11 +222,11 @@ abstract class _UrlBase {
 
   String get protocol {
     final scheme = _uri?.scheme;
-    if (scheme == null) return ":";
-    return "$scheme:";
+    if (scheme == null) return ':';
+    return '$scheme:';
   }
 
-  String get search => _uri?.query ?? "";
+  String get search => _uri?.query ?? '';
 
   set search(String value) {
     throw UnimplementedError();

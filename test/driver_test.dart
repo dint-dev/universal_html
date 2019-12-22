@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-@TestOn("vm")
+@TestOn('vm')
 library driver_test;
 
 import 'dart:async';

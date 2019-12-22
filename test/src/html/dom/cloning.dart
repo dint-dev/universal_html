@@ -15,7 +15,7 @@
 part of main_test;
 
 void _testCloning() {
-  test("node.clone(true)", () {
+  test('node.clone(true)', () {
     // Create an element with many children
     final original = DivElement();
     for (var tagName in tagNames) {
@@ -29,7 +29,7 @@ void _testCloning() {
     _expectSaneTree(clone);
   });
 
-  test("document.adoptNode", () {
+  test('document.adoptNode', () {
     // Create an element with many children
     final original = DivElement();
     for (var tagName in tagNames) {
@@ -38,7 +38,7 @@ void _testCloning() {
     final originalOuterHtml = original.outerHtml;
 
     // Create a new document
-    final document = DomParser().parseFromString("", "text/html");
+    final document = DomParser().parseFromString('', 'text/html');
 
     // Adopt children from the original element
     final clone = document.adoptNode(original) as Element;

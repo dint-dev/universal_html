@@ -59,7 +59,7 @@ abstract class ElementStream<T extends Event> implements Stream<T> {
   ///
   /// * [Event Capture](http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-flow-capture)
   ///   from the W3C DOM Events specification.
-  StreamSubscription<T> capture(void onData(T event));
+  StreamSubscription<T> capture(void Function(T event) onData);
 
   /// Return a stream that only fires when the particular event fires for
   /// elements matching the specified CSS selector.
@@ -158,7 +158,7 @@ class _ElementEventStreamImpl<T extends Event> extends _EventStream<T>
       : super(target, eventType, useCapture);
 
   @override
-  StreamSubscription<T> capture(void onData(T event)) =>
+  StreamSubscription<T> capture(void Function(T event) onData) =>
       throw UnimplementedError();
 
   @override
@@ -173,15 +173,15 @@ class _EventStream<T extends Event> extends Stream<T> {
   _EventStream(this.target, this.type, this.useCapture);
 
   @override
-  StreamSubscription<T> listen(void onData(T event),
-      {Function onError, void onDone(), bool cancelOnError}) {
+  StreamSubscription<T> listen(void Function(T event) onData,
+      {Function onError, void Function() onDone, bool cancelOnError}) {
     final controller = StreamController<T>();
     final listener = (Event event) {
       controller.add(event);
     };
     target.addEventListener(type, listener, useCapture);
     controller.onCancel = () {
-      this.target.removeEventListener(type, listener, useCapture);
+      target.removeEventListener(type, listener, useCapture);
     };
     return controller.stream.listen(
       onData,

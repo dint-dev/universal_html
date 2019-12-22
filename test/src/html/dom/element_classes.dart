@@ -18,55 +18,55 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // AnchorElement
   // ---------------------------------------------------------------------------
-  group("AnchorElement:", () {
+  group('AnchorElement:', () {
     AnchorElement element;
     setUp(() {
       element = AnchorElement();
     });
 
-    test("href", () {
+    test('href', () {
       _testAttributeResolvedUri<AnchorElement>(
-        "href",
+        'href',
         element,
         (e) => e.href,
         (e, v) => e.href = v,
       );
     });
 
-    test("hreflang", () {
+    test('hreflang', () {
       _testAttribute<AnchorElement>(
-        "hreflang",
+        'hreflang',
         element,
         (e) => e.hreflang,
         (e, v) => e.hreflang = v,
       );
     });
 
-    test("hash", () {
-      expect(element.hash, "");
-      element.href = "https://host/path#x";
-      expect(element.hash, "#x");
+    test('hash', () {
+      expect(element.hash, '');
+      element.href = 'https://host/path#x';
+      expect(element.hash, '#x');
     });
 
-    test("pathname", () {
-      expect(element.pathname, "");
-      element.href = "https://host/x#hash";
-      expect(element.pathname, "/x");
+    test('pathname', () {
+      expect(element.pathname, '');
+      element.href = 'https://host/x#hash';
+      expect(element.pathname, '/x');
     });
 
-    test("referrerpolicy", () {
+    test('referrerpolicy', () {
       _testAttribute<AnchorElement>(
-        "referrerpolicy",
+        'referrerpolicy',
         element,
         (e) => e.referrerPolicy,
         (e, v) => e.referrerPolicy = v,
-        value: "origin",
+        value: 'origin',
       );
     });
 
-    test("target", () {
+    test('target', () {
       _testAttribute<AnchorElement>(
-        "target",
+        'target',
         element,
         (e) => e.target,
         (e, v) => e.target = v,
@@ -77,15 +77,15 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // AreaElement
   // ---------------------------------------------------------------------------
-  group("AreaElement: ", () {
+  group('AreaElement: ', () {
     AreaElement element;
     setUp(() {
       element = AreaElement();
     });
 
-    test("href", () {
+    test('href', () {
       _testAttributeResolvedUri<AreaElement>(
-        "href",
+        'href',
         element,
         (e) => e.href,
         (e, v) => e.href = v,
@@ -96,15 +96,15 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // AudioElement
   // ---------------------------------------------------------------------------
-  group("AudioElement: ", () {
+  group('AudioElement: ', () {
     AudioElement element;
     setUp(() {
       element = AudioElement();
     });
 
-    test("src", () {
+    test('src', () {
       _testAttributeResolvedUri<AudioElement>(
-        "src",
+        'src',
         element,
         (e) => e.src,
         (e, v) => e.src = v,
@@ -115,13 +115,13 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // ButtonElement
   // ---------------------------------------------------------------------------
-  group("ButtonElement: ", () {
+  group('ButtonElement: ', () {
     ButtonElement element;
     setUp(() {
       element = ButtonElement();
     });
 
-    test("click", () {
+    test('click', () {
       element.onClick.listen(expectAsync1((event) => null));
       element.click();
     });
@@ -130,70 +130,70 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // Element
   // ---------------------------------------------------------------------------
-  group("Element: ", () {
+  group('Element: ', () {
     Element element;
     setUp(() {
       element = DivElement();
     });
 
-    test("className", () {
+    test('className', () {
       _testAttribute<DivElement>(
-        "class",
+        'class',
         element,
         (e) => e.className,
         (e, v) => e.className = v,
       );
     });
 
-    test("dir", () {
+    test('dir', () {
       _testAttribute<DivElement>(
-        "dir",
+        'dir',
         element,
         (e) => e.dir,
         (e, v) => e.dir = v,
-        value: "rtl",
+        value: 'rtl',
       );
     });
 
-    test("draggable", () {
+    test('draggable', () {
       _testAttributeBoolString<DivElement>(
-        "draggable",
+        'draggable',
         element,
         (e) => e.draggable,
         (e, v) => e.draggable = v,
       );
     });
 
-    test("id", () {
+    test('id', () {
       _testAttribute<DivElement>(
-        "id",
+        'id',
         element,
         (e) => e.id,
         (e, v) => e.id = v,
       );
     });
 
-    test("slot", () {
+    test('slot', () {
       _testAttribute<DivElement>(
-        "slot",
+        'slot',
         element,
         (e) => e.slot,
         (e, v) => e.slot = v,
       );
     });
 
-    test("spellcheck", () {
+    test('spellcheck', () {
       _testAttributeBoolString<DivElement>(
-        "spellcheck",
+        'spellcheck',
         element,
         (e) => e.spellcheck,
         (e, v) => e.spellcheck = v,
       );
     });
 
-    test("tabIndex", () {
+    test('tabIndex', () {
       _testAttributeNumber<DivElement>(
-        "tabindex",
+        'tabindex',
         element,
         (e) => e.tabIndex,
         (e, v) => e.tabIndex = v,
@@ -201,14 +201,14 @@ void _testElementClasses() {
       );
     });
 
-    test("translate", () {
+    test('translate', () {
       _testAttributeBoolString<DivElement>(
-        "translate",
+        'translate',
         element,
         (e) => e.translate,
         (e, v) => e.translate = v,
-        falseValue: "no",
-        trueValue: "yes",
+        falseValue: 'no',
+        trueValue: 'yes',
       );
     });
   });
@@ -216,42 +216,42 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // IFrameElement
   // ---------------------------------------------------------------------------
-  group("IFrameElement: ", () {
+  group('IFrameElement: ', () {
     IFrameElement element;
     setUp(() {
       element = IFrameElement();
     });
 
-    test("allow", () {
+    test('allow', () {
       _testAttribute<IFrameElement>(
-        "allow",
+        'allow',
         element,
         (e) => e.allow,
         (e, v) => e.allow = v,
       );
     });
 
-    test("height", () {
+    test('height', () {
       _testAttribute<IFrameElement>(
-        "height",
+        'height',
         element,
         (e) => e.height,
         (e, v) => e.height = v,
       );
     });
 
-    test("src", () {
+    test('src', () {
       _testAttributeResolvedUri<IFrameElement>(
-        "src",
+        'src',
         element,
         (e) => e.src,
         (e, v) => e.src = v,
       );
     });
 
-    test("width", () {
+    test('width', () {
       _testAttribute<IFrameElement>(
-        "width",
+        'width',
         element,
         (e) => e.width,
         (e, v) => e.width = v,
@@ -262,37 +262,37 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // ImageElement
   // ---------------------------------------------------------------------------
-  group("ImageElement: ", () {
+  group('ImageElement: ', () {
     ImageElement element;
     setUp(() {
       element = ImageElement();
     });
 
-    test("alt", () {
+    test('alt', () {
       _testAttribute<ImageElement>(
-        "alt",
+        'alt',
         element,
         (e) => e.alt,
         (e, v) => e.alt = v,
       );
     });
 
-    test("height", () {
+    test('height', () {
       expect(element.height, 0);
       element.height = 32;
       expect(element.height, 32);
     });
 
-    test("src", () {
+    test('src', () {
       _testAttributeResolvedUri<ImageElement>(
-        "src",
+        'src',
         element,
         (e) => e.src,
         (e, v) => e.src = v,
       );
     });
 
-    test("width", () {
+    test('width', () {
       expect(element.width, 0);
       element.width = 32;
       expect(element.width, 32);
@@ -302,117 +302,117 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // InputElement
   // ---------------------------------------------------------------------------
-  group("InputElement: ", () {
+  group('InputElement: ', () {
     InputElement element;
     setUp(() {
       element = InputElement();
     });
 
-    test("autofocus", () {
+    test('autofocus', () {
       _testAttributeBool<InputElement>(
-        "autofocus",
+        'autofocus',
         element,
         (e) => e.autofocus,
         (e, v) => e.autofocus = v,
       );
     });
 
-    test("checked", () {
+    test('checked', () {
       expect(element.checked, false);
-      expect(element.getAttribute("checked"), null);
+      expect(element.getAttribute('checked'), null);
 
       element.checked = true;
       expect(element.checked, true);
-      expect(element.getAttribute("checked"), null);
+      expect(element.getAttribute('checked'), null);
 
       element.checked = false;
       expect(element.checked, false);
-      expect(element.getAttribute("checked"), null);
+      expect(element.getAttribute('checked'), null);
     });
 
-    test("defaultValue", () {
+    test('defaultValue', () {
       _testAttribute<InputElement>(
-        "value",
+        'value',
         element,
         (e) => e.defaultValue,
         (e, v) => e.defaultValue = v,
       );
     });
 
-    test("defaultChecked", () {
+    test('defaultChecked', () {
       _testAttributeBool<InputElement>(
-        "checked",
+        'checked',
         element,
         (e) => e.defaultChecked,
         (e, v) => e.defaultChecked = v,
       );
     });
 
-    test("pattern", () {
+    test('pattern', () {
       _testAttribute<InputElement>(
-        "pattern",
+        'pattern',
         element,
         (e) => e.pattern,
         (e, v) => e.pattern = v,
       );
     });
 
-    test("type", () {
+    test('type', () {
       _testAttribute<InputElement>(
-        "type",
+        'type',
         element,
         (e) => e.type,
         (e, v) => e.type = v,
-        defaultValue: "text",
-        value: "number",
+        defaultValue: 'text',
+        value: 'number',
       );
     });
 
-    test("value", () {
+    test('value', () {
       final element = InputElement();
-      expect(element.value, "");
-      expect(element.getAttribute("value"), null);
+      expect(element.value, '');
+      expect(element.getAttribute('value'), null);
 
-      element.value = "x";
-      expect(element.value, "x");
-      expect(element.getAttribute("value"), null);
+      element.value = 'x';
+      expect(element.value, 'x');
+      expect(element.getAttribute('value'), null);
 
       element.value = null;
-      expect(element.value, "");
-      expect(element.getAttribute("value"), null);
+      expect(element.value, '');
+      expect(element.getAttribute('value'), null);
     });
   });
 
   // ---------------------------------------------------------------------------
   // LinkElement
   // ---------------------------------------------------------------------------
-  group("LinkElement: ", () {
+  group('LinkElement: ', () {
     LinkElement element;
     setUp(() {
       element = LinkElement();
     });
 
-    test("href", () {
+    test('href', () {
       _testAttributeResolvedUri<LinkElement>(
-        "href",
+        'href',
         element,
         (e) => e.href,
         (e, v) => e.href = v,
       );
     });
 
-    test("rel", () {
+    test('rel', () {
       _testAttribute<LinkElement>(
-        "rel",
+        'rel',
         element,
         (e) => e.rel,
         (e, v) => e.rel = v,
       );
     });
 
-    test("type", () {
+    test('type', () {
       _testAttribute<LinkElement>(
-        "type",
+        'type',
         element,
         (e) => e.type,
         (e, v) => e.type = v,
@@ -423,22 +423,22 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // MediaElement
   // ---------------------------------------------------------------------------
-  group("MediaElement: ", () {
+  group('MediaElement: ', () {
     MediaElement element;
     setUp(() {
       element = AudioElement();
     });
 
-    test("defaultMuted", () {
+    test('defaultMuted', () {
       _testAttributeBool<MediaElement>(
-        "muted",
+        'muted',
         element,
         (e) => e.defaultMuted,
         (e, v) => e.defaultMuted = v,
       );
     });
 
-    test("muted", () {
+    test('muted', () {
       expect(element.muted, isFalse);
       element.defaultMuted = true;
       expect(element.defaultMuted, true);
@@ -451,15 +451,15 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // OptionElement
   // ---------------------------------------------------------------------------
-  group("OptionElement: ", () {
+  group('OptionElement: ', () {
     OptionElement element;
     setUp(() {
       element = OptionElement();
     });
 
-    test("defaultSelected", () {
+    test('defaultSelected', () {
       _testAttributeBool<OptionElement>(
-        "selected",
+        'selected',
         element,
         (e) => e.defaultSelected,
         (e, v) => e.defaultSelected = v,
@@ -470,13 +470,13 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // SelectElement
   // ---------------------------------------------------------------------------
-  group("SelectElement: ", () {
+  group('SelectElement: ', () {
     SelectElement element;
     setUp(() {
       element = SelectElement();
     });
 
-    test("length", () {
+    test('length', () {
       expect(element.length, 0);
       element.append(OptionElement());
       expect(element.length, 1);
@@ -484,7 +484,7 @@ void _testElementClasses() {
       expect(element.length, 2);
     });
 
-    test("length=", () {
+    test('length=', () {
       element.append(OptionElement());
       element.append(OptionElement());
       expect(element.length, 2);
@@ -493,22 +493,22 @@ void _testElementClasses() {
       expect(element.children.length, 1);
     });
 
-    test("multiple", () {
+    test('multiple', () {
       _testAttributeBool<SelectElement>(
-        "multiple",
+        'multiple',
         element,
         (e) => e.multiple,
         (e, v) => e.multiple = v,
       );
     });
 
-    test("options", () {
-      final option0 = OptionElement()..appendText("example");
+    test('options', () {
+      final option0 = OptionElement()..appendText('example');
       element.append(option0);
 
       element.append(DivElement());
 
-      final option1 = OptionElement()..appendText("example");
+      final option1 = OptionElement()..appendText('example');
       element.append(option1);
 
       expect(element.options, [
@@ -517,17 +517,17 @@ void _testElementClasses() {
       ]);
     });
 
-    test("selectedIndex (single)", () {
+    test('selectedIndex (single)', () {
       final options = [
         OptionElement()
-          ..appendText("text0")
-          ..value = "value0",
+          ..appendText('text0')
+          ..value = 'value0',
         OptionElement()
-          ..appendText("text1")
-          ..value = "value1",
+          ..appendText('text1')
+          ..value = 'value1',
         OptionElement()
-          ..appendText("text2")
-          ..value = "value2",
+          ..appendText('text2')
+          ..value = 'value2',
       ];
       for (var option in options) {
         element.append(option);
@@ -537,17 +537,17 @@ void _testElementClasses() {
       expect(element.selectedIndex, 1);
     });
 
-    test("selectedIndex (multiple)", () {
+    test('selectedIndex (multiple)', () {
       final options = [
         OptionElement()
-          ..appendText("text0")
-          ..value = "value0",
+          ..appendText('text0')
+          ..value = 'value0',
         OptionElement()
-          ..appendText("text1")
-          ..value = "value1",
+          ..appendText('text1')
+          ..value = 'value1',
         OptionElement()
-          ..appendText("text2")
-          ..value = "value2",
+          ..appendText('text2')
+          ..value = 'value2',
       ];
       element.multiple = true;
       for (var option in options) {
@@ -560,17 +560,17 @@ void _testElementClasses() {
       expect(element.selectedIndex, 1);
     });
 
-    test("selectedOptions (single)", () {
+    test('selectedOptions (single)', () {
       final options = [
         OptionElement()
-          ..appendText("text0")
-          ..value = "value0",
+          ..appendText('text0')
+          ..value = 'value0',
         OptionElement()
-          ..appendText("text1")
-          ..value = "value1",
+          ..appendText('text1')
+          ..value = 'value1',
         OptionElement()
-          ..appendText("text2")
-          ..value = "value2",
+          ..appendText('text2')
+          ..value = 'value2',
       ];
       for (var option in options) {
         element.append(option);
@@ -585,17 +585,17 @@ void _testElementClasses() {
       expect(element.selectedOptions[0], same(options[2]));
     });
 
-    test("selectedOptions (multiple)", () {
+    test('selectedOptions (multiple)', () {
       final options = [
         OptionElement()
-          ..appendText("text0")
-          ..value = "value0",
+          ..appendText('text0')
+          ..value = 'value0',
         OptionElement()
-          ..appendText("text1")
-          ..value = "value1",
+          ..appendText('text1')
+          ..value = 'value1',
         OptionElement()
-          ..appendText("text2")
-          ..value = "value2",
+          ..appendText('text2')
+          ..value = 'value2',
       ];
       element.multiple = true;
       for (var option in options) {
@@ -611,94 +611,94 @@ void _testElementClasses() {
       expect(element.selectedOptions[1], same(options[2]));
     });
 
-    test("type: select-multiple", () {
-      expect(element.type, "select-one");
+    test('type: select-multiple', () {
+      expect(element.type, 'select-one');
     });
 
-    test("type: select-one", () {
+    test('type: select-one', () {
       element.multiple = true;
-      expect(element.type, "select-multiple");
+      expect(element.type, 'select-multiple');
     });
 
-    test("value (single)", () {
+    test('value (single)', () {
       final options = [
         OptionElement()
-          ..appendText("text0")
-          ..value = "value0",
+          ..appendText('text0')
+          ..value = 'value0',
         OptionElement()
-          ..appendText("text1")
-          ..value = "value1",
+          ..appendText('text1')
+          ..value = 'value1',
         OptionElement()
-          ..appendText("text2")
-          ..value = "value2",
+          ..appendText('text2')
+          ..value = 'value2',
       ];
       for (var option in options) {
         element.append(option);
       }
-      expect(element.value, "value0");
+      expect(element.value, 'value0');
       options[1].selected = true;
-      expect(element.value, "value1");
+      expect(element.value, 'value1');
     });
 
-    test("value (multiple)", () {
+    test('value (multiple)', () {
       final options = [
         OptionElement()
-          ..appendText("text0")
-          ..value = "value0",
+          ..appendText('text0')
+          ..value = 'value0',
         OptionElement()
-          ..appendText("text1")
-          ..value = "value1",
+          ..appendText('text1')
+          ..value = 'value1',
         OptionElement()
-          ..appendText("text2")
-          ..value = "value2",
+          ..appendText('text2')
+          ..value = 'value2',
       ];
       element.multiple = true;
       for (var option in options) {
         element.append(option);
       }
-      expect(element.value, "");
+      expect(element.value, '');
       options[1].selected = true;
-      expect(element.value, "value1");
+      expect(element.value, 'value1');
       options[2].selected = true;
-      expect(element.value, "value1");
+      expect(element.value, 'value1');
     });
 
-    test("value (no value attributes)", () {
+    test('value (no value attributes)', () {
       final options = [
-        OptionElement()..appendText("text0"),
-        OptionElement()..appendText("text1"),
-        OptionElement()..appendText("text2"),
+        OptionElement()..appendText('text0'),
+        OptionElement()..appendText('text1'),
+        OptionElement()..appendText('text2'),
       ];
       for (var option in options) {
         element.append(option);
       }
-      expect(element.value, "");
+      expect(element.value, '');
       options[1].selected = true;
-      expect(element.value, "");
+      expect(element.value, '');
     });
   });
 
   // ---------------------------------------------------------------------------
   // ScriptElement
   // ---------------------------------------------------------------------------
-  group("ScriptElement: ", () {
+  group('ScriptElement: ', () {
     ScriptElement element;
     setUp(() {
       element = ScriptElement();
     });
 
-    test("src", () {
+    test('src', () {
       _testAttributeResolvedUri<ScriptElement>(
-        "src",
+        'src',
         element,
         (e) => e.src,
         (e, v) => e.src = v,
       );
     });
 
-    test("type", () {
+    test('type', () {
       _testAttribute<ScriptElement>(
-        "type",
+        'type',
         element,
         (e) => e.type,
         (e, v) => e.type = v,
@@ -709,15 +709,15 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // TextArea
   // ---------------------------------------------------------------------------
-  group("TextAreaElement: ", () {
+  group('TextAreaElement: ', () {
     TextAreaElement element;
     setUp(() {
       element = TextAreaElement();
     });
 
-    test("cols", () {
+    test('cols', () {
       _testAttributeNumber<TextAreaElement>(
-        "cols",
+        'cols',
         element,
         (e) => e.cols,
         (e, v) => e.cols = v?.toInt(),
@@ -725,19 +725,19 @@ void _testElementClasses() {
       );
     });
 
-    test("defaultValue", () {
-      expect(element.value, "");
-      element.appendText("a");
-      expect(element.value, "a");
-      element.appendText("b");
-      expect(element.value, "ab");
-      element.value = "abc";
-      expect(element.value, "abc");
+    test('defaultValue', () {
+      expect(element.value, '');
+      element.appendText('a');
+      expect(element.value, 'a');
+      element.appendText('b');
+      expect(element.value, 'ab');
+      element.value = 'abc';
+      expect(element.value, 'abc');
     });
 
-    test("maxLength", () {
+    test('maxLength', () {
       _testAttributeNumber<TextAreaElement>(
-        "maxlength",
+        'maxlength',
         element,
         (e) => e.maxLength,
         (e, v) => e.maxLength = v?.toInt(),
@@ -745,9 +745,9 @@ void _testElementClasses() {
       );
     });
 
-    test("minLength", () {
+    test('minLength', () {
       _testAttributeNumber<TextAreaElement>(
-        "minlength",
+        'minlength',
         element,
         (e) => e.minLength,
         (e, v) => e.minLength = v?.toInt(),
@@ -755,18 +755,18 @@ void _testElementClasses() {
       );
     });
 
-    test("placeholder", () {
+    test('placeholder', () {
       _testAttribute<TextAreaElement>(
-        "placeholder",
+        'placeholder',
         element,
         (e) => e.placeholder,
         (e, v) => e.placeholder = v,
       );
     });
 
-    test("rows", () {
+    test('rows', () {
       _testAttributeNumber<TextAreaElement>(
-        "rows",
+        'rows',
         element,
         (e) => e.rows,
         (e, v) => e.rows = v?.toInt(),
@@ -778,15 +778,15 @@ void _testElementClasses() {
   // ---------------------------------------------------------------------------
   // VideoElement
   // ---------------------------------------------------------------------------
-  group("VideoElement: ", () {
+  group('VideoElement: ', () {
     VideoElement element;
     setUp(() {
       element = VideoElement();
     });
 
-    test("src", () {
+    test('src', () {
       _testAttributeResolvedUri<VideoElement>(
-        "src",
+        'src',
         element,
         (e) => e.src,
         (e, v) => e.src = v,
@@ -798,10 +798,10 @@ void _testElementClasses() {
 void _testAttribute<T extends Element>(
   String name,
   T element,
-  String getter(T e),
-  void setter(T element, String value), {
-  String defaultValue = "",
-  String value = "x",
+  String Function(T e) getter,
+  void Function(T element, String value) setter, {
+  String defaultValue = '',
+  String value = 'x',
 }) {
   // Test expectations
   expect(getter(element), defaultValue);
@@ -829,16 +829,16 @@ void _testAttribute<T extends Element>(
 }
 
 void _testAttributeBool<T extends Element>(String name, T element,
-    bool getter(T e), void setter(T element, bool value)) {
+    bool Function(T e) getter, void Function(T element, bool value) setter) {
   // Test expectations
   expect(getter(element), false);
 
   // element.setAttribute
-  element.setAttribute(name, "");
+  element.setAttribute(name, '');
 
   // Test expectations
   expect(element.hasAttribute(name), true);
-  expect(element.getAttribute(name), "");
+  expect(element.getAttribute(name), '');
   expect(getter(element), true);
 
   // Reset
@@ -854,13 +854,13 @@ void _testAttributeBool<T extends Element>(String name, T element,
 
   // Test expectations
   expect(element.hasAttribute(name), true);
-  expect(element.getAttribute(name), "");
+  expect(element.getAttribute(name), '');
   expect(getter(element), true);
 }
 
 void _testAttributeBoolString<T extends Element>(String name, T element,
-    bool getter(T e), void setter(T element, bool value),
-    {String falseValue = "false", String trueValue = "true"}) {
+    bool Function(T e) getter, void Function(T element, bool value) setter,
+    {String falseValue = 'false', String trueValue = 'true'}) {
   final defaultValue = getter(element);
   if (defaultValue == false) {
     // Test expectations
@@ -919,19 +919,19 @@ void _testAttributeBoolString<T extends Element>(String name, T element,
   }
 }
 
-void _testAttributeNumber<T extends Element>(
-    String name, T element, int getter(T e), void setter(T element, int value),
+void _testAttributeNumber<T extends Element>(String name, T element,
+    int Function(T e) getter, void Function(T element, int value) setter,
     {int defaultValue}) {
   // Test expectations
   expect(element.getAttribute(name), null);
   expect(getter(element), defaultValue);
 
   // element.setAttribute
-  element.setAttribute(name, "42");
+  element.setAttribute(name, '42');
 
   // Test expectations
   expect(element.hasAttribute(name), true);
-  expect(element.getAttribute(name), "42");
+  expect(element.getAttribute(name), '42');
   expect(getter(element), 42);
 
   // Reset
@@ -947,30 +947,30 @@ void _testAttributeNumber<T extends Element>(
 
   // Test expectations
   expect(element.hasAttribute(name), true);
-  expect(element.getAttribute(name), "42");
+  expect(element.getAttribute(name), '42');
   expect(getter(element), 42);
 }
 
 void _testAttributeResolvedUri<T extends Element>(
   String name,
   T element,
-  String getter(T e),
-  void setter(T element, String value),
+  String Function(T e) getter,
+  void Function(T element, String value) setter,
 ) {
   expect(element.baseUri, isNotEmpty);
-  expect(getter(element), "");
+  expect(getter(element), '');
 
   // Test absolute
-  final absoluteUri = "https://absolute/path";
+  final absoluteUri = 'https://absolute/path';
   element.setAttribute(name, absoluteUri);
   expect(getter(element), absoluteUri);
   expect(element.getAttribute(name), absoluteUri);
 
-  final relativeUri = "relative/example";
+  final relativeUri = 'relative/example';
   setter(element, relativeUri);
-  expect(element.getAttribute(name), "relative/example");
+  expect(element.getAttribute(name), 'relative/example');
   expect(
     getter(element),
-    matches(r"^.+:(?://localhost:[0-9]+(?:/.+)*)?/relative/example$"),
+    matches(r'^.+:(?://localhost:[0-9]+(?:/.+)*)?/relative/example$'),
   );
 }

@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -72,7 +72,7 @@ class EventSource extends EventTarget {
   static const int CONNECTING = 0;
   static const int OPEN = 1;
 
-  static const String _mediaType = "text/event-stream";
+  static const String _mediaType = 'text/event-stream';
 
   /// URL of this event source.
   final String url;
@@ -93,7 +93,7 @@ class EventSource extends EventTarget {
     // Parse URI
     var parsedUri = Uri.tryParse(url);
     if (parsedUri == null) {
-      throw ArgumentError.value(url, "url", "Invalid URL");
+      throw ArgumentError.value(url, 'url', 'Invalid URL');
     }
 
     // Resolve relative URLs
@@ -104,20 +104,20 @@ class EventSource extends EventTarget {
     // Check the scheme
     final scheme = parsedUri.scheme;
     switch (scheme) {
-      case "http":
+      case 'http':
         break;
-      case "https":
+      case 'https':
         break;
       default:
         throw ArgumentError.value(
           url,
-          "url",
-          "Scheme must be 'http' or 'https'",
+          'url',
+          'Scheme must be "http" or "https"',
         );
     }
 
     // Connect
-    this._parsedUri = parsedUri;
+    _parsedUri = parsedUri;
     _connect();
   }
 
@@ -147,12 +147,12 @@ class EventSource extends EventTarget {
             HtmlDriver.current.browserImplementation.newHttpClient();
         final httpRequest = await httpClient.getUrl(_parsedUri);
 
-        // Add HTTP header "Accept"
-        httpRequest.headers.set("Accept", _mediaType);
+        // Add HTTP header 'Accept'
+        httpRequest.headers.set('Accept', _mediaType);
 
-        // Add HTTP header "Last-Event-ID"
+        // Add HTTP header 'Last-Event-ID'
         if (lastEventId != null) {
-          httpRequest.headers.set("Last-Event-ID", lastEventId);
+          httpRequest.headers.set('Last-Event-ID', lastEventId);
         }
 
         // Send the HTTP request
@@ -173,7 +173,7 @@ class EventSource extends EventTarget {
         // Listen the event stream
         _eventSubscription = eventStream.listen((event) {
           lastEventId = event.lastEventId;
-          this.dispatchEvent(event);
+          dispatchEvent(event);
         });
 
         // Wait for
@@ -184,10 +184,10 @@ class EventSource extends EventTarget {
         }
 
         // Update state
-        this._readyState = CONNECTING;
+        _readyState = CONNECTING;
 
-        // Dispatch "stream interruption" event
-        this.dispatchEvent(Event.internal("error"));
+        // Dispatch 'stream interruption' event
+        dispatchEvent(Event.internal('error'));
 
         // Reconnect after a timeout
         await Future.delayed(timeout);
@@ -197,13 +197,13 @@ class EventSource extends EventTarget {
       if (_readyState == CLOSED) {
         return;
       }
-      this._readyState = CLOSED;
+      _readyState = CLOSED;
 
       // Add error
-      this.dispatchEvent(
+      dispatchEvent(
         ErrorEvent._(
           error: error,
-          message: "Error:\n  $error\n\nStack trace:\n  $stackTrace",
+          message: 'Error:\n  $error\n\nStack trace:\n  $stackTrace',
         ),
       );
     } finally {
@@ -213,7 +213,7 @@ class EventSource extends EventTarget {
   }
 
   Stream<MessageEvent> _readHttpResponse(
-      io.HttpClientResponse httpResponse, void onTimeout(Duration d)) {
+      io.HttpClientResponse httpResponse, void Function(Duration d) onTimeout) {
     var close = false;
     EventStreamDecoder transformer;
     try {
@@ -221,11 +221,11 @@ class EventSource extends EventTarget {
       final statusCode = httpResponse.statusCode;
       if (statusCode != 200) {
         throw StateError(
-          "Server returned HTTP status $statusCode",
+          'Server returned HTTP status $statusCode',
         );
       }
 
-      // Check HTTP header "Content-Type"
+      // Check HTTP header 'Content-Type'
       final mimeType = httpResponse.headers.contentType.mimeType;
       switch (mimeType) {
         case _mediaType:
@@ -233,7 +233,7 @@ class EventSource extends EventTarget {
 
         default:
           throw StateError(
-            "Server returned MIME type '$mimeType': $_parsedUri",
+            'Server returned MIME type "$mimeType": $_parsedUri',
           );
       }
 
@@ -244,12 +244,12 @@ class EventSource extends EventTarget {
 
       // The connection is open
       _readyState = OPEN;
-      dispatchEvent(Event.internal("open"));
+      dispatchEvent(Event.internal('open'));
 
       // Transform to event stream
       final origin = _parsedUri.origin;
       if (origin == null) {
-        throw StateError("Origin is null for URI: $_parsedUri");
+        throw StateError('Origin is null for URI: $_parsedUri');
       }
       transformer = EventStreamDecoder(
         origin: origin,

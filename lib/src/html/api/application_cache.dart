@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -48,28 +48,28 @@ part of universal_html.internal;
 
 abstract class ApplicationCache extends EventTarget {
   static const EventStreamProvider<Event> cachedEvent =
-      EventStreamProvider<Event>("cached");
+      EventStreamProvider<Event>('cached');
 
   static const EventStreamProvider<Event> checkingEvent =
-      EventStreamProvider<Event>("checking");
+      EventStreamProvider<Event>('checking');
 
   static const EventStreamProvider<Event> downloadingEvent =
-      EventStreamProvider<Event>("downloading");
+      EventStreamProvider<Event>('downloading');
 
   static const EventStreamProvider<Event> errorEvent =
-      EventStreamProvider<Event>("error");
+      EventStreamProvider<Event>('error');
 
   static const EventStreamProvider<Event> noUpdateEvent =
-      EventStreamProvider<Event>("noupdate");
+      EventStreamProvider<Event>('noupdate');
 
   static const EventStreamProvider<Event> obsoleteEvent =
-      EventStreamProvider<Event>("obsolete");
+      EventStreamProvider<Event>('obsolete');
 
   static const EventStreamProvider<Event> progressEvent =
-      EventStreamProvider<Event>("progress");
+      EventStreamProvider<Event>('progress');
 
   static const EventStreamProvider<Event> updateReadyEvent =
-      EventStreamProvider<Event>("updateready");
+      EventStreamProvider<Event>('updateready');
 
   static const int UNCACHED = 0;
 

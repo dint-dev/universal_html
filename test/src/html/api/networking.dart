@@ -24,12 +24,12 @@ void _testNetworking() {
   if (_isFlutter) {
     return;
   }
-  group("Networking:", () {
+  group('Networking:', () {
     StreamChannel streamChannel;
     setUpAll(() async {
       if (httpServerPort == 0) {
         final streamChannel = spawnHybridUri(
-          Uri.parse("/test/src/html/api/networking_server.dart"),
+          Uri.parse('/test/src/html/api/networking_server.dart'),
         );
         final streamQueue = StreamQueue(streamChannel.stream);
         httpServerPort = ((await streamQueue.next) as num).toInt();

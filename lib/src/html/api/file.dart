@@ -258,7 +258,7 @@ abstract class FileReader extends EventTarget {
   Object get result => _result;
 
   void abort() {
-    this._id = null;
+    _id = null;
   }
 
   void readAsArrayBuffer(Blob blob) {
@@ -281,26 +281,26 @@ abstract class FileReader extends EventTarget {
     });
   }
 
-  void _perform(Future<Object> f()) {
-    this._readyState = FileReader.LOADING;
-    this._result = null;
-    this._error = null;
+  void _perform(Future<Object> Function() f) {
+    _readyState = FileReader.LOADING;
+    _result = null;
+    _error = null;
     final id = Object();
-    this._id = id;
+    _id = id;
     f().then((result) {
       // Check that the task wasn't aborted or replaced with another
-      if (!identical(id, this._id)) {
+      if (!identical(id, _id)) {
         return;
       }
-      this._readyState = FileReader.DONE;
-      this._result = result;
+      _readyState = FileReader.DONE;
+      _result = result;
     }, onError: (error) {
       // Check that the task wasn't aborted or replaced with another
-      if (!identical(id, this._id)) {
+      if (!identical(id, _id)) {
         return;
       }
-      this._readyState = FileReader.DONE;
-      this._error = Error();
+      _readyState = FileReader.DONE;
+      _error = Error();
     });
   }
 }

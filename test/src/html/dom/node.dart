@@ -15,35 +15,35 @@
 part of main_test;
 
 void _testNode() {
-  group("Node:", () {
-    test("append", () {
-      final e = Element.tag("e");
-      e.append(Text("a"));
+  group('Node:', () {
+    test('append', () {
+      final e = Element.tag('e');
+      e.append(Text('a'));
       expect(e.outerHtml, '<e>a</e>');
-      e.append(Text("b"));
+      e.append(Text('b'));
       expect(e.outerHtml, '<e>ab</e>');
-      e.append(Text("c"));
+      e.append(Text('c'));
       expect(e.outerHtml, '<e>abc</e>');
     });
-    test("append null fails", () {
-      final e = Element.tag("e");
+    test('append null fails', () {
+      final e = Element.tag('e');
       expect(() => e.append(null), throwsA(anything));
     });
-    test("append self fails", () {
-      final e = Element.tag("e");
+    test('append self fails', () {
+      final e = Element.tag('e');
       expect(() => e.append(e), throwsA(anything));
     });
-    test("appendText", () {
-      final input = Element.tag("a")..appendText("abc");
+    test('appendText', () {
+      final input = Element.tag('a')..appendText('abc');
       final expected = '<a>abc</a>';
       expect(input.outerHtml, expected);
     });
-    test("replaceWith", () {
-      final e0 = Element.tag("e0")..appendText("e0-text");
-      final e1 = Element.tag("e1")..appendText("e1-text");
-      final e2 = Element.tag("e2")..appendText("e2-text");
-      final root = Element.tag("sometag")
-        ..setAttribute("k", "v")
+    test('replaceWith', () {
+      final e0 = Element.tag('e0')..appendText('e0-text');
+      final e1 = Element.tag('e1')..appendText('e1-text');
+      final e2 = Element.tag('e2')..appendText('e2-text');
+      final root = Element.tag('sometag')
+        ..setAttribute('k', 'v')
         ..append(e0)
         ..append(e1)
         ..append(e2);
@@ -57,7 +57,7 @@ void _testNode() {
       // Replace child #1 of 'e1'
       {
         final replaced = e1.firstChild;
-        final replacement = Text("e1-text-replaced");
+        final replacement = Text('e1-text-replaced');
         expect(replaced.parent, same(e1));
 
         replaced.replaceWith(replacement);
@@ -73,7 +73,7 @@ void _testNode() {
 
       // Replace child #2 of root ('e1')
       {
-        final replacement = Text("e1-replaced");
+        final replacement = Text('e1-replaced');
         expect(e0.nextNode, same(e1));
         expect(e1.nextNode, same(e2));
 
@@ -90,23 +90,23 @@ void _testNode() {
                 '<sometag k="v"><e0>e0-text</e0>e1-replaced<e2>e2-text</e2></sometag>'));
       }
     });
-    test("replaceWith when the node has no parent", () {
-      final e0 = Element.tag("e0")..appendText("e0-text");
-      final e1 = Element.tag("e1")..appendText("e1-text");
+    test('replaceWith when the node has no parent', () {
+      final e0 = Element.tag('e0')..appendText('e0-text');
+      final e1 = Element.tag('e1')..appendText('e1-text');
       e0.replaceWith(e1);
     });
 
-    test("replaceWith when replacement is null", () {
-      final e0 = Element.tag("e0")..appendText("e0-text");
+    test('replaceWith when replacement is null', () {
+      final e0 = Element.tag('e0')..appendText('e0-text');
       e0.replaceWith(null);
     });
 
-    test("remove", () {
-      final e0 = Element.tag("e0")..appendText("e0-text");
-      final e1 = Element.tag("e1")..appendText("e1-text");
-      final e2 = Element.tag("e2")..appendText("e2-text");
-      final root = Element.tag("sometag")
-        ..setAttribute("k", "v")
+    test('remove', () {
+      final e0 = Element.tag('e0')..appendText('e0-text');
+      final e1 = Element.tag('e1')..appendText('e1-text');
+      final e2 = Element.tag('e2')..appendText('e2-text');
+      final root = Element.tag('sometag')
+        ..setAttribute('k', 'v')
         ..append(e0)
         ..append(e1)
         ..append(e2);
@@ -138,167 +138,167 @@ void _testNode() {
             '<sometag k="v"><e0>e0-text</e0><e2>e2-text</e2></sometag>');
       }
     });
-    test("remove fails when the node has parent", () {
-      final e0 = Element.tag("e0")..appendText("e0-text");
+    test('remove fails when the node has parent', () {
+      final e0 = Element.tag('e0')..appendText('e0-text');
       e0.remove();
     });
 
-    test("text", () {
-      final e = Element.tag("e");
+    test('text', () {
+      final e = Element.tag('e');
       expect(e.text, '');
-      e.appendText("a");
+      e.appendText('a');
       expect(e.text, 'a');
-      e.append(Element.tag("innerElement")..appendText("")..appendText("b"));
+      e.append(Element.tag('innerElement')..appendText('')..appendText('b'));
       expect(e.text, 'ab');
-      e.append(Comment("not text"));
+      e.append(Comment('not text'));
       expect(e.text, 'ab');
-      e.append(Text("c"));
+      e.append(Text('c'));
       expect(e.text, 'abc');
     });
 
-    test("text: comments", () {
-      final e = Element.tag("e");
-      e.appendText("a");
-      e.append(Comment("not text"));
-      e.appendText("b");
-      expect(e.text, "ab");
+    test('text: comments', () {
+      final e = Element.tag('e');
+      e.appendText('a');
+      e.append(Comment('not text'));
+      e.appendText('b');
+      expect(e.text, 'ab');
     });
 
-    test("text: style", () {
-      final e = Element.tag("e");
-      e.appendText("a");
-      e.append(StyleElement()..appendText("[style]"));
-      e.appendText("b");
-      expect(e.text, "a[style]b");
+    test('text: style', () {
+      final e = Element.tag('e');
+      e.appendText('a');
+      e.append(StyleElement()..appendText('[style]'));
+      e.appendText('b');
+      expect(e.text, 'a[style]b');
     });
 
-    test("text: style", () {
-      final e = Element.tag("e");
-      e.appendText("a");
-      e.append(ScriptElement()..appendText("[script]"));
-      e.appendText("b");
-      expect(e.text, "a[script]b");
+    test('text: style', () {
+      final e = Element.tag('e');
+      e.appendText('a');
+      e.append(ScriptElement()..appendText('[script]'));
+      e.appendText('b');
+      expect(e.text, 'a[script]b');
     });
 
-    test(r"text: 'a\nb'", () {
-      final e = Element.tag("e");
-      e.appendText("a\nb");
-      expect(e.text, "a\nb");
+    test('text: "a\\nb"', () {
+      final e = Element.tag('e');
+      e.appendText('a\nb');
+      expect(e.text, 'a\nb');
     });
 
-    test(r"text: 'a\tb'", () {
-      final e = Element.tag("e");
-      e.appendText("a\tb");
-      expect(e.text, "a\tb");
+    test('text: "a\\tb"', () {
+      final e = Element.tag('e');
+      e.appendText('a\tb');
+      expect(e.text, 'a\tb');
     });
 
-    test(r"text: 'a  b'", () {
-      final e = Element.tag("e");
-      e.appendText("a  b");
-      expect(e.text, "a  b");
+    test('text: "a  b"', () {
+      final e = Element.tag('e');
+      e.appendText('a  b');
+      expect(e.text, 'a  b');
     });
 
-    test("innerText", () {
-      final e = Element.tag("e");
-      expect(e.innerText, "");
+    test('innerText', () {
+      final e = Element.tag('e');
+      expect(e.innerText, '');
 
-      e.appendText("a");
-      expect(e.innerText, "a");
+      e.appendText('a');
+      expect(e.innerText, 'a');
 
-      e.appendText("b");
-      expect(e.innerText, "ab");
-    });
-
-    test("innerText: comments", () {
-      final e = Element.tag("e");
-      expect(e.innerText, "");
-
-      e.appendText("a");
-      e.append(Comment("not in innerText"));
-      e.appendText("b");
+      e.appendText('b');
       expect(e.innerText, 'ab');
     });
 
-    test("innerText: <br>", () {
-      final e = Element.tag("e");
-      expect(e.innerText, "");
+    test('innerText: comments', () {
+      final e = Element.tag('e');
+      expect(e.innerText, '');
 
-      e.appendText("a");
+      e.appendText('a');
+      e.append(Comment('not in innerText'));
+      e.appendText('b');
+      expect(e.innerText, 'ab');
+    });
+
+    test('innerText: <br>', () {
+      final e = Element.tag('e');
+      expect(e.innerText, '');
+
+      e.appendText('a');
       e.append(BRElement());
-      e.appendText("b");
+      e.appendText('b');
       expect(e.innerText, 'ab');
     });
 
-    test("innerText: non-visible elements", () {
-      final e = Element.tag("e");
-      expect(e.innerText, "");
+    test('innerText: non-visible elements', () {
+      final e = Element.tag('e');
+      expect(e.innerText, '');
 
       // Mozilla documentation says <style> content should be ignored,
       // but Chrome doesn't do so.
-      e.appendText("a");
-      e.append(StyleElement()..appendText("[style]"));
-      e.append(ScriptElement()..appendText("[script]"));
-      e.appendText("b");
+      e.appendText('a');
+      e.append(StyleElement()..appendText('[style]'));
+      e.append(ScriptElement()..appendText('[script]'));
+      e.appendText('b');
       expect(e.innerText, 'a[style][script]b');
 
-      e.innerText = "xyz";
-      expect(e.innerText, "xyz");
+      e.innerText = 'xyz';
+      expect(e.innerText, 'xyz');
     });
 
-    test(r"innerText = 'ab''", () {
-      final e = Element.tag("e");
-      expect(e.innerText, "");
-      e.innerText = "a";
-      expect(e.innerText, "a");
-      e.innerText = "ab";
-      expect(e.innerText, "ab");
+    test('innerText = "ab"', () {
+      final e = Element.tag('e');
+      expect(e.innerText, '');
+      e.innerText = 'a';
+      expect(e.innerText, 'a');
+      e.innerText = 'ab';
+      expect(e.innerText, 'ab');
     });
 
-    test(r"innerText = 'a\nb''", () {
-      final e = Element.tag("e");
-      e.innerText = "a\nb";
-      expect(e.innerText, "ab");
+    test('innerText = "a\\nb"', () {
+      final e = Element.tag('e');
+      e.innerText = 'a\nb';
+      expect(e.innerText, 'ab');
     });
 
-    test(r"innerText = 'a\tb''", () {
-      final e = Element.tag("e");
-      e.innerText = "a\tb";
-      expect(e.innerText, "a\tb");
+    test(r'innerText = "a\tb"', () {
+      final e = Element.tag('e');
+      e.innerText = 'a\tb';
+      expect(e.innerText, 'a\tb');
     });
 
-    test(r"innerText = 'a  b''", () {
-      final e = Element.tag("e");
-      e.innerText = "a  b";
-      expect(e.innerText, "a  b");
+    test('innerText = "a  b"', () {
+      final e = Element.tag('e');
+      e.innerText = 'a  b';
+      expect(e.innerText, 'a  b');
     });
   });
 
-  group("Comment", () {
-    test("Comment()", () {
+  group('Comment', () {
+    test('Comment()', () {
       final node = Comment();
-      expect(node.nodeValue, "");
+      expect(node.nodeValue, '');
     });
 
-    test("Comment('abc')", () {
-      final node = Comment("abc");
-      expect(node.nodeValue, "abc");
+    test('Comment("abc")', () {
+      final node = Comment('abc');
+      expect(node.nodeValue, 'abc');
     });
 
-    test("toString()", () {
-      final node = Comment("abc");
-      expect(node.toString(), "abc");
+    test('toString()', () {
+      final node = Comment('abc');
+      expect(node.toString(), 'abc');
     });
   });
 
-  group("Text", () {
-    test("Text('abc')", () {
-      final node = Text("abc");
-      expect(node.nodeValue, "abc");
+  group('Text', () {
+    test('Text("abc")', () {
+      final node = Text('abc');
+      expect(node.nodeValue, 'abc');
     });
 
-    test("toString()", () {
-      final node = Text("abc");
-      expect(node.toString(), "abc");
+    test('toString()', () {
+      final node = Text('abc');
+      expect(node.toString(), 'abc');
     });
   });
 }

@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -195,7 +195,7 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   }
 
   @override
-  bool any(bool f(String element)) => readClasses().any(f);
+  bool any(bool Function(String element) f) => readClasses().any(f);
 
   @override
   void clear() {
@@ -225,26 +225,28 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   String elementAt(int index) => readClasses().elementAt(index);
 
   @override
-  bool every(bool f(String element)) => readClasses().every(f);
+  bool every(bool Function(String element) f) => readClasses().every(f);
 
   // interface Collection - END
 
   // interface Set - BEGIN
   @override
-  Iterable<T> expand<T>(Iterable<T> f(String element)) =>
+  Iterable<T> expand<T>(Iterable<T> Function(String element) f) =>
       readClasses().expand<T>(f);
 
   @override
-  String firstWhere(bool test(String value), {String orElse()}) =>
+  String firstWhere(bool Function(String value) test,
+          {String Function() orElse}) =>
       readClasses().firstWhere(test, orElse: orElse);
 
   @override
-  T fold<T>(T initialValue, T combine(T previousValue, String element)) {
+  T fold<T>(
+      T initialValue, T Function(T previousValue, String element) combine) {
     return readClasses().fold<T>(initialValue, combine);
   }
 
   @override
-  void forEach(void f(String element)) {
+  void forEach(void Function(String element) f) {
     readClasses().forEach(f);
   }
 
@@ -253,10 +255,11 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
       readClasses().intersection(other);
 
   @override
-  String join([String separator = ""]) => readClasses().join(separator);
+  String join([String separator = '']) => readClasses().join(separator);
 
   @override
-  String lastWhere(bool test(String value), {String orElse()}) =>
+  String lastWhere(bool Function(String value) test,
+          {String Function() orElse}) =>
       readClasses().lastWhere(test, orElse: orElse);
 
   /// Lookup from the Set interface. Not interesting for a String set.
@@ -264,7 +267,7 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   String lookup(Object value) => contains(value) ? value : null;
 
   @override
-  Iterable<T> map<T>(T f(String e)) => readClasses().map<T>(f);
+  Iterable<T> map<T>(T Function(String e) f) => readClasses().map<T>(f);
 
   /// Helper method used to modify the set of css classes on this element.
   ///
@@ -273,7 +276,7 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   ///   After f returns, the modified set is written to the
   ///       className property of this element.
-  Object modify(f(Set<String> s)) {
+  Object modify(Function(Set<String> s) f) {
     final s = readClasses();
     var ret = f(s);
     writeClasses(s);
@@ -286,7 +289,7 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   Set<String> readClasses();
 
   @override
-  String reduce(String combine(String value, String element)) {
+  String reduce(String Function(String value, String element) combine) {
     return readClasses().reduce(combine);
   }
 
@@ -315,7 +318,7 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   }
 
   @override
-  void removeWhere(bool test(String name)) {
+  void removeWhere(bool Function(String name) test) {
     modify((s) => s.removeWhere(test));
   }
 
@@ -325,26 +328,27 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   }
 
   @override
-  void retainWhere(bool test(String name)) {
+  void retainWhere(bool Function(String name) test) {
     modify((s) => s.retainWhere(test));
   }
 
   @override
-  String singleWhere(bool test(String value), {String orElse()}) =>
+  String singleWhere(bool Function(String value) test,
+          {String Function() orElse}) =>
       readClasses().singleWhere(test, orElse: orElse);
 
   @override
   Iterable<String> skip(int n) => readClasses().skip(n);
 
   @override
-  Iterable<String> skipWhile(bool test(String value)) =>
+  Iterable<String> skipWhile(bool Function(String value) test) =>
       readClasses().skipWhile(test);
 
   @override
   Iterable<String> take(int n) => readClasses().take(n);
 
   @override
-  Iterable<String> takeWhile(bool test(String value)) =>
+  Iterable<String> takeWhile(bool Function(String value) test) =>
       readClasses().takeWhile(test);
 
   /// Adds the class [value] to the element if it is not on it, removes it if it
@@ -398,7 +402,8 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   // interface Set - END
 
   @override
-  Iterable<String> where(bool f(String element)) => readClasses().where(f);
+  Iterable<String> where(bool Function(String element) f) =>
+      readClasses().where(f);
 
   /// Join all the elements of a set into one string and write
   /// back to the element.
@@ -466,13 +471,13 @@ class _ElementCssClassSet extends CssClassSetImpl {
   void removeAll(Iterable<Object> iterable) {}
 
   @override
-  void removeWhere(bool test(String name)) {}
+  void removeWhere(bool Function(String name) test) {}
 
   @override
   void retainAll(Iterable<Object> iterable) {}
 
   @override
-  void retainWhere(bool test(String name)) {}
+  void retainWhere(bool Function(String name) test) {}
 
   @override
   bool toggle(String value, [bool shouldAdd]) {
@@ -508,7 +513,7 @@ class _MultiElementCssClassSet extends CssClassSetImpl {
   ///   After f returns, the modified set is written to the
   ///       className property of this element.
   @override
-  Object modify(f(Set<String> s)) {
+  Object modify(Function(Set<String> s) f) {
     _sets.forEach((CssClassSetImpl e) => e.modify(f));
     return null;
   }

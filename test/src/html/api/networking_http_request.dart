@@ -15,7 +15,7 @@
 part of main_test;
 
 void _testHttpRequest() {
-  group("HttpRequest", () {
+  group('HttpRequest', () {
     HttpRequest request;
     StreamQueue<ProgressEvent> onError, onTimeout, onLoadEnd;
     setUp(() {
@@ -25,7 +25,7 @@ void _testHttpRequest() {
       onLoadEnd = StreamQueue<ProgressEvent>(request.onLoadEnd);
     });
 
-    test("GET", () async {
+    test('GET', () async {
       //
       // Request #1
       //
@@ -33,7 +33,7 @@ void _testHttpRequest() {
       expect(request.readyState, HttpRequest.UNSENT);
 
       // Open
-      request.open("GET", "http://localhost:$httpServerPort/http_request/ok");
+      request.open('GET', 'http://localhost:$httpServerPort/http_request/ok');
       expect(request.readyState, HttpRequest.OPENED);
 
       // Send
@@ -48,18 +48,18 @@ void _testHttpRequest() {
       expect(request.statusText, isNotEmpty);
       expect(
         request.responseHeaders,
-        containsPair("x-example", "example value"),
+        containsPair('x-example', 'example value'),
       );
-      expect(request.response, "hello");
+      expect(request.response, 'hello');
 
       // No error
       expect(onError.eventsDispatched, 0);
       expect(onTimeout.eventsDispatched, 0);
     });
 
-    test("GET, type 'arraybuffer'", () async {
-      request.open("GET", "http://localhost:$httpServerPort/http_request/ok");
-      request.responseType = "arraybuffer";
+    test('GET, type "arraybuffer"', () async {
+      request.open('GET', 'http://localhost:$httpServerPort/http_request/ok');
+      request.responseType = 'arraybuffer';
       request.send();
       final event = await onLoadEnd.next.timeout(
         const Duration(milliseconds: 200),
@@ -69,20 +69,20 @@ void _testHttpRequest() {
       expect(request.statusText, isNotEmpty);
       expect(
         request.responseHeaders,
-        containsPair("x-example", "example value"),
+        containsPair('x-example', 'example value'),
       );
       expect(request.response, TypeMatcher<ByteBuffer>());
       expect(
-          utf8.decode(Uint8List.view(request.response as ByteBuffer)), "hello");
+          utf8.decode(Uint8List.view(request.response as ByteBuffer)), 'hello');
 
       // No error
       expect(onError.eventsDispatched, 0);
       expect(onTimeout.eventsDispatched, 0);
     });
 
-    test("GET, type 'json'", () async {
-      request.open("GET", "http://localhost:$httpServerPort/http_request/json");
-      request.responseType = "json";
+    test('GET, type "json"', () async {
+      request.open('GET', 'http://localhost:$httpServerPort/http_request/json');
+      request.responseType = 'json';
       request.send();
       final event = await onLoadEnd.next.timeout(
         const Duration(milliseconds: 200),
@@ -92,16 +92,16 @@ void _testHttpRequest() {
       expect(request.statusText, isNotEmpty);
       expect(
         request.responseHeaders,
-        containsPair("x-example", "example value"),
+        containsPair('x-example', 'example value'),
       );
-      expect(request.response, {"greeting": "hello"});
+      expect(request.response, {'greeting': 'hello'});
 
       // No error
       expect(onError.eventsDispatched, 0);
       expect(onTimeout.eventsDispatched, 0);
     });
 
-    test("Failing request", () async {
+    test('Failing request', () async {
       //
       // Declare HttpRequest
       //
@@ -117,7 +117,9 @@ void _testHttpRequest() {
       // Open
       // We assume port 314 doesn't have HTTP server
       request.open(
-          "GET", "http://localhost:$httpServerWrongPort/http_request/ok");
+        'GET',
+        'http://localhost:$httpServerWrongPort/http_request/ok',
+      );
       expect(request.readyState, HttpRequest.OPENED);
 
       // Send
@@ -129,8 +131,8 @@ void _testHttpRequest() {
       );
       expect(event, TypeMatcher<ProgressEvent>());
       expect(request.status, 0);
-      expect(request.statusText, "");
-      expect(request.responseText, "");
+      expect(request.statusText, '');
+      expect(request.responseText, '');
     });
   });
 }

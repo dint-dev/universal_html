@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -53,20 +53,20 @@ const _printingHtml = 1;
 /// Empty elements from:
 /// https://developer.mozilla.org/en-US/docs/Glossary/empty_element
 final Set<String> _singleTagNamesInLowerCase = <String>{
-  "area",
-  "base",
-  "br",
-  "col",
-  "embed",
-  "hr",
-  "img",
-  "input",
-  "link",
-  "meta",
-  "param",
-  "source",
-  "track",
-  "wbr",
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
 };
 
 int _getPrintingFlags(Node node) {
@@ -76,10 +76,10 @@ int _getPrintingFlags(Node node) {
     return _printingHtml;
   }
   switch (doc.contentType) {
-    case "text/html":
+    case 'text/html':
       flags = _printingHtml;
       break;
-    case "application/xhtml+xml":
+    case 'application/xhtml+xml':
       flags = _printingHtml | _printingAttributeNamespaces;
       break;
     default:
@@ -90,12 +90,12 @@ int _getPrintingFlags(Node node) {
 }
 
 String _namespaceUriToPrefix(Node node, String uri) {
-  if (uri == "xmlns") {
-    return "xmlns";
+  if (uri == 'xmlns') {
+    return 'xmlns';
   }
   for (; node != null; node = node.parent) {
     if (node is Element) {
-      final defaultNamespace = node.getAttribute("xmlns");
+      final defaultNamespace = node.getAttribute('xmlns');
       if (defaultNamespace == uri) {
         return null;
       }
@@ -103,7 +103,7 @@ String _namespaceUriToPrefix(Node node, String uri) {
       if (namespaces == null) {
         continue;
       }
-      final map = namespaces["xmlns"];
+      final map = namespaces['xmlns'];
       if (map == null) {
         continue;
       }
@@ -119,18 +119,18 @@ String _namespaceUriToPrefix(Node node, String uri) {
 
 void _printAttribute(
     StringBuffer sb, int flags, String prefix, String name, String value) {
-  sb.write(" ");
+  sb.write(' ');
   if (prefix != null) {
     // TODO: Validate mutations (like browsers do) so nothing needs to be done here.
     if (!(Element._normalizedAttributeNameRegExp.hasMatch(name) &&
         Element._normalizedAttributeNameRegExp.hasMatch(name))) {
       throw StateError(
-        "Invalid namespaced attribute: '${prefix}:${name}'",
+        'Invalid namespaced attribute: "${prefix}:${name}"',
       );
     }
     if (_printingAttributeNamespaces & flags != 0) {
       sb.write(prefix);
-      sb.write(":");
+      sb.write(':');
     }
   }
   sb.write(name);
@@ -143,10 +143,10 @@ void _printAttribute(
     String escape;
     switch (codeUnit) {
       case charcode.$ampersand:
-        escape = "&amp;";
+        escape = '&amp;';
         break;
       case charcode.$quot:
-        escape = "&quot;";
+        escape = '&quot;';
         break;
     }
     if (escape != null) {
@@ -173,10 +173,10 @@ void _printElement(StringBuffer sb, int flags, Element node) {
   if (namespaceUri != null) {
     prefix = _namespaceUriToPrefix(node, namespaceUri);
   }
-  sb.write("<");
+  sb.write('<');
   if (prefix != null) {
     sb.write(prefix);
-    sb.write(":");
+    sb.write(':');
   }
   if (node._isCaseSensitive) {
     sb.write(node._nodeName); // Already validated!
@@ -198,26 +198,26 @@ void _printElement(StringBuffer sb, int flags, Element node) {
     }
   }
   if (node.childNodes.isEmpty && node.ownerDocument is XmlDocument) {
-    sb.write("/>");
+    sb.write('/>');
     return;
   }
-  sb.write(">");
+  sb.write('>');
   if (_singleTagNamesInLowerCase.contains(node._lowerCaseTagName) &&
       node.ownerDocument is HtmlDocument) {
     return;
   }
   _printChildren(sb, flags, node);
-  sb.write("</");
+  sb.write('</');
   if (prefix != null) {
     sb.write(prefix);
-    sb.write(":");
+    sb.write(':');
   }
   if (node._isCaseSensitive) {
     sb.write(node._nodeName); // Already validated!
   } else {
     sb.write(node._lowerCaseTagName); // Already validated!
   }
-  sb.write(">");
+  sb.write('>');
 }
 
 void _printNode(StringBuffer sb, int flags, Node node) {
@@ -237,13 +237,13 @@ void _printNode(StringBuffer sb, int flags, Node node) {
         String escape;
         switch (codeUnit) {
           case charcode.$ampersand:
-            escape = "&amp;";
+            escape = '&amp;';
             break;
           case charcode.$lt:
-            escape = "&lt;";
+            escape = '&lt;';
             break;
           case charcode.$gt:
-            escape = "&gt;";
+            escape = '&gt;';
             break;
         }
         if (escape != null) {
@@ -258,17 +258,17 @@ void _printNode(StringBuffer sb, int flags, Node node) {
     case Node.COMMENT_NODE:
       // To be safe, escape value.
       final value = node.nodeValue;
-      if (value.contains("-->")) {
-        throw StateError("Comment contains '-->': '${value}'");
+      if (value.contains('-->')) {
+        throw StateError('Comment contains "-->": "${value}"');
       }
 
-      sb.write("<!--");
+      sb.write('<!--');
       sb.write(value);
       sb.write('-->');
       break;
 
     case Node.CDATA_SECTION_NODE:
-      sb.write("<![CDATA[");
+      sb.write('<![CDATA[');
       // We don't provide an API to create CDATA other than parsing,
       // so no need to inspect the value.
       sb.write(node.nodeValue);
@@ -276,14 +276,14 @@ void _printNode(StringBuffer sb, int flags, Node node) {
       break;
 
     case Node.DOCUMENT_TYPE_NODE:
-      sb.write("<!doctype");
+      sb.write('<!doctype');
       // We don't provide an API to create DOCTYPE other than parsing,
       // so no need to inspect the value.
       if (node.nodeValue != null) {
-        sb.write(" ");
+        sb.write(' ');
         sb.write(node.nodeValue);
       }
-      sb.write(">");
+      sb.write('>');
       break;
 
     case Node.DOCUMENT_FRAGMENT_NODE:

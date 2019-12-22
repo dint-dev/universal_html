@@ -62,7 +62,7 @@ class _ComputedStyle extends CssStyleDeclaration {
   }
 
   _CssStyleDeclaration compute() {
-    final cachedStyle = this._style;
+    final cachedStyle = _style;
     if (cachedStyle != null) {
       return cachedStyle;
     }
@@ -122,7 +122,7 @@ class _ComputedStyle extends CssStyleDeclaration {
         result.setProperty(name, style.getPropertyValue(name));
       }
     }
-    this._style = result;
+    _style = result;
     return result;
   }
 

@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -53,7 +53,7 @@ abstract class CharacterData extends Node
 
   CharacterData._(Document ownerDocument, this.data) : super._(ownerDocument) {
     if (data == null) {
-      throw ArgumentError.notNull("data");
+      throw ArgumentError.notNull('data');
     }
   }
 
@@ -61,7 +61,7 @@ abstract class CharacterData extends Node
 
   @override
   Element get nextElementSibling {
-    var node = this.nextNode;
+    var node = nextNode;
     while (node != null && node is! Element) {
       node = node.nextNode;
     }
@@ -73,7 +73,7 @@ abstract class CharacterData extends Node
 
   @override
   Element get previousElementSibling {
-    var node = this.previousNode;
+    var node = previousNode;
     while (node != null && node is! Element) {
       node = node.previousNode;
     }
@@ -93,14 +93,14 @@ abstract class ChildNode {
 
 class Comment extends CharacterData {
   factory Comment([String value]) {
-    if (value != null && value.contains("-->")) {
+    if (value != null && value.contains('-->')) {
       throw ArgumentError.value(value);
     }
     return Comment._(null, value);
   }
 
   Comment._(Document ownerDocument, String value)
-      : super._(ownerDocument, value ?? "");
+      : super._(ownerDocument, value ?? '');
 
   @override
   int get nodeType => Node.COMMENT_NODE;
@@ -133,12 +133,12 @@ abstract class Node extends EventTarget {
 
   /// Constructor for most subclasses.
   Node._(Document ownerDocument)
-      : this.ownerDocument = ownerDocument ?? document,
+      : ownerDocument = ownerDocument ?? document,
         super._created();
 
   /// Constructor used by [Document].
   Node._document()
-      : this.ownerDocument = null,
+      : ownerDocument = null,
         super._created();
 
   String get baseUri {
@@ -160,7 +160,7 @@ abstract class Node extends EventTarget {
   List<Node> get nodes => _ChildNodeListLazy(this);
 
   set nodes(List<Node> nodes) {
-    this._clearChildren();
+    _clearChildren();
     for (var node in nodes) {
       append(node);
     }
@@ -171,14 +171,14 @@ abstract class Node extends EventTarget {
   String get nodeValue => null;
 
   Element get parent {
-    final parent = this._parent;
+    final parent = _parent;
     if (parent is Element) {
       return parent;
     }
     return null;
   }
 
-  Node get parentNode => this._parent;
+  Node get parentNode => _parent;
 
   Node get previousNode => _previousNode;
 
@@ -194,7 +194,7 @@ abstract class Node extends EventTarget {
   }
 
   Element get _firstElementChild {
-    var node = this.firstChild;
+    var node = firstChild;
     while (node != null) {
       if (node is Element) {
         return node;
@@ -221,37 +221,37 @@ abstract class Node extends EventTarget {
   String get _nodeTypeName {
     switch (nodeType) {
       case ELEMENT_NODE:
-        return "element";
+        return 'element';
       case ATTRIBUTE_NODE:
-        return "attribute";
+        return 'attribute';
       case TEXT_NODE:
-        return "text";
+        return 'text';
       case CDATA_SECTION_NODE:
-        return "cdata";
+        return 'cdata';
       case ENTITY_REFERENCE_NODE:
-        return "entityreference";
+        return 'entityreference';
       case ENTITY_NODE:
-        return "entity";
+        return 'entity';
       case COMMENT_NODE:
-        return "comment";
+        return 'comment';
       case DOCUMENT_NODE:
-        return "document";
+        return 'document';
       case DOCUMENT_TYPE_NODE:
-        return "documenttype";
+        return 'documenttype';
       case DOCUMENT_FRAGMENT_NODE:
-        return "documentfragment";
+        return 'documentfragment';
       default:
         throw UnimplementedError();
     }
   }
 
   @override
-  EventTarget get _parentEventTarget => this.parent;
+  EventTarget get _parentEventTarget => parent;
 
   RenderData get _renderData => parent?._renderData;
 
   Node append(Node node) {
-    this.insertBefore(node, null);
+    insertBefore(node, null);
 
     // DocumentFragment is handled differently, according to Mozilla
     if (node is DocumentFragment) {
@@ -262,7 +262,7 @@ abstract class Node extends EventTarget {
   }
 
   Node clone(bool deep) {
-    final clone = internalCloneWithOwnerDocument(this.ownerDocument, deep);
+    final clone = internalCloneWithOwnerDocument(ownerDocument, deep);
     clone._parent = null;
     return clone;
   }
@@ -293,18 +293,18 @@ abstract class Node extends EventTarget {
   bool hasChildNodes() => firstChild != null;
 
   void insertAllBefore(Iterable<Node> nodes, Node before) {
-    throw DomException._invalidMethod("Node", "insertAllBefore");
+    throw DomException._invalidMethod('Node', 'insertAllBefore');
   }
 
   void insertBefore(Node node, Node before) {
-    throw DomException._invalidMethod("Node", "insertBefore");
+    throw DomException._invalidMethod('Node', 'insertBefore');
   }
 
   @visibleForTesting
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep);
 
   void remove() {
-    final parent = this._parent;
+    final parent = _parent;
     if (parent == null) {
       assert(_previousNode == null);
       assert(_nextNode == null);
@@ -315,8 +315,8 @@ abstract class Node extends EventTarget {
     _markDirty();
 
     // Get previous and next
-    final previous = this._previousNode;
-    final next = this._nextNode;
+    final previous = _previousNode;
+    final next = _nextNode;
 
     if (previous == null) {
       // This was the first sibling
@@ -335,15 +335,15 @@ abstract class Node extends EventTarget {
     }
 
     // Set fields of this node
-    this._parent = null;
-    this._previousNode = null;
-    this._nextNode = null;
+    _parent = null;
+    _previousNode = null;
+    _nextNode = null;
     parent._mutated();
-    this._mutated();
+    _mutated();
   }
 
   void replaceWith(Node node) {
-    final parent = this._parent;
+    final parent = _parent;
     if (parent == null) {
       assert(_previousNode == null);
       assert(_nextNode == null);
@@ -355,8 +355,8 @@ abstract class Node extends EventTarget {
     node._markDirty();
 
     // Get previous and next
-    final previous = this._previousNode;
-    final next = this._nextNode;
+    final previous = _previousNode;
+    final next = _nextNode;
 
     if (previous == null) {
       // This was the first sibling
@@ -377,16 +377,16 @@ abstract class Node extends EventTarget {
     node._parent = parent;
     node._previousNode = previous;
     node._nextNode = next;
-    this._parent = null;
-    this._previousNode = null;
-    this._nextNode = null;
-    this._mutated();
+    _parent = null;
+    _previousNode = null;
+    _nextNode = null;
+    _mutated();
     node._mutated();
   }
 
   /// Used by [_ChildNodeListLazy].
   void _buildText(StringBuffer sb) {
-    var current = this.firstChild;
+    var current = firstChild;
     while (current != null) {
       current._buildText(sb);
       current = current.nextNode;
@@ -395,7 +395,7 @@ abstract class Node extends EventTarget {
 
   void _clearChildren() {
     while (true) {
-      final child = this.firstChild;
+      final child = firstChild;
       if (child == null) {
         break;
       }
@@ -510,7 +510,7 @@ class Text extends CharacterData {
   }
 }
 
-abstract class _ChildNode implements ChildNode {
+mixin _ChildNode implements ChildNode {
   @override
   void after(Object nodes) {}
   @override
@@ -530,23 +530,23 @@ class _ChildNodeIterator extends Iterator<Node> {
 
   @override
   bool moveNext() {
-    var current = this._current;
+    var current = _current;
     if (current == null) {
       var node = _parent.firstChild;
       if (node == null) {
         return false;
       }
-      this._current = node;
+      _current = node;
       return true;
     } else {
       if (!identical(current.parentNode, _parent)) {
-        throw StateError("DOM tree was modified during iteration");
+        throw StateError('DOM tree was modified during iteration');
       }
       final next = current.nextNode;
       if (next == null) {
         return false;
       }
-      this._current = next;
+      _current = next;
       return true;
     }
   }
@@ -566,11 +566,11 @@ class _DocumentType extends Node {
   @visibleForTesting
   @override
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      _DocumentType._(ownerDocument, this._value);
+      _DocumentType._(ownerDocument, _value);
 }
 
 /// Mixin for [Element] and [Document].
-abstract class _ElementOrDocument implements Node, ParentNode {
+mixin _ElementOrDocument implements Node, ParentNode {
   Node _firstChild;
   Node _lastChild;
 
@@ -581,7 +581,7 @@ abstract class _ElementOrDocument implements Node, ParentNode {
   Node get lastChild => _lastChild;
 
   Iterable<Element> get _ancestors sync* {
-    var ancestor = this.parent;
+    var ancestor = parent;
     while (ancestor != null) {
       yield (ancestor);
       ancestor = ancestor.parent;
@@ -590,7 +590,7 @@ abstract class _ElementOrDocument implements Node, ParentNode {
 
   @override
   void insertAllBefore(Iterable<Node> nodes, Node before) {
-    var previous = before == null ? this.lastChild : before.previousNode;
+    var previous = before == null ? lastChild : before.previousNode;
     var isFirstIteration = true;
     for (var node in nodes) {
       if (isFirstIteration) {
@@ -601,7 +601,7 @@ abstract class _ElementOrDocument implements Node, ParentNode {
         node.remove();
       }
       if (previous == null) {
-        this._firstChild = node;
+        _firstChild = node;
       } else {
         previous._nextNode = node;
       }
@@ -615,22 +615,22 @@ abstract class _ElementOrDocument implements Node, ParentNode {
   void insertBefore(Node node, Node before) {
     // Can't add null
     if (node == null) {
-      throw ArgumentError.notNull("node");
+      throw ArgumentError.notNull('node');
     }
 
     // Can't add document
     if (node is Document) {
-      throw ArgumentError.value(node, "node");
+      throw ArgumentError.value(node, 'node');
     }
 
     // Can't add node into itself
     if (identical(node, this)) {
-      throw ArgumentError.value(node, "node");
+      throw ArgumentError.value(node, 'node');
     }
 
     // If 'before' is non-null, it must be a child
     if (before != null && !identical(before._parent, this)) {
-      throw ArgumentError.value(before, "before");
+      throw ArgumentError.value(before, 'before');
     }
 
     // Mark as dirty
@@ -644,24 +644,24 @@ abstract class _ElementOrDocument implements Node, ParentNode {
     // Validate state
     if (node.parentNode != null ||
         node.previousNode != null && node.nextNode != null) {
-      throw StateError("Node is not detached.");
+      throw StateError('Node is not detached.');
     }
 
     node._parent = this;
     if (before == null) {
-      final oldLastChild = this._lastChild;
+      final oldLastChild = _lastChild;
       if (oldLastChild == null) {
-        this._firstChild = node;
+        _firstChild = node;
       } else {
         oldLastChild._nextNode = node;
       }
       node._previousNode = oldLastChild;
-      this._lastChild = node;
+      _lastChild = node;
     } else {
       final previous = before._previousNode;
       if (previous == null) {
         // Set first sibling
-        this._firstChild = node;
+        _firstChild = node;
       } else {
         previous._nextNode = node;
         node._previousNode = previous;
@@ -671,10 +671,8 @@ abstract class _ElementOrDocument implements Node, ParentNode {
     }
 
     // Validate state
-    if (this._firstChild == null ||
-        this._lastChild == null ||
-        node.parentNode == null) {
-      throw StateError("Node is not attached.");
+    if (_firstChild == null || _lastChild == null || node.parentNode == null) {
+      throw StateError('Node is not attached.');
     }
   }
 
@@ -705,7 +703,7 @@ abstract class _ElementOrDocument implements Node, ParentNode {
     }
     final selectorGroup = css.parseSelectorGroup(input);
     final result = <Element>[];
-    this._forEachTreeElement((element) {
+    _forEachTreeElement((element) {
       if (_matchesSelectorGroup(element, selectorGroup, null)) {
         result.add(element);
       }
@@ -713,8 +711,8 @@ abstract class _ElementOrDocument implements Node, ParentNode {
     return _FrozenElementList<T>._wrap(result);
   }
 
-  void _forEachTreeElement(void f(Element element)) {
-    var node = this.firstChild;
+  void _forEachTreeElement(void Function(Element element) f) {
+    var node = firstChild;
     if (node == null) {
       return;
     }
@@ -748,11 +746,10 @@ abstract class _NodeListWrapper {
   List<Node> get rawList;
 }
 
-abstract class _NonDocumentTypeChildNode
-    implements Node, NonDocumentTypeChildNode {
+mixin _NonDocumentTypeChildNode implements Node, NonDocumentTypeChildNode {
   @override
   Element get nextElementSibling {
-    var node = this.nextNode;
+    var node = nextNode;
     while (node != null) {
       if (Node.ELEMENT_NODE == node.nodeType) {
         return node as Element;
@@ -764,7 +761,7 @@ abstract class _NonDocumentTypeChildNode
 
   @override
   Element get previousElementSibling {
-    var node = this.previousNode;
+    var node = previousNode;
     while (node != null) {
       if (Node.ELEMENT_NODE == node.nodeType) {
         return node as Element;

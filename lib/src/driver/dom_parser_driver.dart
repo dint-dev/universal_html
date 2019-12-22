@@ -24,11 +24,11 @@ import 'package:xml/xml.dart' as xml;
 class DomParserDriver {
   final HtmlDriver _htmlDriver;
 
-  const DomParserDriver({HtmlDriver driver}) : this._htmlDriver = driver;
+  const DomParserDriver({HtmlDriver driver}) : _htmlDriver = driver;
 
   HtmlDriver get htmlDriver => _htmlDriver ?? HtmlDriver.current;
 
-  /// Parses [Document] based on [mime] (e.g. "text/html").
+  /// Parses [Document] based on [mime] (e.g. 'text/html').
   ///
   /// The result is either [HtmlDocument] or [XmlDocument].
   Document parseDocument(
@@ -36,10 +36,10 @@ class DomParserDriver {
     @required String mime,
   }) {
     if (mime == null) {
-      throw ArgumentError.notNull("mime");
+      throw ArgumentError.notNull('mime');
     }
     switch (mime) {
-      case "text/plain":
+      case 'text/plain':
         final document = BrowserImplementationUtils.newHtmlDocument(
           htmlDriver: htmlDriver,
           contentType: mime,
@@ -49,32 +49,32 @@ class DomParserDriver {
         return document;
 
       // HTML
-      case "text/html":
+      case 'text/html':
         return parseHtml(input, mime: mime);
-      case "application/html":
+      case 'application/html':
         return parseHtml(input, mime: mime);
 
       // XHTML
-      case "application/xhtml+xml":
+      case 'application/xhtml+xml':
         return parseXml(input, mime: mime);
 
       // SVG
-      case "text/svg":
+      case 'text/svg':
         return parseSvg(input, mime: mime);
-      case "application/svg":
+      case 'application/svg':
         return parseSvg(input, mime: mime);
 
       // XML
-      case "text/xml":
+      case 'text/xml':
         return parseXml(input, mime: mime);
-      case "application/xml":
+      case 'application/xml':
         return parseXml(input, mime: mime);
 
       default:
         throw ArgumentError.value(
           mime,
-          "mime",
-          "Unsupported MIME type",
+          'mime',
+          'Unsupported MIME type',
         );
     }
   }
@@ -85,7 +85,7 @@ class DomParserDriver {
     final task = _HtmlParser(
       htmlDriver,
       type: _HtmlParser._typeHtml,
-      mime: "text/html",
+      mime: 'text/html',
     );
     return task._parseDocumentFragment(
       _HtmlParser._typeHtml,
@@ -102,7 +102,7 @@ class DomParserDriver {
     final task = _HtmlParser(
       htmlDriver,
       type: _HtmlParser._typeSvg,
-      mime: "application/svg",
+      mime: 'application/svg',
     );
     return task._parseDocumentFragment(
       _HtmlParser._typeSvg,
@@ -110,7 +110,7 @@ class DomParserDriver {
       html,
       validator: validator,
       treeSanitizer: treeSanitizer,
-      container: "svg",
+      container: 'svg',
     );
   }
 
@@ -123,7 +123,7 @@ class DomParserDriver {
   /// body of blank HTML document.
   HtmlDocument parseHtmlFromAnything(
     String input, {
-    String mime = "text/html",
+    String mime = 'text/html',
   }) {
     final document = parseDocument(input, mime: mime);
     if (document is HtmlDocument) {
@@ -147,10 +147,10 @@ class DomParserDriver {
       }
       return htmlDocument;
     }
-    throw StateError("Invalid document type");
+    throw StateError('Invalid document type');
   }
 
-  HtmlDocument parseHtml(String input, {String mime = "text/html"}) {
+  HtmlDocument parseHtml(String input, {String mime = 'text/html'}) {
     final task = _HtmlParser(
       htmlDriver,
       type: _HtmlParser._typeHtml,
@@ -161,19 +161,19 @@ class DomParserDriver {
   }
 
   XmlDocument parseXhtml(String input,
-      {String mime = "application/xhtml+xml"}) {
+      {String mime = 'application/xhtml+xml'}) {
     final parser = _XmlParser(htmlDriver, mime);
     final node = parser._newNodeFrom(null, xml.parse(input));
     return node as XmlDocument;
   }
 
-  XmlDocument parseXml(String input, {String mime = "text/xml"}) {
+  XmlDocument parseXml(String input, {String mime = 'text/xml'}) {
     final parser = _XmlParser(htmlDriver, mime);
     final node = parser._newNodeFrom(null, xml.parse(input));
     return node as XmlDocument;
   }
 
-  XmlDocument parseSvg(String input, {String mime = "application/svg"}) {
+  XmlDocument parseSvg(String input, {String mime = 'application/svg'}) {
     final parser = _XmlParser(htmlDriver, mime);
     final node = parser._newNodeFrom(null, xml.parse(input));
     return node as XmlDocument;
@@ -261,9 +261,9 @@ class _HtmlParser {
 
       // An ugly workaround for CDATA, which seems to be parsed as comments.
       final data = input.data;
-      if (data.startsWith("[CDATA[") && data.endsWith("]]")) {
+      if (data.startsWith('[CDATA[') && data.endsWith(']]')) {
         return Text(
-            data.substring("[CDATA[".length, data.length - "]]".length));
+            data.substring('[CDATA['.length, data.length - ']]'.length));
       }
 
       return Comment(data);
@@ -388,7 +388,7 @@ class _XmlParser {
           continue;
         }
         var namespaceUri = attribute.name.namespaceUri;
-        namespaceUri ??= "xmlns";
+        namespaceUri ??= 'xmlns';
         result.setAttributeNS(
           namespaceUri,
           attribute.name.local,

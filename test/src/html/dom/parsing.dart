@@ -15,19 +15,19 @@
 part of main_test;
 
 void _testParsing() {
-  group("Parsing nodes: ", () {
+  group('Parsing nodes: ', () {
     setUp(() {
-      HtmlDriver.current.uri = Uri.parse("http://localhost:8080/");
+      HtmlDriver.current.uri = Uri.parse('http://localhost:8080/');
     });
-    test("`DomParser, 'text/html'", () {
-      final contentType = "text/html";
-      const source = """
+    test('`DomParser, "text/html"', () {
+      final contentType = 'text/html';
+      const source = '''
 <div emptyname name="value" ns:name="value2">
 some text
 <!--some comment-->
 <h1>element #1</h1>
 <Img src="image.jpeg">
-</div>""";
+</div>''';
 
       // Parse
       final document = DomParser().parseFromString(source, contentType);
@@ -39,7 +39,7 @@ some text
       expect(root.ownerDocument, isNotNull);
       expect(root.ownerDocument.contentType, contentType);
       expect(root, isA<HtmlElement>());
-      expect(root.tagName, "HTML");
+      expect(root.tagName, 'HTML');
       expect(root.childNodes, hasLength(2));
       expect(root.childNodes[0], isA<HeadElement>());
       expect(root.childNodes[1], isA<BodyElement>());
@@ -52,30 +52,30 @@ some text
         expect(div, isA<DivElement>());
 
         final element = div as DivElement;
-        expect(element.tagName, "DIV");
-        expect(element.getAttribute("emptyname"), "");
-        expect(element.getAttribute("name"), "value");
+        expect(element.tagName, 'DIV');
+        expect(element.getAttribute('emptyname'), '');
+        expect(element.getAttribute('name'), 'value');
       }
 
       // some text
       {
         final node = div.childNodes[0];
         expect(node, isA<Text>());
-        expect(node.nodeValue, "\nsome text\n");
+        expect(node.nodeValue, '\nsome text\n');
       }
 
       // <!--some comment-->
       {
         final node = div.childNodes[1];
         expect(node, isA<Comment>());
-        expect(node.nodeValue, "some comment");
+        expect(node.nodeValue, 'some comment');
       }
 
       // (newline)
       {
         final node = div.childNodes[2];
         expect(node, isA<Text>());
-        expect(node.nodeValue, "\n");
+        expect(node.nodeValue, '\n');
       }
 
       // <h1>element #1</h1>
@@ -84,15 +84,15 @@ some text
         expect(node, isA<HeadingElement>());
 
         final element = node as HeadingElement;
-        expect(element.tagName, "H1");
-        expect(element.text, "element #1");
+        expect(element.tagName, 'H1');
+        expect(element.text, 'element #1');
       }
 
       // (newline)
       {
         final node = div.childNodes[4];
         expect(node, isA<Text>());
-        expect(node.nodeValue, "\n");
+        expect(node.nodeValue, '\n');
       }
 
       // <img href="element #2">
@@ -101,14 +101,14 @@ some text
         expect(node, isA<ImageElement>());
 
         final element = node as ImageElement;
-        expect(element.tagName, "IMG");
-        expect(element.getAttribute("src"), "image.jpeg");
+        expect(element.tagName, 'IMG');
+        expect(element.getAttribute('src'), 'image.jpeg');
       }
     });
 
-    test("`DomParser, 'application/xhtml+xml'", () {
-      final contentType = "application/xhtml+xml";
-      const source = """
+    test('`DomParser, "application/xhtml+xml"', () {
+      final contentType = 'application/xhtml+xml';
+      const source = '''
 <!DOCTYPE example>
 <!-- comment -->
 <html>
@@ -121,7 +121,7 @@ some text
 </div>
 </body>
 </html>
-""";
+''';
 
       // Parse
       final document = DomParser().parseFromString(source, contentType);
@@ -133,8 +133,8 @@ some text
       expect(html.ownerDocument, isNotNull);
       expect(html.ownerDocument.contentType, contentType);
       expect(html, isNot(isA<HtmlHtmlElement>()));
-      expect(html.nodeName, "html");
-      expect(html.tagName, "html");
+      expect(html.nodeName, 'html');
+      expect(html.tagName, 'html');
       expect(html.children, hasLength(1));
       expect(html.children[0], isNot(isA<BodyElement>()));
 
@@ -145,30 +145,30 @@ some text
       final div = body.children.first;
       {
         expect(div, isNot(isA<DivElement>()));
-        expect(div.tagName, "div");
-        expect(div.getAttribute("k0"), "v0");
-        expect(div.getAttribute("k1"), "v1");
+        expect(div.tagName, 'div');
+        expect(div.getAttribute('k0'), 'v0');
+        expect(div.getAttribute('k1'), 'v1');
       }
 
       // some text
       {
         final node = div.childNodes[0];
         expect(node, isA<Text>());
-        expect(node.nodeValue, "\nsome text\n");
+        expect(node.nodeValue, '\nsome text\n');
       }
 
       // <!--some comment-->
       {
         final node = div.childNodes[1];
         expect(node, isA<Comment>());
-        expect(node.nodeValue, "some comment");
+        expect(node.nodeValue, 'some comment');
       }
 
       // (newline)
       {
         final node = div.childNodes[2];
         expect(node, isA<Text>());
-        expect(node.nodeValue, "\n");
+        expect(node.nodeValue, '\n');
       }
 
       // <h1>element #1</h1>
@@ -177,15 +177,15 @@ some text
         expect(node, isNot(isA<HeadingElement>()));
 
         final element = node as Element;
-        expect(element.tagName, "h1");
-        expect(element.text, "element #1");
+        expect(element.tagName, 'h1');
+        expect(element.text, 'element #1');
       }
 
       // (newline)
       {
         final node = div.childNodes[4];
         expect(node, isA<Text>());
-        expect(node.nodeValue, "\n");
+        expect(node.nodeValue, '\n');
       }
 
       // <img src="image.jpeg">
@@ -194,18 +194,18 @@ some text
         expect(node, isNot(isA<ImageElement>()));
 
         final element = node as Element;
-        expect(element.tagName, "img");
-        expect(element.getAttribute("src"), "image.jpeg");
+        expect(element.tagName, 'img');
+        expect(element.getAttribute('src'), 'image.jpeg');
       }
     });
 
-    test("`DomParser, 'text/xml', 'application/xml'", () {
-      for (var contentType in ["text/xml", "application/xml"]) {
-        const source = """
+    test('`DomParser, "text/xml", "application/xml"', () {
+      for (var contentType in ['text/xml', 'application/xml']) {
+        const source = '''
 <root xmlns:x="example_namespace">
 <Child k0="v0" k1="v1">text</Child>
 <x:Child x:k0="v0" x:k1="v1">text</x:Child>
-</root>""";
+</root>''';
 
         // Parse
         final document = DomParser().parseFromString(source, contentType);
@@ -216,8 +216,8 @@ some text
         expect(root.ownerDocument, isNotNull);
         expect(root.ownerDocument.contentType, contentType);
         expect(root, isA<Element>());
-        expect(root.nodeName, "root");
-        expect(root.tagName, "root");
+        expect(root.nodeName, 'root');
+        expect(root.tagName, 'root');
         expect(root.childNodes, hasLength(5));
         expect(root.children, hasLength(2));
 
@@ -225,24 +225,24 @@ some text
         final child0 = root.children[0];
         expect(child0.ownerDocument, isNotNull);
         expect(child0.ownerDocument.contentType, contentType);
-        expect(child0.tagName, "Child");
+        expect(child0.tagName, 'Child');
         expect(child0.attributes, hasLength(2));
-        expect(child0.attributes["k0"], "v0");
-        expect(child0.attributes["k1"], "v1");
+        expect(child0.attributes['k0'], 'v0');
+        expect(child0.attributes['k1'], 'v1');
         expect(child0.childNodes, hasLength(1));
-        expect(child0.text, "text");
+        expect(child0.text, 'text');
 
         // <ns:child ns:k0="v0" ns:k1="v1">text</ns:child>
         final child1 = root.children[1];
-        expect(child1.namespaceUri, "example_namespace");
-        expect(child1.nodeName, "x:Child");
-        expect(child1.tagName, "x:Child");
-        expect(child1.attributes, isNot(contains("k0")));
-        expect(child1.attributes, isNot(contains("k1")));
-        expect(child1.getAttributeNS("example_namespace", "k0"), "v0");
-        expect(child1.getAttributeNS("example_namespace", "k1"), "v1");
+        expect(child1.namespaceUri, 'example_namespace');
+        expect(child1.nodeName, 'x:Child');
+        expect(child1.tagName, 'x:Child');
+        expect(child1.attributes, isNot(contains('k0')));
+        expect(child1.attributes, isNot(contains('k1')));
+        expect(child1.getAttributeNS('example_namespace', 'k0'), 'v0');
+        expect(child1.getAttributeNS('example_namespace', 'k1'), 'v1');
         expect(child1.childNodes, hasLength(1));
-        expect(child1.text, "text");
+        expect(child1.text, 'text');
 
         // ---------------------------------------------------------------------
         // Test various methods
@@ -250,87 +250,87 @@ some text
         for (var child in root.children) {
           expect(child.parent, same(root));
         }
-        expect(document.querySelector("root"), isNotNull);
-        expect(document.querySelectorAll("not-found"), hasLength(0));
+        expect(document.querySelector('root'), isNotNull);
+        expect(document.querySelectorAll('not-found'), hasLength(0));
         expect(
-          document.querySelectorAll("child"),
+          document.querySelectorAll('child'),
           hasLength(0),
-          reason: "querySelectorAll",
+          reason: 'querySelectorAll',
         );
         expect(
-          document.querySelectorAll("Child"),
+          document.querySelectorAll('Child'),
           hasLength(2),
-          reason: "querySelectorAll",
+          reason: 'querySelectorAll',
         );
         expect(
-          document.getElementsByName("child"),
+          document.getElementsByName('child'),
           hasLength(0),
-          reason: "getElementsByName",
+          reason: 'getElementsByName',
         );
         expect(
-          document.getElementsByName("Child"),
+          document.getElementsByName('Child'),
           hasLength(0),
-          reason: "getElementsByName",
+          reason: 'getElementsByName',
         );
         expect(
-          document.getElementsByTagName("child"),
+          document.getElementsByTagName('child'),
           hasLength(0),
-          reason: "getElementsByTagName",
+          reason: 'getElementsByTagName',
         );
         expect(
-          document.getElementsByTagName("Child"),
+          document.getElementsByTagName('Child'),
           hasLength(1),
-          reason: "getElementsByTagName",
+          reason: 'getElementsByTagName',
         );
       }
     });
 
-    test("`DomParser, 'text/xml' (default namespace)", () {
-      const source = """<a xmlns="example"><b>&amp;&lt;&gt;</b></a>""";
-      final document = DomParser().parseFromString(source, "text/xml");
+    test('`DomParser, "text/xml" (default namespace)', () {
+      const source = '''<a xmlns="example"><b>&amp;&lt;&gt;</b></a>''';
+      final document = DomParser().parseFromString(source, 'text/xml');
       expect(document.documentElement.outerHtml, source);
     });
 
-    test("`DomParser, 'text/xml' (comment before element)", () {
-      const source = """<!-- x --><a></a>""";
-      final document = DomParser().parseFromString(source, "text/xml");
+    test('`DomParser, "text/xml" (comment before element)', () {
+      const source = '''<!-- x --><a></a>''';
+      final document = DomParser().parseFromString(source, 'text/xml');
       expect(document.childNodes, hasLength(2));
-      expect(document.documentElement.outerHtml, "<a/>");
+      expect(document.documentElement.outerHtml, '<a/>');
     });
 
-    test("`DomParser, 'text/xml' (XML processing instruction)", () {
-      const source = """<?xml version="1.0"?><a></a>""";
-      final document = DomParser().parseFromString(source, "text/xml");
+    test('`DomParser, "text/xml" (XML processing instruction)', () {
+      const source = '''<?xml version="1.0"?><a></a>''';
+      final document = DomParser().parseFromString(source, 'text/xml');
       expect(document.childNodes, hasLength(1));
-      expect(document.documentElement.outerHtml, "<a/>");
+      expect(document.documentElement.outerHtml, '<a/>');
     });
 
-    test("`DomParser, 'text/xml' (doctype)", () {
-      const source = """<!DOCTYPE example><a></a>""";
-      final document = DomParser().parseFromString(source, "text/xml");
+    test('`DomParser, "text/xml" (doctype)', () {
+      const source = '''<!DOCTYPE example><a></a>''';
+      final document = DomParser().parseFromString(source, 'text/xml');
       expect(document.childNodes, hasLength(2));
-      expect(document.documentElement.outerHtml, "<a/>");
+      expect(document.documentElement.outerHtml, '<a/>');
     });
 
-    test("`DomParser, 'text/xml' (special characters)", () {
-      const source = """<a>&amp;&lt;&gt;</a>""";
-      final document = DomParser().parseFromString(source, "text/xml");
+    test('`DomParser, "text/xml" (special characters)', () {
+      const source = '''<a>&amp;&lt;&gt;</a>''';
+      final document = DomParser().parseFromString(source, 'text/xml');
       expect(document.documentElement.outerHtml, source);
     });
 
     test(
-        "`DomParser, 'text/xml' (element that doesn't have closing tag in HTML)",
+        'DomParser, "text/xml" (element that doesn\'t have closing tag in HTML)',
         () {
-      const source = """<img>text</img>""";
-      final document = DomParser().parseFromString(source, "text/xml");
+      const source = '''<img>text</img>''';
+      final document = DomParser().parseFromString(source, 'text/xml');
       expect(document.documentElement.outerHtml, source);
     });
 
     test(
-        "`DomParser, 'text/xml' (element that doesn't have closing tag in HTML, no content)",
+        'DomParser, "text/xml" (element that doesn\'t have closing tag in HTML, no content)',
         () {
-      const source = """<img/>""";
-      final document = DomParser().parseFromString(source, "text/xml");
+      const source = '''<img/>''';
+      final document = DomParser().parseFromString(source, 'text/xml');
       expect(document.documentElement.outerHtml, source);
     });
   });

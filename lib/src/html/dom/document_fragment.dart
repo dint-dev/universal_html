@@ -94,12 +94,12 @@ class DocumentFragment extends Node
 
   String get innerHtml {
     final e = DivElement();
-    e.append(this.clone(true));
+    e.append(clone(true));
     return e.innerHtml;
   }
 
   set innerHtml(String value) {
-    this.setInnerHtml(value);
+    setInnerHtml(value);
   }
 
   @override
@@ -112,7 +112,7 @@ class DocumentFragment extends Node
     NodeValidator validator,
     NodeTreeSanitizer treeSanitizer,
   }) {
-    this.append(DocumentFragment.html(
+    append(DocumentFragment.html(
       text,
       validator: validator,
       treeSanitizer: treeSanitizer,
@@ -122,7 +122,7 @@ class DocumentFragment extends Node
   /// Adds the specified text as a text node after the last child of this
   /// document fragment.
   void appendText(String text) {
-    this.append(Text(text));
+    append(Text(text));
   }
 
   @visibleForTesting
@@ -144,7 +144,7 @@ class DocumentFragment extends Node
     NodeValidator validator,
     NodeTreeSanitizer treeSanitizer,
   }) {
-    this.nodes.clear();
+    nodes.clear();
     append(document.body.createFragment(
       html,
       validator: validator,

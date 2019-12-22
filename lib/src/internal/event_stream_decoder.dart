@@ -18,7 +18,7 @@ import 'package:typed_data/typed_buffers.dart';
 import 'package:universal_html/src/html.dart';
 import 'dart:convert';
 
-/// Decodes "application/event-stream" streams.
+/// Decodes 'application/event-stream' streams.
 class EventStreamDecoder
     extends StreamTransformerBase<Uint8List, MessageEvent> {
   final String origin;
@@ -37,7 +37,7 @@ class EventStreamDecoder
     await for (var chunk in stream) {
       while (chunk.isNotEmpty) {
         // Find newline
-        var i = chunk.indexOf("\n".codeUnitAt(0));
+        var i = chunk.indexOf('\n'.codeUnitAt(0));
         if (i < 0) {
           // No newline
           buffer.addAll(chunk);
@@ -55,7 +55,7 @@ class EventStreamDecoder
           if (hasData) {
             // End of message
             yield (MessageEvent(
-              type ?? "message",
+              type ?? 'message',
               lastEventId: id,
               data: dataBuilder.toString(),
               origin: origin,
@@ -65,40 +65,40 @@ class EventStreamDecoder
           dataBuilder.clear();
           id = null;
           type = null;
-        } else if (line.startsWith(":")) {
+        } else if (line.startsWith(':')) {
           // Comment
         } else {
-          final i = line.indexOf(":");
+          final i = line.indexOf(':');
 
-          // "name:value"
+          // 'name:value'
           final name = line.substring(0, i);
           var value = line.substring(i + 1);
 
-          // "name: value"
-          if (value.startsWith(" ")) {
+          // 'name: value'
+          if (value.startsWith(' ')) {
             value = value.substring(1);
           }
           switch (name) {
-            case "retry":
+            case 'retry':
               final amount = int.tryParse(value);
               if (amount != null && onReceivedTimeout != null) {
                 onReceivedTimeout(Duration(milliseconds: amount));
               }
               break;
 
-            case "data":
+            case 'data':
               hasData = true;
               if (dataBuilder.length > 0) {
-                dataBuilder.write("\n");
+                dataBuilder.write('\n');
               }
               dataBuilder.write(value);
               break;
 
-            case "id":
+            case 'id':
               id = value;
               break;
 
-            case "event":
+            case 'event':
               type = value;
               break;
           }

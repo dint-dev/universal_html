@@ -31,7 +31,7 @@ The original files in the Dart SDK had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -85,7 +85,7 @@ class SvgElement extends Element {
   /// IMPORTANT: Not part of 'dart:svg'.
   factory SvgElement.internal(Document document, String tag) {
     switch (tag) {
-      case "script":
+      case 'script':
         return ScriptElement();
       default:
         return SvgElement._(document, tag);
@@ -105,13 +105,13 @@ class SvgElement extends Element {
     final clone = SvgElement.tag(tagName);
 
     // Clone attributes
-    this.attributes.forEach((name, value) {
+    attributes.forEach((name, value) {
       clone.setAttribute(name, value);
     });
 
     // Clone children
     if (deep != false) {
-      for (var childNode in this.childNodes) {
+      for (var childNode in childNodes) {
         // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
         clone.append(childNode.internalCloneWithOwnerDocument(document, deep));
       }
@@ -123,5 +123,5 @@ class SvgElement extends Element {
 
 // Declared because this is needed by 'html.dart'.
 class ScriptElement extends SvgElement {
-  ScriptElement() : super._(null, "script");
+  ScriptElement() : super._(null, 'script');
 }

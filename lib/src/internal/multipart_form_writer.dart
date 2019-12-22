@@ -24,16 +24,16 @@ class MultipartFormWriter {
   }
 
   void writeContentDisposition(io.ContentType contentType) {
-    writeHeader("Content-Disposition", contentType.value);
+    writeHeader('Content-Disposition', contentType.value);
   }
 
   void writeFieldValue(String name, String value) {
     final parameters = <String, String>{
-      "name": name,
+      'name': name,
     };
     writeContentDisposition(io.ContentType(
-      "text",
-      "plain",
+      'text',
+      'plain',
       parameters: parameters,
     ));
     sink.writeln();
@@ -45,15 +45,15 @@ class MultipartFormWriter {
 
   void writeFile(String name, Uint8List value, {String fileName}) {
     final parameters = <String, String>{
-      "name": name,
+      'name': name,
     };
-    fileName ??= "";
-    if (fileName != "") {
-      parameters["filename"] = fileName;
+    fileName ??= '';
+    if (fileName != '') {
+      parameters['filename'] = fileName;
     }
     writeContentDisposition(io.ContentType(
-      "application",
-      "octet-stream",
+      'application',
+      'octet-stream',
       parameters: parameters,
     ));
     sink.writeln();
@@ -64,14 +64,14 @@ class MultipartFormWriter {
   }
 
   void writeHeader(String name, String value) {
-    sink.writeln("$name: $value");
+    sink.writeln('$name: $value');
   }
 
   static String _randomBoundary() {
     final sb = StringBuffer();
-    sb.write("----");
+    sb.write('----');
     for (var i = 0; i < 32; i++) {
-      sb.write(_random.nextInt(256).toRadixString(16).padLeft(2, "0"));
+      sb.write(_random.nextInt(256).toRadixString(16).padLeft(2, '0'));
     }
     return sb.toString();
   }

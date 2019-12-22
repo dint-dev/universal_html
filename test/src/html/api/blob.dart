@@ -15,26 +15,26 @@
 part of main_test;
 
 void _testBlob() {
-  test("Blob(['ab'])", () {
+  test('Blob([\'ab\'])', () {
     final blob = Blob([
-      "ab",
+      'ab',
     ]);
     expect(blob.size, 2);
     // Data in the blob is tested in BrowserImplementationUtils test
   });
 
-  test("Blob(['ab', [1,2]])", () {
+  test('Blob([\'ab\', [1,2]])', () {
     final blob = Blob([
-      "ab",
+      'ab',
       [1, 2]
     ]);
     expect(blob.size, 5);
     // Data in the blob is tested in BrowserImplementationUtils test
   });
 
-  test("Blob('ab', [1,2], Uint8List.fromList([3,4]))", () {
+  test('Blob(\'ab\', [1,2], Uint8List.fromList([3,4]))', () {
     final blob = Blob([
-      "ab",
+      'ab',
       [1, 2],
       Uint8List.fromList([3, 4])
     ]);

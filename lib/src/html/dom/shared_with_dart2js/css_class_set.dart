@@ -79,28 +79,29 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
 
   // interface Collection - BEGIN
   @override
-  void forEach(void f(String element)) {
+  void forEach(void Function(String element) f) {
     readClasses().forEach(f);
   }
 
   @override
-  String join([String separator = ""]) => readClasses().join(separator);
+  String join([String separator = '']) => readClasses().join(separator);
 
   @override
-  Iterable<T> map<T>(T f(String e)) => readClasses().map<T>(f);
+  Iterable<T> map<T>(T Function(String e) f) => readClasses().map<T>(f);
 
   @override
-  Iterable<String> where(bool f(String element)) => readClasses().where(f);
+  Iterable<String> where(bool Function(String element) f) =>
+      readClasses().where(f);
 
   @override
-  Iterable<T> expand<T>(Iterable<T> f(String element)) =>
+  Iterable<T> expand<T>(Iterable<T> Function(String element) f) =>
       readClasses().expand<T>(f);
 
   @override
-  bool every(bool f(String element)) => readClasses().every(f);
+  bool every(bool Function(String element) f) => readClasses().every(f);
 
   @override
-  bool any(bool f(String element)) => readClasses().any(f);
+  bool any(bool Function(String element) f) => readClasses().any(f);
 
   @override
   bool get isEmpty => readClasses().isEmpty;
@@ -112,12 +113,13 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   int get length => readClasses().length;
 
   @override
-  String reduce(String combine(String value, String element)) {
+  String reduce(String Function(String value, String element) combine) {
     return readClasses().reduce(combine);
   }
 
   @override
-  T fold<T>(T initialValue, T combine(T previousValue, String element)) {
+  T fold<T>(
+      T initialValue, T Function(T previousValue, String element) combine) {
     return readClasses().fold<T>(initialValue, combine);
   }
 
@@ -204,12 +206,12 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   }
 
   @override
-  void removeWhere(bool test(String name)) {
+  void removeWhere(bool Function(String name) test) {
     modify((s) => s.removeWhere(test));
   }
 
   @override
-  void retainWhere(bool test(String name)) {
+  void retainWhere(bool Function(String name) test) {
     modify((s) => s.retainWhere(test));
   }
 
@@ -247,26 +249,29 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   Iterable<String> take(int n) => readClasses().take(n);
 
   @override
-  Iterable<String> takeWhile(bool test(String value)) =>
+  Iterable<String> takeWhile(bool Function(String value) test) =>
       readClasses().takeWhile(test);
 
   @override
   Iterable<String> skip(int n) => readClasses().skip(n);
 
   @override
-  Iterable<String> skipWhile(bool test(String value)) =>
+  Iterable<String> skipWhile(bool Function(String value) test) =>
       readClasses().skipWhile(test);
 
   @override
-  String firstWhere(bool test(String value), {String orElse()}) =>
+  String firstWhere(bool Function(String value) test,
+          {String Function() orElse}) =>
       readClasses().firstWhere(test, orElse: orElse);
 
   @override
-  String lastWhere(bool test(String value), {String orElse()}) =>
+  String lastWhere(bool Function(String value) test,
+          {String Function() orElse}) =>
       readClasses().lastWhere(test, orElse: orElse);
 
   @override
-  String singleWhere(bool test(String value), {String orElse()}) =>
+  String singleWhere(bool Function(String value) test,
+          {String Function() orElse}) =>
       readClasses().singleWhere(test, orElse: orElse);
 
   @override
@@ -286,7 +291,7 @@ abstract class CssClassSetImpl extends SetBase<String> implements CssClassSet {
   ///
   ///   After f returns, the modified set is written to the
   ///       className property of this element.
-  Object modify(f(Set<String> s)) {
+  Object modify(Function(Set<String> s) f) {
     final s = readClasses();
     var ret = f(s);
     writeClasses(s);

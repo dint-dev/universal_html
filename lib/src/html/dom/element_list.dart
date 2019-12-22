@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -406,13 +406,13 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
 
   _FrozenElementList._wrap(this._nodeList) {
     assert(
-      this._nodeList.every((element) => element is E),
-      "Query expects only HTML elements of type $E but found ${this._nodeList.firstWhere((e) => e is! E)}",
+      _nodeList.every((element) => element is E),
+      'Query expects only HTML elements of type $E but found ${_nodeList.firstWhere((e) => e is! E)}',
     );
   }
 
   @override
-  CssRect get borderEdge => this.first.borderEdge;
+  CssRect get borderEdge => first.borderEdge;
 
   @override
   CssClassSet get classes => _MultiElementCssClassSet(this);
@@ -446,7 +446,7 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   }
 
   @override
-  CssRect get marginEdge => this.first.marginEdge;
+  CssRect get marginEdge => first.marginEdge;
 
   /// Stream of `abort` events handled by this [Element].
   @override
@@ -854,7 +854,7 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
       Element.wheelEvent._forElementList(this);
 
   @override
-  CssRect get paddingEdge => this.first.paddingEdge;
+  CssRect get paddingEdge => first.paddingEdge;
 
   @override
   List<Node> get rawList => _nodeList;

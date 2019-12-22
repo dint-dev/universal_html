@@ -15,18 +15,18 @@
 part of main_test;
 
 void _testNavigator() {
-  group("Navigator", () {
+  group('Navigator', () {
     Navigator navigator;
     setUp(() {
       navigator = window.navigator;
     });
-    test("appName", () {
-      expect(navigator.appName, "Netscape");
+    test('appName', () {
+      expect(navigator.appName, 'Netscape');
     });
-    test("appVersion", () {
-      expect(navigator.appVersion, anyOf("5.0", matches(r"5.0 \(.*")));
+    test('appVersion', () {
+      expect(navigator.appVersion, anyOf('5.0', matches(r'5.0 \(.*')));
     });
-    test("geolocation", () async {
+    test('geolocation', () async {
       final timeout = const Duration(milliseconds: 1);
       final future = navigator.geolocation.getCurrentPosition(
         enableHighAccuracy: true,
@@ -43,20 +43,20 @@ void _testNavigator() {
         // Ignore
       }
     });
-    test("product", () {
-      expect(navigator.product, "Gecko");
+    test('product', () {
+      expect(navigator.product, 'Gecko');
     });
-    test("productSub", () {
-      expect(navigator.productSub, "20030107");
+    test('productSub', () {
+      expect(navigator.productSub, '20030107');
     });
-    test("userAgent", () {
+    test('userAgent', () {
       expect(navigator.userAgent, isNotEmpty);
     });
-    test("vendor", () {
-      expect(navigator.vendor, anyOf(["-", "Google Inc."]));
+    test('vendor', () {
+      expect(navigator.vendor, anyOf(['-', 'Google Inc.']));
     });
-    test("vendorSub", () {
-      expect(navigator.vendorSub, "");
+    test('vendorSub', () {
+      expect(navigator.vendorSub, '');
     });
   });
 }

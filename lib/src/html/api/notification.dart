@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -77,7 +77,7 @@ class Notification extends EventTarget {
 
   static int get maxActions => 0;
 
-  static String get permission => "denied";
+  static String get permission => 'denied';
 
   /// Checks if this type is supported on the current platform.
   static bool get supported => false;
@@ -162,5 +162,5 @@ class Notification extends EventTarget {
     throw UnimplementedError();
   }
 
-  static Future<String> requestPermission() async => "denied";
+  static Future<String> requestPermission() async => 'denied';
 }

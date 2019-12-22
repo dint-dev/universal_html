@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -118,20 +118,20 @@ abstract class Document extends Node
 
   final String contentType;
 
-  final String _readyState = "complete";
+  final String _readyState = 'complete';
 
   final String origin;
 
   factory Document() {
     return XmlDocument._(
-        htmlDriver: HtmlDriver.current, contentType: "text/html");
+        htmlDriver: HtmlDriver.current, contentType: 'text/html');
   }
 
   Document._({
     @required HtmlDriver htmlDriver,
     @required this.contentType,
     this.origin,
-  })  : this._htmlDriver = htmlDriver,
+  })  : _htmlDriver = htmlDriver,
         super._document();
 
   /// Outside the browser, returns null.
@@ -375,7 +375,7 @@ abstract class Document extends Node
 
   DocumentTimeline get timeline => throw UnimplementedError();
 
-  Window get window => this._htmlDriver.window;
+  Window get window => _htmlDriver.window;
 
   bool get _isCaseSensitive => false;
 
@@ -409,8 +409,8 @@ abstract class Document extends Node
 
   List<Node> getElementsByClassName(String classNames) {
     final result = <Node>[];
-    final classNameList = classNames.split(" ");
-    this._forEachTreeElement((element) {
+    final classNameList = classNames.split(' ');
+    _forEachTreeElement((element) {
       for (var className in classNameList) {
         if (!element.classes.contains(className)) {
           return;
@@ -423,8 +423,8 @@ abstract class Document extends Node
 
   List<Node> getElementsByName(String name) {
     final result = <Node>[];
-    this._forEachTreeElement((element) {
-      if (element.getAttribute("name") == name) {
+    _forEachTreeElement((element) {
+      if (element.getAttribute('name') == name) {
         result.add(element);
       }
     });
@@ -434,14 +434,14 @@ abstract class Document extends Node
   List<Node> getElementsByTagName(String tagName) {
     final result = <Node>[];
     if (_isCaseSensitive) {
-      this._forEachTreeElement((element) {
+      _forEachTreeElement((element) {
         if (element.namespaceUri == null && element._nodeName == tagName) {
           result.add(element);
         }
       });
     } else {
       tagName = tagName.toLowerCase();
-      this._forEachTreeElement((element) {
+      _forEachTreeElement((element) {
         if (element.namespaceUri == null &&
             element._lowerCaseTagName == tagName) {
           result.add(element);
@@ -456,12 +456,12 @@ abstract class Document extends Node
   @override
   void insertBefore(Node node, Node before) {
     if (node is Element) {
-      if (this._firstElementChild != null) {
+      if (_firstElementChild != null) {
         throw DomException._failedToExecute(
           DomException.HIERARCHY_REQUEST,
-          "Node",
-          "appendChild",
-          "Only one element on document allowed.",
+          'Node',
+          'appendChild',
+          'Only one element on document allowed.',
         );
       }
     } else if (node is _DocumentType) {
@@ -470,11 +470,11 @@ abstract class Document extends Node
       // OK
     } else if (node is Text) {
       // Check that the text is whitespace
-      final value = node.text.replaceAll("\n", "").trim();
+      final value = node.text.replaceAll('\n', '').trim();
       if (value.isNotEmpty) {
         throw DomException._mayNotBeInsertedInside(
-          "Document",
-          "insertBefore",
+          'Document',
+          'insertBefore',
           node,
           this,
         );
@@ -483,8 +483,8 @@ abstract class Document extends Node
       return;
     } else {
       throw DomException._mayNotBeInsertedInside(
-        "Document",
-        "insertBefore",
+        'Document',
+        'insertBefore',
         node,
         this,
       );
@@ -555,7 +555,7 @@ abstract class Document extends Node
 
   @override
   void remove() {
-    throw UnsupportedError("Can't be removed");
+    throw UnsupportedError('Can\'t be removed');
   }
 }
 
@@ -583,13 +583,13 @@ class DomImplementation {
   XmlDocument createDocument(
       String namespaceURI, String qualifiedName, _DocumentType doctype) {
     final result =
-        XmlDocument._(htmlDriver: _htmlDriver, contentType: "text/xml");
+        XmlDocument._(htmlDriver: _htmlDriver, contentType: 'text/xml');
     if (doctype != null) {
       result.append(doctype.internalCloneWithOwnerDocument(result, true));
     }
     final element = result.createElement(qualifiedName);
     if (namespaceURI != null) {
-      element.setAttribute("xmlns", namespaceURI);
+      element.setAttribute('xmlns', namespaceURI);
     }
     return result;
   }
@@ -602,7 +602,7 @@ class DomImplementation {
   HtmlDocument createHtmlDocument([String title]) {
     return HtmlDocument._(
       htmlDriver: _htmlDriver,
-      contentType: "text/html",
+      contentType: 'text/html',
       filled: false,
     );
   }
@@ -629,7 +629,7 @@ class HtmlDocument extends Document
           origin: origin,
         ) {
     if (filled) {
-      final docType = _DocumentType._(this, "html");
+      final docType = _DocumentType._(this, 'html');
       append(docType);
       final htmlElement = HtmlHtmlElement._(this);
       append(htmlElement);
@@ -651,7 +651,7 @@ class HtmlDocument extends Document
   }
 
   BodyElement get body {
-    var element = this._html?._firstElementChild;
+    var element = _html?._firstElementChild;
     while (element != null) {
       if (element is BodyElement) {
         return element;
@@ -662,17 +662,17 @@ class HtmlDocument extends Document
   }
 
   set body(BodyElement newValue) {
-    final existing = this.head;
+    final existing = head;
     if (existing == null) {
       _html?.append(newValue);
     } else {
       existing.replaceWith(newValue);
     }
-    assert(identical(this.body, newValue));
+    assert(identical(body, newValue));
   }
 
   HeadElement get head {
-    var element = this._html?._firstElementChild;
+    var element = _html?._firstElementChild;
     while (element != null) {
       if (element is HeadElement) {
         return element;
@@ -696,7 +696,7 @@ class HtmlDocument extends Document
   }
 
   HtmlHtmlElement get _html {
-    var element = this._firstElementChild;
+    var element = _firstElementChild;
     while (element != null) {
       if (element is HtmlHtmlElement) {
         return element;
@@ -725,7 +725,7 @@ class HtmlDocument extends Document
   }
 }
 
-abstract class _DocumentOrFragment implements Node, _ElementOrDocument {
+mixin _DocumentOrFragment implements Node, _ElementOrDocument {
   Element getElementById(String id) {
     Element result;
     _forEachTreeElement((element) {
@@ -738,11 +738,11 @@ abstract class _DocumentOrFragment implements Node, _ElementOrDocument {
 
   @override
   void remove() {
-    throw UnsupportedError("Can't be removed");
+    throw UnsupportedError('Can\'t be removed');
   }
 }
 
-abstract class _DocumentOrShadowRoot implements DocumentOrShadowRoot {
+mixin _DocumentOrShadowRoot implements DocumentOrShadowRoot {
   @override
   Element get activeElement => null;
 

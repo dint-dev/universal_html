@@ -57,7 +57,7 @@ class HtmlResourceLoader {
       }
       return HtmlResource(
         uri,
-        cspType: "iframe-src",
+        cspType: 'iframe-src',
         element: node,
       );
     }
@@ -68,7 +68,7 @@ class HtmlResourceLoader {
       }
       return HtmlResource(
         uri,
-        cspType: "image-src",
+        cspType: 'image-src',
         element: node,
       );
     }
@@ -79,7 +79,7 @@ class HtmlResourceLoader {
       }
       return HtmlResource(
         uri,
-        cspType: "script-src",
+        cspType: 'script-src',
         element: node,
       );
     }

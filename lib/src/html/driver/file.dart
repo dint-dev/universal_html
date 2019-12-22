@@ -26,10 +26,10 @@ abstract class BlobBase implements Blob {
     start ??= 0;
     end ??= size;
     if (start < 0 || start > size) {
-      throw ArgumentError.value(end, "start");
+      throw ArgumentError.value(end, 'start');
     }
     if (end < start || end > size) {
-      throw ArgumentError.value(end, "end");
+      throw ArgumentError.value(end, 'end');
     }
     return _SlicedBlob(this, start, end);
   }
@@ -37,7 +37,7 @@ abstract class BlobBase implements Blob {
   Future<Uint8List> toBytesFuture();
 
   @override
-  String toString() => "Blob(...)";
+  String toString() => 'Blob(...)';
 }
 
 // -----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ abstract class BlobBase implements Blob {
 // -----------------------------------------------------------------------------
 abstract class FileBase extends BlobBase implements File {
   @override
-  String toString() => "File(...)";
+  String toString() => 'File(...)';
 
   FileBase();
 }

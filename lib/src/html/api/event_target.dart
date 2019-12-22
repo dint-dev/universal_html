@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -145,13 +145,13 @@ abstract class EventTarget {
       listener,
       useCapture ?? false,
     );
-    final eventListeners = this._listeners ?? (this._listeners = []);
+    final eventListeners = _listeners ?? (_listeners = []);
     eventListeners.add(eventListener);
   }
 
   bool dispatchEvent(Event event) {
     if (event._eventPhase != Event._INITIAL_PHASE) {
-      throw ArgumentError("Event.eventPhase is not Event._INITIAL_PHASE");
+      throw ArgumentError('Event.eventPhase is not Event._INITIAL_PHASE');
     }
     event._eventPhase = Event.AT_TARGET;
     event._target = this;
@@ -192,7 +192,7 @@ abstract class EventTarget {
   /// Called by [BrowserImplementation].
   void _invokeBubblingListeners(Event event) {
     // Does this target have event listeners?
-    final listeners = this._listeners;
+    final listeners = _listeners;
     if (listeners != null) {
       // Set current target
       event._currentTarget = this;
@@ -226,7 +226,7 @@ abstract class EventTarget {
     }
 
     // Does the target have a parent?
-    final parent = this._parentEventTarget;
+    final parent = _parentEventTarget;
     if (parent != null) {
       parent._invokeBubblingListeners(event);
     }
@@ -235,7 +235,7 @@ abstract class EventTarget {
   /// Called by [BrowserImplementation].
   void _invokeCapturingListeners(Event event) {
     // Call parent target
-    final parent = this._parentEventTarget;
+    final parent = _parentEventTarget;
     if (parent != null) {
       parent._invokeCapturingListeners(event);
       if (event._stoppedPropagation) {
@@ -249,7 +249,7 @@ abstract class EventTarget {
     }
 
     // Do we have listeners?
-    final listeners = this._listeners;
+    final listeners = _listeners;
     if (listeners == null) {
       return;
     }
@@ -288,5 +288,5 @@ class _AddedEventListener {
   final bool _useCapture;
 
   _AddedEventListener(this._type, this._listener, this._useCapture)
-      : assert(_useCapture is bool);
+      : assert(_useCapture != null);
 }

@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -109,7 +109,7 @@ abstract class CssStyleDeclaration extends CssStyleDeclarationBase {
 
 class _CssStyleDeclaration extends CssStyleDeclaration {
   /// Regular expression for values that will be printed without quotes.
-  static final _noQuotesRegExp = RegExp(r"^[a-zA-Z0-9]+$");
+  static final _noQuotesRegExp = RegExp(r'^[a-zA-Z0-9\-\.]+$');
 
   final LinkedHashMap<String, String> _map = LinkedHashMap<String, String>();
   String _source;
@@ -118,7 +118,7 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
   _CssStyleDeclaration._() : super._();
 
   @override
-  int get length => this._map.length;
+  int get length => _map.length;
 
   @override
   CssRule get parentRule {
@@ -132,9 +132,9 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
 
   @override
   String getPropertyValue(String name) {
-    final value = this._map[name];
+    final value = _map[name];
     if (value == null) {
-      return "";
+      return '';
     }
     return value;
   }
@@ -146,14 +146,14 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
 
   @override
   String removeProperty(String name) {
-    this._sourceIsLatest = false;
+    _sourceIsLatest = false;
     return _map.remove(name);
   }
 
   @override
   void setProperty(String propertyName, String value, [String priority]) {
-    this._sourceIsLatest = false;
-    this._map[propertyName] = (value ?? "");
+    _sourceIsLatest = false;
+    _map[propertyName] = (value ?? '');
   }
 
   @override
@@ -161,7 +161,7 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
     if (_sourceIsLatest) {
       return _source;
     }
-    final map = this._map;
+    final map = _map;
     if (map.isEmpty) {
       return null;
     }
@@ -177,43 +177,43 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
       if (quotes) {
         sb.write('"');
       }
-      sb.write(";");
+      sb.write(';');
     });
     final source = sb.toString();
-    this._source = source;
-    this._sourceIsLatest = true;
+    _source = source;
+    _sourceIsLatest = true;
     return source;
   }
 
   CssStyleDeclaration _clone() {
     final result = _CssStyleDeclaration._();
-    result._source = this._source;
-    result._sourceIsLatest = this._sourceIsLatest;
+    result._source = _source;
+    result._sourceIsLatest = _sourceIsLatest;
     final resultMap = result._map;
-    this._map?.forEach((k, v) {
+    _map?.forEach((k, v) {
       resultMap[k] = v;
     });
     return result;
   }
 
   void _parse(String source) {
-    this._source = source;
-    this._sourceIsLatest = true;
-    final map = this._map;
+    _source = source;
+    _sourceIsLatest = true;
+    final map = _map;
     map.clear();
     if (source == null) {
       return;
     }
     var offset = 0;
     while (offset < source.length) {
-      final endOfName = source.indexOf(":", offset);
+      final endOfName = source.indexOf(':', offset);
       if (endOfName < 0) {
         return;
       }
       final name = source.substring(offset, endOfName).trim();
       offset = endOfName + 1;
       String value;
-      final endOfValue = source.indexOf(";", offset);
+      final endOfValue = source.indexOf(';', offset);
       if (endOfValue < 0) {
         value = source.substring(offset).trim();
         offset = source.length;
@@ -221,7 +221,7 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
         value = source.substring(offset, endOfValue).trim();
         offset = endOfValue + 1;
       }
-      if (value.length > 2 && value.startsWith("\"") && value.endsWith('"')) {
+      if (value.length > 2 && value.startsWith('\'') && value.endsWith('\'')) {
         value = value.substring(1, value.length - 1);
       }
       map[name] = value;

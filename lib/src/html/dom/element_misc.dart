@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -47,9 +47,9 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 class ScrollAlignment {
-  static const ScrollAlignment BOTTOM = ScrollAlignment._("BOTTOM");
-  static const ScrollAlignment CENTER = ScrollAlignment._("CENTER");
-  static const ScrollAlignment TOP = ScrollAlignment._("TOP");
+  static const ScrollAlignment BOTTOM = ScrollAlignment._('BOTTOM');
+  static const ScrollAlignment CENTER = ScrollAlignment._('CENTER');
+  static const ScrollAlignment TOP = ScrollAlignment._('TOP');
   final String _name;
 
   const ScrollAlignment._(this._name);
@@ -168,7 +168,7 @@ class _DataAttributeMap extends MapBase<String, String> {
   bool containsValue(Object value) => values.any((v) => v == value);
 
   @override
-  void forEach(void f(String key, String value)) {
+  void forEach(void Function(String key, String value) f) {
     _attributes.forEach((String key, String value) {
       if (_matches(key)) {
         f(_strip(key), value);
@@ -178,7 +178,7 @@ class _DataAttributeMap extends MapBase<String, String> {
 
   // TODO: Use lazy iterator when it is available on Map.
   @override
-  String putIfAbsent(String key, String ifAbsent()) =>
+  String putIfAbsent(String key, String Function() ifAbsent) =>
       _attributes.putIfAbsent(_attr(key), ifAbsent);
 
   @override
@@ -244,7 +244,7 @@ class _ElementChildren extends ListBase<Element> {
 
   @override
   set length(int newLength) {
-    final element = this._element;
+    final element = _element;
     if (newLength == 0) {
       while (true) {
         final first = element._firstElementChild;
@@ -297,21 +297,21 @@ class _ElementIterator extends Iterator<Element> {
 
   @override
   bool moveNext() {
-    final current = this._current;
+    final current = _current;
     if (current == null) {
       final first = _parent._firstElementChild;
-      this._current = first;
+      _current = first;
       return first != null;
     }
     if (!identical(_parent, current.parent)) {
       // TODO: Implementation that handles modifications like 'dart:html' does.
-      throw StateError("DOM tree was modified during iteration");
+      throw StateError('DOM tree was modified during iteration');
     }
     final next = current.nextElementSibling;
     if (next == null) {
       return false;
     }
-    this._current = next;
+    _current = next;
     return true;
   }
 }

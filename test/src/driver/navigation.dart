@@ -15,18 +15,18 @@
 part of driver_test;
 
 void _testNavigationNetworking() {
-  group("Navigation:", () {
+  group('Navigation:', () {
     HttpServer server;
     String receivedContentType;
     String receivedBody;
     setUpAll(() async {
-      server = await HttpServer.bind("localhost", 0);
+      server = await HttpServer.bind('localhost', 0);
       server.listen((request) async {
         receivedContentType = request.headers.contentType?.value;
         receivedBody = await utf8.decodeStream(request);
         final response = request.response;
         switch (request.uri.path) {
-          case "form":
+          case 'form':
             response.statusCode = 200;
             break;
 
@@ -38,12 +38,12 @@ void _testNavigationNetworking() {
       });
     });
 
-    test("Anchor click", () {
-      final anchor = AnchorElement()..href = "/anchror_destination";
+    test('Anchor click', () {
+      final anchor = AnchorElement()..href = '/anchror_destination';
       anchor.click();
     });
 
-    group("Form submission:", () {
+    group('Form submission:', () {
       InputElement textInput;
       InputElement checkboxInput0;
       InputElement checkboxInput1;
@@ -62,26 +62,26 @@ void _testNavigationNetworking() {
         HtmlDriver.zoneLocal.defaultValue = HtmlDriver();
         formElement = FormElement();
         textInput = TextInputElement()
-          ..name = "k0"
-          ..value = "v0";
+          ..name = 'k0'
+          ..value = 'v0';
         checkboxInput0 = CheckboxInputElement()
-          ..name = "k1"
-          ..value = "v1-0";
+          ..name = 'k1'
+          ..value = 'v1-0';
         checkboxInput1 = CheckboxInputElement()
-          ..name = "k1"
-          ..value = "v1-1";
+          ..name = 'k1'
+          ..value = 'v1-1';
         checkboxInput2 = CheckboxInputElement()
-          ..name = "k1"
-          ..value = "v1-2";
+          ..name = 'k1'
+          ..value = 'v1-2';
         radioButtonInput0 = RadioButtonInputElement()
-          ..name = "k2"
-          ..value = "v2-0";
+          ..name = 'k2'
+          ..value = 'v2-0';
         radioButtonInput1 = RadioButtonInputElement()
-          ..name = "k2"
-          ..value = "v2-1";
+          ..name = 'k2'
+          ..value = 'v2-1';
         radioButtonInput2 = RadioButtonInputElement()
-          ..name = "k2"
-          ..value = "v2-2";
+          ..name = 'k2'
+          ..value = 'v2-2';
         submitButton = SubmitButtonInputElement();
         resetButton = ResetButtonInputElement();
         formElement = FormElement()
@@ -95,18 +95,18 @@ void _testNavigationNetworking() {
           ..append(submitButton)
           ..append(resetButton);
 
-        expect(textInput.type, "text");
-        expect(textInput.name, "k0");
-        expect(textInput.value, "v0");
+        expect(textInput.type, 'text');
+        expect(textInput.name, 'k0');
+        expect(textInput.value, 'v0');
 
-        expect(checkboxInput0.type, "checkbox");
-        expect(checkboxInput0.name, "k1");
-        expect(checkboxInput0.value, "v1-0");
+        expect(checkboxInput0.type, 'checkbox');
+        expect(checkboxInput0.name, 'k1');
+        expect(checkboxInput0.value, 'v1-0');
         expect(checkboxInput0.checked, isFalse);
 
-        expect(radioButtonInput0.type, "radio");
-        expect(radioButtonInput0.name, "k2");
-        expect(radioButtonInput0.value, "v2-0");
+        expect(radioButtonInput0.type, 'radio');
+        expect(radioButtonInput0.name, 'k2');
+        expect(radioButtonInput0.value, 'v2-0');
         expect(radioButtonInput0.checked, isFalse);
 
         // Try repeated clicks on checkbox
@@ -131,34 +131,34 @@ void _testNavigationNetworking() {
         radioButtonInput1.click();
 
         // Check state of all inputs
-        expect(textInput.value, "v0");
-        expect(checkboxInput0.type, "checkbox");
-        expect(checkboxInput0.name, "k1");
-        expect(checkboxInput0.value, "v1-0");
+        expect(textInput.value, 'v0');
+        expect(checkboxInput0.type, 'checkbox');
+        expect(checkboxInput0.name, 'k1');
+        expect(checkboxInput0.value, 'v1-0');
         expect(checkboxInput0.checked, isTrue);
         expect(checkboxInput1.checked, isTrue);
         expect(checkboxInput2.checked, isFalse);
-        expect(radioButtonInput0.type, "radio");
-        expect(radioButtonInput0.name, "k2");
-        expect(radioButtonInput0.value, "v2-0");
+        expect(radioButtonInput0.type, 'radio');
+        expect(radioButtonInput0.name, 'k2');
+        expect(radioButtonInput0.value, 'v2-0');
         expect(radioButtonInput0.checked, isFalse);
         expect(radioButtonInput1.checked, isTrue);
         expect(radioButtonInput2.checked, isFalse);
 
-        action = "http://localhost:${server.port}/form";
-        formEncoding = "k0=v0&k1=v1-0&k1=v1-1&k2=v2-1";
-        getUri = action + "?" + formEncoding;
+        action = 'http://localhost:${server.port}/form';
+        formEncoding = 'k0=v0&k1=v1-0&k1=v1-1&k2=v2-1';
+        getUri = action + '?' + formEncoding;
       });
 
-      test("No action", () async {
+      test('No action', () async {
         formElement.submit();
         await Future.delayed(Duration(milliseconds: 100));
         expect(window.location.href, HtmlDriver.defaultUri.toString());
       });
 
-      test("SubmitButtonInputElement click", () async {
+      test('SubmitButtonInputElement click', () async {
         expect(window.location.href, HtmlDriver.defaultUri.toString());
-        formElement.method = "GET";
+        formElement.method = 'GET';
         formElement.action = action;
         submitButton.click();
         await Future.delayed(Duration(milliseconds: 100));
@@ -167,43 +167,43 @@ void _testNavigationNetworking() {
 
       test('method="GET" action="/form"', () async {
         expect(window.location.href, HtmlDriver.defaultUri.toString());
-        formElement.method = "GET";
+        formElement.method = 'GET';
         formElement.action = action;
         formElement.submit();
         await Future.delayed(Duration(milliseconds: 100));
         expect(window.location.href, getUri);
         expect(receivedContentType, null);
-        expect(receivedBody, "");
+        expect(receivedBody, '');
       });
 
       test('method="get" action="/form"', () async {
         expect(window.location.href, HtmlDriver.defaultUri.toString());
-        formElement.method = "get";
+        formElement.method = 'get';
         formElement.action = action;
         formElement.submit();
         await Future.delayed(Duration(milliseconds: 100));
         expect(window.location.href, getUri);
         expect(receivedContentType, null);
-        expect(receivedBody, "");
+        expect(receivedBody, '');
       });
 
       test('method="POST" action="/form"', () async {
-        formElement.method = "POST";
+        formElement.method = 'POST';
         formElement.action = action;
         formElement.submit();
         await Future.delayed(Duration(milliseconds: 100));
         expect(window.location.href, action);
-        expect(receivedContentType, "application/x-www-form-urlencoded");
+        expect(receivedContentType, 'application/x-www-form-urlencoded');
         expect(receivedBody, formEncoding);
       });
 
       test('method="post" action="/form"', () async {
-        formElement.method = "post";
+        formElement.method = 'post';
         formElement.action = action;
         formElement.submit();
         await Future.delayed(Duration(milliseconds: 100));
         expect(window.location.href, action);
-        expect(receivedContentType, "application/x-www-form-urlencoded");
+        expect(receivedContentType, 'application/x-www-form-urlencoded');
         expect(receivedBody, formEncoding);
       });
     });

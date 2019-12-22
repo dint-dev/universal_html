@@ -9,7 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
   universal_html:
-    path: '..'
+    path: '../..'
 
 dev_dependencies:
   flutter_test:

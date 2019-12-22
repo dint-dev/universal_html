@@ -70,7 +70,7 @@ class Geolocation {
   final Geoposition _geoPosition;
 
   Geolocation._({Geoposition geoposition})
-      : this._geoPosition = geoposition ?? Geoposition._();
+      : _geoPosition = geoposition ?? Geoposition._();
 
   Future<Geoposition> getCurrentPosition(
       {bool enableHighAccuracy, Duration timeout, Duration maximumAge}) {
@@ -90,8 +90,8 @@ class Geoposition {
 
   /// IMPORTANT: Not part 'dart:html'.
   Geoposition._({Coordinates coords, int timestamp})
-      : this.coords = coords ?? const Coordinates._(),
-        this.timestamp = timestamp ?? DateTime.now().millisecondsSinceEpoch;
+      : coords = coords ?? const Coordinates._(),
+        timestamp = timestamp ?? DateTime.now().millisecondsSinceEpoch;
 }
 
 class PositionError extends Error {

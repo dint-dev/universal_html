@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -695,7 +695,7 @@ class Window extends EventTarget
   /// * [Navigation timing
   ///   specification](http://www.w3.org/TR/navigation-timing/) from W3C.
   Performance get performance =>
-      this._performance ?? (this._performance = Performance._());
+      _performance ?? (_performance = Performance._());
 
   /// Information about the screen displaying this window.
   ///
@@ -1077,7 +1077,7 @@ class Window extends EventTarget
   void stop() {}
 }
 
-abstract class WindowBase {
+mixin WindowBase {
   bool get closed;
 
   /// The current session history for this window's newest document.
@@ -1125,7 +1125,7 @@ abstract class WindowEventHandlers extends EventTarget {
       EventStreamProvider<Event>('unload');
 
   factory WindowEventHandlers._() {
-    throw UnsupportedError("Not supported");
+    throw UnsupportedError('Not supported');
   }
 
   Stream<Event> get onHashChange => hashChangeEvent.forTarget(this);

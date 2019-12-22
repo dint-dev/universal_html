@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -80,7 +80,7 @@ class Storage extends DelegatingMap<String, String> {
     final oldValue = this[key];
     super[key] = value;
     final event = StorageEvent(
-      "StorageEvent",
+      'StorageEvent',
       key: key,
       oldValue: oldValue,
       newValue: value,
@@ -111,7 +111,7 @@ class Storage extends DelegatingMap<String, String> {
     if (containsKey(key)) {
       final oldValue = super.remove(key);
       final event = StorageEvent(
-        "StorageEvent",
+        'StorageEvent',
         key: key,
         oldValue: oldValue,
         newValue: null,
@@ -124,7 +124,7 @@ class Storage extends DelegatingMap<String, String> {
 
   // We need to override this to ensure we dispatch StorageEvent events.
   @override
-  void removeWhere(bool test(String key, String value)) {
+  void removeWhere(bool Function(String key, String value) test) {
     for (var entry in entries.toList()) {
       if (test(entry.key, entry.value)) {
         remove(entry.key);
@@ -134,7 +134,8 @@ class Storage extends DelegatingMap<String, String> {
 
   // We need to override this to ensure we dispatch StorageEvent events.
   @override
-  String update(String key, String update(String value), {String ifAbsent()}) {
+  String update(String key, String Function(String value) update,
+      {String Function() ifAbsent}) {
     var value = this[key];
     if (ifAbsent != null && value == null && !containsKey(key)) {
       value = ifAbsent();
@@ -147,7 +148,7 @@ class Storage extends DelegatingMap<String, String> {
 
   // We need to override this to ensure we dispatch StorageEvent events.
   @override
-  void updateAll(String update(String key, String value)) {
+  void updateAll(String Function(String key, String value) update) {
     for (var entry in entries.toList()) {
       this[entry.key] = update(entry.key, entry.value);
     }

@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -247,21 +247,21 @@ class HttpRequest extends HttpRequestEventTarget {
   /// form of a [String], [ByteBuffer], [Document], [Blob], or json (also a
   /// [String]). `null` indicates request failure.
   dynamic get response {
-    final data = this._responseData;
+    final data = _responseData;
     if (data == null) {
       return null;
     }
-    switch (responseType ?? "text") {
-      case "arraybuffer":
+    switch (responseType ?? 'text') {
+      case 'arraybuffer':
         return data.buffer;
-      case "blob":
+      case 'blob':
         return Blob([data]);
-      case "json":
+      case 'json':
         return json.decode(utf8.decode(data));
-      case "text":
+      case 'text':
         return utf8.decode(data);
       default:
-        throw UnsupportedError("Response type '$responseType' is unsupported");
+        throw UnsupportedError('Response type "$responseType" is unsupported');
     }
   }
 
@@ -276,7 +276,7 @@ class HttpRequest extends HttpRequestEventTarget {
   /// The response in String form or empty String on failure.
   String get responseText {
     if (_responseData == null) {
-      return "";
+      return '';
     }
     return utf8.decode(_responseData);
   }
@@ -289,13 +289,13 @@ class HttpRequest extends HttpRequestEventTarget {
   /// `text/xml` stream, unless responseType = 'document' and the request is
   /// synchronous.
   Document get responseXml =>
-      DomParser().parseFromString(responseText, "text/xml");
+      DomParser().parseFromString(responseText, 'text/xml');
 
   /// The HTTP result code from the request (200, 404, etc).
   /// See also: [HTTP Status Codes](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
   int get status => _status;
 
-  /// The request response string (such as \"200 OK\").
+  /// The request response string (such as \'200 OK\').
   /// See also: [HTTP Status Codes](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
   String get statusText => _statusText;
 
@@ -310,8 +310,8 @@ class HttpRequest extends HttpRequestEventTarget {
   /// `LOADING`. If this method is not in the process of being sent, the method
   /// has no effect.
   void abort() {
-    this._requestId++;
-    this._setReadyState(UNSENT);
+    _requestId++;
+    _setReadyState(UNSENT);
   }
 
   /// Retrieve all the response headers from a request.
@@ -365,16 +365,16 @@ class HttpRequest extends HttpRequestEventTarget {
     if (_readyState != UNSENT) {
       abort();
     }
-    this._requestMethod = method;
-    this._requestUrl = parsedUri;
+    _requestMethod = method;
+    _requestUrl = parsedUri;
     if (async == false) {
-      throw ArgumentError.value(async, "async");
+      throw ArgumentError.value(async, 'async');
     }
-    this._requestHeaders = <String, String>{};
+    _requestHeaders = <String, String>{};
     if (password != null) {
       throw UnimplementedError();
     }
-    this._setReadyState(OPENED);
+    _setReadyState(OPENED);
   }
 
   /// Specify a particular MIME type (such as `text/xml`) desired for the
@@ -383,7 +383,7 @@ class HttpRequest extends HttpRequestEventTarget {
   /// This value must be set before the request has been sent. See also the list
   /// of [IANA Official MIME types](https://www.iana.org/assignments/media-types/media-types.xhtml).
   void overrideMimeType(String mime) {
-    _requestHeaders["Accept"] = mime;
+    _requestHeaders['Accept'] = mime;
   }
 
   /// Send the request with any given `data`.
@@ -411,14 +411,14 @@ class HttpRequest extends HttpRequestEventTarget {
     }
 
     // Get internal request ID
-    this._requestId++;
-    final requestId = this._requestId;
+    _requestId++;
+    final requestId = _requestId;
 
     // Reset response fields
-    this._status = 0;
-    this._statusText = "";
-    this._responseHeaders = null;
-    this._responseData = null;
+    _status = 0;
+    _statusText = '';
+    _responseHeaders = null;
+    _responseData = null;
 
     // Send
     _send(requestId, data);
@@ -463,8 +463,8 @@ class HttpRequest extends HttpRequestEventTarget {
       _requestHeaders.forEach((name, value) {
         httpRequest.headers.set(name, value);
       });
-      httpRequest.headers.set("X-Requested-With", "XMLHttpRequest");
-      httpRequest.headers.set("Origin", window.location.origin);
+      httpRequest.headers.set('X-Requested-With', 'XMLHttpRequest');
+      httpRequest.headers.set('Origin', window.location.origin);
 
       if (data != null) {
         httpRequest.add(data);
@@ -489,7 +489,7 @@ class HttpRequest extends HttpRequestEventTarget {
           responseHeaders[name] = values.first;
         }
       });
-      this._responseHeaders = responseHeaders;
+      _responseHeaders = responseHeaders;
       _setReadyState(HEADERS_RECEIVED);
 
       // Wait for response data
@@ -501,20 +501,20 @@ class HttpRequest extends HttpRequestEventTarget {
       }
 
       // Set response data
-      this._responseData = responseData;
+      _responseData = responseData;
     } catch (error) {
-      dispatchEvent(ProgressEvent("error"));
+      dispatchEvent(ProgressEvent('error'));
     } finally {
       if (_requestId == requestId) {
         _setReadyState(DONE);
       }
-      dispatchEvent(ProgressEvent("loadend"));
+      dispatchEvent(ProgressEvent('loadend'));
     }
   }
 
   void _setReadyState(int readyState) {
     _readyState = readyState;
-    _readyStateStreamController.add(Event.internal("readystatechange"));
+    _readyStateStreamController.add(Event.internal('readystatechange'));
   }
 
   /// Creates a GET request for the specified [url].
@@ -537,7 +537,7 @@ class HttpRequest extends HttpRequestEventTarget {
   ///
   /// * [request]
   static Future<String> getString(String url,
-      {bool withCredentials, void onProgress(ProgressEvent e)}) {
+      {bool withCredentials, void Function(ProgressEvent e) onProgress}) {
     return request(url,
             withCredentials: withCredentials, onProgress: onProgress)
         .then((HttpRequest xhr) => xhr.responseText);
@@ -570,7 +570,7 @@ class HttpRequest extends HttpRequestEventTarget {
       {bool withCredentials,
       String responseType,
       Map<String, String> requestHeaders,
-      void onProgress(ProgressEvent e)}) {
+      void Function(ProgressEvent e) onProgress}) {
     var parts = [];
     data.forEach((key, value) {
       parts.add('${Uri.encodeQueryComponent(key)}='
@@ -652,7 +652,7 @@ class HttpRequest extends HttpRequestEventTarget {
       String mimeType,
       Map<String, String> requestHeaders,
       sendData,
-      void onProgress(ProgressEvent e)}) {
+      void Function(ProgressEvent e) onProgress}) {
     var completer = Completer<HttpRequest>();
 
     var xhr = HttpRequest();

@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -189,7 +189,7 @@ class NodeValidatorBuilder implements NodeValidator {
   /// Allow custom tag extensions with the specified type name and specified
   /// attributes.
   ///
-  /// This will allow tag extensions (such as <div is="x-foo"></div>),
+  /// This will allow tag extensions (such as <div is='x-foo'></div>),
   /// but will not allow custom tags. Use [allowCustomElement] to allow
   /// custom tags.
   void allowTagExtension(String tagName, String baseName,
@@ -255,8 +255,8 @@ class _CustomElementNodeValidator extends _SimpleNodeValidator {
       Iterable<String> allowedUriAttributes,
       bool allowTypeExtension,
       bool allowCustomTag)
-      : this.allowTypeExtension = allowTypeExtension == true,
-        this.allowCustomTag = allowCustomTag == true,
+      : allowTypeExtension = allowTypeExtension == true,
+        allowCustomTag = allowCustomTag == true,
         super(uriPolicy,
             allowedElements: allowedElements,
             allowedAttributes: allowedAttributes,
@@ -459,11 +459,11 @@ class _TemplatingNodeValidator extends _SimpleNodeValidator {
       return true;
     }
 
-    if (attributeName == 'template' && value == "") {
+    if (attributeName == 'template' && value == '') {
       return true;
     }
 
-    if (element.attributes['template'] == "") {
+    if (element.attributes['template'] == '') {
       return _templateAttrs.contains(attributeName);
     }
     return false;

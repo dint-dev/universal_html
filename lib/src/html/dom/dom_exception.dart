@@ -32,7 +32,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -53,7 +53,7 @@ class DomError implements Exception {
   DomError(this.name, [this.message]);
 
   @override
-  String toString() => "${name}: ${message}";
+  String toString() => '${name}: ${message}';
 }
 
 class DomException implements Exception {
@@ -97,7 +97,7 @@ class DomException implements Exception {
   factory DomException._failedToExecute(
       String name, String type, String method, String message) {
     return DomException._(
-        name, "Failed to execute '$method' on '$type': $message");
+        name, 'Failed to execute "$method" on "$type": $message');
   }
 
   factory DomException._invalidMethod(String type, String method) {
@@ -105,7 +105,7 @@ class DomException implements Exception {
       DomException.INVALID_MODIFICATION,
       type,
       method,
-      "This node type does not support this method.",
+      'This node type does not support this method.',
     );
   }
 
@@ -115,9 +115,9 @@ class DomException implements Exception {
         DomException.HIERARCHY_REQUEST,
         type,
         method,
-        "Nodes of type '#${node._nodeTypeName}' may not be inserted inside nodes of type '#${parent._nodeTypeName}'.");
+        'Nodes of type \'#${node._nodeTypeName}\' may not be inserted inside nodes of type \'#${parent._nodeTypeName}\'.');
   }
 
   @override
-  String toString() => "${name}: ${message}";
+  String toString() => '${name}: ${message}';
 }

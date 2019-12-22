@@ -15,30 +15,30 @@
 part of main_test;
 
 void _testWindow() {
-  group("Window", () {
-    test("console", () {
+  group('Window', () {
+    test('console', () {
       expect(window.console, isNotNull);
     });
 
-    test("localStorage / sessionStorage", () {
+    test('localStorage / sessionStorage', () {
       final storages = [
         window.localStorage,
         window.sessionStorage,
       ];
       for (var storage in storages) {
         expect(storage.length, 0);
-        expect(storage["k0"], isNull);
+        expect(storage['k0'], isNull);
 
-        storage["k0"] = 'v0';
+        storage['k0'] = 'v0';
         expect(storage.length, 1);
         expect(storage['k0'], 'v0');
 
-        storage["k1"] = 'v1';
+        storage['k1'] = 'v1';
         expect(storage.length, 2);
         expect(storage['k0'], 'v0');
         expect(storage['k1'], 'v1');
 
-        storage["k2"] = 'v2';
+        storage['k2'] = 'v2';
         expect(storage.length, 3);
         storage.remove('k2');
         expect(storage.length, 2);

@@ -15,15 +15,15 @@
 part of main_test;
 
 void _testDocument() {
-  group("Document:", () {
-    test("initial state", () {
+  group('Document:', () {
+    test('initial state', () {
       expect(document, isNotNull);
       _expectSaneDocument(document);
 
       final docType = document.firstChild;
       expect(docType, isNotNull);
       expect(docType.nodeType, equals(Node.DOCUMENT_TYPE_NODE));
-      expect(docType.nodeName, equals("html"));
+      expect(docType.nodeName, equals('html'));
 
       final htmlHtml = docType.nextNode;
       expect(htmlHtml, const TypeMatcher<HtmlHtmlElement>());
@@ -45,7 +45,7 @@ void _testDocument() {
       expect(document.body, same(body));
     });
 
-    test("inserting and removing succeeds", () {
+    test('inserting and removing succeeds', () {
       // Remove existing children
       _temporarilyRemoveChildrenFromDocument();
 
@@ -53,7 +53,7 @@ void _testDocument() {
       _expectSaneDocument(document);
 
       // Insert
-      final n0 = HtmlHtmlElement()..id = "n0";
+      final n0 = HtmlHtmlElement()..id = 'n0';
       document.append(n0);
 
       // Document:
@@ -67,7 +67,7 @@ void _testDocument() {
       _expectSaneDocument(document);
 
       // Insert
-      final n0_n2 = Element.tag("div")..id = "n0_n2";
+      final n0_n2 = Element.tag('div')..id = 'n0_n2';
       n0.append(n0_n2);
 
       // Document:
@@ -89,9 +89,9 @@ void _testDocument() {
       _expectSaneDocument(document);
 
       // Insert
-      final n0_n0 = Element.tag("div")
-        ..setAttribute("id", "n0_n0")
-        ..id = "n0_n0";
+      final n0_n0 = Element.tag('div')
+        ..setAttribute('id', 'n0_n0')
+        ..id = 'n0_n0';
       n0.insertBefore(n0_n0, n0_n2);
 
       // Document:
@@ -109,7 +109,7 @@ void _testDocument() {
       _expectSaneDocument(document);
 
       // Insert
-      final n0_n1 = Element.tag("div")..id = "n0_n1";
+      final n0_n1 = Element.tag('div')..id = 'n0_n1';
       n0.insertBefore(n0_n1, n0_n2);
 
       // Document:
@@ -188,27 +188,27 @@ void _testDocument() {
       _expectSaneTree(n0);
     });
 
-    test("inserting text shoulding fails", () {
+    test('inserting text shoulding fails', () {
       // Remove existing children
       _temporarilyRemoveChildrenFromDocument();
 
       // Test that throws
       expectLater(() {
-        document.append(Text("a"));
+        document.append(Text('a'));
       }, throwsA(anything));
 
       // Test the exception message
       try {
-        document.append(Text("c"));
+        document.append(Text('c'));
       } catch (e) {
         expect(
             e.toString(),
             contains(
-                "Nodes of type '#text' may not be inserted inside nodes of type '#document'."));
+                'Nodes of type \'#text\' may not be inserted inside nodes of type \'#document\'.'));
       }
     });
 
-    test("inserting two elements should fail", () {
+    test('inserting two elements should fail', () {
       // Remove existing children
       _temporarilyRemoveChildrenFromDocument();
 
@@ -226,22 +226,22 @@ void _testDocument() {
       } catch (e) {
         expect(
           e.toString(),
-          contains("Only one element on document allowed."),
+          contains('Only one element on document allowed.'),
         );
       }
     });
 
-    test("'body'", () {
+    test('body', () {
       expect(document.body, isNotNull);
     });
 
-    test("'getElementById(...)'", () {
+    test('getElementById(...)', () {
       _temporarilyRemoveChildrenFromDocument();
 
-      final n0 = Element.tag("div")..id = "n0";
-      final n0_n0 = Element.tag("div")..id = "n0_n0";
-      final n0_n1 = Element.tag("div")..id = "n0_n1";
-      final n0_n2 = Element.tag("div")..id = "n0_n2";
+      final n0 = Element.tag('div')..id = 'n0';
+      final n0_n0 = Element.tag('div')..id = 'n0_n0';
+      final n0_n1 = Element.tag('div')..id = 'n0_n1';
+      final n0_n2 = Element.tag('div')..id = 'n0_n2';
       n0.append(n0_n0);
       n0.append(n0_n1);
       n0.append(n0_n2);
@@ -255,27 +255,27 @@ void _testDocument() {
       expect(document.getElementById('nonExistingId'), isNull);
     });
 
-    test("getElementsByTagName", () {
+    test('getElementsByTagName', () {
       final parsed = DomParser().parseFromString(
-        "<div><p></p></div>",
-        "text/html",
+        '<div><p></p></div>',
+        'text/html',
       );
-      expect(parsed.getElementsByTagName("div"), hasLength(1));
-      expect(parsed.getElementsByTagName("p"), hasLength(1));
-      expect(parsed.getElementsByTagName("P"), hasLength(1));
+      expect(parsed.getElementsByTagName('div'), hasLength(1));
+      expect(parsed.getElementsByTagName('p'), hasLength(1));
+      expect(parsed.getElementsByTagName('P'), hasLength(1));
     });
 
-    test("getElementsByName (HTML document)", () {
+    test('getElementsByName (HTML document)', () {
       // In HTML documents, getElementsByName should fail.
       final parsed = DomParser().parseFromString(
-        "<div><p></p></div>",
-        "text/html",
+        '<div><p></p></div>',
+        'text/html',
       );
-      expect(parsed.getElementsByName("div"), isEmpty);
-      expect(parsed.getElementsByName("p"), isEmpty);
+      expect(parsed.getElementsByName('div'), isEmpty);
+      expect(parsed.getElementsByName('p'), isEmpty);
     });
 
-    test("'head'", () {
+    test('head', () {
       expect(document.head, isNotNull);
     });
   });

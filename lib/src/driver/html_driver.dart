@@ -30,13 +30,13 @@ class HtmlDriver {
 
   /// Default value of [uri] when it hasn't been specified.
   ///
-  /// Currently "memory:/", but it may be changed in future.
-  static final Uri defaultUri = Uri(scheme: "memory", path: "/");
+  /// Currently 'memory:/', but it may be changed in future.
+  static final Uri defaultUri = Uri(scheme: 'memory', path: '/');
 
   /// Default value of:
-  ///   * HTTP request header "User-Agent"
+  ///   * HTTP request header 'User-Agent'
   ///   * [Navigator.userAgent]
-  static const UserAgent defaultUserAgent = UserAgent("Browser");
+  static const UserAgent defaultUserAgent = UserAgent('Browser');
 
   /// Instance of the current zone.
   static HtmlDriver get current => zoneLocal.value;
@@ -72,18 +72,18 @@ class HtmlDriver {
   /// Parameter [:languages] is used by _window.navigator.languages_.
   ///
   /// Parameter [:userAgent] is default string for:
-  ///   * HTTP request header "User-Agent"
+  ///   * HTTP request header 'User-Agent'
   ///   * _window.navigator.userAgent_
   HtmlDriver({
     BrowserImplementation browserImplementation,
     @deprecated BrowserImplementation browserClassFactory,
-    this.languages = const <String>["en-US"],
+    this.languages = const <String>['en-US'],
     this.userAgent = defaultUserAgent,
   }) {
-    this._browserImplementation = browserImplementation ?? browserClassFactory;
+    _browserImplementation = browserImplementation ?? browserClassFactory;
   }
 
-  @Deprecated("Please use 'browserImplementation' instead")
+  @Deprecated('Please use "browserImplementation" instead')
   BrowserImplementation get browserClassFactory => browserImplementation;
 
   BrowserImplementation get browserImplementation {
@@ -93,11 +93,11 @@ class HtmlDriver {
 
   /// Used by 'dart:html' _document_.
   HtmlDocument get document {
-    var document = this._document;
+    var document = _document;
     if (document == null) {
-      this._document = document = BrowserImplementationUtils.newHtmlDocument(
+      _document = document = BrowserImplementationUtils.newHtmlDocument(
         htmlDriver: this,
-        contentType: "text/html",
+        contentType: 'text/html',
         filled: true,
       );
     }
@@ -109,7 +109,7 @@ class HtmlDriver {
 
   /// Sets URI of the current document.
   set uri(Uri value) {
-    this._uri = value;
+    _uri = value;
   }
 
   /// URI string.
@@ -117,9 +117,9 @@ class HtmlDriver {
 
   /// Used by 'dart:html' _window_.
   Window get window {
-    var window = this._window;
+    var window = _window;
     if (window == null) {
-      this._window = window = browserImplementation.newWindow();
+      _window = window = browserImplementation.newWindow();
     }
     return window;
   }
@@ -134,7 +134,7 @@ class HtmlDriver {
     setDocument(
       BrowserImplementationUtils.newHtmlDocument(
         htmlDriver: HtmlDriver.current,
-        contentType: "text/html",
+        contentType: 'text/html',
         filled: true,
       ),
       uri: uri,
@@ -156,22 +156,22 @@ class HtmlDriver {
   ///   * [contentSecurityPolicy] (using null)
   void setDocument(Document document, {Uri uri}) {
     // Set URL
-    this._uri = uri ?? defaultUri;
+    _uri = uri ?? defaultUri;
 
     // Set document
     final htmlDocument = _convertToHtmlDocument(document);
-    this._document = htmlDocument;
+    _document = htmlDocument;
 
     // Set window.
     // It will be lazily initialized.
-    this._window = null;
+    _window = null;
 
     // Set content security policy.
-    this.contentSecurityPolicy = null;
+    contentSecurityPolicy = null;
     if (htmlDocument == null) {
-      this.contentSecurityPolicy = null;
+      contentSecurityPolicy = null;
     } else {
-      this.contentSecurityPolicy = Csp.fromHtmlDocument(
+      contentSecurityPolicy = Csp.fromHtmlDocument(
         htmlDocument,
       );
     }
@@ -198,7 +198,7 @@ class HtmlDriver {
     String mime,
     ContentTypeSniffer contentTypeSniffer = const ContentTypeSniffer(),
   }) async {
-    mime ??= contentTypeSniffer.sniffMime(input) ?? "text/html";
+    mime ??= contentTypeSniffer.sniffMime(input) ?? 'text/html';
     final document = domParserDriver.parseHtmlFromAnything(input, mime: mime);
     setDocument(document, uri: uri);
   }
@@ -206,7 +206,7 @@ class HtmlDriver {
   /// Loads document from the URI and calls [setDocumentFromContent].
   Future<void> setDocumentFromUri(
     Uri uri, {
-    FutureOr<void> onHttpResponse(io.HttpClientResponse response),
+    FutureOr<void> Function(io.HttpClientResponse response) onHttpResponse,
     String mime,
     ContentTypeSniffer contentTypeSniffer = const ContentTypeSniffer(),
   }) async {
@@ -224,9 +224,9 @@ class HtmlDriver {
       mime: mime,
       contentTypeSniffer: contentTypeSniffer,
     );
-    final cspHeader = httpResponse.headers.value("Content-Security-Policy");
+    final cspHeader = httpResponse.headers.value('Content-Security-Policy');
     if (cspHeader != null) {
-      this.contentSecurityPolicy = Csp.parse(cspHeader);
+      contentSecurityPolicy = Csp.parse(cspHeader);
     }
   }
 

@@ -111,15 +111,47 @@ void _testElement() {
         expect(input.outerHtml, equals(expected));
       });
 
-      test('prints element style, no quotes', () {
+      test('prints element style: font-size', () {
         final input = Element.tag('a')..style.fontSize = '1px';
         final expected = '<a style="font-size: 1px;"></a>';
         expect(input.outerHtml, equals(expected));
       });
 
-      test('prints element style, quotes', () {
-        final input = Element.tag('a')..style.fontFamily = 'Comic Sans';
-        final expected = '<a style="font-family: &quot;Comic Sans&quot;;"></a>';
+      test('prints element style: font-family: "Times New Roman"', () {
+        final input = Element.tag('a')..style.fontFamily = '"Times New Roman"';
+        final expected =
+            '<a style="font-family: &quot;Times New Roman&quot;;"></a>';
+        expect(input.outerHtml, equals(expected));
+      });
+
+      test('prints element style: font-family: serif', () {
+        final input = Element.tag('a')..style.fontFamily = 'serif';
+        final expected = '<a style="font-family: serif;"></a>';
+        expect(input.outerHtml, equals(expected));
+      });
+
+      test('prints element style: color: #ffFFFF', () {
+        final input = Element.tag('a')..style.color = '#ffFFFF';
+        final expected = '<a style="color: #ffFFFF;"></a>';
+        expect(input.outerHtml, equals(expected));
+      }, testOn: 'vm'); // <-- DIFFERENCE: Chrome prints: rgb(255,255,255)
+
+      test('prints element style: color: rgb(0, 0, 99)', () {
+        final input = Element.tag('a')..style.color = 'rgb(0, 0, 99)';
+        final expected = '<a style="color: rgb(0, 0, 99);"></a>';
+        expect(input.outerHtml, equals(expected));
+      });
+
+      test('prints element style: content: none', () {
+        final input = Element.tag('a')..style.content = r'none';
+        final expected = r'<a style="content: none;"></a>';
+        expect(input.outerHtml, equals(expected));
+      });
+
+      test('prints element style: content: quotes', () {
+        final input = Element.tag('a')..style.content = r'"example\"\\"';
+        final expected =
+            r'<a style="content: &quot;example\&quot;\\&quot;;"></a>';
         expect(input.outerHtml, equals(expected));
       });
 

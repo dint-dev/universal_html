@@ -108,9 +108,6 @@ abstract class CssStyleDeclaration extends CssStyleDeclarationBase {
 }
 
 class _CssStyleDeclaration extends CssStyleDeclaration {
-  /// Regular expression for values that will be printed without quotes.
-  static final _noQuotesRegExp = RegExp(r'^[a-zA-Z0-9\-\.]+$');
-
   final LinkedHashMap<String, String> _map = LinkedHashMap<String, String>();
   String _source;
   bool _sourceIsLatest = false;
@@ -169,14 +166,7 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
     map.forEach((name, value) {
       sb.write(name);
       sb.write(': ');
-      final quotes = !_noQuotesRegExp.hasMatch(value);
-      if (quotes) {
-        sb.write('"');
-      }
       sb.write(value);
-      if (quotes) {
-        sb.write('"');
-      }
       sb.write(';');
     });
     final source = sb.toString();

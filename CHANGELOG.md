@@ -1,3 +1,9 @@
+## 1.1.12
+* Fixed a CSS printing issue.
+
+## 1.1.11
+* Fixed pedantic warnings.
+
 ## 1.1.10
 * Raised minimum SDK to 2.6 and updated dependencies.
 

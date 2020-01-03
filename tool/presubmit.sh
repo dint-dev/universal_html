@@ -18,7 +18,7 @@ echo "--------------------------------------------------------------------------
 echo "Running: flutter test"
 echo "         (in directory 'test_in_flutter')"
 echo "----------------------------------------------------------------------------------------------------"
-cd test_in_flutter
+cd tool/test_in_flutter
 flutter pub get --offline
 flutter test
-cd ..
+cd ../..

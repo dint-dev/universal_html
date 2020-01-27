@@ -1,5 +1,6 @@
 [![Pub Package](https://img.shields.io/pub/v/universal_html.svg)](https://pub.dartlang.org/packages/universal_html)
 [![Github Actions CI](https://github.com/dart-browser/universal_html/workflows/Dart%20CI/badge.svg)](https://github.com/dart-browser/universal_html/actions?query=workflow%3A%22Dart+CI%22)
+[![Build Status](https://travis-ci.org/dint-dev/universal_html.svg?branch=master)](https://travis-ci.org/dint-dev/universal_html)
 
 # Introduction
 Cross-platform _dart:html_ that works in the browser, Dart VM, and Flutter.

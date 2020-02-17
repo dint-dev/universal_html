@@ -1,9 +1,9 @@
 [![Pub Package](https://img.shields.io/pub/v/universal_html.svg)](https://pub.dartlang.org/packages/universal_html)
-[![Github Actions CI](https://github.com/dart-browser/universal_html/workflows/Dart%20CI/badge.svg)](https://github.com/dart-browser/universal_html/actions?query=workflow%3A%22Dart+CI%22)
+[![Github Actions CI](https://github.com/dint-dev/universal_html/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/universal_html/actions?query=workflow%3A%22Dart+CI%22)
 [![Build Status](https://travis-ci.org/dint-dev/universal_html.svg?branch=master)](https://travis-ci.org/dint-dev/universal_html)
 
 # Introduction
-Cross-platform _dart:html_ that works in the browser, Dart VM, and Flutter.
+Cross-platform _dart:html_ that works in all platforms (browser, Dart VM, and Flutter).
 
 Typical use cases are:
   * Cross-platform application development (e.g. Flutter mobile and web versions).
@@ -13,14 +13,14 @@ The project is licensed under the [Apache License 2.0](LICENSE). Some of the sou
 from the original [dart:html](https://github.com/dart-lang/sdk/tree/master/tools/dom), which is
 documented in the relevant files.
 
-## Contributing
-  * This project welcomes all sorts of contributions. You don't need to be an expert.
-  * Found a bug? Proposing something? [Create an issue](https://github.com/terrier989/universal_html/issues).
-  * Have a contribution? [Create a pull request](https://github.com/terrier989/universal_html/pull/new/master).
+## Links
+  * [Github project](https://github.com/dint-dev/universal_html)
+  * [Issue tracker](https://github.com/dint-dev/universal_html/issues)
+  * [Create a pull request](https://github.com/dint-dev/universal_html/pull/new/master)
 
-## Similar projects?
+## Similar projects
   * [universal_io](https://pub.dev/packages/universal_io) (cross-platform _dart:io_)
-  * [jsdom](https://www.npmjs.com/package/jsdom) (DOM implementation in Javascript).
+  * [jsdom](https://www.npmjs.com/package/jsdom) (DOM implementation in Javascript)
 
 # Getting started
 ## 1. Add dependency

@@ -1,7 +1,7 @@
 name: universal_html
-version: 1.1.12
+version: 1.1.13
 description:
-  Cross-platform 'dart:html' that works in the browser, Dart VM, and Flutter.
+  Cross-platform 'dart:html' that works in all platforms (browser, Dart VM, and Flutter).
 homepage: https://github.com/terrier989/universal_html
 
 environment:
@@ -15,7 +15,7 @@ dependencies:
   html: ^0.14.0
   meta: ^1.1.0
   typed_data: ^1.1.0
-  universal_io: ^0.8.5
+  universal_io: '>=0.8.5 <2.0.0'
   xml: ^3.5.0
   zone_local: ^0.1.0
 

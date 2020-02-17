@@ -1,3 +1,6 @@
+## 1.1.13
+* Fixes 'universal_io' dependency constraint so that it supports 1.x.x.
+
 ## 1.1.12
 * Fixed a CSS printing issue.
 

@@ -5,15 +5,28 @@
 # Introduction
 Cross-platform _dart:html_ that works in all platforms (browser, Dart VM, and Flutter).
 
-Typical use cases are:
-  * Cross-platform application development (e.g. Flutter mobile and web versions).
-  * Web crawling and scraping
+The test suite is designed to verify that _universal_html_ behaves identically to dart:html running in Chrome.
 
 The project is licensed under the [Apache License 2.0](LICENSE). Some of the source code was adopted
 from the original [dart:html](https://github.com/dart-lang/sdk/tree/master/tools/dom), which is
 documented in the relevant files.
 
+## Example use cases
+### HTML/XML crawling and scraping
+The library enables you to:
+  * Parse and inspect HTML/XML
+  * Find HTML/XML elements with CSS queries ([querySelectorAll](https://api.dart.dev/stable/2.7.1/dart-html/Document/querySelectorAll.html)).
+  * Submit forms
+
+### EventSource
+The library gives you cross-platform _EventSource_ ([Dart API](https://api.dart.dev/stable/2.7.1/dart-html/EventSource-class.html)), which is a [Server Sent Events](https://www.html5rocks.com/en/tutorials/eventsource/basics) (application/event-stream) client.
+
+### Usage by web frameworks
+This library makes command-line or server-side HTML rendering easy.
+[Dint](https://dint.dev) uses _universal_html_ for this purpose.
+
 ## Links
+  * [API reference for dart:html](https://api.dart.dev/stable/2.7.1/dart-html/dart-html-library.html)
   * [Github project](https://github.com/dint-dev/universal_html)
   * [Issue tracker](https://github.com/dint-dev/universal_html/issues)
   * [Create a pull request](https://github.com/dint-dev/universal_html/pull/new/master)
@@ -118,12 +131,9 @@ Future main() async {
 ```
 
 ## Implemented APIs
-### Strategy
-  * Our goal is that _universal_html_ behaves identically to _dart:html_ running in Chrome.
-  * [DIFFERENCES.md](DIFFERENCES.md) contains an automatically generated list of _dart:html_ APIs
-    that are not yet declared by this package yet.
-  * Some APIs are declared, but not implemented. These will either throw `UnimplementedError` or
-    (when appropriate) fail silently.
+### List of differences
+[DIFFERENCES.md](DIFFERENCES.md) contains an automatically generated list of _dart:html_ APIs
+that are not yet declared by this package yet.
 
 ### HTML
   * __Document nodes__

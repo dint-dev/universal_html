@@ -211,8 +211,8 @@ void _testElement() {
       });
     });
 
-    group('Attributes', () {
-      test('setAttribute(...)', () {
+    group('Attributes:', () {
+      test('setAttribute(...): normal', () {
         final e = Element.tag('e');
         e.setAttribute('k0', 'v0');
         expect(e.getAttribute('k0'), equals('v0'));
@@ -230,14 +230,38 @@ void _testElement() {
         expect(e.outerHtml, equals('<e k0="v0" k1="v1" k2="v2"></e>'));
       });
 
-      test('setAttribute(...), null value', () {
+      test('setAttribute(...): replaces namespaced attribute', () {
+        // Set namespaced
+        final e = Element.tag('e');
+        e.setAttributeNS('https://ns/', 'k', 'v0');
+        expect(e.getAttributeNS('https://ns/', 'k'), 'v0');
+        expect(e.getAttribute('k'), 'v0');
+
+        // Set namespaceless
+        e.setAttribute('k', 'v1');
+        expect(e.getAttribute('k'), 'v1');
+        expect(e.getAttributeNS('https://ns/', 'k'), 'v1');
+        expect(e.hasAttribute('k'), isTrue);
+        expect(e.hasAttributeNS('https://ns/', 'k'), isTrue);
+      });
+
+      test('setAttribute(...): null name', () {
+        final e = Element.tag('e');
+        expect(
+          () => e.setAttribute(null, 'value'),
+          throwsA(anything),
+        );
+      });
+
+      test('setAttribute(...): null value', () {
         final e = Element.tag('e');
         e.setAttribute('k0', null);
+        expect(e.getAttribute('other'), isNull);
         expect(e.getAttribute('k0'), 'null');
         expect(e.attributes['k0'], 'null');
       });
 
-      test('setAttribute(...) fails if the name is invalid', () {
+      test('setAttribute(...): fails if the name is invalid', () {
         const invalidChars = ['<', '>', '"', ' ', '&'];
         for (var c in invalidChars) {
           expect(() {
@@ -249,14 +273,116 @@ void _testElement() {
         }
       });
 
+      test('setAttributeNS(...): normal', () {
+        final e = Element.tag('e');
+        e.setAttributeNS('https://ns/', 'k0', 'v0');
+        expect(e.getAttributeNS('https://ns/', 'k0'), 'v0');
+        expect(
+          e.getNamespacedAttributes('https://ns/'),
+          {'k0': 'v0'},
+        );
+      });
+
+      test('setAttributeNS(...): null namespace', () {
+        final e = Element.tag('e');
+        e.setAttributeNS(null, 'k0', 'v0');
+        expect(e.getAttributeNS(null, 'other'), isNull);
+        expect(e.getAttributeNS(null, 'k0'), 'v0');
+        expect(
+          e.getNamespacedAttributes(null),
+          {'k0': 'v0'},
+        );
+        expect(e.getAttribute('other'), isNull);
+        expect(e.getAttribute('k0'), 'v0');
+      });
+
+      test('setAttributeNS(...): null name', () {
+        final e = Element.tag('e');
+        expect(
+          () => e.setAttributeNS('https://ns/', null, 'value'),
+          throwsA(anything),
+        );
+      });
+
+      test('setAttributeNS(...): null value', () {
+        final e = Element.tag('e');
+        e.setAttributeNS('https://ns/', 'k0', null);
+        expect(e.getAttributeNS('https://ns/', 'other'), isNull);
+        expect(e.getAttributeNS('https://ns/', 'k0'), 'null');
+        expect(
+          e.getNamespacedAttributes('https://ns/'),
+          {'k0': 'null'},
+        );
+      });
+
+      test('setAttributeNS(...): fails if the name is invalid', () {
+        const invalidChars = ['<', '>', '"', ' ', '&'];
+        for (var c in invalidChars) {
+          expect(() {
+            Element.tag('x').setAttributeNS('namespace', c, '');
+          }, throwsDomException);
+          expect(() {
+            Element.tag('x').setAttributeNS('namespace', 'x${c}x', '');
+          }, throwsDomException);
+        }
+      });
+
       test('removeAttribute(...)', () {
         final e = Element.tag('e');
         e.setAttribute('k0', 'v0');
         e.setAttribute('removed', 'removed_value');
         expect(e.attributes.containsKey('removed'), isTrue);
+
+        // Remove
         e.removeAttribute('removed');
         expect(e.getAttribute('removed'), null);
-        expect(e.attributes.containsKey('removed'), isFalse);
+        expect(e.attributes, {'k0': 'v0'});
+      });
+
+      test('removeAttributeNS(...): normal', () {
+        // Set three attributes
+        final e = Element.tag('e');
+        e.setAttribute('k', 'v0');
+        e.setAttributeNS('https://ns0/', 'k', 'v1');
+        e.setAttributeNS('https://ns1/', 'k', 'v2');
+        expect(e.getAttribute('k'), 'v0');
+        expect(e.getAttributeNS('https://ns0/', 'k'), 'v1');
+        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
+
+        // Remove one
+        e.removeAttributeNS('https://ns0/', 'k');
+        expect(e.getAttribute('k'), 'v0');
+        expect(e.getAttributeNS('https://ns0/', 'k'), isNull);
+        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
+
+        // Removing again shouldn't throw
+        e.removeAttributeNS('https://ns0/', 'k');
+        expect(e.getAttribute('k'), 'v0');
+        expect(e.getAttributeNS('https://ns0/', 'k'), isNull);
+        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
+      });
+
+      test('removeAttributeNS(...): null namespace', () {
+        // Set three attributes
+        final e = Element.tag('e');
+        e.setAttribute('k', 'v0');
+        e.setAttributeNS('https://ns0/', 'k', 'v1');
+        e.setAttributeNS('https://ns1/', 'k', 'v2');
+        expect(e.getAttribute('k'), 'v0');
+        expect(e.getAttributeNS('https://ns0/', 'k'), 'v1');
+        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
+
+        // Remove
+        e.removeAttributeNS(null, 'k');
+        expect(e.getAttribute('k'), 'v1');
+        expect(e.getAttributeNS('https://ns0/', 'k'), 'v1');
+        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
+
+        // Remove again
+        e.removeAttributeNS(null, 'k');
+        expect(e.getAttribute('k'), 'v1');
+        expect(e.getAttributeNS('https://ns0/', 'k'), 'v1');
+        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
       });
     });
 

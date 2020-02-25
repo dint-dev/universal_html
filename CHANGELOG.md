@@ -1,3 +1,6 @@
+## 1.1.14
+* Fixes bugs related to HTML attributes and namespaces.
+
 ## 1.1.13
 * Fixes 'universal_io' dependency constraint so that it supports 1.x.x.
 

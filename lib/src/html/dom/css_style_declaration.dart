@@ -109,7 +109,11 @@ abstract class CssStyleDeclaration extends CssStyleDeclarationBase {
 
 class _CssStyleDeclaration extends CssStyleDeclaration {
   final LinkedHashMap<String, String> _map = LinkedHashMap<String, String>();
+
+  /// Original source that was parsed or produced.
   String _source;
+
+  /// Whether [_source] contains the latest changes.
   bool _sourceIsLatest = false;
 
   _CssStyleDeclaration._() : super._();
@@ -160,7 +164,7 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
     }
     final map = _map;
     if (map.isEmpty) {
-      return null;
+      return '';
     }
     final sb = StringBuffer();
     map.forEach((name, value) {

@@ -537,22 +537,13 @@ abstract class Element extends Node
 
   AccessibleNode _accessibleNode;
 
-  /// Contains all non-namespaced attributes except special cases like 'style'.
-  /// The instance is allocated lazily.
-  LinkedHashMap<String, String> _attributesPartialViewOrNull;
-
-  /// Cached instance of [_Attributes].
-  ///
-  /// Note that because it just invokes [getAttribute] and [setAttribute],
-  /// we don't necessarily have to cache it and decision to cache it wasn't a
-  /// result of careful analysis.
-  _Attributes _attributesFullViewOrNull;
+  /// Attributes is a linked list of [_Attribute] nodes.
+  /// This is the first attribute.
+  _Attribute _firstAttribute;
+  _Attributes _attributes;
 
   /// Contains style. The instance is allocated lazily.
   _CssStyleDeclaration _style;
-
-  /// Contains namespaced attributes.
-  Map<String, Map<String, String>> _namespacedAttributes;
 
   RenderData _renderDataField;
 
@@ -941,8 +932,7 @@ abstract class Element extends Node
 
   /// Returns a modifiable map of attributes.
   Map<String, String> get attributes {
-    return _attributesFullViewOrNull ??
-        (_attributesFullViewOrNull = _Attributes(this));
+    return _attributes ??= _Attributes(this, null);
   }
 
   set attributes(Map<String, String> value) {
@@ -1683,22 +1673,6 @@ abstract class Element extends Node
     _setAttribute('translate', value ? 'yes' : 'no');
   }
 
-  /// Returns read-only list of attribute names.
-  List<String> get _attributeNames {
-    final result = <String>[..._attributesWithoutLatestValues.keys];
-    final style = _style;
-    if (style != null && (style._sourceIsLatest || style._map.isNotEmpty)) {
-      result.add('style');
-    }
-    return result;
-  }
-
-  LinkedHashMap<String, String> get _attributesWithoutLatestValues {
-    return _attributesPartialViewOrNull ??
-        // ignore: prefer_collection_literals
-        (_attributesPartialViewOrNull = LinkedHashMap<String, String>());
-  }
-
   /// Default value of [spellcheck]. Null means that it's inherited.
   bool get _defaultSpellcheck => null;
 
@@ -1850,7 +1824,7 @@ abstract class Element extends Node
   }
 
   String getAttribute(String name) {
-    return _getAttribute(name.toLowerCase(), defaultValue: null);
+    return getAttributeNS(null, name);
   }
 
   List<String> getAttributeNames() {
@@ -1858,15 +1832,19 @@ abstract class Element extends Node
   }
 
   String getAttributeNS(String namespaceUri, String name) {
-    final namespaces = _namespacedAttributes;
-    if (namespaces == null) {
-      return null;
+    name = name.toLowerCase();
+    if (namespaceUri == null && name == 'style') {
+      return _style?.toString();
     }
-    final attributes = _namespacedAttributes[namespaceUri];
-    if (attributes == null) {
-      return null;
+    var attribute = _firstAttribute;
+    while (attribute != null) {
+      if (attribute.name == name &&
+          (namespaceUri == null || attribute.namespace == namespaceUri)) {
+        return attribute.value;
+      }
+      attribute = attribute.next;
     }
-    return attributes[name];
+    return null;
   }
 
   /// Returns the smallest bounding rectangle that encompasses this element's
@@ -1912,33 +1890,27 @@ abstract class Element extends Node
   }
 
   Map<String, String> getNamespacedAttributes(String namespace) {
-    var namespaces = _namespacedAttributes;
-    if (namespaces == null) {
-      namespaces = <String, Map<String, String>>{};
-      _namespacedAttributes = namespaces;
+    if (namespace == null) {
+      return attributes;
     }
-    var result = namespaces[namespace];
-    if (result == null) {
-      // TODO: Return a special subclass of Map
-      return <String, String>{};
-    }
-    return result;
+    return _Attributes(this, namespace);
   }
 
   bool hasAttribute(String name) {
-    return _hasAttribute(name.toLowerCase());
+    return hasAttributeNS(null, name);
   }
 
   bool hasAttributeNS(String namespaceUri, String name) {
-    final namespaces = _namespacedAttributes;
-    if (namespaces == null) {
-      return false;
+    name = name.toLowerCase();
+    var attribute = _firstAttribute;
+    while (attribute != null) {
+      if (attribute.name == name &&
+          (namespaceUri == null || attribute.namespace == namespaceUri)) {
+        return true;
+      }
+      attribute = attribute.next;
     }
-    final attributes = _namespacedAttributes[namespaceUri];
-    if (attributes == null) {
-      return false;
-    }
-    return attributes.containsKey(name.toLowerCase());
+    return false;
   }
 
   bool hasPointerCapture(int pointerId) {
@@ -2002,12 +1974,21 @@ abstract class Element extends Node
     clone._nodeName = _nodeName;
 
     // Clone attributes
-    final attributes = _attributesPartialViewOrNull;
-    if (attributes != null) {
-      final cloneAttributes = clone._attributesWithoutLatestValues;
-      attributes.forEach((k, v) {
-        cloneAttributes[k] = v;
-      });
+    _Attribute previousAttributeClone;
+    var attribute = _firstAttribute;
+    while (attribute != null) {
+      final attributeClone = _Attribute(
+        attribute.isNamespaceless,
+        attribute.namespace,
+        attribute.name,
+        attribute.value,
+      );
+      if (previousAttributeClone == null) {
+        clone._firstAttribute = attributeClone;
+      } else {
+        previousAttributeClone.next = attributeClone;
+      }
+      attribute = attribute.next;
     }
 
     // Clone style
@@ -2056,16 +2037,42 @@ abstract class Element extends Node
   void releasePointerCapture(int pointerId) {}
 
   void removeAttribute(String name) {
-    _attributesWithoutLatestValues.remove(name);
-    switch (name) {
-      case 'style':
-        _style = null;
-        break;
-    }
+    _removeAttributeNS(null, name);
   }
 
   void removeAttributeNS(String namespace, String name) {
-    setAttributeNS(namespace, name, null);
+    _removeAttributeNS(namespace, name);
+  }
+
+  /// Used by:
+  ///   * [removeAttributeNS] (returns void)
+  ///   * [_Attributes] method `remove` (returns the old value)
+  String _removeAttributeNS(String namespace, String name) {
+    if (namespace == null && name == 'style') {
+      final style = _style;
+      if (style == null) {
+        return null;
+      }
+      _style = null;
+      return style.toString();
+    }
+    _Attribute previous;
+    var current = _firstAttribute;
+    while (current != null) {
+      final next = current.next;
+      if (current.name == name && current.hasNamespace(namespace)) {
+        if (previous == null) {
+          _firstAttribute = next;
+        } else {
+          previous.next = next;
+        }
+        return current.value;
+      } else {
+        previous = current;
+        current = next;
+      }
+    }
+    return null;
   }
 
   void requestFullscreen() {}
@@ -2104,66 +2111,50 @@ abstract class Element extends Node
   }
 
   void setAttribute(String name, String value) {
-    // Normalize name
-    final normalizedName = name.toLowerCase();
+    setAttributeNS(null, name, value);
+  }
 
-    // Validate name
-    if (!_normalizedAttributeNameRegExp.hasMatch(normalizedName)) {
+  void setAttributeNS(String namespace, String name, String value) {
+    final originalName = name;
+
+    // Normalize name
+    name = name.toLowerCase();
+    if (!_normalizedAttributeNameRegExp.hasMatch(name)) {
       throw DomException._failedToExecute(
         'InvalidCharacterError',
         'setAttribute',
         'node',
-        '"$name" is not a valid attribute name.',
+        '"$originalName" is not a valid attribute name.',
       );
     }
 
-    // Use internal method
-    _setAttribute(normalizedName, value);
-  }
+    value ??= 'null';
 
-  void setAttributeNS(String namespace, String name, String value) {
-    // Validate namespace
-    if (namespace == null ||
-        !Element._normalizedAttributeNameRegExp.hasMatch(namespace)) {
-      throw ArgumentError.value(namespace, 'namespace');
+    if (name == 'style' && namespace == null) {
+      _setAttribute('style', value);
+      return;
     }
 
-    // Validate attribute name
-    if (name == null ||
-        !Element._normalizedAttributeNameRegExp.hasMatch(name)) {
-      throw ArgumentError.value(name, 'name');
+    _Attribute previous;
+    var attribute = _firstAttribute;
+    while (attribute != null) {
+      if (attribute.name == name && attribute.hasNamespace(namespace)) {
+        attribute.value = value;
+        return;
+      }
+      previous = attribute;
+      attribute = attribute.next;
     }
-
-    var namespaces = _namespacedAttributes;
-    if (value == null) {
-      //
-      // Remove attribute
-      //
-      if (namespaces == null) {
-        return;
-      }
-      final map = namespaces[namespace];
-      if (map == null) {
-        return;
-      }
-      map.remove(name);
-      if (map.isEmpty) {
-        namespaces.remove(namespace);
-      }
+    final newAttribute = _Attribute(
+      !hasAttribute(name),
+      namespace,
+      name,
+      value,
+    );
+    if (previous == null) {
+      _firstAttribute = newAttribute;
     } else {
-      //
-      // Set attribute
-      //
-      if (namespaces == null) {
-        namespaces = <String, Map<String, String>>{};
-        _namespacedAttributes = namespaces;
-      }
-      var map = namespaces[namespace];
-      if (map == null) {
-        map = <String, String>{};
-        namespaces[namespace] = map;
-      }
-      map[name] = value;
+      previous.next = newAttribute;
     }
   }
 
@@ -2231,11 +2222,14 @@ abstract class Element extends Node
       case 'style':
         return _style?.toString() ?? defaultValue;
       default:
-        final map = _attributesPartialViewOrNull;
-        if (map == null) {
-          return defaultValue;
+        var attribute = _firstAttribute;
+        while (attribute != null) {
+          if (attribute.name == name && attribute.namespace == null) {
+            return attribute.value;
+          }
+          attribute = attribute.next;
         }
-        return map[name] ?? defaultValue;
+        return defaultValue;
     }
   }
 
@@ -2307,16 +2301,23 @@ abstract class Element extends Node
   }
 
   _CssStyleDeclaration _getOrCreateStyle() {
-    var result = _style;
-    if (result == null) {
-      result = _CssStyleDeclaration._();
-      final value = _attributesWithoutLatestValues['style'];
-      if (value != null) {
-        result._parse(value);
+    var style = _style;
+    if (style == null) {
+      var attribute = _firstAttribute;
+      while (attribute != null) {
+        if (attribute.name == 'style' && attribute.namespace == null) {
+          break;
+        }
+        attribute = attribute.next;
       }
-      _style = result;
+      style = _CssStyleDeclaration._();
+      if (attribute != null) {
+        style._parse(attribute.value);
+      }
+
+      _style = style;
     }
-    return result;
+    return style;
   }
 
   bool _hasAttribute(String name) {
@@ -2324,35 +2325,54 @@ abstract class Element extends Node
       case 'style':
         return _style != null;
       default:
-        final map = _attributesPartialViewOrNull;
-        if (map == null) {
-          return false;
+        var attribute = _firstAttribute;
+        while (attribute != null) {
+          if (attribute.name == name && attribute.namespace == null) {
+            return true;
+          }
+          attribute = attribute.next;
         }
-        return map.containsKey(name);
+        return false;
     }
   }
 
   Element _newInstance(Document document);
 
-  /// Sets value of the attribute. The name MUST be lowercase.
+  /// Sets value of an attribute. The name MUST be lowercase.
   void _setAttribute(String name, String value) {
-    name = name.toLowerCase();
+    assert(name == name.toLowerCase());
     value ??= 'null';
 
-    if (!_hasAttribute(name) || value != _getAttribute(name)) {
-      // Mark as dirty
-      _markDirty();
-
-      // Map update
-      _attributesWithoutLatestValues[name] = value;
-
-      // Field update for possible special case
-      switch (name) {
-        case 'style':
+    // Field update for possible special case
+    switch (name) {
+      case 'style':
+        if (getAttribute('style') != value) {
           _getOrCreateStyle()._parse(value);
-          break;
-      }
+          _markDirty();
+        }
+        return;
     }
+
+    _Attribute previous;
+    var attribute = _firstAttribute;
+    while (attribute != null) {
+      if (attribute.name == name && attribute.namespace == null) {
+        if (attribute.value != value) {
+          attribute.value = value;
+          _markDirty();
+        }
+        return;
+      }
+      previous = attribute;
+      attribute = attribute.next;
+    }
+    final newAttribute = _Attribute(true, null, name, value);
+    if (previous == null) {
+      _firstAttribute = newAttribute;
+    } else {
+      previous.next = newAttribute;
+    }
+    _markDirty();
   }
 
   /// Sets boolean value of the attribute. The name MUST be lowercase.

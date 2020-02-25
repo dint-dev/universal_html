@@ -90,6 +90,7 @@ part 'html/dom/document.dart';
 part 'html/dom/document_fragment.dart';
 part 'html/dom/dom_exception.dart';
 part 'html/dom/element.dart';
+part 'html/dom/element_attributes.dart';
 part 'html/dom/element_classes.dart';
 part 'html/dom/element_classes_input.dart';
 part 'html/dom/element_list.dart';

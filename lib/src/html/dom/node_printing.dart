@@ -95,22 +95,12 @@ String _namespaceUriToPrefix(Node node, String uri) {
   }
   for (; node != null; node = node.parent) {
     if (node is Element) {
-      final defaultNamespace = node.getAttribute('xmlns');
-      if (defaultNamespace == uri) {
-        return null;
-      }
-      final namespaces = node._namespacedAttributes;
-      if (namespaces == null) {
-        continue;
-      }
-      final map = namespaces['xmlns'];
-      if (map == null) {
-        continue;
-      }
-      for (var entry in map.entries) {
-        if (entry.value == uri) {
-          return entry.key;
+      var attribute = node._firstAttribute;
+      while (attribute != null) {
+        if (attribute.namespace == 'xmlns' && attribute.value == uri) {
+          return attribute.name;
         }
+        attribute = attribute.next;
       }
     }
   }
@@ -183,19 +173,27 @@ void _printElement(StringBuffer sb, int flags, Element node) {
   } else {
     sb.write(node._lowerCaseTagName); // Already validated!
   }
-  node.attributes.forEach((name, value) {
-    _printAttribute(sb, flags, null, name, value);
-  });
-  final namespaces = node._namespacedAttributes;
-  if (namespaces != null) {
-    for (var namespaceUri in namespaces.keys.toList()..sort()) {
-      final attributes = namespaces[namespaceUri];
-      final prefix = _namespaceUriToPrefix(node, namespaceUri);
-      for (var name in attributes.keys.toList()..sort()) {
-        final value = attributes[name];
-        _printAttribute(sb, flags, prefix, name, value);
-      }
-    }
+  final style = node._style;
+  if (style != null) {
+    _printAttribute(
+      sb,
+      flags,
+      null,
+      'style',
+      style.toString(),
+    );
+  }
+  var attribute = node._firstAttribute;
+  while (attribute != null) {
+    final prefix = _namespaceUriToPrefix(node, attribute.namespace);
+    _printAttribute(
+      sb,
+      flags,
+      prefix,
+      attribute.name,
+      attribute.value,
+    );
+    attribute = attribute.next;
   }
   if (node.childNodes.isEmpty && node.ownerDocument is XmlDocument) {
     sb.write('/>');

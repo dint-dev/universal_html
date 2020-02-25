@@ -11,6 +11,5 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-/// Exports _dart:indexed_db_. In VM and Flutter, exports our implementation.
 
-export 'dart:indexed_db' if (dart.library.io) '../indexed_db.dart';
+export 'dart:indexed_db' if (dart.library.io) '../src/indexed_db.dart';

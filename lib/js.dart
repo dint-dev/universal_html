@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Implements _dart:js_ in VM and Flutter. In browser, this library exports
-/// _"dart:js"_.
+/// Cross-platform _dart:js_.
+///
+/// You can choose from the following libraries:
+///   * `package:universal_html/js.dart`
+///   * `package:universal_html/prefer_sdk/js.dart`
+///   * `package:universal_html/prefer_universal/js.dart`
 ///
 /// # Introduction
 ///
@@ -93,6 +97,6 @@
 ///
 ///     var jsArray = new JsObject.jsify([1, 2, 3]);=
 ///
-library universal_js;
+library universal_html.js;
 
-export 'src/js.dart' if (dart.library.js) 'src/_sdk/js.dart';
+export 'prefer_sdk/js.dart';

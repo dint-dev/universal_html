@@ -11,6 +11,5 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-/// Exports _dart:web_gl_. In VM and Flutter, exports our implementation.
 
-export 'dart:web_gl' if (dart.library.web_gl) '../web_gl.dart';
+export 'dart:web_gl' if (dart.library.io) '../src/web_gl.dart';

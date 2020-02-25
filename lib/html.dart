@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Implements _dart:html_ in VM and Flutter. In browser, this library exports
-/// _"dart:html"_.
+/// Cross-platform _dart:html_.
+///
+/// You can choose from the following libraries:
+///   * `package:universal_html/html.dart`
+///   * `package:universal_html/prefer_sdk/html.dart`
+///   * `package:universal_html/prefer_universal/html.dart`
 ///
 /// # Introduction
 ///
@@ -29,4 +33,4 @@
 /// For information on writing web apps with Dart, see https://webdev.dartlang.org.
 library universal_html;
 
-export 'src/html.dart' if (dart.library.html) 'src/_sdk/html.dart';
+export 'prefer_sdk/html.dart';

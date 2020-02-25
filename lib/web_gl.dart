@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Implements _dart:web_gl_ in VM and Flutter. In browser, this library exports
-/// _"dart:web_gl"_.
-library universal_web_gl;
+/// Cross-platform _dart:html_.
+///
+/// You can choose from the following libraries:
+///   * `package:universal_html/web_gl.dart`
+///   * `package:universal_html/prefer_sdk/web_gl.dart`
+///   * `package:universal_html/prefer_universal/web_gl.dart`
+library universal_html.web_gl;
 
-export 'src/web_gl.dart' if (dart.library.svg) 'src/_sdk/web_gl.dart';
+export 'prefer_sdk/web_gl.dart';

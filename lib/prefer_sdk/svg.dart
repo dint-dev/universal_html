@@ -11,6 +11,5 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-/// Exports _dart:svg_. In VM and Flutter, exports our implementation.
 
-export 'dart:svg' if (dart.library.io) '../svg.dart';
+export 'dart:svg' if (dart.library.io) '../src/svg.dart';

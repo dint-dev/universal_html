@@ -27,31 +27,39 @@ import 'package:universal_html/prefer_universal/js_util.dart'
 
 void testLibraries() {
   test("'package:_/prefer_sdk/X.dart", () {
+    // dart:html
     expect(prefer_sdk_html.EventSource, isNotNull);
+    expect(prefer_sdk_html.Element.tag('h1').outerHtml, '<h1></h1>');
+
+    // dart:svg
     expect(prefer_sdk_svg.SvgElement, isNotNull);
 
-    // js
+    // dart:js
     expect(prefer_sdk_js.allowInterop, isNotNull);
     expect(prefer_sdk_js.allowInteropCaptureThis, isNotNull);
     expect(prefer_sdk_js.JsFunction, isNotNull);
     expect(prefer_sdk_js.JsArray, isNotNull);
     expect(prefer_sdk_js.JsObject, isNotNull);
 
-    // js
+    // dart:js_util
     expect(prefer_sdk_js_util.promiseToFuture, isNotNull);
   });
   test("'package:_/prefer_universal/X.dart", () {
+    // dart:html
     expect(prefer_universal_html.EventSource, isNotNull);
+    expect(prefer_universal_html.Element.tag('h1').outerHtml, '<h1></h1>');
+
+    // dart:svg
     expect(prefer_universal_svg.SvgElement, isNotNull);
 
-    // js
+    // dart:js
     expect(prefer_universal_js.allowInterop, isNotNull);
     expect(prefer_universal_js.allowInteropCaptureThis, isNotNull);
     expect(prefer_universal_js.JsFunction, isNotNull);
     expect(prefer_universal_js.JsArray, isNotNull);
     expect(prefer_universal_js.JsObject, isNotNull);
 
-    // js
+    // dart:js_util
     expect(prefer_universal_js_util.promiseToFuture, isNotNull);
   });
 }

@@ -1,3 +1,8 @@
+## 1.1.15
+* Improved documentation.
+* Removed 'package:universal_html/browser/html.dart', which has been marked with @Deprecated for
+  long time. This is a breaking change, but unlikely to affect anyone.
+
 ## 1.1.14
 * Fixes bugs related to HTML attributes and namespaces.
 

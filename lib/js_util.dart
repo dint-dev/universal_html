@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Implements _dart:js_util_ in VM and Flutter. In browser, this library
-/// exports _"dart:js_util"_.
+/// Cross-platform _dart:js_util_.
+///
+/// You can choose from the following libraries:
+///   * `package:universal_html/js_util.dart`
+///   * `package:universal_html/prefer_sdk/js_util.dart`
+///   * `package:universal_html/prefer_universal/js_util.dart`
 ///
 /// # Introduction
 ///
@@ -23,6 +27,6 @@
 /// These methods would be extension methods on JSObject if Dart supported
 /// extension methods.
 ///
-library universal_js_util;
+library universal_html.js_util;
 
-export 'src/js_util.dart' if (dart.library.js_util) 'src/_sdk/js_util.dart';
+export 'prefer_sdk/js_util.dart';

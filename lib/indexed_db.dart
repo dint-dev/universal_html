@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Implements _dart:indexed_db_ in VM and Flutter. In browser, this library
-/// exports _"dart:indexed_db"_.
-library universal_indexed_db;
+/// Cross-platform _dart:indexed_db_.
+///
+/// You can choose from the following libraries:
+///   * `package:universal_html/html.dart`
+///   * `package:universal_html/prefer_sdk/html.dart`
+///   * `package:universal_html/prefer_universal/html.dart`
+library universal_html.indexed_db;
 
-export 'src/indexed_db.dart'
-    if (dart.library.indexed_db) 'src/_sdk/indexed_db.dart';
+export 'prefer_sdk/indexed_db.dart';

@@ -11,6 +11,5 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-/// Implements _dart:svg_ in VM and Flutter. In browser, exports _"dart:svg"_.
 
 export '../src/svg.dart' if (dart.library.svg) '../src/_sdk/svg.dart';

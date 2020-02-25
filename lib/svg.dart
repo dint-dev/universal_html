@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Implements _dart:svg_ in VM and Flutter. In browser, this library exports
-/// _"dart:svg"_.
-library universal_svg;
+/// Cross-platform _dart:svg_.
+///
+/// You can choose from the following libraries:
+///   * `package:universal_html/svg.dart`
+///   * `package:universal_html/prefer_sdk/svg.dart`
+///   * `package:universal_html/prefer_universal/svg.dart`
+library universal_html.svg;
 
-export 'src/svg.dart' if (dart.library.svg) 'src/_sdk/svg.dart';
+export 'prefer_sdk/svg.dart';

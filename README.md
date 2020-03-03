@@ -40,33 +40,33 @@ This library makes command-line or server-side HTML rendering easy.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^1.1.10
+  universal_html: ^1.1.16
 ```
 
 Now you can replace usage of "dart:html" with "package:universal_html/html.dart".
 
 ## 2. Choose library
-### Option 1
+### Option 1 (recommended)
 ```dart
-import 'package:universal_html/prefer_sdk/html.dart';
+import 'package:universal_html/html.dart';
 ```
-This library exports _dart:html_ by default. The library exports our implementation only when
-_dart:io_ is available.
+This library exports _dart:html_ by default.
+You get the same library by importing `import 'package:universal_html/prefer_sdk/html.dart';`.
 
-If you use this library, your package will not compile in Node.JS. Dart tools may also mistakenly
-think that your package is not compatible with VM/Flutter.
+If you use this library, Dart tools may mistakenly think that your package is not compatible with
+VM/Flutter.
 
 ### Option 2
 ```dart
 import 'package:universal_html/prefer_universal/html.dart';
 ```
 
-This library exports our implementation by default. The library exports _dart:html_ only in
-browsers.
+This library exports our implementation by default. The main advantage of this library is easier
+debugging. If you click "Go to declaration" in your IDE, you will see the implementation.
 
 Getting warnings? In some cases, when you mix _universal_io_ classes with _dart:html_ classes, your
 IDE produces type warnings ("universal_html Element is not dart:html Element"). Your application
-should still compile (in Dart2js, _universal_html_ classes will be _dart:html_ classes).
+should still compile (in browser, _universal_html_ classes will be _dart:html_ classes).
 
 ### Proposed future method
 Dart SDK [feature request #37232](https://github.com/dart-lang/sdk/issues/37232) proposes that

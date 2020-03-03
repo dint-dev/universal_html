@@ -12,4 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'dart:html' if (dart.library.io) '../src/html.dart';
+export 'dart:html'
+    if (dart.library.html) '../src/_sdk/html.dart' // Browser
+    if (dart.library.js) '../src/html.dart' // Node.JS
+    if (dart.library.io) '../src/html.dart'; // VM

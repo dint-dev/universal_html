@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-@TestOn('vm || chrome')
 library main_test;
 
 import 'dart:async';
@@ -49,6 +48,7 @@ var _isFlutter = false;
 
 void main({bool isFlutter = false}) {
   _isFlutter = isFlutter;
+
   group('In VM: ', () {
     _sharedTests();
   }, testOn: 'vm');
@@ -56,6 +56,10 @@ void main({bool isFlutter = false}) {
   group('In Chrome: ', () {
     _sharedTests();
   }, testOn: 'chrome');
+
+  group('In NodeJS: ', () {
+    testLibraries();
+  }, testOn: 'node');
 }
 
 void _sharedTests() {

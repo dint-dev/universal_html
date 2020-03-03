@@ -1,3 +1,7 @@
+## 1.1.16
+* Fixes conditional imports in Node.JS when developer imports 'package:universal_io/X.dart' or
+  'package:universal_io/prefer_sdk/X.dart'.
+
 ## 1.1.15
 * Improved documentation.
 * Removed 'package:universal_html/browser/html.dart', which has been marked with @Deprecated for

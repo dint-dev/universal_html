@@ -50,3 +50,5 @@ class IdbFactory {
     throw UnimplementedError();
   }
 }
+
+class Database {}

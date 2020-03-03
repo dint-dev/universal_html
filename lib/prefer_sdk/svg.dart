@@ -12,4 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'dart:svg' if (dart.library.io) '../src/svg.dart';
+export 'dart:svg'
+    if (dart.library.svg) '../src/_sdk/svg.dart' // Browser
+    if (dart.library.js) '../src/svg.dart' // Node.JS
+    if (dart.library.io) '../src/svg.dart'; // VM

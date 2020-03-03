@@ -12,7 +12,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'dart:indexed_db'
-    if (dart.library.indexed_db) '../src/_sdk/indexed_db.dart' // Browser
-    if (dart.library.js) '../src/indexed_db.dart' // Node.JS
-    if (dart.library.io) '../src/indexed_db.dart'; // VM
+export 'dart:indexed_db' if (dart.library.io) '../src/indexed_db.dart';

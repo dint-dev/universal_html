@@ -57,9 +57,9 @@ void main({bool isFlutter = false}) {
     _sharedTests();
   }, testOn: 'chrome');
 
-  group('In NodeJS: ', () {
-    testLibraries();
-  }, testOn: 'node');
+//  group('In NodeJS: ', () {
+//    testLibraries();
+//  }, testOn: 'node');
 }
 
 void _sharedTests() {

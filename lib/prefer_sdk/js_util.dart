@@ -12,6 +12,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'dart:js_util'
-    if (dart.library.js_util) '../src/_sdk/js_util.dart' // Browser / Node.JS
-    if (dart.library.io) '../src/js_util.dart'; // VM
+export 'dart:js_util' if (dart.library.io) '../src/js_util.dart';

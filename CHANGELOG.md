@@ -1,3 +1,7 @@
+## 1.1.17
+* Restored old conditional imports because of a bug in dartdevc. See bug tracker
+  [issue #16](https://github.com/dint-dev/universal_html/issues/16).
+
 ## 1.1.16
 * Fixes conditional imports in Node.JS when developer imports 'package:universal_io/X.dart' or
   'package:universal_io/prefer_sdk/X.dart'.

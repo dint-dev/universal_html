@@ -234,9 +234,19 @@ class _HtmlParser {
       if (inputAttributes != null && inputAttributes.isNotEmpty) {
         inputAttributes.forEach((dynamic name, String value) {
           if (name is html_parsing.AttributeName) {
-            result.setAttributeNS(name.namespace, name.name, value);
+            BrowserImplementationUtils.setAttributeNSFromParser(
+              result,
+              name.namespace,
+              name.name,
+              value,
+            );
           } else if (name is String) {
-            result.setAttribute(name, value);
+            BrowserImplementationUtils.setAttributeNSFromParser(
+              result,
+              null,
+              name,
+              value,
+            );
           } else {
             throw UnimplementedError();
           }
@@ -368,30 +378,18 @@ class _XmlParser {
       return BrowserImplementationUtils.newText(document, input.text);
     }
     if (input is xml.XmlElement) {
-      final namespaceUri = input.name.namespaceUri;
-      final name = input.name.local;
-      if (name == null) {
-        throw ArgumentError.value(input);
-      }
+      final name = input.name;
       final result = BrowserImplementationUtils.newUnknownElement(
         document,
-        namespaceUri,
-        name,
+        name.namespaceUri,
+        name.qualified,
       );
       for (var attribute in input.attributes) {
-        final prefix = attribute.name.prefix;
-        if (prefix == null) {
-          result.setAttribute(
-            attribute.name.qualified,
-            attribute.value,
-          );
-          continue;
-        }
-        var namespaceUri = attribute.name.namespaceUri;
-        namespaceUri ??= 'xmlns';
-        result.setAttributeNS(
-          namespaceUri,
-          attribute.name.local,
+        final name = attribute.name;
+        BrowserImplementationUtils.setAttributeNSFromParser(
+          result,
+          name.namespaceUri,
+          name.qualified,
           attribute.value,
         );
       }

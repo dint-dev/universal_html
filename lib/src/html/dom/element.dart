@@ -511,10 +511,10 @@ abstract class Element extends Node
       EventStreamProvider<WheelEvent>('wheel');
 
   static final _normalizedElementNameRegExp =
-      RegExp(r'^[a-z_\:][a-z0-9_\-\:]*$');
+      RegExp(r'^[a-zA-Z_:][a-zA-Z0-9_:\.\-]*$');
 
   static final _normalizedAttributeNameRegExp =
-      RegExp(r'^[a-z_\:][a-z0-9_\-\:]*$');
+      RegExp(r'^[a-zA-Z_:][a-zA-Z0-9_:\.\-]*$');
 
   /// Static factory designed to expose `mousewheel` events to event
   /// handlers that are not necessarily instances of [Element].
@@ -531,8 +531,9 @@ abstract class Element extends Node
       EventStreamProvider<TransitionEvent>('transition');
 
   /// For [nodeName] and [tagName].
-  String _nodeName;
+  final String _nodeName;
 
+  /// For [localName] and case-insensitive DOM queries.
   final String _lowerCaseTagName;
 
   AccessibleNode _accessibleNode;
@@ -578,8 +579,9 @@ abstract class Element extends Node
   factory Element.canvas() = CanvasElement;
 
   Element.created()
-      : _lowerCaseTagName = null,
-        super._(null) {
+      : _nodeName = null,
+        _lowerCaseTagName = null,
+        super._(document) {
     throw UnimplementedError();
   }
 
@@ -624,7 +626,8 @@ abstract class Element extends Node
   ///
   factory Element.html(String html,
       {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    final fragment = const DomParserDriver().parseDocumentFragmentFromHtml(
+    final domParser = HtmlDriver.current.domParserDriver;
+    final fragment = domParser.parseDocumentFragmentFromHtml(
       document,
       html.trim(),
       validator: validator,
@@ -654,13 +657,11 @@ abstract class Element extends Node
   @visibleForTesting
   factory Element.internalTag(Document ownerDocument, String name,
       [String typeExtension]) {
-    final result = Element._internalTag(
+    return Element._internalTag(
       ownerDocument,
       name,
       typeExtension,
     );
-    result._nodeName = name;
-    return result;
   }
 
   /// IMPORTANT: Not part 'dart:html'.
@@ -770,7 +771,8 @@ abstract class Element extends Node
   /// Used by Element subclasses such as [AnchorElement].
   Element._(Document ownerDocument, String nodeName)
       : _nodeName = nodeName,
-        _lowerCaseTagName = nodeName.toLowerCase(),
+        _lowerCaseTagName =
+            ownerDocument is XmlDocument ? nodeName : nodeName.toLowerCase(),
         super._(ownerDocument);
 
   factory Element._internalTag(Document ownerDocument, String name,
@@ -1142,7 +1144,14 @@ abstract class Element extends Node
     setAttribute('lang', value);
   }
 
-  String get localName => tagName;
+  String get localName {
+    final name = _lowerCaseTagName;
+    final i = name.indexOf(':');
+    if (i < 0) {
+      return name;
+    }
+    return name.substring(i + 1);
+  }
 
   /// Access the dimensions and position of this element's content + padding +
   /// border + margin box.
@@ -1160,7 +1169,22 @@ abstract class Element extends Node
   /// [Browser Reflow](https://developers.google.com/speed/articles/reflow)
   CssRect get marginEdge => _MarginCssRect(this);
 
-  String get namespaceUri => null;
+  String get namespaceUri {
+    final nodeName = this.nodeName;
+    final i = nodeName.indexOf(':');
+    if (i >= 0) {
+      final prefix = nodeName.substring(0, i);
+      final result = _namespaceUriFromPrefix(prefix);
+      if (result != null) {
+        return result;
+      }
+    }
+    final document = ownerDocument;
+    if (document is HtmlDocument) {
+      return 'http://www.w3.org/1999/xhtml';
+    }
+    return null;
+  }
 
   @override
   Element get nextElementSibling {
@@ -1177,16 +1201,7 @@ abstract class Element extends Node
   /// Returns node name in uppercase.
   @override
   String get nodeName {
-    final name = _nodeName;
-    final namespaceUri = this.namespaceUri;
-    if (namespaceUri == null) {
-      return name;
-    }
-    final prefix = _namespaceUriToPrefix(this, namespaceUri);
-    if (prefix == null) {
-      return name;
-    }
-    return '$prefix:$name';
+    return _nodeName;
   }
 
   @override
@@ -1676,9 +1691,12 @@ abstract class Element extends Node
   /// Default value of [spellcheck]. Null means that it's inherited.
   bool get _defaultSpellcheck => null;
 
-  bool get _isCaseSensitive {
-    return ownerDocument?._isCaseSensitive ?? false;
+  bool get _isXml {
+    return ownerDocument?._isXml ?? false;
   }
+
+  /// Tells whether the element is in a HTML document.
+  bool get _isHtmlDocument => ownerDocument is HtmlDocument;
 
   @override
   RenderData get _renderData {
@@ -1824,26 +1842,72 @@ abstract class Element extends Node
   }
 
   String getAttribute(String name) {
-    return getAttributeNS(null, name);
+    //
+    // Loosely based on:
+    // https://dom.spec.whatwg.org/#dom-element-getattribute
+    //
+
+    if (!_isXml) {
+      name = name.toLowerCase();
+
+      if (name == 'style') {
+        return _style?.toString();
+      }
+    }
+
+    var attribute = _firstAttribute;
+    while (attribute != null) {
+      if (attribute._qualifiedName == name) {
+        return attribute.value;
+      }
+      attribute = attribute._next;
+    }
+
+    // Didn't find attribute
+    return null;
   }
 
   List<String> getAttributeNames() {
-    return attributes.keys.toList();
+    final list = <String>[];
+    var attribute = _firstAttribute;
+    while (attribute != null) {
+      list.add(attribute._qualifiedName);
+      attribute = attribute._next;
+    }
+    return list;
   }
 
   String getAttributeNS(String namespaceUri, String name) {
-    name = name.toLowerCase();
-    if (namespaceUri == null && name == 'style') {
-      return _style?.toString();
+    //
+    // Loosely based on:
+    // https://dom.spec.whatwg.org/#dom-element-getattributens
+    //
+
+    if (namespaceUri == '') {
+      namespaceUri = null;
     }
+
+    // Should we ignore the case?
+    // XML is case sensitive, but HTML is not.
+    if (!_isXml) {
+      name = name.toLowerCase();
+
+      // Is the attribute 'style'?
+      if (name == 'style' && _isHtmlNamespaceUri(namespaceUri)) {
+        return _style?.toString();
+      }
+    }
+
     var attribute = _firstAttribute;
     while (attribute != null) {
-      if (attribute.name == name &&
-          (namespaceUri == null || attribute.namespace == namespaceUri)) {
+      if (attribute._localName == name &&
+          attribute._namespaceUri == namespaceUri) {
         return attribute.value;
       }
-      attribute = attribute.next;
+      attribute = attribute._next;
     }
+
+    // Didn't find attribute
     return null;
   }
 
@@ -1889,28 +1953,22 @@ abstract class Element extends Node
         classNames.split(_whitespaceRegExp).map((name) => '.$name').join());
   }
 
-  Map<String, String> getNamespacedAttributes(String namespace) {
-    if (namespace == null) {
+  Map<String, String> getNamespacedAttributes(String namespaceUri) {
+    if (namespaceUri == '') {
+      namespaceUri = null;
+    }
+    if (namespaceUri == null) {
       return attributes;
     }
-    return _Attributes(this, namespace);
+    return _Attributes(this, namespaceUri);
   }
 
   bool hasAttribute(String name) {
-    return hasAttributeNS(null, name);
+    return getAttribute(name) != null;
   }
 
   bool hasAttributeNS(String namespaceUri, String name) {
-    name = name.toLowerCase();
-    var attribute = _firstAttribute;
-    while (attribute != null) {
-      if (attribute.name == name &&
-          (namespaceUri == null || attribute.namespace == namespaceUri)) {
-        return true;
-      }
-      attribute = attribute.next;
-    }
-    return false;
+    return getAttributeNS(namespaceUri, name) != null;
   }
 
   bool hasPointerCapture(int pointerId) {
@@ -1971,25 +2029,9 @@ abstract class Element extends Node
   Element internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
     // Create a new instance of the same class
     final clone = _newInstance(ownerDocument);
-    clone._nodeName = _nodeName;
 
     // Clone attributes
-    _Attribute previousAttributeClone;
-    var attribute = _firstAttribute;
-    while (attribute != null) {
-      final attributeClone = _Attribute(
-        attribute.isNamespaceless,
-        attribute.namespace,
-        attribute.name,
-        attribute.value,
-      );
-      if (previousAttributeClone == null) {
-        clone._firstAttribute = attributeClone;
-      } else {
-        previousAttributeClone.next = attributeClone;
-      }
-      attribute = attribute.next;
-    }
+    clone._firstAttribute = _firstAttribute?.cloneChain();
 
     // Clone style
     clone._style = _style?._clone();
@@ -2037,42 +2079,82 @@ abstract class Element extends Node
   void releasePointerCapture(int pointerId) {}
 
   void removeAttribute(String name) {
-    _removeAttributeNS(null, name);
-  }
+    //
+    // Loosely based on:
+    // https://dom.spec.whatwg.org/#dom-element-removeattribute
+    //
 
-  void removeAttributeNS(String namespace, String name) {
-    _removeAttributeNS(namespace, name);
-  }
+    ArgumentError.checkNotNull(name);
 
-  /// Used by:
-  ///   * [removeAttributeNS] (returns void)
-  ///   * [_Attributes] method `remove` (returns the old value)
-  String _removeAttributeNS(String namespace, String name) {
-    if (namespace == null && name == 'style') {
-      final style = _style;
-      if (style == null) {
-        return null;
+    if (!_isXml) {
+      name = name.toLowerCase();
+
+      if (name == 'style') {
+        final style = _style;
+        if (style == null) {
+          return null;
+        }
+        _style = null;
+        return;
       }
-      _style = null;
-      return style.toString();
     }
+
     _Attribute previous;
     var current = _firstAttribute;
     while (current != null) {
-      final next = current.next;
-      if (current.name == name && current.hasNamespace(namespace)) {
+      final next = current._next;
+      if (current._localName == name) {
         if (previous == null) {
           _firstAttribute = next;
         } else {
-          previous.next = next;
+          previous._next = next;
         }
-        return current.value;
-      } else {
-        previous = current;
-        current = next;
+        return;
+      }
+      previous = current;
+      current = next;
+    }
+  }
+
+  void removeAttributeNS(String namespaceUri, String name) {
+    //
+    // Loosely based on:
+    // https://dom.spec.whatwg.org/#dom-element-removeattributens
+    //
+
+    ArgumentError.checkNotNull(name);
+
+    if (namespaceUri == '') {
+      namespaceUri = null;
+    }
+    if (!_isXml) {
+      name = name.toLowerCase();
+
+      if (name == 'style' && _isHtmlNamespaceUri(namespaceUri)) {
+        final style = _style;
+        if (style == null) {
+          return null;
+        }
+        _style = null;
+        return;
       }
     }
-    return null;
+
+    _Attribute previous;
+    var current = _firstAttribute;
+    while (current != null) {
+      final next = current._next;
+      if (current._localName == name && current._namespaceUri == namespaceUri) {
+        if (previous == null) {
+          _firstAttribute = next;
+        } else {
+          previous._next = next;
+        }
+        return;
+      }
+      previous = current;
+      current = next;
+    }
   }
 
   void requestFullscreen() {}
@@ -2111,50 +2193,97 @@ abstract class Element extends Node
   }
 
   void setAttribute(String name, String value) {
-    setAttributeNS(null, name, value);
-  }
+    //
+    // Loosely based on:
+    // https://dom.spec.whatwg.org/#dom-element-setattribute
+    //
 
-  void setAttributeNS(String namespace, String name, String value) {
-    final originalName = name;
-
-    // Normalize name
-    name = name.toLowerCase();
-    if (!_normalizedAttributeNameRegExp.hasMatch(name)) {
-      throw DomException._failedToExecute(
-        'InvalidCharacterError',
-        'setAttribute',
-        'node',
-        '"$originalName" is not a valid attribute name.',
-      );
-    }
+    _validateAttributeName('setAttribute', null, name);
 
     value ??= 'null';
+    if (!_isXml) {
+      name = name.toLowerCase();
 
-    if (name == 'style' && namespace == null) {
-      _setAttribute('style', value);
-      return;
+      if (name == 'style') {
+        _setAttribute('style', value);
+        return;
+      }
     }
 
     _Attribute previous;
     var attribute = _firstAttribute;
     while (attribute != null) {
-      if (attribute.name == name && attribute.hasNamespace(namespace)) {
+      if (attribute._localName == name) {
         attribute.value = value;
         return;
       }
       previous = attribute;
-      attribute = attribute.next;
+      attribute = attribute._next;
     }
     final newAttribute = _Attribute(
-      !hasAttribute(name),
-      namespace,
+      false,
+      null,
+      name,
       name,
       value,
     );
     if (previous == null) {
       _firstAttribute = newAttribute;
     } else {
-      previous.next = newAttribute;
+      previous._next = newAttribute;
+    }
+  }
+
+  void setAttributeNS(String namespaceUri, String name, String value) {
+    //
+    // Loosely based on:
+    // https://dom.spec.whatwg.org/#dom-element-setattributens
+    //
+
+    _validateAttributeName('setAttributeNS', namespaceUri, name);
+
+    if (namespaceUri == '') {
+      namespaceUri = null;
+    }
+    value ??= 'null';
+    if (!_isXml) {
+      name = name.toLowerCase();
+
+      if (name == 'style' && namespaceUri == null) {
+        _setAttribute('style', value);
+        return;
+      }
+    }
+
+    final qualifiedName = name;
+    var localName = qualifiedName;
+    final i = localName.indexOf(':');
+    if (i >= 0) {
+      localName = localName.substring(i + 1);
+    }
+
+    _Attribute previous;
+    var attribute = _firstAttribute;
+    while (attribute != null) {
+      if (attribute._localName == localName &&
+          attribute._namespaceUri == namespaceUri) {
+        attribute.value = value;
+        return;
+      }
+      previous = attribute;
+      attribute = attribute._next;
+    }
+    final newAttribute = _Attribute(
+      true,
+      namespaceUri,
+      qualifiedName,
+      localName,
+      value,
+    );
+    if (previous == null) {
+      _firstAttribute = newAttribute;
+    } else {
+      previous._next = newAttribute;
     }
   }
 
@@ -2224,10 +2353,11 @@ abstract class Element extends Node
       default:
         var attribute = _firstAttribute;
         while (attribute != null) {
-          if (attribute.name == name && attribute.namespace == null) {
+          if (attribute._qualifiedName == name &&
+              attribute._namespaceUri == null) {
             return attribute.value;
           }
-          attribute = attribute.next;
+          attribute = attribute._next;
         }
         return defaultValue;
     }
@@ -2305,10 +2435,11 @@ abstract class Element extends Node
     if (style == null) {
       var attribute = _firstAttribute;
       while (attribute != null) {
-        if (attribute.name == 'style' && attribute.namespace == null) {
+        if (attribute._qualifiedName == 'style' &&
+            attribute._namespaceUri == null) {
           break;
         }
-        attribute = attribute.next;
+        attribute = attribute._next;
       }
       style = _CssStyleDeclaration._();
       if (attribute != null) {
@@ -2327,13 +2458,39 @@ abstract class Element extends Node
       default:
         var attribute = _firstAttribute;
         while (attribute != null) {
-          if (attribute.name == name && attribute.namespace == null) {
+          if (attribute._qualifiedName == name &&
+              attribute._namespaceUri == null) {
             return true;
           }
-          attribute = attribute.next;
+          attribute = attribute._next;
         }
         return false;
     }
+  }
+
+  /// Tells whether the namespace URI refers to standard HTML elements.
+  bool _isHtmlNamespaceUri(String namespaceUri) {
+    return _isHtmlDocument && (namespaceUri ?? '') == '';
+  }
+
+  String _namespaceUriFromPrefix(String prefix) {
+    if (prefix == null) {
+      return null;
+    }
+    final attributeName = 'xmlns:$prefix';
+    Node node = this;
+    for (; node != null; node = node.parent) {
+      if (node is Element) {
+        var attribute = node._firstAttribute;
+        while (attribute != null) {
+          if (attribute._qualifiedName == attributeName) {
+            return attribute.value;
+          }
+          attribute = attribute._next;
+        }
+      }
+    }
+    return null;
   }
 
   Element _newInstance(Document document);
@@ -2356,7 +2513,7 @@ abstract class Element extends Node
     _Attribute previous;
     var attribute = _firstAttribute;
     while (attribute != null) {
-      if (attribute.name == name && attribute.namespace == null) {
+      if (attribute._qualifiedName == name && attribute._namespaceUri == null) {
         if (attribute.value != value) {
           attribute.value = value;
           _markDirty();
@@ -2364,13 +2521,19 @@ abstract class Element extends Node
         return;
       }
       previous = attribute;
-      attribute = attribute.next;
+      attribute = attribute._next;
     }
-    final newAttribute = _Attribute(true, null, name, value);
+    final newAttribute = _Attribute(
+      false,
+      null,
+      name,
+      name,
+      value,
+    );
     if (previous == null) {
       _firstAttribute = newAttribute;
     } else {
-      previous.next = newAttribute;
+      previous._next = newAttribute;
     }
     _markDirty();
   }
@@ -2428,5 +2591,52 @@ abstract class Element extends Node
 
   static String _safeTagName(Element element) {
     return element.tagName;
+  }
+
+  static void _validateAttributeName(
+    String methodName,
+    String namespace,
+    String name,
+  ) {
+    //
+    // Validate name
+    //
+    if (!_normalizedAttributeNameRegExp.hasMatch(name)) {
+      throw DomException._failedToExecute(
+        'InvalidCharacterError',
+        methodName,
+        'Element',
+        '"$name" is not a valid attribute name.',
+      );
+    }
+    if (namespace != null) {
+      final i = name.indexOf(':');
+      if (i == 0) {
+        throw DomException._failedToExecute(
+          'InvalidCharacterError',
+          methodName,
+          'Element',
+          'The qualified name provided (\'$name\') has an empty namespace prefix.',
+        );
+      } else if (i > 0) {
+        final afterPrefix = name.substring(i + 1);
+        if (afterPrefix.contains(':')) {
+          throw DomException._failedToExecute(
+            'InvalidCharacterError',
+            methodName,
+            'Element',
+            'The qualified name provided (\'$name\') contains multiple colons.',
+          );
+        }
+        if (!_normalizedAttributeNameRegExp.hasMatch(afterPrefix)) {
+          throw DomException._failedToExecute(
+            'InvalidCharacterError',
+            methodName,
+            'Element',
+            'The qualified name provided (\'$name\') contains the invalid characters.',
+          );
+        }
+      }
+    }
   }
 }

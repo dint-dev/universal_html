@@ -57,6 +57,7 @@ class DocumentFragment extends Node
     NodeValidator validator,
     NodeTreeSanitizer treeSanitizer,
   }) {
+    input ??= 'null';
     return const DomParserDriver().parseDocumentFragmentFromHtml(
       document,
       input,

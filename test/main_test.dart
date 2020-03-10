@@ -22,7 +22,7 @@ import 'package:async/async.dart';
 import 'package:stream_channel/stream_channel.dart';
 import 'package:test/test.dart';
 import 'package:universal_html/driver.dart';
-import 'package:universal_html/html.dart';
+import 'package:universal_html/prefer_universal/html.dart';
 import 'package:universal_html/src/internal/event_stream_decoder.dart';
 
 import 'src/libraries.dart';
@@ -39,7 +39,8 @@ part 'src/html/dom/cloning.dart';
 part 'src/html/dom/css.dart';
 part 'src/html/dom/document.dart';
 part 'src/html/dom/element.dart';
-part 'src/html/dom/element_classes.dart';
+part 'src/html/dom/element_attributes.dart';
+part 'src/html/dom/element_subclasses.dart';
 part 'src/html/dom/helpers.dart';
 part 'src/html/dom/node.dart';
 part 'src/html/dom/parsing.dart';
@@ -68,7 +69,7 @@ void _sharedTests() {
   _testNode();
   _testDocument();
   _testElement();
-  _testElementClasses();
+  _testElementSubclasses();
   _testParsing();
   _testCss();
   _testEvents();

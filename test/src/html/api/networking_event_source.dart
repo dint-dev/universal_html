@@ -134,9 +134,9 @@ void _testEventSource() {
       });
 
       // Wait for 100 ms
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 100));
 
-      expect(messages.length, greaterThan(3));
+      expect(messages, hasLength(greaterThanOrEqualTo(5)));
       expect(messages[0].lastEventId, 'id_0');
       expect(messages[1].lastEventId, 'id_1');
       expect(messages[2].lastEventId, 'id_2');

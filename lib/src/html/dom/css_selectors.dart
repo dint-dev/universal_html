@@ -260,8 +260,14 @@ bool _matchesSimpleSelector(
     //
     // elementName
     //
-    if (element._isCaseSensitive) {
-      return selector.name == element._nodeName;
+    if (element._isXml) {
+      var selectorName = selector.name;
+      var elementName = element.localName;
+      if (!element._isXml) {
+        selectorName = selectorName.toLowerCase();
+        elementName = elementName.toLowerCase();
+      }
+      return selectorName == elementName;
     }
     return selector.name.toLowerCase() == element._lowerCaseTagName;
   } else if (selector is css.IdSelector) {

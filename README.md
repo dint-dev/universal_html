@@ -40,7 +40,7 @@ This library makes command-line or server-side HTML rendering easy.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^1.1.16
+  universal_html: ^1.1.18
 ```
 
 Now you can replace usage of "dart:html" with "package:universal_html/html.dart".
@@ -50,8 +50,9 @@ Now you can replace usage of "dart:html" with "package:universal_html/html.dart"
 ```dart
 import 'package:universal_html/html.dart';
 ```
+
 This library exports _dart:html_ by default.
-You get the same library by importing `import 'package:universal_html/prefer_sdk/html.dart';`.
+You can also use `import 'package:universal_html/prefer_sdk/html.dart';`.
 
 If you use this library, Dart tools may mistakenly think that your package is not compatible with
 VM/Flutter.

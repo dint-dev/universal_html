@@ -65,6 +65,53 @@ class BrowserImplementationUtils {
     );
   }
 
+  /// Used by HTML parser.
+  static void setAttributeNSFromParser(
+      Element element, String namespaceUri, String name, String value) {
+    if (namespaceUri == '') {
+      namespaceUri = null;
+    }
+    value ??= 'null';
+    if (!element._isXml) {
+      name = name.toLowerCase();
+
+      if (name == 'style' && namespaceUri == null) {
+        element._setAttribute('style', value);
+        return;
+      }
+    }
+
+    final qualifiedName = name;
+    var localName = qualifiedName;
+    final i = localName.indexOf(':');
+    if (i >= 0) {
+      localName = localName.substring(i + 1);
+    }
+
+    _Attribute previous;
+    var attribute = element._firstAttribute;
+    while (attribute != null) {
+      if (attribute._qualifiedName == qualifiedName) {
+        attribute.value = value;
+        return;
+      }
+      previous = attribute;
+      attribute = attribute._next;
+    }
+    final newAttribute = _Attribute(
+      namespaceUri != null,
+      namespaceUri,
+      qualifiedName,
+      localName,
+      value,
+    );
+    if (previous == null) {
+      element._firstAttribute = newAttribute;
+    } else {
+      previous._next = newAttribute;
+    }
+  }
+
   static void setInputElementValue(InputElement element, String value) {
     element._value = value;
   }

@@ -89,40 +89,8 @@ int _getPrintingFlags(Node node) {
   return flags;
 }
 
-String _namespaceUriToPrefix(Node node, String uri) {
-  if (uri == 'xmlns') {
-    return 'xmlns';
-  }
-  for (; node != null; node = node.parent) {
-    if (node is Element) {
-      var attribute = node._firstAttribute;
-      while (attribute != null) {
-        if (attribute.namespace == 'xmlns' && attribute.value == uri) {
-          return attribute.name;
-        }
-        attribute = attribute.next;
-      }
-    }
-  }
-  return null;
-}
-
-void _printAttribute(
-    StringBuffer sb, int flags, String prefix, String name, String value) {
+void _printAttribute(StringBuffer sb, int flags, String name, String value) {
   sb.write(' ');
-  if (prefix != null) {
-    // TODO: Validate mutations (like browsers do) so nothing needs to be done here.
-    if (!(Element._normalizedAttributeNameRegExp.hasMatch(name) &&
-        Element._normalizedAttributeNameRegExp.hasMatch(name))) {
-      throw StateError(
-        'Invalid namespaced attribute: "${prefix}:${name}"',
-      );
-    }
-    if (_printingAttributeNamespaces & flags != 0) {
-      sb.write(prefix);
-      sb.write(':');
-    }
-  }
   sb.write(name);
   sb.write('="');
 
@@ -158,63 +126,44 @@ void _printChildren(StringBuffer sb, int flags, Node node) {
 }
 
 void _printElement(StringBuffer sb, int flags, Element node) {
-  String prefix;
-  final namespaceUri = node.namespaceUri;
-  if (namespaceUri != null) {
-    prefix = _namespaceUriToPrefix(node, namespaceUri);
+  var name = node._lowerCaseTagName;
+  if (node._isXml) {
+    name = node._nodeName;
   }
   sb.write('<');
-  if (prefix != null) {
-    sb.write(prefix);
-    sb.write(':');
-  }
-  if (node._isCaseSensitive) {
-    sb.write(node._nodeName); // Already validated!
-  } else {
-    sb.write(node._lowerCaseTagName); // Already validated!
-  }
+  sb.write(name);
   final style = node._style;
   if (style != null) {
     _printAttribute(
       sb,
       flags,
-      null,
       'style',
       style.toString(),
     );
   }
   var attribute = node._firstAttribute;
   while (attribute != null) {
-    final prefix = _namespaceUriToPrefix(node, attribute.namespace);
     _printAttribute(
       sb,
       flags,
-      prefix,
-      attribute.name,
+      attribute._qualifiedName,
       attribute.value,
     );
-    attribute = attribute.next;
+    attribute = attribute._next;
   }
-  if (node.childNodes.isEmpty && node.ownerDocument is XmlDocument) {
+  if (node.firstChild == null && node.ownerDocument is XmlDocument) {
     sb.write('/>');
     return;
   }
   sb.write('>');
-  if (_singleTagNamesInLowerCase.contains(node._lowerCaseTagName) &&
+  if (node.firstChild == null &&
+      _singleTagNamesInLowerCase.contains(node._lowerCaseTagName) &&
       node.ownerDocument is HtmlDocument) {
     return;
   }
   _printChildren(sb, flags, node);
   sb.write('</');
-  if (prefix != null) {
-    sb.write(prefix);
-    sb.write(':');
-  }
-  if (node._isCaseSensitive) {
-    sb.write(node._nodeName); // Already validated!
-  } else {
-    sb.write(node._lowerCaseTagName); // Already validated!
-  }
+  sb.write(name);
   sb.write('>');
 }
 

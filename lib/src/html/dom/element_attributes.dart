@@ -47,16 +47,42 @@ part of universal_html.internal;
 
 /// Internally [Element] treats attributes as a linked list of these nodes.
 class _Attribute {
-  final bool isNamespaceless;
-  final String namespace;
-  final String name;
+  final bool _isNamespaced;
+  final String _namespaceUri;
+  final String _qualifiedName;
+  final String _localName;
   String value;
-  _Attribute next;
-  _Attribute(this.isNamespaceless, this.namespace, this.name, this.value);
+  _Attribute _next;
 
-  bool hasNamespace(String namespace) {
-    return (namespace == null && isNamespaceless) ||
-        namespace == this.namespace;
+  _Attribute(
+    this._isNamespaced,
+    this._namespaceUri,
+    this._qualifiedName,
+    this._localName,
+    this.value,
+  ) : assert(_namespaceUri != '');
+
+  _Attribute cloneChain() {
+    _Attribute firstClone;
+    _Attribute previousClone;
+    var attribute = this;
+    while (attribute != null) {
+      final clone = _Attribute(
+        attribute._isNamespaced,
+        attribute._namespaceUri,
+        attribute._qualifiedName,
+        attribute._localName,
+        attribute.value,
+      );
+      if (previousClone == null) {
+        firstClone = clone;
+      } else {
+        previousClone._next = clone;
+      }
+      previousClone = clone;
+      attribute = attribute._next;
+    }
+    return firstClone;
   }
 }
 
@@ -78,9 +104,9 @@ class _Attributes extends MapBase<String, String> {
     }
     var current = _element._firstAttribute;
     while (current != null) {
-      final next = current.next;
-      if (current.namespace == namespace) {
-        yield (current.name);
+      final next = current._next;
+      if (current._namespaceUri == namespace) {
+        yield (current._localName);
       }
       current = next;
     }
@@ -106,12 +132,12 @@ class _Attributes extends MapBase<String, String> {
     _Attribute previous;
     var current = _element._firstAttribute;
     while (current != null) {
-      final next = current.next;
-      if (current.namespace == namespace) {
+      final next = current._next;
+      if (current._namespaceUri == namespace) {
         if (previous == null) {
           _element._firstAttribute = next;
         } else {
-          previous.next = next;
+          previous._next = next;
         }
         current = next;
       } else {
@@ -123,7 +149,12 @@ class _Attributes extends MapBase<String, String> {
 
   @override
   String remove(Object key) {
-    return _element._removeAttributeNS(_namespace, key);
+    final oldValue = _element.getAttributeNS(_namespace, key);
+    if (oldValue == null) {
+      return null;
+    }
+    _element.removeAttributeNS(_namespace, key);
+    return oldValue;
   }
 }
 

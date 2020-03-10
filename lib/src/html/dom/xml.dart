@@ -60,7 +60,7 @@ class XmlDocument extends Document {
         );
 
   @override
-  bool get _isCaseSensitive => true;
+  bool get _isXml => true;
 
   @visibleForTesting
   @override

@@ -190,7 +190,7 @@ abstract class Node extends EventTarget {
 
   set text(String newValue) {
     _clearChildren();
-    append(Text(newValue));
+    append(Text(newValue.toString()));
   }
 
   Element get _firstElementChild {
@@ -703,7 +703,7 @@ mixin _ElementOrDocument implements Node, ParentNode {
     }
     final selectorGroup = css.parseSelectorGroup(input);
     final result = <Element>[];
-    _forEachTreeElement((element) {
+    _forEachElementInTree((element) {
       if (_matchesSelectorGroup(element, selectorGroup, null)) {
         result.add(element);
       }
@@ -711,7 +711,7 @@ mixin _ElementOrDocument implements Node, ParentNode {
     return _FrozenElementList<T>._wrap(result);
   }
 
-  void _forEachTreeElement(void Function(Element element) f) {
+  void _forEachElementInTree(void Function(Element element) f) {
     var node = firstChild;
     if (node == null) {
       return;

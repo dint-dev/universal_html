@@ -18,52 +18,72 @@ final throwsDomException = throwsA(isA<DomException>());
 
 void _testElement() {
   group('Element:', () {
-    test('"Element.tag" fails if the name is invalid', () {
-      const invalidChars = ['<', '>', '"', ' ', '&'];
-      for (var c in invalidChars) {
-        expect(() {
-          Element.tag('${c}');
-        }, throwsDomException);
+    group('Element.tag:', () {
+      test('simple', () {
+        expect(Element.tag('div'), isA<DivElement>());
+        expect(Element.tag('Tag'), isA<Element>());
+      });
+      test('fails if the name is invalid', () {
+        const invalidChars = ['<', '>', '"', ' ', '&'];
+        for (var c in invalidChars) {
+          expect(() {
+            Element.tag('${c}');
+          }, throwsDomException);
 
-        expect(() {
-          Element.tag('x${c}x');
-        }, throwsDomException);
-      }
+          expect(() {
+            Element.tag('x${c}x');
+          }, throwsDomException);
+        }
+      });
     });
 
     test('tagName', () {
       expect(DivElement().tagName, 'DIV');
       expect(ImageElement().tagName, 'IMG');
       expect(ParagraphElement().tagName, 'P');
+      expect(Element.tag('Tag').tagName, 'TAG');
     });
 
     test('nodeName', () {
       expect(DivElement().nodeName, 'DIV');
       expect(ImageElement().nodeName, 'IMG');
       expect(ParagraphElement().nodeName, 'P');
+      expect(Element.tag('Tag').nodeName, 'TAG');
+    });
+
+    test('localName', () {
+      expect(DivElement().localName, 'div');
+      expect(ImageElement().localName, 'img');
+      expect(ParagraphElement().localName, 'p');
+      expect(Element.tag('Tag').localName, 'tag');
     });
 
     group('innerHtml:', () {
-      test('works with attributes', () {
+      test('attributes', () {
         final input = Element.tag('a')
           ..setAttribute('someAttribute', 'someValue')
           ..appendText('a')
           ..appendText('b')
           ..appendText('c');
-        final expected = 'abc';
-        expect(input.innerHtml, equals(expected));
+        expect(input.innerHtml, 'abc');
       });
 
-      test('works with no attributes', () {
+      test('text, comments', () {
         final input = Element.tag('a')
           ..appendText('a')
           ..append(Comment('b'))
           ..appendText('c');
-        final expected = 'a<!--b-->c';
-        expect(input.innerHtml, equals(expected));
+        expect(input.innerHtml, 'a<!--b-->c');
       });
+    });
 
-      test('setting works', () {
+    group('innerHtml=:', () {
+      test('null', () {
+        final input = DivElement()..text = 'old text';
+        input.innerHtml = null;
+        expect(input.innerHtml, 'null');
+      });
+      test('elements, text', () {
         final input = DivElement();
         input.innerHtml = '<span>a</span><span>b</span>';
         expect(input.firstChild.text, 'a');
@@ -73,8 +93,8 @@ void _testElement() {
 
     group('outerHtml:', () {
       test('handles single tags like <br> and <img>', () {
-        /// Empty elements from:
-        /// https://developer.mozilla.org/en-US/docs/Glossary/empty_element
+        // Empty elements from:
+        // https://developer.mozilla.org/en-US/docs/Glossary/empty_element
         final tags = const [
           'area',
           'base',
@@ -91,6 +111,7 @@ void _testElement() {
           'track',
           'wbr',
         ];
+
         for (var tag in tags) {
           final element = Element.tag(tag);
           expect(element.outerHtml, '<$tag>');
@@ -212,287 +233,7 @@ void _testElement() {
     });
 
     group('Attributes:', () {
-      test('setAttribute(...): normal', () {
-        final e = Element.tag('e');
-        e.setAttribute('k0', 'v0');
-        expect(e.getAttribute('k0'), equals('v0'));
-        e.setAttribute('K1', 'v1');
-        e.setAttribute('k2', 'v2');
-        expect(e.getAttribute('k0'), equals('v0'));
-        expect(e.getAttribute('k1'), equals('v1'));
-        expect(e.getAttribute('k2'), equals('v2'));
-        expect(e.getAttribute('style'), isNull);
-        expect(e.attributes, hasLength(equals(3)));
-        expect(e.attributes['k0'], equals('v0'));
-        expect(e.attributes['k1'], equals('v1'));
-        expect(e.attributes['k2'], equals('v2'));
-        expect(e.attributes['style'], isNull);
-        expect(e.outerHtml, equals('<e k0="v0" k1="v1" k2="v2"></e>'));
-      });
-
-      test('setAttribute(...): replaces namespaced attribute', () {
-        // Set namespaced
-        final e = Element.tag('e');
-        e.setAttributeNS('https://ns/', 'k', 'v0');
-        expect(e.getAttributeNS('https://ns/', 'k'), 'v0');
-        expect(e.getAttribute('k'), 'v0');
-
-        // Set namespaceless
-        e.setAttribute('k', 'v1');
-        expect(e.getAttribute('k'), 'v1');
-        expect(e.getAttributeNS('https://ns/', 'k'), 'v1');
-        expect(e.hasAttribute('k'), isTrue);
-        expect(e.hasAttributeNS('https://ns/', 'k'), isTrue);
-      });
-
-      test('setAttribute(...): null name', () {
-        final e = Element.tag('e');
-        expect(
-          () => e.setAttribute(null, 'value'),
-          throwsA(anything),
-        );
-      });
-
-      test('setAttribute(...): null value', () {
-        final e = Element.tag('e');
-        e.setAttribute('k0', null);
-        expect(e.getAttribute('other'), isNull);
-        expect(e.getAttribute('k0'), 'null');
-        expect(e.attributes['k0'], 'null');
-      });
-
-      test('setAttribute(...): fails if the name is invalid', () {
-        const invalidChars = ['<', '>', '"', ' ', '&'];
-        for (var c in invalidChars) {
-          expect(() {
-            Element.tag('x').setAttribute(c, '');
-          }, throwsDomException);
-          expect(() {
-            Element.tag('x').setAttribute('x${c}x', '');
-          }, throwsDomException);
-        }
-      });
-
-      test('setAttributeNS(...): normal', () {
-        final e = Element.tag('e');
-        e.setAttributeNS('https://ns/', 'k0', 'v0');
-        expect(e.getAttributeNS('https://ns/', 'k0'), 'v0');
-        expect(
-          e.getNamespacedAttributes('https://ns/'),
-          {'k0': 'v0'},
-        );
-      });
-
-      test('setAttributeNS(...): null namespace', () {
-        final e = Element.tag('e');
-        e.setAttributeNS(null, 'k0', 'v0');
-        expect(e.getAttributeNS(null, 'other'), isNull);
-        expect(e.getAttributeNS(null, 'k0'), 'v0');
-        expect(
-          e.getNamespacedAttributes(null),
-          {'k0': 'v0'},
-        );
-        expect(e.getAttribute('other'), isNull);
-        expect(e.getAttribute('k0'), 'v0');
-      });
-
-      test('setAttributeNS(...): null name', () {
-        final e = Element.tag('e');
-        expect(
-          () => e.setAttributeNS('https://ns/', null, 'value'),
-          throwsA(anything),
-        );
-      });
-
-      test('setAttributeNS(...): null value', () {
-        final e = Element.tag('e');
-        e.setAttributeNS('https://ns/', 'k0', null);
-        expect(e.getAttributeNS('https://ns/', 'other'), isNull);
-        expect(e.getAttributeNS('https://ns/', 'k0'), 'null');
-        expect(
-          e.getNamespacedAttributes('https://ns/'),
-          {'k0': 'null'},
-        );
-      });
-
-      test('setAttributeNS(...): fails if the name is invalid', () {
-        const invalidChars = ['<', '>', '"', ' ', '&'];
-        for (var c in invalidChars) {
-          expect(() {
-            Element.tag('x').setAttributeNS('namespace', c, '');
-          }, throwsDomException);
-          expect(() {
-            Element.tag('x').setAttributeNS('namespace', 'x${c}x', '');
-          }, throwsDomException);
-        }
-      });
-
-      test('removeAttribute(...)', () {
-        final e = Element.tag('e');
-        e.setAttribute('k0', 'v0');
-        e.setAttribute('removed', 'removed_value');
-        expect(e.attributes.containsKey('removed'), isTrue);
-
-        // Remove
-        e.removeAttribute('removed');
-        expect(e.getAttribute('removed'), null);
-        expect(e.attributes, {'k0': 'v0'});
-      });
-
-      test('removeAttributeNS(...): normal', () {
-        // Set three attributes
-        final e = Element.tag('e');
-        e.setAttribute('k', 'v0');
-        e.setAttributeNS('https://ns0/', 'k', 'v1');
-        e.setAttributeNS('https://ns1/', 'k', 'v2');
-        expect(e.getAttribute('k'), 'v0');
-        expect(e.getAttributeNS('https://ns0/', 'k'), 'v1');
-        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
-
-        // Remove one
-        e.removeAttributeNS('https://ns0/', 'k');
-        expect(e.getAttribute('k'), 'v0');
-        expect(e.getAttributeNS('https://ns0/', 'k'), isNull);
-        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
-
-        // Removing again shouldn't throw
-        e.removeAttributeNS('https://ns0/', 'k');
-        expect(e.getAttribute('k'), 'v0');
-        expect(e.getAttributeNS('https://ns0/', 'k'), isNull);
-        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
-      });
-
-      test('removeAttributeNS(...): null namespace', () {
-        // Set three attributes
-        final e = Element.tag('e');
-        e.setAttribute('k', 'v0');
-        e.setAttributeNS('https://ns0/', 'k', 'v1');
-        e.setAttributeNS('https://ns1/', 'k', 'v2');
-        expect(e.getAttribute('k'), 'v0');
-        expect(e.getAttributeNS('https://ns0/', 'k'), 'v1');
-        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
-
-        // Remove
-        e.removeAttributeNS(null, 'k');
-        expect(e.getAttribute('k'), 'v1');
-        expect(e.getAttributeNS('https://ns0/', 'k'), 'v1');
-        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
-
-        // Remove again
-        e.removeAttributeNS(null, 'k');
-        expect(e.getAttribute('k'), 'v1');
-        expect(e.getAttributeNS('https://ns0/', 'k'), 'v1');
-        expect(e.getAttributeNS('https://ns1/', 'k'), 'v2');
-      });
-    });
-
-    group('style:', () {
-      test('style.setProperty(..), null value', () {
-        final e = Element.tag('a');
-        final k = 'color';
-        final v = 'blue';
-        expect(e.style.getPropertyValue(k), equals(''));
-        e.style.setProperty(k, v);
-        expect(e.style.getPropertyValue(k), equals(v));
-        expect(e.outerHtml, contains(v));
-        e.style.setProperty(k, null);
-        expect(e.style.getPropertyValue(k), equals(''));
-        expect(e.outerHtml, isNot(contains(v)));
-      });
-
-      test('style.removeProperty(...)', () {
-        final e = Element.tag('a');
-        final k = 'color';
-        final v = 'blue';
-        expect(e.style.getPropertyValue(k), equals(''));
-        e.style.setProperty(k, v);
-        expect(e.style.getPropertyValue(k), equals(v));
-        expect(e.outerHtml, contains(v));
-        e.style.removeProperty(k);
-        expect(e.style.getPropertyValue(k), equals(''));
-        expect(e.outerHtml, isNot(contains(v)));
-      });
-
-      test('style.setProperty(...), changes result of element.getAttribute',
-          () {
-        final e = Element.tag('a');
-        e.style.setProperty('color', 'blue');
-        expect(e.getAttribute('style'), contains('blue'));
-      });
-
-      test('style.setProperty(...), changes result of element.attributes', () {
-        final e = Element.tag('a');
-        e.style.setProperty('color', 'blue');
-        expect(e.attributes['style'], contains('blue'));
-      });
-
-      test(
-          'style.setProperty(...), changes result of element.attributes, obtained before setting style',
-          () {
-        final e = Element.tag('a');
-        final attributes = e.attributes;
-        e.style.setProperty('color', 'blue');
-        expect(attributes['style'], contains('blue'));
-      });
-
-      test('style.setProperty(...), changes result of element.outerHtml', () {
-        final e = Element.tag('a');
-        e.style.setProperty('color', 'blue');
-        expect(e.outerHtml, contains('blue'));
-      });
-
-      test(
-          'style.getProperty("font-size") returns non-quoted value when value is "90px"',
-          () {
-        final e = Element.tag('a');
-        e.style.setProperty('font-size', '90px');
-        expect(e.style.getPropertyValue('font-size'), '90px');
-      });
-
-      test('element.setAttribute("style", value), changes element.style', () {
-        final variations = const [
-          'color: blue',
-          'color:blue;',
-        ];
-        for (var variation in variations) {
-          final e = Element.tag('a');
-          e.setAttribute('style', variation);
-          expect(e.getAttribute('style'), equals(variation));
-          expect(e.attributes['style'], equals(variation));
-          expect(e.style.color, equals('blue'));
-        }
-      });
-
-      test('element.attributes["style"]="color: blue", changes element.style',
-          () {
-        final e = Element.tag('a');
-        final value = 'color: blue';
-        e.attributes['style'] = value;
-        expect(e.getAttribute('style'), value);
-        expect(e.attributes['style'], value);
-        expect(e.style.color, 'blue');
-      });
-
-      test(
-          'element.attributes["style"]="color: blue; font-size: 2em", changes element.style',
-          () {
-        final e = Element.tag('a');
-        final value = 'color: blue; font-size: 2em';
-        e.attributes['style'] = value;
-        expect(e.getAttribute('style'), value);
-        expect(e.attributes['style'], value);
-        expect(e.style.color, 'blue');
-        expect(e.style.fontSize, '2em');
-      });
-
-      test('element.removeAttribute("style") removes style', () {
-        final e = Element.tag('e');
-        expect(e.style.getPropertyValue('font-family'), '');
-        e.style.setProperty('font-family', 'Verdana');
-        expect(e.style.getPropertyValue('font-family'), 'Verdana');
-        e.removeAttribute('style');
-        expect(e.style.getPropertyValue('font-family'), '');
-      });
+      _testElementAttributes();
     });
 
     // toString()

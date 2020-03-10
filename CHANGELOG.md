@@ -1,6 +1,9 @@
+## 1.1.18
+* Fixes parsing of non-standard HTML attribute names ([#15](https://github.com/dint-dev/universal_html/issues/15))
+  and various other issues.
+
 ## 1.1.17
-* Restored old conditional imports because of a bug in dartdevc. See bug tracker
-  [issue #16](https://github.com/dint-dev/universal_html/issues/16).
+* Restores old conditional exports because of a bug in dartdevc ([#16](https://github.com/dint-dev/universal_html/issues/16)).
 
 ## 1.1.16
 * Fixes conditional imports in Node.JS when developer imports 'package:universal_io/X.dart' or

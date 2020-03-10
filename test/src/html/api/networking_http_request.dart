@@ -41,7 +41,7 @@ void _testHttpRequest() {
 
       // Wait
       final event = await onLoadEnd.next.timeout(
-        const Duration(milliseconds: 200),
+        const Duration(seconds: 5),
       );
       expect(event, TypeMatcher<ProgressEvent>());
       expect(request.status, 200);
@@ -55,7 +55,7 @@ void _testHttpRequest() {
       // No error
       expect(onError.eventsDispatched, 0);
       expect(onTimeout.eventsDispatched, 0);
-    });
+    }, timeout: Timeout(Duration(seconds: 5)));
 
     test('GET, type "arraybuffer"', () async {
       request.open('GET', 'http://localhost:$httpServerPort/http_request/ok');
@@ -73,12 +73,14 @@ void _testHttpRequest() {
       );
       expect(request.response, TypeMatcher<ByteBuffer>());
       expect(
-          utf8.decode(Uint8List.view(request.response as ByteBuffer)), 'hello');
+        utf8.decode(Uint8List.view(request.response as ByteBuffer)),
+        'hello',
+      );
 
       // No error
       expect(onError.eventsDispatched, 0);
       expect(onTimeout.eventsDispatched, 0);
-    });
+    }, timeout: Timeout(Duration(seconds: 5)));
 
     test('GET, type "json"', () async {
       request.open('GET', 'http://localhost:$httpServerPort/http_request/json');
@@ -99,7 +101,7 @@ void _testHttpRequest() {
       // No error
       expect(onError.eventsDispatched, 0);
       expect(onTimeout.eventsDispatched, 0);
-    });
+    }, timeout: Timeout(Duration(seconds: 5)));
 
     test('Failing request', () async {
       //
@@ -133,6 +135,6 @@ void _testHttpRequest() {
       expect(request.status, 0);
       expect(request.statusText, '');
       expect(request.responseText, '');
-    });
+    }, timeout: Timeout(Duration(seconds: 5)));
   });
 }

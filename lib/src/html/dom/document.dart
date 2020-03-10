@@ -377,7 +377,7 @@ abstract class Document extends Node
 
   Window get window => _htmlDriver.window;
 
-  bool get _isCaseSensitive => false;
+  bool get _isXml => false;
 
   Node adoptNode(Node node) {
     final clone = node.internalCloneWithOwnerDocument(this, true);
@@ -410,7 +410,7 @@ abstract class Document extends Node
   List<Node> getElementsByClassName(String classNames) {
     final result = <Node>[];
     final classNameList = classNames.split(' ');
-    _forEachTreeElement((element) {
+    _forEachElementInTree((element) {
       for (var className in classNameList) {
         if (!element.classes.contains(className)) {
           return;
@@ -423,7 +423,7 @@ abstract class Document extends Node
 
   List<Node> getElementsByName(String name) {
     final result = <Node>[];
-    _forEachTreeElement((element) {
+    _forEachElementInTree((element) {
       if (element.getAttribute('name') == name) {
         result.add(element);
       }
@@ -433,17 +433,16 @@ abstract class Document extends Node
 
   List<Node> getElementsByTagName(String tagName) {
     final result = <Node>[];
-    if (_isCaseSensitive) {
-      _forEachTreeElement((element) {
-        if (element.namespaceUri == null && element._nodeName == tagName) {
+    if (_isXml) {
+      _forEachElementInTree((element) {
+        if (element._nodeName == tagName) {
           result.add(element);
         }
       });
     } else {
-      tagName = tagName.toLowerCase();
-      _forEachTreeElement((element) {
-        if (element.namespaceUri == null &&
-            element._lowerCaseTagName == tagName) {
+      final lowerCaseTagName = tagName.toLowerCase();
+      _forEachElementInTree((element) {
+        if (element._lowerCaseTagName == lowerCaseTagName) {
           result.add(element);
         }
       });
@@ -687,7 +686,7 @@ class HtmlDocument extends Document
   @override
   List<StyleSheet> get styleSheets {
     final list = <StyleSheet>[];
-    _forEachTreeElement((element) {
+    _forEachElementInTree((element) {
       if (element is StyleElement) {
         list.add(element.sheet);
       }
@@ -728,7 +727,7 @@ class HtmlDocument extends Document
 mixin _DocumentOrFragment implements Node, _ElementOrDocument {
   Element getElementById(String id) {
     Element result;
-    _forEachTreeElement((element) {
+    _forEachElementInTree((element) {
       if (element.id == id) {
         result = element;
       }

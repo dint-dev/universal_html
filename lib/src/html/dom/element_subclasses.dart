@@ -302,6 +302,20 @@ class BRElement extends HtmlElement {
 
 class ButtonElement extends HtmlElement
     with _DisabledElement, _FormFieldElement {
+  bool formNoValidate;
+
+  String formTarget;
+
+  factory ButtonElement() => ButtonElement._(null);
+
+  ButtonElement._(Document ownerDocument) : super._(ownerDocument, 'BUTTON');
+
+  bool get autofocus => _getAttributeBool('autofocus');
+
+  set autofocus(bool value) {
+    _setAttributeBool(name, value);
+  }
+
   String get formAction => _getAttributeResolvedUri('formaction') ?? '';
 
   set formAction(String value) {
@@ -318,20 +332,6 @@ class ButtonElement extends HtmlElement
 
   set formMethod(String value) {
     _setAttribute('formmethod', value);
-  }
-
-  bool formNoValidate;
-
-  String formTarget;
-
-  factory ButtonElement() => ButtonElement._(null);
-
-  ButtonElement._(Document ownerDocument) : super._(ownerDocument, 'BUTTON');
-
-  bool get autofocus => _getAttributeBool('autofocus');
-
-  set autofocus(bool value) {
-    _setAttributeBool(name, value);
   }
 
   String get name => _getAttribute('name');
@@ -815,7 +815,7 @@ class FormElement extends HtmlElement {
 
         case 'file':
           for (var file in element.files ?? []) {
-            writer.writeFile(name, file, fileName: file.name);
+            writer.writeFile(name, file, fileName: file._qualifiedName);
           }
           break;
 
@@ -3010,11 +3010,18 @@ class UListElement extends HtmlElement {
 }
 
 class UnknownElement extends HtmlElement {
-  @override
-  final String namespaceUri;
+  final String _namespaceUri;
 
-  UnknownElement._(Document ownerDocument, this.namespaceUri, String tag)
+  UnknownElement._(Document ownerDocument, this._namespaceUri, String tag)
       : super._(ownerDocument, tag);
+
+  @override
+  String get namespaceUri {
+    if (_namespaceUri != null) {
+      return _namespaceUri;
+    }
+    return super.namespaceUri;
+  }
 
   @override
   Element _newInstance(Document ownerDocument) =>

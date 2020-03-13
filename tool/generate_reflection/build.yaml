@@ -8,4 +8,4 @@ builders:
     defaults:
       generate_for:
         include:
-          - web/main_test.dart
+          - web/main.dart

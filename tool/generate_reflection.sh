@@ -10,7 +10,7 @@ echo "--------------------------------------------------------------------------
 HELPER_DIR=`dirname $0`/generate_reflection
 cd $HELPER_DIR
 
-pub get --offline
+pub get
 
 pub run build_runner build
 

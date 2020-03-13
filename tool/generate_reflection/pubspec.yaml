@@ -6,7 +6,7 @@ environment:
   sdk: '>=2.5.0-dev.1.0 <3.0.0'
 
 dependencies:
-  analyzer: any
+  analyzer: '>=0.38.5'
   build: ^1.0.0
   universal_html:
     path: "../.."

@@ -94,7 +94,7 @@ class Geoposition {
         timestamp = timestamp ?? DateTime.now().millisecondsSinceEpoch;
 }
 
-class PositionError extends Error {
+class PositionError {
   final int code;
   final String message;
   PositionError._(this.code, this.message);

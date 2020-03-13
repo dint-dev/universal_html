@@ -68,6 +68,9 @@ class InfoBuilder implements Builder {
 
   static void _addClassMembers(Map<String, Object> result, String className,
       ClassElement classElement, bool isInherited) {
+    if (classElement == null) {
+      return;
+    }
     if (classElement.name == "Object") {
       return;
     }
@@ -141,12 +144,12 @@ class InfoBuilder implements Builder {
     // -----------------
     // Inherited members
     // -----------------
-    _addClassMembers(result, className, classElement.supertype.element, true);
+    _addClassMembers(result, className, classElement.supertype?.element, true);
     for (var type in classElement.mixins) {
-      _addClassMembers(result, className, type.element, true);
+      _addClassMembers(result, className, type?.element, true);
     }
     for (var type in classElement.interfaces) {
-      _addClassMembers(result, className, type.element, true);
+      _addClassMembers(result, className, type?.element, true);
     }
   }
 

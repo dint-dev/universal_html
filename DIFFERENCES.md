@@ -433,49 +433,6 @@
   * HttpRequestUpload.onProgress
   * HttpRequestUpload.onTimeout
   * HttpRequestUpload.removeEventListener(...)
-  * HttpStatus.ACCEPTED
-  * HttpStatus.BAD_GATEWAY
-  * HttpStatus.BAD_REQUEST
-  * HttpStatus.CONFLICT
-  * HttpStatus.CONTINUE
-  * HttpStatus.CREATED
-  * HttpStatus.EXPECTATION_FAILED
-  * HttpStatus.FORBIDDEN
-  * HttpStatus.FOUND
-  * HttpStatus.GATEWAY_TIMEOUT
-  * HttpStatus.GONE
-  * HttpStatus.HTTP_VERSION_NOT_SUPPORTED
-  * HttpStatus.INTERNAL_SERVER_ERROR
-  * HttpStatus.LENGTH_REQUIRED
-  * HttpStatus.METHOD_NOT_ALLOWED
-  * HttpStatus.MOVED_PERMANENTLY
-  * HttpStatus.MOVED_TEMPORARILY
-  * HttpStatus.MULTIPLE_CHOICES
-  * HttpStatus.NETWORK_CONNECT_TIMEOUT_ERROR
-  * HttpStatus.NON_AUTHORITATIVE_INFORMATION
-  * HttpStatus.NOT_ACCEPTABLE
-  * HttpStatus.NOT_FOUND
-  * HttpStatus.NOT_IMPLEMENTED
-  * HttpStatus.NOT_MODIFIED
-  * HttpStatus.NO_CONTENT
-  * HttpStatus.OK
-  * HttpStatus.PARTIAL_CONTENT
-  * HttpStatus.PAYMENT_REQUIRED
-  * HttpStatus.PRECONDITION_FAILED
-  * HttpStatus.PROXY_AUTHENTICATION_REQUIRED
-  * HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE
-  * HttpStatus.REQUEST_ENTITY_TOO_LARGE
-  * HttpStatus.REQUEST_TIMEOUT
-  * HttpStatus.REQUEST_URI_TOO_LONG
-  * HttpStatus.RESET_CONTENT
-  * HttpStatus.SEE_OTHER
-  * HttpStatus.SERVICE_UNAVAILABLE
-  * HttpStatus.SWITCHING_PROTOCOLS
-  * HttpStatus.TEMPORARY_REDIRECT
-  * HttpStatus.UNAUTHORIZED
-  * HttpStatus.UNSUPPORTED_MEDIA_TYPE
-  * HttpStatus.UPGRADE_REQUIRED
-  * HttpStatus.USE_PROXY
   * IFrameElement.created
   * ImageBitmap.close(...)
   * ImageBitmap.height
@@ -793,7 +750,9 @@
   * PointerEvent.isTrusted
   * PointerEvent.supported
   * PopStateEvent.isTrusted
-  * PositionError (class)
+  * PositionError.PERMISSION_DENIED
+  * PositionError.POSITION_UNAVAILABLE
+  * PositionError.TIMEOUT
   * PreElement.created
   * PresentationConnectionAvailableEvent.isTrusted
   * PresentationConnectionCloseEvent.isTrusted

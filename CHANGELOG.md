@@ -1,3 +1,6 @@
+## 1.1.19
+* Fixes bug in FileReader that caused compile-time errors.
+
 ## 1.1.18
 * Fixes parsing of non-standard HTML attribute names ([#15](https://github.com/dint-dev/universal_html/issues/15))
   and various other issues.

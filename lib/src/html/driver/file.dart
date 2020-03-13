@@ -48,10 +48,10 @@ abstract class BlobBase implements Blob {
 //  * Exported by library '/driver.dart'
 // -----------------------------------------------------------------------------
 abstract class FileBase extends BlobBase implements File {
+  FileBase();
+
   @override
   String toString() => 'File(...)';
-
-  FileBase();
 }
 
 // -----------------------------------------------------------------------------

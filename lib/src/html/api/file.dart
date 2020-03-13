@@ -46,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
-abstract class DirectoryEntry extends Entry {
+class DirectoryEntry extends Entry {
   factory DirectoryEntry._() {
     throw UnimplementedError();
   }
@@ -104,15 +104,15 @@ class DirectoryReader {
 abstract class Entry {
   Entry._();
 
-  FileSystem get filesystem;
+  FileSystem get filesystem => null;
 
-  String get fullPath;
+  String get fullPath => null;
 
   bool get isDirectory => false;
 
   bool get isFile => false;
 
-  String get name;
+  String get name => null;
 
   Future<Entry> copyTo(DirectoryEntry parent, {String name}) {
     throw UnimplementedError();
@@ -163,21 +163,27 @@ class File implements Blob {
       throw UnimplementedError();
 }
 
-abstract class FileEntry extends Entry {
-  FileEntry._() : super._();
+class FileEntry extends Entry {
+  factory FileEntry._() {
+    throw UnimplementedError();
+  }
 
   @override
   bool get isFile => true;
 
-  Future<FileWriter> createWriter();
+  Future<FileWriter> createWriter() {
+    throw UnimplementedError();
+  }
 
-  Future<File> file();
+  Future<File> file() {
+    throw UnimplementedError();
+  }
 
   @override
   Future remove();
 }
 
-abstract class FileReader extends EventTarget {
+class FileReader extends EventTarget {
   static const int DONE = 2;
   static const int EMPTY = 0;
   static const int LOADING = 1;
@@ -305,14 +311,16 @@ abstract class FileReader extends EventTarget {
   }
 }
 
-abstract class FileSystem {
+class FileSystem {
   static bool get supported => false;
 
-  FileSystem._();
+  factory FileSystem._() {
+    throw UnimplementedError();
+  }
 
-  String get name;
+  String get name => null;
 
-  DirectoryEntry get root;
+  DirectoryEntry get root => null;
 }
 
 abstract class FileWriter extends EventTarget {
@@ -401,10 +409,12 @@ abstract class FileWriter extends EventTarget {
   void write(Blob data);
 }
 
-abstract class Metadata {
-  Metadata._();
+class Metadata {
+  factory Metadata._() {
+    throw UnimplementedError();
+  }
 
-  DateTime get modificationTime;
+  DateTime get modificationTime => null;
 
-  int get size;
+  int get size => null;
 }

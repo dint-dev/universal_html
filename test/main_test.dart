@@ -29,6 +29,7 @@ import 'src/libraries.dart';
 
 part 'src/html/api/blob.dart';
 part 'src/html/api/event_target.dart';
+part 'src/html/api/file.dart';
 part 'src/html/api/history.dart';
 part 'src/html/api/navigator.dart';
 part 'src/html/api/networking.dart';
@@ -44,8 +45,6 @@ part 'src/html/dom/element_subclasses.dart';
 part 'src/html/dom/helpers.dart';
 part 'src/html/dom/node.dart';
 part 'src/html/dom/parsing.dart';
-
-var _isFlutter = false;
 
 void main({bool isFlutter = false}) {
   _isFlutter = isFlutter;
@@ -63,6 +62,8 @@ void main({bool isFlutter = false}) {
 //  }, testOn: 'node');
 }
 
+var _isFlutter = false;
+
 void _sharedTests() {
   // DOM
   _testCloning();
@@ -77,11 +78,12 @@ void _sharedTests() {
   //
   // APIs
   //
-  _testWindow();
-  _testNavigator();
-  _testHistory();
-  _testNetworking();
   _testBlob();
+  _testFile();
+  _testHistory();
+  _testNavigator();
+  _testNetworking();
+  _testWindow();
 
   //
   // Mocked libraries

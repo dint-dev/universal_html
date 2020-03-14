@@ -46,12 +46,26 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
+abstract class MemoryInfo {
+  factory MemoryInfo._() {
+    throw UnimplementedError();
+  }
+
+  int get jsHeapSizeLimit;
+
+  int get totalJSHeapSize;
+
+  int get usedJSHeapSize;
+}
+
 class Performance extends EventTarget {
   static bool get supported => false;
 
   final num timeOrigin = DateTime.now().microsecondsSinceEpoch / 10e6;
 
   Performance._() : super._created();
+
+  MemoryInfo get memory => null;
 
   void clearMarks(String markName) {
     throw UnimplementedError();

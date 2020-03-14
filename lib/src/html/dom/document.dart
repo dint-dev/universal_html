@@ -122,6 +122,10 @@ abstract class Document extends Node
 
   final String origin;
 
+  String cookie;
+
+  Element rootScroller;
+
   factory Document() {
     return XmlDocument._(
         htmlDriver: HtmlDriver.current, contentType: 'text/html');
@@ -137,10 +141,14 @@ abstract class Document extends Node
   /// Outside the browser, returns null.
   Element get activeElement => null;
 
+  String get addressSpace => null;
+
   @override
   String get baseUri {
     return window.location.href;
   }
+
+  ScriptElement get currentScript => null;
 
   Element get documentElement {
     var node = firstChild;
@@ -152,6 +160,14 @@ abstract class Document extends Node
     }
     return null;
   }
+
+  String get domain => null;
+
+  Element get fullscreenElement => null;
+
+  bool get fullscreenEnabled => false;
+
+  bool get hidden => false;
 
   DomImplementation get implementation => DomImplementation._(_htmlDriver);
 
@@ -364,7 +380,15 @@ abstract class Document extends Node
 
   Stream<Event> get onWaiting => Element.waitingEvent.forTarget(this);
 
+  Element get pointerLockElement => null;
+
   String get readyState => _readyState;
+
+  Element get rootElement => documentElement;
+
+  Element get scrollingElement => null;
+
+  String get suborigin => null;
 
   bool get supportsRegister => false;
 
@@ -374,6 +398,8 @@ abstract class Document extends Node
   String get text => null;
 
   DocumentTimeline get timeline => throw UnimplementedError();
+
+  String get visibilityState => null;
 
   Window get window => _htmlDriver.window;
 
@@ -604,123 +630,6 @@ class DomImplementation {
       contentType: 'text/html',
       filled: false,
     );
-  }
-}
-
-class HtmlDocument extends Document
-    with _DocumentOrShadowRoot
-    implements DocumentOrShadowRoot {
-  /// If [filled] is true, returns document:
-  ///
-  ///     <doctype html>
-  ///     <html>
-  ///     <head></head>
-  ///     <body></body>
-  ///     </html>
-  HtmlDocument._(
-      {@required HtmlDriver htmlDriver,
-      @required String contentType,
-      @required bool filled,
-      String origin})
-      : super._(
-          htmlDriver: htmlDriver,
-          contentType: contentType,
-          origin: origin,
-        ) {
-    if (filled) {
-      final docType = _DocumentType._(this, 'html');
-      append(docType);
-      final htmlElement = HtmlHtmlElement._(this);
-      append(htmlElement);
-      htmlElement.append(HeadElement._(this));
-      htmlElement.append(BodyElement._(this));
-    }
-  }
-
-  @override
-  String get baseUri {
-    if (head != null) {
-      for (var child in head.children) {
-        if (child is BaseElement) {
-          return child.href;
-        }
-      }
-    }
-    return super.baseUri;
-  }
-
-  BodyElement get body {
-    var element = _html?._firstElementChild;
-    while (element != null) {
-      if (element is BodyElement) {
-        return element;
-      }
-      element = element.nextElementSibling;
-    }
-    return null;
-  }
-
-  set body(BodyElement newValue) {
-    final existing = head;
-    if (existing == null) {
-      _html?.append(newValue);
-    } else {
-      existing.replaceWith(newValue);
-    }
-    assert(identical(body, newValue));
-  }
-
-  HeadElement get head {
-    var element = _html?._firstElementChild;
-    while (element != null) {
-      if (element is HeadElement) {
-        return element;
-      }
-      element = element.nextElementSibling;
-    }
-    return null;
-  }
-
-  String get referrer => null;
-
-  @override
-  List<StyleSheet> get styleSheets {
-    final list = <StyleSheet>[];
-    _forEachElementInTree((element) {
-      if (element is StyleElement) {
-        list.add(element.sheet);
-      }
-    });
-    return list;
-  }
-
-  HtmlHtmlElement get _html {
-    var element = _firstElementChild;
-    while (element != null) {
-      if (element is HtmlHtmlElement) {
-        return element;
-      }
-      element = element.nextElementSibling;
-    }
-    return null;
-  }
-
-  @visibleForTesting
-  @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
-    final clone = HtmlDocument._(
-      htmlDriver: _htmlDriver,
-      contentType: contentType,
-      filled: false,
-    );
-    if (deep != false) {
-      Node._cloneChildrenFrom(
-        clone,
-        newParent: clone,
-        oldParent: this,
-      );
-    }
-    return clone;
   }
 }
 

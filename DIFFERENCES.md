@@ -1,33 +1,16 @@
 # Missing APIs
-  * AbortPaymentEvent.isTrusted
   * AbsoluteOrientationSensor (class)
   * Accelerometer (class)
   * AmbientLightSensor (class)
   * AnchorElement.created
-  * AnchorElement.host=
-  * AnchorElement.hostname=
-  * AnchorElement.password=
-  * AnchorElement.protocol=
-  * AnchorElement.username=
-  * Animation.addEventListener(...)
-  * Animation.cancelEvent
   * Animation.currentTime
   * Animation.currentTime=
-  * Animation.dispatchEvent(...)
   * Animation.effect
   * Animation.effect=
-  * Animation.finishEvent
-  * Animation.finished
-  * Animation.id
   * Animation.id=
-  * Animation.on
-  * Animation.onCancel
-  * Animation.onFinish
   * Animation.playState
   * Animation.playbackRate
   * Animation.playbackRate=
-  * Animation.ready
-  * Animation.removeEventListener(...)
   * Animation.startTime
   * Animation.startTime=
   * Animation.timeline
@@ -40,9 +23,7 @@
   * AnimationEffectTimingReadOnly.fill
   * AnimationEffectTimingReadOnly.iterationStart
   * AnimationEffectTimingReadOnly.iterations
-  * AnimationEvent.isTrusted
   * AnimationPlaybackEvent.currentTime
-  * AnimationPlaybackEvent.isTrusted
   * AnimationPlaybackEvent.timelineTime
   * AnimationWorkletGlobalScope (class)
   * ApplicationCacheErrorEvent (class)
@@ -51,41 +32,24 @@
   * AreaElement.coords
   * AreaElement.coords=
   * AreaElement.created
-  * AreaElement.host=
-  * AreaElement.hostname=
-  * AreaElement.password=
-  * AreaElement.protocol=
   * AreaElement.shape
   * AreaElement.shape=
   * AreaElement.target
   * AreaElement.target=
-  * AreaElement.username=
   * AudioElement.audioDecodedByteCount
   * AudioElement.audioTracks
   * AudioElement.buffered
-  * AudioElement.controls
-  * AudioElement.controls=
   * AudioElement.controlsList
   * AudioElement.created
   * AudioElement.currentSrc
   * AudioElement.currentTime
   * AudioElement.currentTime=
-  * AudioElement.defaultPlaybackRate
-  * AudioElement.defaultPlaybackRate=
-  * AudioElement.disableRemotePlayback
-  * AudioElement.disableRemotePlayback=
   * AudioElement.duration
   * AudioElement.ended
-  * AudioElement.error
-  * AudioElement.mediaKeys
-  * AudioElement.networkState
   * AudioElement.paused
   * AudioElement.playbackRate
   * AudioElement.playbackRate=
   * AudioElement.played
-  * AudioElement.readyState
-  * AudioElement.remote
-  * AudioElement.seekable
   * AudioElement.seeking
   * AudioElement.sinkId
   * AudioElement.textTracks
@@ -97,28 +61,19 @@
   * BRElement.created
   * BackgroundFetchClickEvent (class)
   * BackgroundFetchEvent.id
-  * BackgroundFetchEvent.isTrusted
   * BackgroundFetchEvent.waitUntil(...)
   * BackgroundFetchFailEvent.fetches
   * BackgroundFetchFailEvent.id
-  * BackgroundFetchFailEvent.isTrusted
   * BackgroundFetchFailEvent.waitUntil(...)
   * BackgroundFetchFetch (class)
   * BackgroundFetchSettledFetch (class)
   * BackgroundFetchedEvent.fetches
   * BackgroundFetchedEvent.id
-  * BackgroundFetchedEvent.isTrusted
   * BackgroundFetchedEvent.updateUI(...)
   * BackgroundFetchedEvent.waitUntil(...)
   * BarcodeDetector (class)
   * BaseElement.created
   * BatteryManager (class)
-  * BeforeInstallPromptEvent.isTrusted
-  * BeforeInstallPromptEvent.platforms
-  * BeforeInstallPromptEvent.prompt(...)
-  * BeforeInstallPromptEvent.userChoice
-  * BeforeUnloadEvent.isTrusted
-  * BlobEvent.isTrusted
   * BluetoothRemoteGattDescriptor (class)
   * BroadcastChannel (class)
   * BudgetState (class)
@@ -127,14 +82,11 @@
   * ButtonElement.labels
   * ButtonElement.reportValidity(...)
   * ButtonElement.setCustomValidity(...)
-  * ButtonElement.type
-  * ButtonElement.type=
   * ButtonElement.validationMessage
   * ButtonElement.validity
   * ButtonElement.value
   * ButtonElement.value=
   * ButtonElement.willValidate
-  * CanMakePaymentEvent.isTrusted
   * CanvasCaptureMediaStreamTrack.applyConstraints(...)
   * CanvasCaptureMediaStreamTrack.clone(...)
   * CanvasCaptureMediaStreamTrack.getCapabilities(...)
@@ -154,25 +106,11 @@
   * CanvasRenderingContext2D.currentTransform=
   * CanvasRenderingContext2D.scrollPathIntoView(...)
   * CanvasRenderingContext2D.setLineDash(...)
-  * CharacterData.appendData(...)
-  * CharacterData.deleteData(...)
-  * CharacterData.insertData(...)
-  * CharacterData.replaceData(...)
-  * CharacterData.substringData(...)
-  * ClipboardEvent.isTrusted
   * CloseEvent.CloseEvent
-  * CloseEvent.isTrusted
-  * Comment.appendData(...)
-  * Comment.deleteData(...)
-  * Comment.insertData(...)
-  * Comment.replaceData(...)
-  * Comment.substringData(...)
   * CompositionEvent.data
   * CompositionEvent.detail
-  * CompositionEvent.isTrusted
   * CompositionEvent.sourceCapabilities
   * CompositionEvent.view
-  * Console.memory
   * ContentElement.created
   * CredentialUserData (class)
   * Css (class)
@@ -247,7 +185,6 @@
   * CssViewportRule.parentStyleSheet
   * CssViewportRule.type
   * CssurlImageValue (class)
-  * CustomEvent.isTrusted
   * CustomStream (class)
   * DListElement.created
   * DataElement.created
@@ -263,35 +200,16 @@
   * DeprecatedStorageQuota (class)
   * DeprecationReport (class)
   * DetailsElement.created
-  * DetailsElement.open
-  * DetailsElement.open=
   * DetectedBarcode (class)
   * DetectedFace (class)
   * DetectedText (class)
-  * DeviceMotionEvent.isTrusted
   * DeviceOrientationEvent.DeviceOrientationEvent
-  * DeviceOrientationEvent.isTrusted
   * DialogElement.created
   * DivElement.created
-  * Document.addressSpace
-  * Document.cookie
-  * Document.cookie=
   * Document.createRange(...)
-  * Document.currentScript
-  * Document.domain
   * Document.elementsFromPoint(...)
   * Document.fonts
-  * Document.fullscreenElement
-  * Document.fullscreenEnabled
   * Document.getAnimations(...)
-  * Document.hidden
-  * Document.pointerLockElement
-  * Document.rootElement
-  * Document.rootScroller
-  * Document.rootScroller=
-  * Document.scrollingElement
-  * Document.suborigin
-  * Document.visibilityState
   * DocumentOrShadowRoot.getSelection(...)
   * DomImplementation.hasFeature(...)
   * DomIterator (class)
@@ -344,36 +262,27 @@
   * EmbedElement.width
   * EmbedElement.width=
   * ErrorEvent.ErrorEvent
-  * ErrorEvent.isTrusted
-  * Event.isTrusted
   * ExtendableEvent.ExtendableEvent
-  * ExtendableEvent.isTrusted
   * ExtendableMessageEvent (class)
   * FaceDetector (class)
   * FederatedCredential (class)
-  * FetchEvent.isTrusted
   * FieldSetElement.checkValidity(...)
   * FieldSetElement.created
-  * FieldSetElement.disabled
-  * FieldSetElement.disabled=
   * FieldSetElement.elements
   * FieldSetElement.name
   * FieldSetElement.name=
   * FieldSetElement.reportValidity(...)
   * FieldSetElement.setCustomValidity(...)
-  * FieldSetElement.type
   * FieldSetElement.validationMessage
   * FieldSetElement.validity
   * FieldSetElement.willValidate
   * FileList (class)
   * FixedSizeListIterator (class)
-  * FocusEvent.isTrusted
   * FontFace (class)
   * FontFaceSet (class)
   * FontFaceSetForEachCallback (typedef)
   * FontFaceSetLoadEvent (class)
   * FontFaceSource (class)
-  * ForeignFetchEvent.isTrusted
   * ForeignFetchEvent.request
   * FunctionStringCallback (typedef)
   * GamepadEvent (class)
@@ -381,46 +290,23 @@
   * HRElement.color
   * HRElement.color=
   * HRElement.created
-  * HashChangeEvent.isTrusted
   * HeadElement.created
   * HeadingElement.created
-  * History.scrollRestoration=
-  * History.supportsState
   * HistoryBase (class)
   * HtmlCollection (class)
-  * HtmlDocument.addressSpace
   * HtmlDocument.caretRangeFromPoint(...)
-  * HtmlDocument.cookie
-  * HtmlDocument.cookie=
   * HtmlDocument.createElementUpgrader(...)
   * HtmlDocument.createRange(...)
-  * HtmlDocument.currentScript
-  * HtmlDocument.domain
   * HtmlDocument.fonts
-  * HtmlDocument.fullscreenEnabled
   * HtmlDocument.getAnimations(...)
-  * HtmlDocument.hidden
   * HtmlDocument.lastModified
   * HtmlDocument.onVisibilityChange
   * HtmlDocument.preferredStylesheetSet
-  * HtmlDocument.rootElement
-  * HtmlDocument.rootScroller
-  * HtmlDocument.rootScroller=
-  * HtmlDocument.scrollingElement
   * HtmlDocument.selectedStylesheetSet
   * HtmlDocument.selectedStylesheetSet=
-  * HtmlDocument.suborigin
-  * HtmlDocument.title
-  * HtmlDocument.title=
   * HtmlDocument.visibilityChangeEvent
-  * HtmlDocument.visibilityState
   * HtmlFormControlsCollection (class)
   * HtmlHtmlElement.created
-  * HtmlHyperlinkElementUtils.host=
-  * HtmlHyperlinkElementUtils.hostname=
-  * HtmlHyperlinkElementUtils.password=
-  * HtmlHyperlinkElementUtils.protocol=
-  * HtmlHyperlinkElementUtils.username=
   * HtmlOptionsCollection (class)
   * HttpRequestUpload.addEventListener(...)
   * HttpRequestUpload.dispatchEvent(...)
@@ -444,7 +330,6 @@
   * InputDeviceCapabilities.firesTouchEvents
   * InputElement.created
   * InputElementBase.InputElementBase
-  * InstallEvent.isTrusted
   * InstallEvent.registerForeignFetch(...)
   * InstallEvent.waitUntil(...)
   * IntersectionObserver (class)
@@ -454,38 +339,23 @@
   * KeyCode.KeyCode
   * KeyEvent.canUseDispatchEvent
   * KeyEvent.isComposed
-  * KeyEvent.isTrusted
-  * KeyEvent.key
-  * KeyEvent.keyDownEvent
   * KeyEvent.keyDownEvent=
-  * KeyEvent.keyPressEvent
   * KeyEvent.keyPressEvent=
-  * KeyEvent.keyUpEvent
   * KeyEvent.keyUpEvent=
-  * KeyEvent.which
   * KeyEvent.wrap
   * KeyEvent.wrapped
   * KeyLocation (class)
-  * KeyboardEvent.isTrusted
-  * KeyboardEvent.key
-  * KeyboardEvent.which
   * KeyboardEventStream (class)
   * KeyframeEffect (class)
   * KeyframeEffectReadOnly (class)
   * LIElement.created
-  * LIElement.value
-  * LIElement.value=
   * LabelElement.control
   * LabelElement.created
   * LegendElement.created
   * LinearAccelerationSensor (class)
   * LinkElement.created
-  * LinkElement.hreflang
-  * LinkElement.hreflang=
   * LinkElement.import
   * LinkElement.relList
-  * LinkElement.scope
-  * LinkElement.scope=
   * LinkElement.sheet
   * LinkElement.sizes
   * LinkElement.supportsImport
@@ -498,78 +368,32 @@
   * Magnetometer (class)
   * MapElement.areas
   * MapElement.created
-  * MapElement.name
-  * MapElement.name=
-  * MediaDevices.addEventListener(...)
-  * MediaDevices.dispatchEvent(...)
-  * MediaDevices.getSupportedConstraints(...)
-  * MediaDevices.on
-  * MediaDevices.removeEventListener(...)
-  * MediaElement.HAVE_CURRENT_DATA
-  * MediaElement.HAVE_ENOUGH_DATA
-  * MediaElement.HAVE_FUTURE_DATA
-  * MediaElement.HAVE_METADATA
-  * MediaElement.HAVE_NOTHING
-  * MediaElement.NETWORK_EMPTY
-  * MediaElement.NETWORK_IDLE
-  * MediaElement.NETWORK_LOADING
-  * MediaElement.NETWORK_NO_SOURCE
   * MediaElement.audioDecodedByteCount
   * MediaElement.audioTracks
   * MediaElement.buffered
-  * MediaElement.controls
-  * MediaElement.controls=
   * MediaElement.controlsList
   * MediaElement.created
   * MediaElement.currentSrc
   * MediaElement.currentTime
   * MediaElement.currentTime=
-  * MediaElement.defaultPlaybackRate
-  * MediaElement.defaultPlaybackRate=
-  * MediaElement.disableRemotePlayback
-  * MediaElement.disableRemotePlayback=
   * MediaElement.duration
   * MediaElement.ended
-  * MediaElement.error
-  * MediaElement.mediaKeys
-  * MediaElement.networkState
   * MediaElement.paused
   * MediaElement.playbackRate
   * MediaElement.playbackRate=
   * MediaElement.played
-  * MediaElement.readyState
-  * MediaElement.remote
-  * MediaElement.seekable
   * MediaElement.seeking
   * MediaElement.sinkId
   * MediaElement.textTracks
   * MediaElement.videoDecodedByteCount
   * MediaElement.videoTracks
   * MediaEncryptedEvent (class)
-  * MediaError (class)
   * MediaKeyMessageEvent (class)
   * MediaKeySession (class)
   * MediaKeyStatusMap (class)
   * MediaKeySystemAccess (class)
-  * MediaKeys.getStatusForPolicy(...)
-  * MediaKeys.setServerCertificate(...)
-  * MediaKeysPolicy (class)
   * MediaList (class)
   * MediaQueryListEvent (class)
-  * MediaRecorder.addEventListener(...)
-  * MediaRecorder.audioBitsPerSecond
-  * MediaRecorder.dispatchEvent(...)
-  * MediaRecorder.errorEvent
-  * MediaRecorder.isTypeSupported(...)
-  * MediaRecorder.mimeType
-  * MediaRecorder.on
-  * MediaRecorder.onError
-  * MediaRecorder.onPause
-  * MediaRecorder.pauseEvent
-  * MediaRecorder.removeEventListener(...)
-  * MediaRecorder.state
-  * MediaRecorder.stream
-  * MediaRecorder.videoBitsPerSecond
   * MediaSource.MediaSource
   * MediaSource.addSourceBuffer(...)
   * MediaSource.clearLiveSeekableRange(...)
@@ -577,24 +401,6 @@
   * MediaSource.endOfStream(...)
   * MediaSource.removeSourceBuffer(...)
   * MediaSource.setLiveSeekableRange(...)
-  * MediaStream.MediaStream
-  * MediaStream.active
-  * MediaStream.addTrack(...)
-  * MediaStream.addTrackEvent
-  * MediaStream.clone(...)
-  * MediaStream.getAudioTracks(...)
-  * MediaStream.getTrackById(...)
-  * MediaStream.getTracks(...)
-  * MediaStream.getVideoTracks(...)
-  * MediaStream.id
-  * MediaStream.onAddTrack
-  * MediaStream.onRemoveTrack
-  * MediaStream.removeTrack(...)
-  * MediaStream.removeTrackEvent
-  * MediaStream.supported
-  * MediaStreamEvent.isTrusted
-  * MediaStreamEvent.stream
-  * MediaStreamEvent.supported
   * MediaStreamTrack.applyConstraints(...)
   * MediaStreamTrack.clone(...)
   * MediaStreamTrack.endedEvent
@@ -607,15 +413,10 @@
   * MediaStreamTrack.onUnmute
   * MediaStreamTrack.stop(...)
   * MediaStreamTrack.unmuteEvent
-  * MediaStreamTrackEvent.isTrusted
   * MediaStreamTrackEvent.supported
-  * MemoryInfo (class)
   * MenuElement.created
   * MessageCallback (typedef)
   * MessageChannel (class)
-  * MessageEvent.isTrusted
-  * MessageEvent.suborigin
-  * MessagePort.onMessage
   * MetaElement.created
   * MetaElement.httpEquiv
   * MetaElement.httpEquiv=
@@ -635,7 +436,6 @@
   * ModElement.dateTime
   * ModElement.dateTime=
   * MojoWatchCallback (typedef)
-  * MouseEvent.isTrusted
   * MutationCallback (typedef)
   * MutationObserver (class)
   * MutationRecord (class)
@@ -645,7 +445,6 @@
   * NodeIterator (class)
   * NodeList (class)
   * NonElementParentNode (class)
-  * NotificationEvent.isTrusted
   * OListElement.created
   * OListElement.reversed
   * OListElement.reversed=
@@ -654,31 +453,20 @@
   * OListElement.type
   * OListElement.type=
   * ObjectElement.checkValidity(...)
-  * ObjectElement.contentWindow
   * ObjectElement.created
   * ObjectElement.data
   * ObjectElement.data=
-  * ObjectElement.height
-  * ObjectElement.height=
-  * ObjectElement.name
-  * ObjectElement.name=
   * ObjectElement.reportValidity(...)
   * ObjectElement.setCustomValidity(...)
-  * ObjectElement.type
-  * ObjectElement.type=
   * ObjectElement.useMap
   * ObjectElement.useMap=
   * ObjectElement.validationMessage
   * ObjectElement.validity
-  * ObjectElement.width
-  * ObjectElement.width=
   * ObjectElement.willValidate
   * OffscreenCanvasRenderingContext2D.canvas
   * OffscreenCanvasRenderingContext2D.commit(...)
   * OffscreenCanvasRenderingContext2D.setLineDash(...)
   * OptGroupElement.created
-  * OptGroupElement.disabled
-  * OptGroupElement.disabled=
   * OptGroupElement.label
   * OptGroupElement.label=
   * OrientationSensor (class)
@@ -691,22 +479,14 @@
   * OutputElement.validationMessage
   * OutputElement.validity
   * OverconstrainedError (class)
-  * PageTransitionEvent.isTrusted
   * PageTransitionEvent.persisted
   * PaintRenderingContext2D (class)
   * PaintSize (class)
   * PaintWorkletGlobalScope (class)
   * ParagraphElement.created
   * ParamElement.created
-  * ParamElement.name
-  * ParamElement.name=
-  * ParamElement.value
-  * ParamElement.value=
   * PasswordCredential (class)
-  * PaymentAddress (class)
-  * PaymentRequest (class)
   * PaymentRequestEvent.instrumentKey
-  * PaymentRequestEvent.isTrusted
   * PaymentRequestEvent.methodData
   * PaymentRequestEvent.modifiers
   * PaymentRequestEvent.openWindow(...)
@@ -716,13 +496,10 @@
   * PaymentRequestEvent.topLevelOrigin
   * PaymentRequestEvent.total
   * PaymentRequestEvent.waitUntil(...)
-  * PaymentRequestUpdateEvent.isTrusted
   * PaymentRequestUpdateEvent.updateWith(...)
-  * PaymentResponse (class)
   * Performance.getEntries(...)
   * Performance.getEntriesByName(...)
   * Performance.getEntriesByType(...)
-  * Performance.memory
   * Performance.navigation
   * Performance.timing
   * PerformanceEntry (class)
@@ -747,37 +524,15 @@
   * PermissionStatus.state
   * PluginArray (class)
   * PointerEvent.getCoalescedEvents(...)
-  * PointerEvent.isTrusted
   * PointerEvent.supported
-  * PopStateEvent.isTrusted
   * PositionError.PERMISSION_DENIED
   * PositionError.POSITION_UNAVAILABLE
   * PositionError.TIMEOUT
   * PreElement.created
-  * PresentationConnectionAvailableEvent.isTrusted
-  * PresentationConnectionCloseEvent.isTrusted
-  * ProcessingInstruction.after(...)
-  * ProcessingInstruction.appendData(...)
-  * ProcessingInstruction.before(...)
-  * ProcessingInstruction.data
-  * ProcessingInstruction.data=
-  * ProcessingInstruction.deleteData(...)
-  * ProcessingInstruction.insertData(...)
-  * ProcessingInstruction.length
-  * ProcessingInstruction.nextElementSibling
-  * ProcessingInstruction.previousElementSibling
-  * ProcessingInstruction.replaceData(...)
-  * ProcessingInstruction.substringData(...)
   * ProgressElement.created
   * ProgressElement.labels
-  * ProgressEvent.isTrusted
-  * ProgressEvent.lengthComputable
-  * ProgressEvent.loaded
-  * ProgressEvent.total
   * PromiseRejectionEvent (class)
   * PublicKeyCredential (class)
-  * PushEvent.data
-  * PushEvent.isTrusted
   * PushEvent.waitUntil(...)
   * QuoteElement.QuoteElement
   * QuoteElement.cite
@@ -820,8 +575,6 @@
   * Range.surroundContents(...)
   * ReadyState (class)
   * RelativeOrientationSensor (class)
-  * RemotePlayback (class)
-  * RemotePlaybackAvailabilityCallback (typedef)
   * ReportBody (class)
   * ReportingObserver (class)
   * ReportingObserverCallback (typedef)
@@ -842,7 +595,6 @@
   * RtcDataChannel.negotiated
   * RtcDataChannel.ordered
   * RtcDataChannel.protocol
-  * RtcDataChannelEvent.isTrusted
   * RtcDtmfSender.addEventListener(...)
   * RtcDtmfSender.canInsertDtmf
   * RtcDtmfSender.dispatchEvent(...)
@@ -865,7 +617,6 @@
   * RtcPeerConnection.signalingState
   * RtcPeerConnection.supported
   * RtcPeerConnectionIceEvent.candidate
-  * RtcPeerConnectionIceEvent.isTrusted
   * RtcRtpContributingSource (class)
   * RtcRtpReceiver.getContributingSources(...)
   * RtcRtpReceiver.track
@@ -910,10 +661,8 @@
   * SearchInputElement.dirName=
   * SearchInputElement.list
   * SecurityPolicyViolationEvent.SecurityPolicyViolationEvent
-  * SecurityPolicyViolationEvent.isTrusted
   * Sensor (class)
   * SensorErrorEvent.error
-  * SensorErrorEvent.isTrusted
   * ShadowElement.ShadowElement
   * ShadowElement.created
   * ShadowElement.getDistributedNodes(...)
@@ -954,12 +703,8 @@
   * SpeechRecognitionError (class)
   * SpeechRecognitionEvent (class)
   * SpeechRecognitionResult (class)
-  * SpeechSynthesisEvent.isTrusted
   * StaticRange (class)
-  * StorageEvent.isTrusted
   * StyleElement.created
-  * StyleElement.disabled
-  * StyleElement.disabled=
   * StyleElement.media
   * StyleElement.media=
   * StyleSheet.disabled
@@ -970,9 +715,6 @@
   * StyleSheet.parentStyleSheet
   * StyleSheet.title
   * StyleSheet.type
-  * SyncEvent.isTrusted
-  * SyncEvent.lastChance
-  * SyncEvent.tag
   * SyncEvent.waitUntil(...)
   * TableCaptionElement.created
   * TableCellElement.created
@@ -988,19 +730,13 @@
   * TaskAttributionTiming (class)
   * TelephoneInputElement.list
   * TemplateElement.created
-  * Text.appendData(...)
   * Text.assignedSlot
-  * Text.deleteData(...)
   * Text.getDestinationInsertionPoints(...)
-  * Text.insertData(...)
-  * Text.replaceData(...)
   * Text.splitText(...)
-  * Text.substringData(...)
   * Text.wholeText
   * TextDetector (class)
   * TextEvent.data
   * TextEvent.detail
-  * TextEvent.isTrusted
   * TextEvent.sourceCapabilities
   * TextEvent.view
   * TextTrack.activeCues
@@ -1025,7 +761,6 @@
   * TimeElement.created
   * TimeInputElement.valueAsDate
   * TimeInputElement.valueAsDate=
-  * TimeRanges (class)
   * TimeoutHandler (typedef)
   * TitleElement.created
   * Touch.client
@@ -1037,7 +772,6 @@
   * Touch.screen
   * Touch.target
   * TouchEvent.TouchEvent
-  * TouchEvent.isTrusted
   * TrackDefault (class)
   * TrackDefaultList (class)
   * TrackElement.ERROR
@@ -1051,14 +785,11 @@
   * TrackElement.srclang
   * TrackElement.srclang=
   * TrackElement.track
-  * TrackEvent.isTrusted
   * TrackEvent.track
-  * TransitionEvent.isTrusted
   * TreeWalker (class)
   * TrustedHtml (class)
   * TrustedScriptUrl (class)
   * TrustedUrl (class)
-  * UIEvent.isTrusted
   * UListElement.created
   * UnderlyingSourceBase (class)
   * UnknownElement.created
@@ -1093,33 +824,16 @@
   * VideoElement.audioDecodedByteCount
   * VideoElement.audioTracks
   * VideoElement.buffered
-  * VideoElement.controls
-  * VideoElement.controls=
   * VideoElement.controlsList
   * VideoElement.created
   * VideoElement.currentSrc
   * VideoElement.currentTime
   * VideoElement.currentTime=
   * VideoElement.decodedFrameCount
-  * VideoElement.defaultPlaybackRate
-  * VideoElement.defaultPlaybackRate=
-  * VideoElement.disableRemotePlayback
-  * VideoElement.disableRemotePlayback=
   * VideoElement.droppedFrameCount
-  * VideoElement.duration
-  * VideoElement.ended
-  * VideoElement.error
-  * VideoElement.mediaKeys
-  * VideoElement.networkState
-  * VideoElement.paused
   * VideoElement.playbackRate
   * VideoElement.playbackRate=
   * VideoElement.played
-  * VideoElement.poster
-  * VideoElement.poster=
-  * VideoElement.readyState
-  * VideoElement.remote
-  * VideoElement.seekable
   * VideoElement.seeking
   * VideoElement.sinkId
   * VideoElement.textTracks
@@ -1135,15 +849,10 @@
   * VideoTrackList (class)
   * VttCue (class)
   * VttRegion (class)
-  * WheelEvent.isTrusted
   * Window.cancelAnimationFrame(...)
   * Window.defaultStatus=
   * Window.defaultstatus=
   * Window.openDatabase(...)
-  * WindowBase.addEventListener(...)
-  * WindowBase.dispatchEvent(...)
-  * WindowBase.on
-  * WindowBase.removeEventListener(...)
   * WindowBase64 (class)
   * Worker (class)
   * WorkerGlobalScope.caches
@@ -1154,24 +863,8 @@
   * WorkerPerformance (class)
   * WorkletAnimation (class)
   * WorkletGlobalScope (class)
-  * XmlDocument.addressSpace
-  * XmlDocument.cookie
-  * XmlDocument.cookie=
   * XmlDocument.createRange(...)
-  * XmlDocument.currentScript
-  * XmlDocument.domain
   * XmlDocument.elementsFromPoint(...)
   * XmlDocument.fonts
-  * XmlDocument.fullscreenElement
-  * XmlDocument.fullscreenEnabled
   * XmlDocument.getAnimations(...)
-  * XmlDocument.hidden
-  * XmlDocument.pointerLockElement
-  * XmlDocument.rootElement
-  * XmlDocument.rootScroller
-  * XmlDocument.rootScroller=
-  * XmlDocument.scrollingElement
-  * XmlDocument.suborigin
-  * XmlDocument.visibilityState
-  * promiseToFuture
   * promiseToFutureAsMap

@@ -46,13 +46,29 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
-abstract class Animation {
+abstract class Animation extends EventTarget {
+  static const EventStreamProvider<Event> cancelEvent =
+      EventStreamProvider<Event>('cancel');
+
+  static const EventStreamProvider<Event> finishEvent =
+      EventStreamProvider<Event>('finish');
+
+  static bool get supported => false;
+
   factory Animation(
       [AnimationEffectTimingReadOnly effect, AnimationTimeline timeline]) {
     throw UnimplementedError();
   }
 
-  static bool get supported => false;
+  Future<Animation> get finished;
+
+  String get id;
+
+  Stream<Event> get onCancel => cancelEvent.forTarget(this);
+
+  Stream<Event> get onFinish => finishEvent.forTarget(this);
+
+  Future<Animation> get ready;
 
   void cancel();
 

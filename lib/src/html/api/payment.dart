@@ -46,6 +46,34 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
+abstract class PaymentAddress {
+  final List<String> addressLine;
+
+  final String city;
+
+  final String country;
+
+  final String dependentLocality;
+
+  final String languageCode;
+
+  final String organization;
+
+  final String phone;
+
+  final String postalCode;
+
+  final String recipient;
+
+  final String region;
+
+  final String sortingCode;
+
+  factory PaymentAddress._() {
+    throw UnimplementedError();
+  }
+}
+
 class PaymentInstruments {
   factory PaymentInstruments._() {
     throw UnimplementedError();
@@ -75,4 +103,48 @@ class PaymentManager {
   factory PaymentManager._() {
     throw UnimplementedError();
   }
+}
+
+abstract class PaymentRequest extends EventTarget {
+  factory PaymentRequest(List<Map> methodData, Map details, [Map options]) {
+    throw UnimplementedError();
+  }
+
+  String get id;
+
+  PaymentAddress get shippingAddress;
+
+  String get shippingOption;
+
+  String get shippingType;
+
+  Future abort();
+
+  Future<bool> canMakePayment();
+
+  Future<PaymentResponse> show();
+}
+
+abstract class PaymentResponse {
+  final Object details;
+
+  final String methodName;
+
+  final String payerEmail;
+
+  final String payerName;
+
+  final String payerPhone;
+
+  final String requestId;
+
+  final PaymentAddress shippingAddress;
+
+  final String shippingOption;
+
+  factory PaymentResponse._() {
+    throw UnimplementedError();
+  }
+
+  Future complete([String paymentResult]);
 }

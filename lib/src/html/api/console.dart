@@ -55,6 +55,8 @@ class Console {
     }
   }
 
+  MemoryInfo get memory => null;
+
   void clear(Object arg) {}
 
   void count(Object arg) {}

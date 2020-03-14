@@ -1,5 +1,5 @@
 name: universal_html
-version: 1.1.19
+version: 1.1.20
 description:
   Cross-platform 'dart:html' that works in all platforms (browser, Dart VM, and Flutter).
 homepage: https://github.com/terrier989/universal_html

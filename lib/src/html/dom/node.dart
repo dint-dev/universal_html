@@ -80,6 +80,36 @@ abstract class CharacterData extends Node
     return node;
   }
 
+  void appendData(String data) {
+    final oldData = this.data;
+    this.data = '$oldData$data';
+  }
+
+  void deleteData(int offset, int count) {
+    final oldData = data;
+    final a = oldData.substring(0, offset);
+    final b = oldData.substring(offset + count);
+    data = '$a$b';
+  }
+
+  void insertData(int offset, String data) {
+    final oldData = this.data;
+    final a = oldData.substring(0, offset);
+    final b = oldData.substring(offset);
+    this.data = '$a$data$b';
+  }
+
+  void replaceData(int offset, int count, String data) {
+    final oldData = this.data;
+    final a = oldData.substring(0, offset);
+    final b = oldData.substring(offset + count);
+    this.data = '$a$data$b';
+  }
+
+  String substringData(int offset, int count) {
+    return data.substring(offset, offset + count);
+  }
+
   @override
   String toString() => nodeValue;
 }
@@ -460,12 +490,12 @@ abstract class ParentNode {
   Element querySelector(String selectors);
 }
 
-class ProcessingInstruction extends Node {
+class ProcessingInstruction extends CharacterData {
   final StyleSheet sheet;
   final String target;
 
   ProcessingInstruction._(Document ownerDocument, {this.sheet, this.target})
-      : super._(ownerDocument);
+      : super._(ownerDocument, '');
 
   @override
   int get nodeType => Node.PROCESSING_INSTRUCTION_NODE;
@@ -513,8 +543,10 @@ class Text extends CharacterData {
 mixin _ChildNode implements ChildNode {
   @override
   void after(Object nodes) {}
+
   @override
   void before(Object nodes) {}
+
   @override
   void remove();
 }

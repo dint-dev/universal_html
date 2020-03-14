@@ -87,8 +87,15 @@ class BackgroundFetchFailEvent extends Event {
   BackgroundFetchFailEvent(String type) : super.internal(type);
 }
 
-class BeforeInstallPromptEvent extends Event {
-  BeforeInstallPromptEvent(String type) : super.internal(type);
+abstract class BeforeInstallPromptEvent extends Event {
+  BeforeInstallPromptEvent(String type, [Map eventInitDict])
+      : super.internal(type);
+
+  List<String> get platforms;
+
+  Future<Map<String, dynamic>> get userChoice;
+
+  Future prompt();
 }
 
 class BeforeUnloadEvent extends Event {
@@ -326,7 +333,6 @@ class KeyboardEvent extends UIEvent {
   final bool metaKey;
   final bool repeat;
   final bool shiftKey;
-
   KeyboardEvent(
     String type, {
     this.altKey = false,
@@ -348,10 +354,26 @@ class KeyboardEvent extends UIEvent {
           cancelable: cancelable,
         );
 
+  String get key => throw UnimplementedError();
+
+  int get which => throw UnimplementedError();
+
   bool getModifierState(String keyArg) => false;
 }
 
 class KeyEvent extends KeyboardEvent {
+  /// Accessor to provide a stream of KeyEvents on the desired target.
+  static EventStreamProvider<KeyEvent> get keyDownEvent =>
+      throw UnimplementedError();
+
+  /// Accessor to provide a stream of KeyEvents on the desired target.
+  static EventStreamProvider<KeyEvent> get keyPressEvent =>
+      throw UnimplementedError();
+
+  /// Accessor to provide a stream of KeyEvents on the desired target.
+  static EventStreamProvider<KeyEvent> get keyUpEvent =>
+      throw UnimplementedError();
+
   @override
   final int charCode;
 
@@ -401,6 +423,8 @@ class MessageEvent extends Event {
     this.ports,
   })  : lastEventId = lastEventId ?? '',
         super.internal(type);
+
+  String get suborigin => null;
 }
 
 abstract class MessagePort extends EventTarget {
@@ -408,6 +432,9 @@ abstract class MessagePort extends EventTarget {
       EventStreamProvider<MessageEvent>('message');
 
   MessagePort._() : super._created();
+
+  /// Stream of `message` events handled by this [MessagePort].
+  Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
 
   void close();
 
@@ -657,11 +684,19 @@ class PopStateEvent extends Event {
 }
 
 class ProgressEvent extends Event {
-  ProgressEvent(String type) : super.internal(type);
+  ProgressEvent(String type, [Map eventInitDict]) : super.internal(type);
+
+  bool get lengthComputable => null;
+
+  int get loaded => null;
+
+  int get total => null;
 }
 
 class PushEvent extends Event {
-  PushEvent(String type) : super.internal(type);
+  PushEvent(String type, [Map eventInitDict]) : super.internal(type);
+
+  PushMessageData get data => null;
 }
 
 class SecurityPolicyViolationEvent extends Event {
@@ -712,6 +747,10 @@ class SensorErrorEvent extends Event {
 
 class SyncEvent extends Event {
   SyncEvent(String type) : super.internal(type);
+
+  bool get lastChance => null;
+
+  String get tag => null;
 }
 
 class TextEvent extends Event {

@@ -273,6 +273,29 @@ void _testNode() {
     });
   });
 
+  group('CharacterData', () {
+    test('appendData', () {
+      final node = Comment('ab');
+      node.appendData('c');
+      expect(node.nodeValue, 'abc');
+    });
+    test('deleteData', () {
+      final node = Comment('abcde');
+      node.deleteData(2, 1);
+      expect(node.nodeValue, 'abde');
+    });
+    test('insertData', () {
+      final node = Comment('abde');
+      node.insertData(2, 'c');
+      expect(node.nodeValue, 'abcde');
+    });
+    test('replaceData', () {
+      final node = Comment('abXde');
+      node.replaceData(2, 1, 'c');
+      expect(node.nodeValue, 'abcde');
+    });
+  });
+
   group('Comment', () {
     test('Comment()', () {
       final node = Comment();

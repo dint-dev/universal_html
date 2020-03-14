@@ -340,6 +340,12 @@ class ButtonElement extends HtmlElement
     _setAttribute(name, value);
   }
 
+  String get type => _getAttribute('type', defaultValue: 'submit');
+
+  set type(String value) {
+    _setAttribute('type', value);
+  }
+
   @override
   Element _newInstance(Document ownerDocument) =>
       ButtonElement._(ownerDocument);
@@ -539,6 +545,12 @@ class DetailsElement extends HtmlElement {
 
   DetailsElement._(Document ownerDocument) : super._(ownerDocument, 'DETAILS');
 
+  bool get open => _getAttributeBool('open');
+
+  set open(bool value) {
+    _setAttributeBool('open', value);
+  }
+
   @override
   Element _newInstance(Document ownerDocument) =>
       DetailsElement._(ownerDocument);
@@ -634,6 +646,14 @@ class FieldSetElement extends HtmlElement with _FormFieldElement {
 
   FieldSetElement._(Document ownerDocument)
       : super._(ownerDocument, 'FIELDSET');
+
+  bool get disabled => _getAttributeBool('disabled');
+
+  set disabled(bool value) {
+    _setAttributeBool('disabled', value);
+  }
+
+  String get type => null;
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -1043,8 +1063,13 @@ class HtmlHtmlElement extends HtmlElement {
 abstract class HtmlHyperlinkElementUtils implements _UrlBase {
   String href;
   HtmlHyperlinkElementUtils._();
+  set host(String value);
+  set hostname(String value);
   String get password;
+  set password(String value);
+  set protocol(String value);
   String get username;
+  set username(String value);
 }
 
 class IFrameElement extends HtmlElement {
@@ -1715,6 +1740,12 @@ class LIElement extends HtmlElement {
 
   LIElement._(Document ownerDocument) : super._(ownerDocument, 'LI');
 
+  int get value => _getAttributeInt('value');
+
+  set value(int value) {
+    _setAttributeInt('value', value);
+  }
+
   @override
   Element _newInstance(Document ownerDocument) => LIElement._(ownerDocument);
 }
@@ -1737,6 +1768,12 @@ class LinkElement extends HtmlElement
     _setAttribute('crossorigin', value);
   }
 
+  String get hreflang => _getAttribute('hreflang');
+
+  set hreflang(String value) {
+    _setAttribute('hreflang', value);
+  }
+
   String get integrity => _getAttribute('integrity');
 
   set integrity(String value) {
@@ -1755,6 +1792,12 @@ class LinkElement extends HtmlElement
     _setAttribute('rel', value);
   }
 
+  String get scope => _getAttribute('scope');
+
+  set scope(String value) {
+    _setAttribute('scope', value);
+  }
+
   String get type => _getAttribute('type');
 
   set type(String value) {
@@ -1770,12 +1813,40 @@ class MapElement extends HtmlElement {
 
   MapElement._(Document ownerDocument) : super._(ownerDocument, 'MAP');
 
+  String get name => _getAttribute('name');
+
+  set name(String value) {
+    _setAttribute('name', value);
+  }
+
   @override
   Element _newInstance(Document ownerDocument) => MapElement._(ownerDocument);
 }
 
 abstract class MediaElement extends HtmlElement {
+  static const int HAVE_CURRENT_DATA = 2;
+
+  static const int HAVE_ENOUGH_DATA = 4;
+
+  static const int HAVE_FUTURE_DATA = 3;
+
+  static const int HAVE_METADATA = 1;
+
+  static const int HAVE_NOTHING = 0;
+
+  static const int NETWORK_EMPTY = 0;
+
+  static const int NETWORK_IDLE = 1;
+
+  static const int NETWORK_LOADING = 2;
+
+  static const int NETWORK_NO_SOURCE = 3;
+
   bool _muted;
+
+  num defaultPlaybackRate;
+
+  bool disableRemotePlayback;
 
   MediaElement._(Document ownerDocument, String tag)
       : super._(ownerDocument, tag);
@@ -1784,6 +1855,12 @@ abstract class MediaElement extends HtmlElement {
 
   set autoplay(bool value) {
     _setAttributeBool('autoplay', value);
+  }
+
+  bool get controls => _getAttributeBool('controls');
+
+  set controls(bool value) {
+    _setAttributeBool('controls', value);
   }
 
   String get crossOrigin => _getAttribute('crossorigin');
@@ -1798,11 +1875,15 @@ abstract class MediaElement extends HtmlElement {
     _setAttributeBool('muted', value);
   }
 
+  MediaError get error => null;
+
   bool get loop => _getAttributeBool('loop');
 
   set loop(bool value) {
     _setAttributeBool('loop', value);
   }
+
+  MediaKeys get mediaKeys => null;
 
   bool get muted => _muted ?? false;
 
@@ -1810,11 +1891,19 @@ abstract class MediaElement extends HtmlElement {
     _muted = value;
   }
 
+  int get networkState => NETWORK_EMPTY;
+
   String get preload => _getAttribute('preload');
 
   set preload(String value) {
     _setAttribute('preload', value);
   }
+
+  int get readyState => null;
+
+  RemotePlayback get remote => null;
+
+  TimeRanges get seekable => null;
 
   String get src => _getAttributeResolvedUri('src') ?? '';
 
@@ -1972,6 +2061,32 @@ class ObjectElement extends HtmlElement with _FormFieldElement {
 
   ObjectElement._(Document ownerDocument) : super._(ownerDocument, 'OBJECT');
 
+  WindowBase get contentWindow => null;
+
+  int get height => _getAttributeInt('height');
+
+  set height(int value) {
+    _setAttributeInt('height', value);
+  }
+
+  String get name => _getAttribute('name');
+
+  set name(String value) {
+    _setAttribute('name', value);
+  }
+
+  String get type => _getAttribute('type');
+
+  set type(String value) {
+    _setAttribute('type', value);
+  }
+
+  int get width => _getAttributeInt('width');
+
+  set width(int value) {
+    _setAttributeInt('width', value);
+  }
+
   @override
   Element _newInstance(Document ownerDocument) =>
       ObjectElement._(ownerDocument);
@@ -1991,6 +2106,12 @@ class OptGroupElement extends HtmlElement {
 
   OptGroupElement._(Document ownerDocument)
       : super._(ownerDocument, 'OPTGROUP');
+
+  bool get disabled => _getAttributeBool('disabled');
+
+  set disabled(bool value) {
+    _setAttributeBool('disabled', value);
+  }
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -2137,6 +2258,18 @@ class ParamElement extends HtmlElement {
   factory ParamElement() => ParamElement._(null);
 
   ParamElement._(Document ownerDocument) : super._(ownerDocument, 'PARAM');
+
+  String get name => _getAttribute('name');
+
+  set name(String value) {
+    _setAttribute('name', value);
+  }
+
+  String get value => _getAttribute('value');
+
+  set value(String value) {
+    _setAttribute('value', value);
+  }
 
   @override
   Element _newInstance(Document ownerDocument) => ParamElement._(ownerDocument);
@@ -2486,6 +2619,12 @@ class StyleElement extends HtmlElement {
   factory StyleElement() => StyleElement._(null);
 
   StyleElement._(Document ownerDocument) : super._(ownerDocument, 'STYLE');
+
+  bool get disabled => _getAttributeBool('disabled');
+
+  set disabled(bool value) {
+    _setAttributeBool('disabled', value);
+  }
 
   StyleSheet get sheet {
     if (_sheet != null) {
@@ -3061,10 +3200,22 @@ class VideoElement extends MediaElement implements CanvasImageSource {
 
   VideoElement._(Document ownerDocument) : super._(ownerDocument, 'VIDEO');
 
+  num get duration => null;
+
+  bool get ended => false;
+
   int get height => _getAttributeInt('height');
 
   set height(int value) {
     _setAttributeInt('height', value);
+  }
+
+  bool get paused => false;
+
+  String get poster => _getAttribute('poster');
+
+  set poster(String value) {
+    _setAttribute('poster', value);
   }
 
   int get width => _getAttributeInt('width');
@@ -3122,11 +3273,25 @@ mixin _HrefAttributeElement implements HtmlElement {
   }
 }
 
-mixin _HtmlHyperlinkElementUtils implements _UrlBase {
+mixin _HtmlHyperlinkElementUtils
+    implements HtmlHyperlinkElementUtils, _UrlBase {
+  @override
+  set host(String value) {
+    throw UnimplementedError();
+  }
+
+  @override
+  set hostname(String value) {
+    throw UnimplementedError();
+  }
+
+  @override
   String get href;
 
+  @override
   set href(String value);
 
+  @override
   String get password {
     final userInfo = _uri?.userInfo;
     if (userInfo == null) {
@@ -3139,6 +3304,17 @@ mixin _HtmlHyperlinkElementUtils implements _UrlBase {
     return userInfo.substring(i + 1);
   }
 
+  @override
+  set password(String value) {
+    throw UnimplementedError();
+  }
+
+  @override
+  set protocol(String value) {
+    throw UnimplementedError();
+  }
+
+  @override
   String get username {
     final userInfo = _uri?.userInfo;
     if (userInfo == null) {
@@ -3149,6 +3325,11 @@ mixin _HtmlHyperlinkElementUtils implements _UrlBase {
       return userInfo;
     }
     return userInfo.substring(0, i);
+  }
+
+  @override
+  set username(String value) {
+    throw UnimplementedError();
   }
 
   @override

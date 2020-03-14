@@ -1077,7 +1077,7 @@ class Window extends EventTarget
   void stop() {}
 }
 
-mixin WindowBase {
+mixin WindowBase implements EventTarget {
   bool get closed;
 
   /// The current session history for this window's newest document.

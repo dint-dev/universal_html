@@ -42,6 +42,8 @@ export 'dart:math' show Point, Rectangle;
 
 export 'package:universal_io/io.dart' show HttpStatus;
 
+export 'js_util.dart' show promiseToFuture;
+
 part 'html/api/accessible_node.dart';
 part 'html/api/animation.dart';
 part 'html/api/application_cache.dart';
@@ -53,10 +55,10 @@ part 'html/api/data_transfer.dart';
 part 'html/api/device.dart';
 part 'html/api/dom_matrix.dart';
 part 'html/api/event.dart';
-part 'html/api/event_classes.dart';
 part 'html/api/event_handlers.dart';
 part 'html/api/event_source.dart';
 part 'html/api/event_stream.dart';
+part 'html/api/event_subclasses.dart';
 part 'html/api/event_target.dart';
 part 'html/api/file.dart';
 part 'html/api/geolocation.dart';
@@ -95,6 +97,7 @@ part 'html/dom/element_list.dart';
 part 'html/dom/element_misc.dart';
 part 'html/dom/element_subclasses.dart';
 part 'html/dom/element_subclasses_for_inputs.dart';
+part 'html/dom/html_document.dart';
 part 'html/dom/html_node_validator.dart';
 part 'html/dom/node.dart';
 part 'html/dom/node_child_node_list.dart';
@@ -102,7 +105,7 @@ part 'html/dom/node_printing.dart';
 part 'html/dom/node_validator_builder.dart';
 part 'html/dom/parser.dart';
 part 'html/dom/validators.dart';
-part 'html/dom/xml.dart';
+part 'html/dom/xml_document.dart';
 part 'html/driver/browser_implementation.dart';
 part 'html/driver/browser_implementation_utils.dart';
 part 'html/driver/file.dart';

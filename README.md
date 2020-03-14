@@ -12,18 +12,16 @@ from the original [dart:html](https://github.com/dart-lang/sdk/tree/master/tools
 documented in the relevant files.
 
 ## Example use cases
-### HTML/XML crawling and scraping
-The library enables you to:
-  * Parse and inspect HTML/XML
-  * Find HTML/XML elements with CSS queries ([querySelectorAll](https://api.dart.dev/stable/2.7.1/dart-html/Document/querySelectorAll.html)).
-  * Submit forms
-
-### EventSource
-The library gives you cross-platform _EventSource_ ([Dart API](https://api.dart.dev/stable/2.7.1/dart-html/EventSource-class.html)), which is a [Server Sent Events](https://www.html5rocks.com/en/tutorials/eventsource/basics) (application/event-stream) client.
-
-### Usage by web frameworks
-This library makes command-line or server-side HTML rendering easy.
-[Dint](https://dint.dev) uses _universal_html_ for this purpose.
+  * __HTML/XML crawling and scraping__
+    * Parse and inspect HTML/XML.
+    * Find HTML/XML elements with CSS queries ([querySelectorAll](https://api.dart.dev/stable/2.7.1/dart-html/Document/querySelectorAll.html)).
+    * Submit forms.
+  * __Cross-platform HTML generation__
+    * For example, web frameworks can generate HTML in the browser, command-line, and server-side.
+  * __EventSource__
+    * The library contains a cross-platform _EventSource_ ([Dart API](https://api.dart.dev/stable/2.7.1/dart-html/EventSource-class.html)),
+      which is a [Server Sent Events](https://www.html5rocks.com/en/tutorials/eventsource/basics)
+      (application/event-stream) client.
 
 ## Links
   * [API reference for dart:html](https://api.dart.dev/stable/2.7.1/dart-html/dart-html-library.html)
@@ -40,7 +38,7 @@ This library makes command-line or server-side HTML rendering easy.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^1.1.18
+  universal_html: ^1.1.20
 ```
 
 Now you can replace usage of "dart:html" with "package:universal_html/html.dart".

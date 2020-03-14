@@ -47,6 +47,15 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 class History {
+  /// Checks if the State APIs are supported on the current platform.
+  ///
+  /// See also:
+  ///
+  /// * [pushState]
+  /// * [replaceState]
+  /// * [state]
+  static bool get supportsState => true;
+
   final List<_HistoryState> _stack = [
     _HistoryState(null, '', window.location.href),
   ];
@@ -54,13 +63,11 @@ class History {
   int _index = 0;
   dynamic _state;
 
+  String scrollRestoration;
+
   History._();
 
   int get length => _stack.length;
-
-  String get scrollRestoration {
-    throw UnimplementedError();
-  }
 
   dynamic get state => _state;
 

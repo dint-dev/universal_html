@@ -44,5 +44,5 @@ void _testNetworking() {
 
     _testHttpRequest();
     _testEventSource();
-  });
+  }, timeout: Timeout(const Duration(seconds: 30)));
 }

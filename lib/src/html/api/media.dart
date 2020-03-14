@@ -45,6 +45,8 @@ The source code adopted from 'dart:html' had the following license:
 */
 part of universal_html.internal;
 
+typedef RemotePlaybackAvailabilityCallback = void Function(bool available);
+
 abstract class CanvasCaptureMediaStreamTrack implements MediaStreamTrack {
   CanvasCaptureMediaStreamTrack._();
 
@@ -83,28 +85,99 @@ abstract class MediaDeviceInfo {
   String get label;
 }
 
-class MediaDevices {
-  MediaDevices._();
+class MediaDevices extends EventTarget {
+  MediaDevices._() : super._created();
 
   Future<List<MediaDeviceInfo>> enumerateDevices() async {
     return const <MediaDeviceInfo>[];
   }
+
+  Map getSupportedConstraints() => null;
 }
 
-class MediaKeys {
-  MediaKeys._();
+abstract class MediaError {
+  static const int MEDIA_ERR_ABORTED = 1;
+
+  static const int MEDIA_ERR_DECODE = 3;
+
+  static const int MEDIA_ERR_NETWORK = 2;
+
+  static const int MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
+
+  factory MediaError._() {
+    throw UnimplementedError();
+  }
+
+  int get code;
+
+  String get message;
 }
 
-abstract class MediaRecorder {
-  void pause() {}
+abstract class MediaKeys {
+  factory MediaKeys._() {
+    throw UnimplementedError();
+  }
 
-  void requestData() {}
+  Future getStatusForPolicy(MediaKeysPolicy policy);
 
-  void resume() {}
+  Future setServerCertificate(/*BufferSource*/ serverCertificate);
+}
 
-  void start([int timeslice]) {}
+abstract class MediaKeysPolicy {
+  factory MediaKeysPolicy(Map init) {
+    throw UnimplementedError();
+  }
 
-  void stop() {}
+  factory MediaKeysPolicy._() {
+    throw UnimplementedError();
+  }
+
+  String get minHdcpVersion;
+}
+
+abstract class MediaRecorder implements EventTarget {
+  // To suppress missing implicit constructor warnings.
+  static const EventStreamProvider<Event> errorEvent =
+      EventStreamProvider<Event>('error');
+
+  static const EventStreamProvider<Event> pauseEvent =
+      EventStreamProvider<Event>('pause');
+
+  factory MediaRecorder(MediaStream stream, [Map options]) {
+    throw UnimplementedError();
+  }
+
+  factory MediaRecorder._() {
+    throw UnimplementedError();
+  }
+
+  int get audioBitsPerSecond;
+
+  String get mimeType;
+
+  Stream<Event> get onError => errorEvent.forTarget(this);
+
+  Stream<Event> get onPause => pauseEvent.forTarget(this);
+
+  String get state;
+
+  MediaStream get stream;
+
+  int get videoBitsPerSecond;
+
+  void pause();
+
+  void requestData();
+
+  void resume();
+
+  void start([int timeslice]);
+
+  void stop();
+
+  static bool isTypeSupported(String type) {
+    throw UnimplementedError();
+  }
 }
 
 abstract class MediaSettingsRange {
@@ -133,12 +206,58 @@ abstract class MediaSource extends EventTarget {
   static bool isTypeSupported(String type) => false;
 }
 
-abstract class MediaStream extends EventTarget {
-  MediaStream._() : super._created();
+abstract class MediaStream implements EventTarget {
+  /// Static factory designed to expose `addtrack` events to event
+  /// handlers that are not necessarily instances of [MediaStream].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<Event> addTrackEvent =
+      EventStreamProvider<Event>('addtrack');
+
+  /// Static factory designed to expose `removetrack` events to event
+  /// handlers that are not necessarily instances of [MediaStream].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<Event> removeTrackEvent =
+      EventStreamProvider<Event>('removetrack');
+
+  static bool get supported => false;
+
+  factory MediaStream([stream_OR_tracks]) {
+    throw UnimplementedError();
+  }
+
+  bool get active;
+
+  String get id;
+
+  /// Stream of `addtrack` events handled by this [MediaStream].
+  Stream<Event> get onAddTrack => addTrackEvent.forTarget(this);
+
+  /// Stream of `removetrack` events handled by this [MediaStream].
+  Stream<Event> get onRemoveTrack => removeTrackEvent.forTarget(this);
+
+  void addTrack(MediaStreamTrack track);
+
+  MediaStream clone();
+
+  List<MediaStreamTrack> getAudioTracks();
+
+  MediaStreamTrack getTrackById(String trackId);
+
+  List<MediaStreamTrack> getTracks();
+
+  List<MediaStreamTrack> getVideoTracks();
+
+  void removeTrack(MediaStreamTrack track);
 }
 
 class MediaStreamEvent extends Event {
+  static bool get supported => false;
+
   MediaStreamEvent(String type) : super.internal(type);
+
+  MediaStream get stream => null;
 }
 
 abstract class MediaStreamTrack extends EventTarget {
@@ -178,6 +297,20 @@ abstract class PhotoCapabilities {
   String get redEyeReduction;
 }
 
+abstract class RemotePlayback extends EventTarget {
+  factory RemotePlayback._() {
+    throw UnimplementedError();
+  }
+
+  String get state;
+
+  Future cancelWatchAvailability([int id]);
+
+  Future prompt();
+
+  Future<int> watchAvailability(RemotePlaybackAvailabilityCallback callback);
+}
+
 abstract class SourceBuffer {
   SourceBuffer._();
 
@@ -192,6 +325,18 @@ abstract class SourceBuffer {
 
 class TextTrack {
   TextTrack._();
+}
+
+abstract class TimeRanges {
+  factory TimeRanges._() {
+    throw UnimplementedError();
+  }
+
+  int get length => null;
+
+  double end(int index);
+
+  double start(int index);
 }
 
 class VideoPlaybackQuality {

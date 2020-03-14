@@ -14,6 +14,214 @@
 
 part of main_test;
 
+void _testAttribute<T extends Element>(
+  String name,
+  T element,
+  String Function(T e) getter,
+  void Function(T element, String value) setter, {
+  String defaultValue = '',
+  String value = 'x',
+}) {
+  // Test expectations
+  expect(
+    getter(element),
+    defaultValue,
+    reason: 'Default value is incorrect',
+  );
+
+  // Use element.setAttribute
+  element.setAttribute(name, value);
+
+  // Test expectations
+  expect(
+    element.getAttribute(name),
+    value,
+    reason: 'Setting with setAttribute fails (getAttribute)',
+  );
+  expect(
+    getter(element),
+    value,
+    reason: 'Setting with setAttribute fails (getter)',
+  );
+
+  // Reset
+  element.removeAttribute(name);
+
+  // Test expectations
+  expect(
+    element.getAttribute(name),
+    null,
+    reason: 'Removing fails (getAttribute)',
+  );
+  expect(
+    getter(element),
+    defaultValue,
+    reason: 'Removing fails (getter)',
+  );
+
+  // Use element.propertyName=
+  setter(element, value);
+
+  // Test expectations
+  expect(
+    getter(element),
+    value,
+    reason: 'Setting with setter fails (getter',
+  );
+  expect(
+    element.getAttribute(name),
+    value,
+    reason: 'Setting with setter fails (getAttribute)',
+  );
+}
+
+void _testAttributeBool<T extends Element>(String name, T element,
+    bool Function(T e) getter, void Function(T element, bool value) setter) {
+  // Test expectations
+  expect(getter(element), false);
+
+  // element.setAttribute
+  element.setAttribute(name, '');
+
+  // Test expectations
+  expect(element.hasAttribute(name), true);
+  expect(element.getAttribute(name), '');
+  expect(getter(element), true);
+
+  // Reset
+  element.removeAttribute(name);
+
+  // Test expectations
+  expect(element.hasAttribute(name), false);
+  expect(element.getAttribute(name), null);
+  expect(getter(element), false);
+
+  // element.propertyName=
+  setter(element, true);
+
+  // Test expectations
+  expect(element.hasAttribute(name), true);
+  expect(element.getAttribute(name), '');
+  expect(getter(element), true);
+}
+
+void _testAttributeBoolString<T extends Element>(String name, T element,
+    bool Function(T e) getter, void Function(T element, bool value) setter,
+    {String falseValue = 'false', String trueValue = 'true'}) {
+  final defaultValue = getter(element);
+  if (defaultValue == false) {
+    // Test expectations
+    expect(getter(element), false);
+
+    // element.setAttribute
+    element.setAttribute(name, trueValue);
+
+    // Test expectations
+    expect(element.hasAttribute(name), true);
+    expect(element.getAttribute(name), trueValue);
+    expect(getter(element), true);
+
+    // Reset
+    element.removeAttribute(name);
+
+    // Test expectations
+    expect(element.hasAttribute(name), false);
+    expect(element.getAttribute(name), null);
+    expect(getter(element), false);
+
+    // element.propertyName=
+    setter(element, true);
+
+    // Test expectations
+    expect(element.hasAttribute(name), true);
+    expect(element.getAttribute(name), trueValue);
+    expect(getter(element), true);
+  } else {
+    // Test expectations
+    expect(getter(element), true);
+
+    // element.setAttribute
+    element.setAttribute(name, falseValue);
+
+    // Test expectations
+    expect(element.hasAttribute(name), true);
+    expect(element.getAttribute(name), falseValue);
+    expect(getter(element), false);
+
+    // Reset
+    element.removeAttribute(name);
+
+    // Test expectations
+    expect(element.hasAttribute(name), false);
+    expect(element.getAttribute(name), null);
+    expect(getter(element), true);
+
+    // element.propertyName=
+    setter(element, false);
+
+    // Test expectations
+    expect(element.hasAttribute(name), true);
+    expect(element.getAttribute(name), falseValue);
+    expect(getter(element), false);
+  }
+}
+
+void _testAttributeNumber<T extends Element>(String name, T element,
+    int Function(T e) getter, void Function(T element, int value) setter,
+    {int defaultValue}) {
+  // Test expectations
+  expect(element.getAttribute(name), null);
+  expect(getter(element), defaultValue);
+
+  // element.setAttribute
+  element.setAttribute(name, '42');
+
+  // Test expectations
+  expect(element.hasAttribute(name), true);
+  expect(element.getAttribute(name), '42');
+  expect(getter(element), 42);
+
+  // Reset
+  element.removeAttribute(name);
+
+  // Test expectations
+  expect(element.hasAttribute(name), false);
+  expect(element.getAttribute(name), null);
+  expect(getter(element), defaultValue);
+
+  // element.propertyName=
+  setter(element, 42);
+
+  // Test expectations
+  expect(element.hasAttribute(name), true);
+  expect(element.getAttribute(name), '42');
+  expect(getter(element), 42);
+}
+
+void _testAttributeResolvedUri<T extends Element>(
+  String name,
+  T element,
+  String Function(T e) getter,
+  void Function(T element, String value) setter,
+) {
+  expect(element.baseUri, isNotEmpty);
+  expect(getter(element), '');
+
+  // Test absolute
+  final absoluteUri = 'https://absolute/path';
+  element.setAttribute(name, absoluteUri);
+  expect(getter(element), absoluteUri);
+  expect(element.getAttribute(name), absoluteUri);
+
+  final relativeUri = 'relative/example';
+  setter(element, relativeUri);
+  expect(element.getAttribute(name), 'relative/example');
+  expect(
+    getter(element),
+    matches(r'^.+:(?://localhost:[0-9]+(?:/.+)*)?/relative/example$'),
+  );
+}
+
 void _testElementSubclasses() {
   // ---------------------------------------------------------------------------
   // AnchorElement
@@ -117,6 +325,7 @@ void _testElementSubclasses() {
   // ---------------------------------------------------------------------------
   group('ButtonElement: ', () {
     ButtonElement element;
+
     setUp(() {
       element = ButtonElement();
     });
@@ -124,6 +333,17 @@ void _testElementSubclasses() {
     test('click', () {
       element.onClick.listen(expectAsync1((event) => null));
       element.click();
+    });
+
+    test('type', () {
+      _testAttribute<ButtonElement>(
+        'type',
+        element,
+        (e) => e.type,
+        (e, v) => e.type = v,
+        defaultValue: 'submit',
+        value: 'reset',
+      );
     });
   });
 
@@ -793,184 +1013,4 @@ void _testElementSubclasses() {
       );
     });
   });
-}
-
-void _testAttribute<T extends Element>(
-  String name,
-  T element,
-  String Function(T e) getter,
-  void Function(T element, String value) setter, {
-  String defaultValue = '',
-  String value = 'x',
-}) {
-  // Test expectations
-  expect(getter(element), defaultValue);
-
-  // Use element.setAttribute
-  element.setAttribute(name, value);
-
-  // Test expectations
-  expect(element.getAttribute(name), value);
-  expect(getter(element), value);
-
-  // Reset
-  element.removeAttribute(name);
-
-  // Test expectations
-  expect(element.getAttribute(name), null);
-  expect(getter(element), defaultValue);
-
-  // Use element.propertyName=
-  setter(element, value);
-
-  // Test expectations
-  expect(getter(element), value);
-  expect(element.getAttribute(name), value);
-}
-
-void _testAttributeBool<T extends Element>(String name, T element,
-    bool Function(T e) getter, void Function(T element, bool value) setter) {
-  // Test expectations
-  expect(getter(element), false);
-
-  // element.setAttribute
-  element.setAttribute(name, '');
-
-  // Test expectations
-  expect(element.hasAttribute(name), true);
-  expect(element.getAttribute(name), '');
-  expect(getter(element), true);
-
-  // Reset
-  element.removeAttribute(name);
-
-  // Test expectations
-  expect(element.hasAttribute(name), false);
-  expect(element.getAttribute(name), null);
-  expect(getter(element), false);
-
-  // element.propertyName=
-  setter(element, true);
-
-  // Test expectations
-  expect(element.hasAttribute(name), true);
-  expect(element.getAttribute(name), '');
-  expect(getter(element), true);
-}
-
-void _testAttributeBoolString<T extends Element>(String name, T element,
-    bool Function(T e) getter, void Function(T element, bool value) setter,
-    {String falseValue = 'false', String trueValue = 'true'}) {
-  final defaultValue = getter(element);
-  if (defaultValue == false) {
-    // Test expectations
-    expect(getter(element), false);
-
-    // element.setAttribute
-    element.setAttribute(name, trueValue);
-
-    // Test expectations
-    expect(element.hasAttribute(name), true);
-    expect(element.getAttribute(name), trueValue);
-    expect(getter(element), true);
-
-    // Reset
-    element.removeAttribute(name);
-
-    // Test expectations
-    expect(element.hasAttribute(name), false);
-    expect(element.getAttribute(name), null);
-    expect(getter(element), false);
-
-    // element.propertyName=
-    setter(element, true);
-
-    // Test expectations
-    expect(element.hasAttribute(name), true);
-    expect(element.getAttribute(name), trueValue);
-    expect(getter(element), true);
-  } else {
-    // Test expectations
-    expect(getter(element), true);
-
-    // element.setAttribute
-    element.setAttribute(name, falseValue);
-
-    // Test expectations
-    expect(element.hasAttribute(name), true);
-    expect(element.getAttribute(name), falseValue);
-    expect(getter(element), false);
-
-    // Reset
-    element.removeAttribute(name);
-
-    // Test expectations
-    expect(element.hasAttribute(name), false);
-    expect(element.getAttribute(name), null);
-    expect(getter(element), true);
-
-    // element.propertyName=
-    setter(element, false);
-
-    // Test expectations
-    expect(element.hasAttribute(name), true);
-    expect(element.getAttribute(name), falseValue);
-    expect(getter(element), false);
-  }
-}
-
-void _testAttributeNumber<T extends Element>(String name, T element,
-    int Function(T e) getter, void Function(T element, int value) setter,
-    {int defaultValue}) {
-  // Test expectations
-  expect(element.getAttribute(name), null);
-  expect(getter(element), defaultValue);
-
-  // element.setAttribute
-  element.setAttribute(name, '42');
-
-  // Test expectations
-  expect(element.hasAttribute(name), true);
-  expect(element.getAttribute(name), '42');
-  expect(getter(element), 42);
-
-  // Reset
-  element.removeAttribute(name);
-
-  // Test expectations
-  expect(element.hasAttribute(name), false);
-  expect(element.getAttribute(name), null);
-  expect(getter(element), defaultValue);
-
-  // element.propertyName=
-  setter(element, 42);
-
-  // Test expectations
-  expect(element.hasAttribute(name), true);
-  expect(element.getAttribute(name), '42');
-  expect(getter(element), 42);
-}
-
-void _testAttributeResolvedUri<T extends Element>(
-  String name,
-  T element,
-  String Function(T e) getter,
-  void Function(T element, String value) setter,
-) {
-  expect(element.baseUri, isNotEmpty);
-  expect(getter(element), '');
-
-  // Test absolute
-  final absoluteUri = 'https://absolute/path';
-  element.setAttribute(name, absoluteUri);
-  expect(getter(element), absoluteUri);
-  expect(element.getAttribute(name), absoluteUri);
-
-  final relativeUri = 'relative/example';
-  setter(element, relativeUri);
-  expect(element.getAttribute(name), 'relative/example');
-  expect(
-    getter(element),
-    matches(r'^.+:(?://localhost:[0-9]+(?:/.+)*)?/relative/example$'),
-  );
 }

@@ -100,14 +100,14 @@ class Event {
 
   final num timeStamp;
 
+  bool _cancelable;
+
   // In JS, canBubble and cancelable are technically required parameters to
   // init*Event. In practice, though, if they aren't provided they simply
   // default to false (since that's Boolean(undefined)).
   //
   // Contrary to JS, we default canBubble and cancelable to true, since that's
   // what people want most of the time anyway.
-  bool _cancelable;
-
   factory Event(String type, {bool canBubble = true, bool cancelable = true}) {
     return Event.eventType(
       'Event',
@@ -155,6 +155,8 @@ class Event {
   bool get defaultPrevented => _defaultPrevented;
 
   int get eventPhase => _eventPhase;
+
+  bool get isTrusted => true;
 
   /// A pointer to the element whose CSS selector matched within which an event
   /// was fired. If this Event was not associated with any Event delegation,

@@ -12,11 +12,11 @@ from the original [dart:html](https://github.com/dart-lang/sdk/tree/master/tools
 documented in the relevant files.
 
 ## Example use cases
-  * __HTML/XML crawling and scraping__
+  * __HTML/XML scraping__
     * Parse and inspect HTML/XML.
     * Find HTML/XML elements with CSS queries ([querySelectorAll](https://api.dart.dev/stable/2.7.1/dart-html/Document/querySelectorAll.html)).
     * Submit forms.
-  * __Cross-platform HTML generation__
+  * __Generating HTML content__
     * For example, web frameworks can generate HTML in the browser, command-line, and server-side.
   * __EventSource__
     * The library contains a cross-platform _EventSource_ ([Dart API](https://api.dart.dev/stable/2.7.1/dart-html/EventSource-class.html)),
@@ -38,7 +38,7 @@ documented in the relevant files.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^1.1.20
+  universal_html: ^1.2.0
 ```
 
 Now you can replace usage of "dart:html" with "package:universal_html/html.dart".
@@ -93,6 +93,20 @@ void main() {
 ```
 
 # Manual
+## Parsing HTML / XML
+We recommend that you use the following helper library (instead of _DomParser_):
+```
+import 'package:universal_html/parsing.dart';
+
+void main() {
+  // HTML
+  final htmlDocument = parseHtmlDocument('<html>...</html>');
+
+  // XML
+  final xmlDocument = parseXmlDocument('<xml>...</xml>');
+}
+```
+
 ## Server-side rendering
 The package comes with _ServerSideRenderer_, which is a web server for rendering your web
 application in the server-side.

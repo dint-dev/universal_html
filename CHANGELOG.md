@@ -1,6 +1,9 @@
+## 1.2.0
+* Adds `package:universal_html/parsing.dart`.
+
 ## 1.1.21
-* Lowered minimum version of `csslib` ([#17](https://github.com/dint-dev/universal_html/issues/17)) and `html` dependencies.
-* Added @nodoc to helper libraries.
+* Lowers minimum version of `csslib` ([#17](https://github.com/dint-dev/universal_html/issues/17)) and `html` dependencies.
+* Adds @nodoc to helper libraries.
 
 ## 1.1.20
 * Adds various missing APIs.

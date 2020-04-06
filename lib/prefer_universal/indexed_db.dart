@@ -12,5 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// {@nodoc}
+library prefer_universal.indexed_db;
+
 export '../src/indexed_db.dart'
     if (dart.library.indexed_db) '../src/_sdk/indexed_db.dart';

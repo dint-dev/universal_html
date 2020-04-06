@@ -12,4 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// {@nodoc}
+library prefer_sdk.indexed_db;
+
 export 'dart:indexed_db' if (dart.library.io) '../src/indexed_db.dart';

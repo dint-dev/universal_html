@@ -12,4 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// {@nodoc}
+library prefer_universal.web_gl;
+
 export '../src/web_gl.dart' if (dart.library.web_gl) '../src/_sdk/web_gl.dart';

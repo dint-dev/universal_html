@@ -12,4 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// {@nodoc}
+library prefer_universal.svg;
+
 export '../src/svg.dart' if (dart.library.svg) '../src/_sdk/svg.dart';

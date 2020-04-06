@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Creates and controls browser simulators.
+/// API for controlling browser simulators.
 library universal_html.driver;
 
 export 'src/driver/content_loading.dart';

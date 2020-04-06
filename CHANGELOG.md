@@ -1,8 +1,12 @@
+## 1.1.21
+* Lowered minimum version of `csslib` ([#17](https://github.com/dint-dev/universal_html/issues/17)) and `html` dependencies.
+* Added @nodoc to helper libraries.
+
 ## 1.1.20
 * Adds various missing APIs.
 
 ## 1.1.19
-* Fixes bug in FileReader that caused compile-time errors.
+* Fixes a bug in FileReader that caused compile-time errors.
 * Updates DIFFERENCES.md
 
 ## 1.1.18

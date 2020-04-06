@@ -12,4 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// {@nodoc}
+library prefer_sdk.js_util;
+
 export 'dart:js_util' if (dart.library.io) '../src/js_util.dart';

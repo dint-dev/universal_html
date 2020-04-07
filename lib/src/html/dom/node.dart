@@ -80,6 +80,9 @@ abstract class CharacterData extends Node
     return node;
   }
 
+  @override
+  String get text => nodeValue;
+
   void appendData(String data) {
     final oldData = this.data;
     this.data = '$oldData$data';
@@ -526,9 +529,6 @@ class Text extends CharacterData {
   @override
   int get nodeType => Node.TEXT_NODE;
 
-  @override
-  String get text => nodeValue;
-
   @visibleForTesting
   @override
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
@@ -590,10 +590,20 @@ class _DocumentType extends Node {
   _DocumentType._(Document ownerDocument, this._value) : super._(ownerDocument);
 
   @override
-  String get nodeName => _value;
+  String get nodeName {
+    final value = _value;
+    final i = value.indexOf(' ');
+    if (i < 0) {
+      return value;
+    }
+    return value.substring(0, i);
+  }
 
   @override
   int get nodeType => Node.DOCUMENT_TYPE_NODE;
+
+  @override
+  String get text => null;
 
   @visibleForTesting
   @override

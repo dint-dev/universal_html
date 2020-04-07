@@ -15,7 +15,7 @@
 part of main_test;
 
 void _testParsing() {
-  group('Parsing nodes: ', () {
+  group('Parsing nodes:', () {
     setUp(() {
       HtmlDriver.current.uri = Uri.parse('http://localhost:8080/');
     });
@@ -242,7 +242,7 @@ some text
     });
 
     for (var contentType in ['text/xml', 'application/xml']) {
-      group('`DomParser, "$contentType":', () {
+      group('DomParser, "$contentType":', () {
         const source = '''
 <root xmlns:x="test/ns">
 <Child k0="v0" k1="v1">text</Child>

@@ -1,3 +1,7 @@
+## 1.2.1
+* Eliminates dependency on an XML parsing package by introducing our own XML parser.
+* Improves documentation.
+
 ## 1.2.0
 * Adds `package:universal_html/parsing.dart`.
 

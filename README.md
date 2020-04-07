@@ -5,14 +5,15 @@
 # Introduction
 Cross-platform _dart:html_ that works in all platforms (browser, Dart VM, and Flutter).
 
-The test suite is designed to verify that _universal_html_ behaves identically to dart:html running in Chrome.
+The test suite is designed to verify that _universal_html_ behaves identically to _dart:html_
+running in Chrome.
 
 The project is licensed under the [Apache License 2.0](LICENSE). Some of the source code was adopted
 from the original [dart:html](https://github.com/dart-lang/sdk/tree/master/tools/dom), which is
 documented in the relevant files.
 
 ## Example use cases
-  * __HTML/XML scraping__
+  * __HTML or XML parsing and scraping__
     * Parse and inspect HTML/XML.
     * Find HTML/XML elements with CSS queries ([querySelectorAll](https://api.dart.dev/stable/2.7.1/dart-html/Document/querySelectorAll.html)).
     * Submit forms.
@@ -38,7 +39,7 @@ documented in the relevant files.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^1.2.0
+  universal_html: ^1.2.1
 ```
 
 Now you can replace usage of "dart:html" with "package:universal_html/html.dart".
@@ -94,8 +95,8 @@ void main() {
 
 # Manual
 ## Parsing HTML / XML
-We recommend that you use the following helper library (instead of _DomParser_):
-```
+We recommend that you use `package:universal_html/parsing.dart` (instead of _DomParser_):
+```dart
 import 'package:universal_html/parsing.dart';
 
 void main() {
@@ -158,7 +159,7 @@ that are not yet declared by this package yet.
     * You can parse HTML/XML with _innerHtml/outerHtml_ setters and _DomParser_
     * HTML parsing uses [package:html](https://pub.dev/packages/html)
     * CSS parsing uses [package:csslib](https://pub.dev/packages/csslib)
-    * XML parsing uses [package:xml](https://pub.dev/packages/xml)
+    * XML parsing uses our own parser.
   * __DOM printing__
     * _element.innerHtml_, _element.outerHtml_
   * __DOM events__
@@ -220,7 +221,7 @@ _BrowserImplementation.newRenderData(element)_.
 Currently, networking classes don't implement same-origin policies, CORS, and other security
 specifications. We hope to fix this in future.
 
-### Nevigator
+### Navigator
   * _locale_
   * All APIs are declared
 
@@ -243,7 +244,7 @@ We wrote mock implementation of the following SDK libraries:
   * _dart:svg_
   * _dart:web_gl_
 
-Any attempt to use these APIs will ead to _UnimplementedException_. The libraries are available in:
+Any attempt to use these APIs will throw _UnimplementedException_. The libraries are available in:
   * package:universal_html/(libraryName).dart
   * package:universal_html/prefer_sdk/(libraryName).dart
   * package:universal_html/prefer_universal/(libraryName).dart

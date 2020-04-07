@@ -20,7 +20,7 @@ import 'package:universal_html/html.dart';
 import 'src/parsing/parsing_impl_browser.dart'
     if (dart.library.io) 'src/parsing/parsing_impl_vm.dart' as impl;
 
-/// Parses [HtmlDocument].
+/// Parses a [HtmlDocument].
 ///
 /// ```
 /// import 'package:universal_html/parsing.dart';
@@ -34,7 +34,7 @@ HtmlDocument parseHtmlDocument(String content) {
   return impl.parseHtmlDocument(content);
 }
 
-/// Parses [XmlDocument].
+/// Parses an [XmlDocument].
 ///
 /// ```
 /// import 'package:universal_html/parsing.dart';

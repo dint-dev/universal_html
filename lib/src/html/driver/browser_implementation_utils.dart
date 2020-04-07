@@ -67,25 +67,24 @@ class BrowserImplementationUtils {
 
   /// Used by HTML parser.
   static void setAttributeNSFromParser(
-      Element element, String namespaceUri, String name, String value) {
+    Element element,
+    String namespaceUri,
+    String qualifiedName,
+    String localName,
+    String value,
+  ) {
     if (namespaceUri == '') {
       namespaceUri = null;
     }
     value ??= 'null';
     if (!element._isXml) {
-      name = name.toLowerCase();
+      qualifiedName = qualifiedName.toLowerCase();
+      localName = localName.toLowerCase();
 
-      if (name == 'style' && namespaceUri == null) {
+      if (qualifiedName == 'style' && namespaceUri == null) {
         element._setAttribute('style', value);
         return;
       }
-    }
-
-    final qualifiedName = name;
-    var localName = qualifiedName;
-    final i = localName.indexOf(':');
-    if (i >= 0) {
-      localName = localName.substring(i + 1);
     }
 
     _Attribute previous;

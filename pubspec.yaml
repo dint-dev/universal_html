@@ -1,8 +1,8 @@
 name: universal_html
-version: 1.2.1
+version: 1.2.2
 description:
-  A 'dart:html' that works in all platforms, including Flutter and servers.
-  Eases cross-platform development, web scraping, and other HTML / XML handling.
+  A 'dart:html' that works in all platforms, including Flutter and server-side.
+  Eases cross-platform development and other HTML / XML processing.
 homepage: https://github.com/dint-dev/universal_html
 
 environment:

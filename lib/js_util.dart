@@ -12,21 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Cross-platform _dart:js_util_.
-///
-/// You can choose from the following libraries:
-///   * `package:universal_html/js_util.dart`
-///   * `package:universal_html/prefer_sdk/js_util.dart`
-///   * `package:universal_html/prefer_universal/js_util.dart`
-///
-/// # Introduction
-///
-/// Utility methods to efficiently manipulate typed JSInterop objects in cases
-/// where the name to call is not known at runtime. You should only use these
-/// methods when the same effect cannot be achieved with @JS annotations.
-/// These methods would be extension methods on JSObject if Dart supported
-/// extension methods.
-///
+/// {@nodoc}
+@deprecated
 library universal_html.js_util;
 
 export 'prefer_sdk/js_util.dart';

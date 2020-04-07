@@ -12,12 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Cross-platform _dart:svg_.
-///
-/// You can choose from the following libraries:
-///   * `package:universal_html/svg.dart`
-///   * `package:universal_html/prefer_sdk/svg.dart`
-///   * `package:universal_html/prefer_universal/svg.dart`
+/// {@nodoc}
+@deprecated
 library universal_html.svg;
 
 export 'prefer_sdk/svg.dart';

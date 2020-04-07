@@ -13,6 +13,7 @@
 // limitations under the License.
 
 /// {@nodoc}
+@deprecated
 library prefer_sdk.js_util;
 
 export 'dart:js_util' if (dart.library.io) '../src/js_util.dart';

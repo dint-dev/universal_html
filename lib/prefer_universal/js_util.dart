@@ -13,6 +13,7 @@
 // limitations under the License.
 
 /// {@nodoc}
+@deprecated
 library prefer_universal.js_util;
 
 export '../src/js_util.dart'

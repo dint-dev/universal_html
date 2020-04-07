@@ -13,6 +13,7 @@
 // limitations under the License.
 
 /// {@nodoc}
+@deprecated
 library prefer_sdk.web_gl;
 
 export 'dart:web_gl' if (dart.library.io) '../src/web_gl.dart';

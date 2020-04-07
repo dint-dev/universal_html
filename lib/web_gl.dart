@@ -12,12 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Cross-platform _dart:html_.
-///
-/// You can choose from the following libraries:
-///   * `package:universal_html/web_gl.dart`
-///   * `package:universal_html/prefer_sdk/web_gl.dart`
-///   * `package:universal_html/prefer_universal/web_gl.dart`
+/// {@nodoc}
+@deprecated
 library universal_html.web_gl;
 
 export 'prefer_sdk/web_gl.dart';

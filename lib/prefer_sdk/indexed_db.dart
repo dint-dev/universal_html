@@ -13,6 +13,7 @@
 // limitations under the License.
 
 /// {@nodoc}
+@deprecated
 library prefer_sdk.indexed_db;
 
 export 'dart:indexed_db' if (dart.library.io) '../src/indexed_db.dart';

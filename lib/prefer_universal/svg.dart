@@ -13,6 +13,7 @@
 // limitations under the License.
 
 /// {@nodoc}
+@deprecated
 library prefer_universal.svg;
 
 export '../src/svg.dart' if (dart.library.svg) '../src/_sdk/svg.dart';

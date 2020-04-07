@@ -1,3 +1,7 @@
+## 1.2.2
+* Improves documentation.
+* Deprecates some libraries.
+
 ## 1.2.1
 * Eliminates dependency on an XML parsing package by introducing our own XML parser.
 * Improves documentation.

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 /// {@nodoc}
+@deprecated
 library prefer_universal.indexed_db;
 
 export '../src/indexed_db.dart'

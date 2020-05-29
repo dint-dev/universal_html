@@ -1,5 +1,5 @@
 [![Pub Package](https://img.shields.io/pub/v/universal_html.svg)](https://pub.dartlang.org/packages/universal_html)
-[![Github Actions CI](https://github.com/dint-dev/universal_html/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/universal_html/actions?query=workflow%3A%22Dart+CI%22)
+[![Github Actions CI](https://github.com/dint-dev/web_browser/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/web_browser/actions?query=workflow%3A%22Dart+CI%22)
 
 # Introduction
 A cross-platform `dart:html`:
@@ -19,8 +19,8 @@ documented in the relevant files.
 
 ## Links
   * [API reference](https://pub.dev/documentation/universal_html/latest/universal_html/universal_html-library.html)
-  * [Github project](https://github.com/dint-dev/universal_html)
-  * [Issue tracker](https://github.com/dint-dev/universal_html/issues)
+  * [Github project](https://github.com/dint-dev/web_browser)
+  * [Issue tracker](https://github.com/dint-dev/web_browser/issues)
 
 ## Used by
   * [web_browser](https://pub.dev/packages/web_browser)

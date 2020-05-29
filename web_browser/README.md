@@ -1,6 +1,14 @@
+[![Pub Package](https://img.shields.io/pub/v/web_browser.svg)](https://pub.dartlang.org/packages/web_browser)
+[![Github Actions CI](https://github.com/dint-dev/web_browser/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/web_browser/actions?query=workflow%3A%22Dart+CI%22)
+
 # Overview
 Web browser and HTML rendering widgets for Flutter application. Licensed under the
 [Apache License 2.0](LICENSE).
+
+## Links
+  * [API reference](https://pub.dev/documentation/web_browser/latest/web_browser/web_browser-library.html)
+  * [Github project](https://github.com/dint-dev/web_browser)
+  * [Issue tracker](https://github.com/dint-dev/web_browser/issues)
 
 # Getting started
 ## Adding dependency
@@ -12,7 +20,7 @@ dependencies:
 
 ## 2.Configure your project
 In _ios/Runner/Info.plist_, add:
-```dart:s
+```xml
 <key>io.flutter.embedded_views_preview</key>
 <true />
 ```

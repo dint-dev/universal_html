@@ -3,7 +3,7 @@ version: 1.2.2
 description:
   A 'dart:html' that works in all platforms, including Flutter and server-side.
   Eases cross-platform development and other HTML / XML processing.
-homepage: https://github.com/dint-dev/universal_html
+homepage: https://github.com/dint-dev/web_browser
 
 environment:
   sdk: '>=2.6.0 <3.0.0'

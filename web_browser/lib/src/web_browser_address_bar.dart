@@ -17,6 +17,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:web_browser/web_browser.dart';
+import 'search_impl_default.dart'
+    if (dart.library.html) 'search_impl_browser.dart';
 
 /// A web browser address bar.
 class WebBrowserAddressBar extends StatefulWidget {
@@ -40,19 +42,6 @@ class WebBrowserAddressBar extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _WebBrowserAddressBarState();
-  }
-
-  /// Uses Google for searching.
-  static void defaultOnSearch(WebBrowserController controller, String query) {
-    query = query.trim();
-    if (query.isEmpty) {
-      controller.loadUrl('https://www.google.com/');
-    } else {
-      final q =
-          query.split(' ').map((e) => Uri.encodeQueryComponent(e)).join('+');
-      final url = 'https://www.google.com/search?q=$q';
-      controller.loadUrl(url);
-    }
   }
 }
 
@@ -99,12 +88,14 @@ class _WebBrowserAddressBarState extends State<WebBrowserAddressBar> {
         focusScope.unfocus();
 
         // Get URL
-        var value = _textEditingController.text;
+        var value = _textEditingController.text.trim();
 
         // Is it a search query?
+        final parsedUri = Uri.tryParse(value);
         if (onSearch != null) {
           final isNotGoodURL = value.contains(' ') ||
-              !(value.contains('.') || value.contains('://'));
+              parsedUri == null ||
+              (!parsedUri.hasScheme && !(parsedUri.host ?? '').contains('.'));
           if (isNotGoodURL) {
             // A search query
             onSearch(controller, value);
@@ -113,7 +104,7 @@ class _WebBrowserAddressBarState extends State<WebBrowserAddressBar> {
         }
 
         // If user gives URL without scheme
-        if (!value.contains('://')) {
+        if (parsedUri != null && !parsedUri.hasScheme) {
           // Prepend "https://
           value = 'https://$value';
         }
@@ -163,10 +154,17 @@ class _WebBrowserAddressBarState extends State<WebBrowserAddressBar> {
 
   static String _visibleUrl(String value) {
     value ??= '';
+
     const ignoredPrefix = 'https://';
     if (value.startsWith(ignoredPrefix)) {
       return value.substring(ignoredPrefix.length);
     }
+
+    // Hide the data URLs
+    if (value.startsWith('data:')) {
+      return '';
+    }
+
     return value;
   }
 }

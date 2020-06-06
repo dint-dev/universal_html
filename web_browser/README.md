@@ -5,65 +5,70 @@
 Web browser and HTML rendering widgets for Flutter application. Licensed under the
 [Apache License 2.0](LICENSE).
 
+In Android and iOS, this package uses [webview_flutter](https://pub.dev/packages/webview_flutter),
+which is maintained by Google. However, _webview_flutter_ works only in Android and iOS. This
+package works in browsers too by using `<iframe>` and other HTML elements. The iframe relies on a
+_dart:ui_ API that is currently undocumented.
+
+For easy cross-platform DOM manipulation, the package also exports `package:web_browser/html.dart`,
+which is a cross-platform _dart:html_ taken from [universal_html](https://pub.dev/packages/universal_html),
+a sibling project of this package.
+
+The main widgets in this package are:
+  * [WebBrowser](https://pub.dev/documentation/universal_html/latest/web_browser/WebBrowser-class.html)
+    * Shows any web page. By default, gives you address bar and navigation bar.
+    * By default, gives you:
+      * Address bar
+      * "Share link" button
+      * "Back" button
+      * "Forward" button
+  * [WebNode](https://pub.dev/documentation/universal_html/latest/web_browser/WebNode-class.html)
+    * Shows any DOM node. DOM nodes work in Android and iOS too, thanks to
+      [universal_html](https://pub.dev/packages/universal_html).
+
+## Contributing
+  * Pull request are welcome!
+  * Please test your changes manually with the example application.
+
+## Known issues
+  * Flickering in browsers ([Flutter issue #51865](https://github.com/flutter/flutter/issues/51865))
+
 ## Links
   * [API reference](https://pub.dev/documentation/web_browser/latest/web_browser/web_browser-library.html)
   * [Github project](https://github.com/dint-dev/web_browser)
   * [Issue tracker](https://github.com/dint-dev/web_browser/issues)
 
-# Getting started
+# Setting up
 ## Adding dependency
 In _pubspec.yaml_:
 ```yaml
 dependencies:
-  web_browser: any
+  web_browser: ^0.2.0
 ```
 
 ## 2.Configure your project
-In _ios/Runner/Info.plist_, add:
+Follow the standard [webview_flutter](https://pub.dev/packages/webview_flutter) instructions, which
+means adding the following snippet in `ios/Runner/Info.plist`:
 ```xml
 <key>io.flutter.embedded_views_preview</key>
 <true />
 ```
 
-## 3.Use widgets
-
-### WebText
-[WebText](https://pub.dev/documentation/universal_html/latest/web_browser/WebText-class.html) renders non-navigatable HTML in a borderless box.
-  * In Android/iOS, it uses [webview_flutter](https://pub.dev/packages/webview_flutter), which is
-    maintained by Google.
-  * In browsers, the widget uses `<div>...</div>`.
-
+## 3. Try it
 ```dart
-import 'package:web_browser/web_browser';
+import 'package:flutter/material.dart';
+import 'package:web_browser/web_browser.dart';
 
-const greeting = WebText('<h1 style="color:navy">Hello world!</h1>');
-```
-
-### WebNode
-[WebNode](https://pub.dev/documentation/universal_html/latest/web_browser/WebNode-class.html) renders non-navigatable HTML in a borderless box.
-  * In Android/iOS, it uses [webview_flutter](https://pub.dev/packages/webview_flutter), which is
-    maintained by Google.
-  * In browsers, the widget uses `<div>...</div>`.
-
-```dart
-import 'package:web_browser/html';
-import 'package:web_browser/web_browser';
-
-final element = HeadingElement.h1()..appendText('Hello world!');
-final greeting = WebNode(element);
-```
-
-### WebBrowser
-[WebBrowser](https://pub.dev/documentation/universal_html/latest/web_browser/WebBrowser-class.html) renders a navigatable web page.
-  * In Android/iOS, it uses [webview_flutter](https://pub.dev/packages/webview_flutter), which is
-    maintained by Google.
-  * In browsers, it uses `iframe`.
-
-```dart
-import 'package:web_browser/web_browser';
-
-const webBrowser = WebBrowser(
-  initialUrl: 'https://dart.dev/',
-  javascript: true,
-);
+void main() {
+  runApp(MaterialApp(
+    body: Scaffold(
+      body: SafeArea(
+        child: WebBrowser(
+          initialUrl: 'https://flutter.dev/',
+          javascriptEnabled: true,
+        ),
+      ),
+    ),
+  ));
+}
 ```

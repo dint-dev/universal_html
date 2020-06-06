@@ -12,16 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Shows web content in Flutter applications.
-library web_browser;
+import 'package:flutter/widgets.dart';
+import 'package:share/share.dart' as share;
 
-export 'src/controller.dart';
-export 'src/feature_policy.dart';
-export 'src/iframe_settings.dart';
-export 'src/interaction_settings.dart';
-export 'src/share_url.dart';
-export 'src/web_browser.dart';
-export 'src/web_browser_address_bar.dart';
-export 'src/web_browser_buttons.dart';
-export 'src/web_browser_navigation_bar.dart';
-export 'src/web_node.dart';
+void shareUrl(BuildContext context, String url) {
+  share.Share.share(url);
+}

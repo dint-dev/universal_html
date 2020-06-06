@@ -12,30 +12,65 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:web_browser/html.dart' as html;
-import 'package:web_browser/src/web_browser.dart';
+import 'package:web_browser/web_browser.dart';
 
 void main() {
-  group('WebNode:', () {
-    testWidgets('basic usage', (WidgetTester tester) async {
-      await tester.pumpWidget(WebNode(
-        html.HeadingElement.h1()..appendText('Hello world'),
-      ));
-    });
+  setUpAll(() {
+    spawnHybridUri('test/web_server.dart');
   });
-  group('WebText:', () {
-    testWidgets('basic usage', (WidgetTester tester) async {
-      await tester.pumpWidget(WebText('<h1>Hello world</h1>'));
-    });
-  });
+
   group('WebBrowser:', () {
-    testWidgets('basic usage', (WidgetTester tester) async {
-      await tester.pumpWidget(WebBrowser(
-        initialUrl: 'https://dart.dev/',
-        javascript: true,
-        allowFullscreen: true,
-      ));
+    testWidgets('basic usage in CupertinoApp', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        CupertinoApp(
+          home: WebBrowser(
+            initialUrl: 'http://localhost:9898/',
+            javascriptEnabled: true,
+          ),
+        ),
+      );
+    });
+
+    testWidgets('basic usage in MaterialApp', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: WebBrowser(
+            initialUrl: 'http://localhost:9898/',
+            javascriptEnabled: true,
+          ),
+        ),
+      );
+    });
+
+    testWidgets('with onCreated', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: WebBrowser(
+            initialUrl: 'http://localhost:9898/',
+            javascriptEnabled: true,
+            onCreated: (controller) {
+              // TODO: Test that this is called
+            },
+          ),
+        ),
+      );
+    });
+
+    testWidgets('with onError', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: WebBrowser(
+            initialUrl: 'http://localhost:9898/',
+            javascriptEnabled: true,
+            onError: (error) {
+              // TODO: Test that this is called
+            },
+          ),
+        ),
+      );
     });
   });
 }

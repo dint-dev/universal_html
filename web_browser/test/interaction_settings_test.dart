@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Shows web content in Flutter applications.
-library web_browser;
+import 'package:flutter_test/flutter_test.dart';
+import 'package:web_browser/src/interaction_settings.dart';
 
-export 'src/controller.dart';
-export 'src/feature_policy.dart';
-export 'src/iframe_settings.dart';
-export 'src/interaction_settings.dart';
-export 'src/share_url.dart';
-export 'src/web_browser.dart';
-export 'src/web_browser_address_bar.dart';
-export 'src/web_browser_buttons.dart';
-export 'src/web_browser_navigation_bar.dart';
-export 'src/web_node.dart';
+void main() {
+  group('InteractionSettings:', () {
+    test('default', () {
+      const settings = WebBrowserInteractionSettings();
+      expect(settings.topBar, isNotNull);
+      expect(settings.bottomBar, isNotNull);
+      expect(settings.gestureNavigationEnabled, false);
+      expect(
+        settings.initialMediaPlaybackPolicy,
+        AutoMediaPlaybackPolicy.require_user_action_for_all_media_types,
+      );
+    });
+  });
+}

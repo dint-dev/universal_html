@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Shows web content in Flutter applications.
-library web_browser;
+import 'package:flutter_test/flutter_test.dart';
+import 'package:web_browser/html.dart' as html;
+import 'package:web_browser/web_browser.dart';
 
-export 'src/controller.dart';
-export 'src/feature_policy.dart';
-export 'src/iframe_settings.dart';
-export 'src/interaction_settings.dart';
-export 'src/share_url.dart';
-export 'src/web_browser.dart';
-export 'src/web_browser_address_bar.dart';
-export 'src/web_browser_buttons.dart';
-export 'src/web_browser_navigation_bar.dart';
-export 'src/web_node.dart';
+void main() {
+  group('WebNode:', () {
+    testWidgets('basic usage', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        WebNode(
+          node: html.HeadingElement.h1()..appendText('Hello world'),
+        ),
+      );
+    });
+  });
+}

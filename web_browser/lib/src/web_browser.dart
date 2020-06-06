@@ -12,80 +12,119 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart' hide Element;
 import 'package:meta/meta.dart';
-import 'package:web_browser/html.dart' as html;
-import 'package:web_browser/html.dart';
+import 'package:web_browser/web_browser.dart';
+import 'package:webview_flutter/platform_interface.dart' show WebResourceError;
 
 import 'web_browser_impl_default.dart'
-    if (dart.library.html) 'web_browser_impl_browser.dart';
+    if (dart.library.html) 'web_browser_impl_browser.dart' as impl;
 
-/// Renders a web page.
+export 'package:webview_flutter/platform_interface.dart'
+    show WebResourceError, WebResourceErrorType;
+export 'package:webview_flutter/webview_flutter.dart' show CookieManager;
+
+/// A widget for showing a web page.
+///
+/// Behavior by platform:
+///   * In browsers, the widget uses `<iframe src="URL">`.
+///   * In other platforms, the widget uses [webview_flutter](https://pub.dev/packages/webview_flutter),
+///     which is a plugin maintained by Google.
 ///
 /// ## Example
 /// ```
 /// import 'package:web_browser/web_browser.dart';
 ///
-/// const widget = WebBrowser(
-///   initialUrl: 'https://dart.dev/',
-///   javascript: true,
-///   allowFullscreen: true,
-/// );
+/// class MyWidget extends StatelessWidget {
+///   @override
+///   Widget build(BuildContext context) {
+///     return WebBrowser(
+///       initialUrl: 'https://dart.dev/',
+///       javascript: true,
+///     );
+///   }
+/// }
 /// ```
-class WebBrowser extends StatelessWidget {
+class WebBrowser extends StatefulWidget {
+  static const Set<Factory<OneSequenceGestureRecognizer>>
+      _defaultGestureRecognizers = {
+    Factory<HorizontalDragGestureRecognizer>(
+      _horizontalDragGestureRecognizerFactory,
+    ),
+    Factory<VerticalDragGestureRecognizer>(
+      _verticalDragGestureRecognizerFactory,
+    ),
+    Factory<TapGestureRecognizer>(
+      _tapGestureRecognizerFactory,
+    ),
+  };
+
+  /// Initial URL.
   final String initialUrl;
-  final bool javascript;
-  final bool allowFullscreen;
+
+  /// Specifies `<iframe>` attributes.
+  final WebBrowserIFrameSettings iframeSettings;
+
+  /// Specifies UI elements for interacting with the browser.
+  final WebBrowserInteractionSettings interactionSettings;
+
+  /// Whether debugging mode is enabled. Default is false.
+  /// Only supported in Android and iOS.
+  /// Ignored in other platforms.
+  final bool debuggingEnabled;
+
+  /// Gesture recognizers of the browser. By default, all gesture recognizers.
+  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers;
+
+  /// Whether Javascript is allowed. Default is false.
+  /// Only supported in Android and iOS.
+  /// Ignored in other platforms.
+  final bool javascriptEnabled;
+
+  /// Called when the web browser is ready.
+  final void Function(WebBrowserController controller) onCreated;
+
+  /// Called when an error occurs.
+  final void Function(WebResourceError error) onError;
+
+  /// User-agent string. Default is undefined.
+  /// Only supported in Android and iOS.
+  /// Ignored in other platforms.
+  final String userAgent;
 
   const WebBrowser({
+    Key key,
     @required this.initialUrl,
-    this.javascript = false,
-    this.allowFullscreen = false,
+    this.iframeSettings = const WebBrowserIFrameSettings(),
+    this.interactionSettings = const WebBrowserInteractionSettings(),
+    this.debuggingEnabled = false,
+    this.gestureRecognizers = _defaultGestureRecognizers,
+    this.javascriptEnabled = false,
+    this.onCreated,
+    this.onError,
+    this.userAgent,
   })  : assert(initialUrl != null),
-        assert(javascript != null),
-        assert(allowFullscreen != null);
+        assert(iframeSettings != null),
+        assert(debuggingEnabled != null),
+        assert(gestureRecognizers != null),
+        assert(javascriptEnabled != null),
+        super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return buildWebBrowser(this);
+  State<StatefulWidget> createState() {
+    return impl.WebBrowserState();
   }
-}
 
-/// Renders _dart:html_ [Element].
-///
-/// ## Example
-/// ```
-/// import 'package:web_browser/html.dart';
-/// import 'package:web_browser/web_browser.dart';
-///
-/// const widget = WebText(HeadingElement.h1()..appendText('Hello world!'));
-/// ```
-class WebNode extends StatelessWidget {
-  final html.Element node;
+  static HorizontalDragGestureRecognizer
+      _horizontalDragGestureRecognizerFactory() =>
+          HorizontalDragGestureRecognizer();
 
-  const WebNode(this.node) : assert(node != null);
+  static VerticalDragGestureRecognizer
+      _verticalDragGestureRecognizerFactory() =>
+          VerticalDragGestureRecognizer();
 
-  @override
-  Widget build(BuildContext context) {
-    return buildWebNode(this);
-  }
-}
-
-/// Renders HTML source.
-///
-/// ## Example
-/// ```
-/// import 'package:web_browser/web_browser.dart';
-///
-/// const widget = WebText('<h1>Hello world!</h1>');
-/// ```
-class WebText extends StatelessWidget {
-  final String content;
-
-  const WebText(this.content) : assert(content != null);
-
-  @override
-  Widget build(BuildContext context) {
-    return buildWebText(this);
-  }
+  static TapGestureRecognizer _tapGestureRecognizerFactory() =>
+      TapGestureRecognizer();
 }

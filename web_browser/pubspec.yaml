@@ -1,15 +1,18 @@
 name: web_browser
 version: 0.1.0
-description: Cross-platform web browser and web content widgets for Flutter applications.
+description: Widgets for showing web pages and web content. Uses webview_flutter in Android/iOS and
+  iframe in browsers.
 homepage: https://github.com/dint-dev/web_browser
 
 environment:
   sdk: ">=2.8.0 <3.0.0"
 
 dependencies:
+  cupertino_icons: ^0.1.3
   flutter:
     sdk: flutter
   meta: ^1.1.0
+  share: ^0.6.0
   universal_html: '^1.1.0'
   webview_flutter: '^0.3.22'
 
@@ -19,9 +22,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   pedantic: ^1.9.0
+  test: any
 
-#dependency_overrides:
-#  universal_html:
-#    path: '../universal_html'
+dependency_overrides:
+  universal_html:
+    path: '../universal_html'
 
 flutter:

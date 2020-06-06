@@ -9,12 +9,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   web_browser:
     path: ..
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  pedantic: ^1.9.0
+
+dependency_overrides:
+  universal_html:
+    path: '../../universal_html'
 
 flutter:
   uses-material-design: true

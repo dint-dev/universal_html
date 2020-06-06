@@ -12,77 +12,119 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ignore: avoid_web_libraries_in_flutter
+import 'dart:async';
 import 'dart:html' as html;
-import 'dart:ui' as ui;
+import 'dart:js' as js;
 
 import 'package:flutter/widgets.dart';
+import 'package:web_browser/src/web_browser_impl.dart';
+import 'package:web_browser/web_browser.dart';
 
-import 'web_browser.dart';
-
-int _htmlViewCounter = 0;
-
-Widget buildWebBrowser(WebBrowser widget) {
-  return _WebNode(html.IFrameElement()
-    ..src = widget.initialUrl
-    ..width = '10%%'
-    ..height = '100%'
-    ..allowFullscreen = widget.allowFullscreen);
-}
-
-Widget buildWebNode(WebNode widget) {
-  return _WebNode(widget.node);
-}
-
-Widget buildWebText(WebText widget) {
-  return _WebNode(html.DivElement()..innerHtml = widget.content);
-}
-
-class _WebNode extends StatefulWidget {
-  final html.Element node;
-
-  _WebNode(this.node);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _WebNodeState();
-  }
-}
-
-class _WebNodeState extends State<_WebNode> {
-  html.Element _node;
+class WebBrowserState extends State<WebBrowser> {
   Widget _builtWidget;
+  html.IFrameElement _element;
+  bool _didUpdate = true;
 
   @override
   Widget build(BuildContext context) {
     if (_builtWidget == null) {
-      final htmlViewId = 'HtmlView-$_htmlViewCounter';
-      _htmlViewCounter++;
+      // Construct iframe
+      _element = html.IFrameElement();
+      _element.style.backgroundColor = 'white';
 
-      ui.platformViewRegistry.registerViewFactory(
-        htmlViewId,
-        (int viewId) => _node,
+      // Construct controller
+      final controller = _WebBrowserController(_element);
+
+      // Wrap iframe with navigation
+      _builtWidget = wrapWebBrowser(
+        context,
+        widget,
+        controller,
+        WebNode(node: _element),
       );
 
-      _builtWidget = HtmlElementView(
-        viewType: htmlViewId,
-      );
+      final onCreated = widget.onCreated;
+      if (onCreated != null) {
+        scheduleMicrotask(() {
+          onCreated(_WebBrowserController(_element));
+        });
+      }
+    }
+    if (_didUpdate) {
+      _didUpdate = false;
+      final element = _element;
+      element.src = widget.initialUrl;
+      widget.iframeSettings?.applyToIFrameElement(element);
+      final size = MediaQuery.of(context).size;
+      element.height ??= '${size.height.toInt() - 100}';
+      element.width ??= '${size.width.toInt()}';
     }
     return _builtWidget;
   }
 
   @override
-  void didUpdateWidget(_WebNode oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (!identical(_node, widget.node)) {
-      _node = widget.node;
-      _builtWidget = null;
+  void didUpdateWidget(WebBrowser oldWidget) {
+    if (!(widget.initialUrl == oldWidget.initialUrl ||
+        widget.iframeSettings != oldWidget.iframeSettings ||
+        widget.interactionSettings != oldWidget.interactionSettings ||
+        !identical(widget.onCreated, oldWidget.onCreated) ||
+        !identical(widget.onError, oldWidget.onError))) {
+      // Invalidate cached widget
+      _didUpdate = true;
     }
+    super.didUpdateWidget(oldWidget);
+  }
+}
+
+class _WebBrowserController extends WebBrowserController {
+  final html.IFrameElement _element;
+  final _webNavigationEventController =
+      StreamController<WebBrowserNavigationEvent>.broadcast();
+  String _url;
+
+  _WebBrowserController(this._element) {
+    _url = _element.src;
   }
 
   @override
-  void initState() {
-    super.initState();
-    _node = widget.node;
+  Stream<WebBrowserNavigationEvent> get onNavigation =>
+      _webNavigationEventController.stream;
+
+  @override
+  Future<String> currentUrl() async {
+    return _url;
+  }
+
+  @override
+  Future<void> evaluateJavascript(String javascriptString) async {
+    final window = _element.contentWindow as js.JsObject;
+    window.callMethod('eval', [javascriptString]);
+  }
+
+  @override
+  Future<void> goBack() async {
+    _element.contentWindow.history.back();
+  }
+
+  @override
+  Future<void> goForward() async {
+    _element.contentWindow.history.forward();
+  }
+
+  @override
+  Future<void> loadUrl(String url, {Map<String, String> headers}) async {
+    _element.src = url;
+    _url = url;
+    _webNavigationEventController.add(WebBrowserNavigationEvent(this, url));
+  }
+
+  @override
+  Future<void> postMessage(dynamic message, String targetOrigin) async {
+    _element.contentWindow.postMessage(message, targetOrigin);
+  }
+
+  @override
+  Future<void> reload() async {
+    _element?.contentWindow?.history?.go(0);
   }
 }

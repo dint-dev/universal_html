@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   meta: ^1.1.0
   share: ^0.6.0
-  universal_html: '^1.1.0'
+  universal_html: '^1.2.3'
   webview_flutter: '^0.3.22'
 
 dev_dependencies:

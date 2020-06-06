@@ -16,8 +16,8 @@ a sibling project of this package.
 
 The main widgets in this package are:
   * [WebBrowser](https://pub.dev/documentation/universal_html/latest/web_browser/WebBrowser-class.html)
-    * Shows any web page. By default, gives you address bar and navigation bar.
-    * By default, gives you:
+    * Shows any web page.
+    * By default, the widget gives you:
       * Address bar
       * "Share link" button
       * "Back" button
@@ -39,22 +39,21 @@ The main widgets in this package are:
   * [Issue tracker](https://github.com/dint-dev/web_browser/issues)
 
 # Setting up
-## Adding dependency
+## 1.Add dependency
 In _pubspec.yaml_:
 ```yaml
 dependencies:
   web_browser: ^0.2.0
 ```
 
-## 2.Configure your project
-Follow the standard [webview_flutter](https://pub.dev/packages/webview_flutter) instructions, which
-means adding the following snippet in `ios/Runner/Info.plist`:
+For iOS support, you should follow the usual [webview_flutter](https://pub.dev/packages/webview_flutter)
+instructions, which means adding the following snippet in `ios/Runner/Info.plist`:
 ```xml
 <key>io.flutter.embedded_views_preview</key>
 <true />
 ```
 
-## 3. Try it
+## 2. Try it
 ```dart
 import 'package:flutter/material.dart';
 import 'package:web_browser/web_browser.dart';

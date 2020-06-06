@@ -1,3 +1,6 @@
+## 1.2.3
+* Fixes a missing getter (referrerPolicy in IFrameElement).
+
 ## 1.2.2
 * Improves documentation.
 * Deprecates some libraries.

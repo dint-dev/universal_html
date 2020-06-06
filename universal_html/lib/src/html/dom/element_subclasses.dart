@@ -1115,6 +1115,8 @@ class IFrameElement extends HtmlElement {
     _setAttribute('name', value);
   }
 
+  String get referrerPolicy => _getAttribute('referrerpolicy');
+
   set referrerPolicy(String value) {
     _setAttribute('referrerpolicy', value);
   }

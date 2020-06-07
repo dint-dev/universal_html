@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Widgets for showing web pages and web content. Uses webview_flutter in
-/// Android/iOS and iframe in browsers.
+/// Exports [universal_html](https://pub.dev/packages/universal_html).
 library web_browser.html;
 
 export 'package:universal_html/html.dart';

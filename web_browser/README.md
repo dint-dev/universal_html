@@ -15,31 +15,29 @@ which is a cross-platform _dart:html_ taken from [universal_html](https://pub.de
 a sibling project of this package.
 
 The main widgets in this package are:
-  * [WebBrowser](https://pub.dev/documentation/universal_html/latest/web_browser/WebBrowser-class.html)
+  * [WebBrowser](https://pub.dev/documentation/web_browser/latest/web_browser/WebBrowser-class.html)
     * Shows any web page.
     * By default, the widget gives you:
       * Address bar
       * "Share link" button
       * "Back" button
       * "Forward" button
-  * [WebNode](https://pub.dev/documentation/universal_html/latest/web_browser/WebNode-class.html)
+  * [WebNode](https://pub.dev/documentation/web_browser/latest/web_browser/WebNode-class.html)
     * Shows any DOM node. DOM nodes work in Android and iOS too, thanks to
       [universal_html](https://pub.dev/packages/universal_html).
 
-## Contributing
-  * Pull request are welcome!
-  * Please test your changes manually with the example application.
+Pull request are welcome! Please test your changes manually with the example application.
+
+## Links
+  * [Github project](https://github.com/dint-dev/web_browser)
+  * [Issue tracker](https://github.com/dint-dev/web_browser/issues)
+  * [API Reference](https://pub.dev/documentation/web_browser/latest/index.html)
 
 ## Known issues
   * Flickering in browsers ([Flutter issue #51865](https://github.com/flutter/flutter/issues/51865))
 
-## Links
-  * [API reference](https://pub.dev/documentation/web_browser/latest/web_browser/web_browser-library.html)
-  * [Github project](https://github.com/dint-dev/web_browser)
-  * [Issue tracker](https://github.com/dint-dev/web_browser/issues)
-
 # Setting up
-## 1.Add dependency
+## 1.Setup
 In _pubspec.yaml_:
 ```yaml
 dependencies:
@@ -60,7 +58,7 @@ import 'package:web_browser/web_browser.dart';
 
 void main() {
   runApp(MaterialApp(
-    body: Scaffold(
+    home: Scaffold(
       body: SafeArea(
         child: WebBrowser(
           initialUrl: 'https://flutter.dev/',

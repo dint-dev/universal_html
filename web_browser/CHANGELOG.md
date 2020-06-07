@@ -1,3 +1,6 @@
+## 0.2.1
+  * Fixes documentation and dependencies.
+
 ## 0.2.0
 
 * Added support for more features supported by the underlying webview_flutter.

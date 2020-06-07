@@ -1,16 +1,17 @@
-This is an example of using _package:web_browser_.
-
 # Running
+In browser:
 ```
 flutter run -d chrome
 ```
 
+In Android emulator:
 ```
-flutter emulators launch --android
-flutter run -d android
+flutter emulators --launch android
+flutter run
 ```
 
+In iOS emulator:
 ```
-flutter emulators launch --ios
-flutter run -d ios
+flutter emulators --launch ios
+flutter run
 ```

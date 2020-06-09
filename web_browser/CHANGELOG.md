@@ -1,3 +1,6 @@
+## 0.2.2
+  * Fixes a bug in DOM handling.
+
 ## 0.2.1
   * Fixes documentation and dependencies.
 

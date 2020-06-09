@@ -108,13 +108,40 @@ class WebBrowserIFrameSettings {
       width == other.width;
 
   void applyToIFrameElement(IFrameElement element) {
-    element.height = height;
-    element.width = width;
-    element.allow = allow?.toString();
-    element.csp = csp;
-    element.setAttribute('importance', importance);
-    element.referrerPolicy = referrerPolicy;
-    element.setAttribute('sandbox', sandbox);
-    element.setAttribute('scrolling', scrolling);
+    // IMPORTANT:
+    // We noticed browsers throw errors if some attributes (such as 'csp' and
+    // 'sandbox') are null.
+    final csp = this.csp ?? '';
+    if (csp != element.csp ?? '') {
+      element.csp = csp;
+    }
+    final height = this.height ?? '';
+    if (height != element.height ?? '') {
+      element.height = height;
+    }
+    final width = this.width ?? '';
+    if (width != element.width ?? '') {
+      element.width = width;
+    }
+    final allow = this.allow ?? '';
+    if (allow != element.allow ?? '') {
+      element.allow = allow?.toString();
+    }
+    final referrerPolicy = this.referrerPolicy ?? '';
+    if (referrerPolicy != element.referrerPolicy ?? '') {
+      element.referrerPolicy = referrerPolicy;
+    }
+    final sandbox = this.sandbox;
+    if (sandbox != element.getAttribute('sandbox')) {
+      element.setAttribute('sandbox', sandbox);
+    }
+    final importance = this.importance;
+    if (importance != element.getAttribute('importance')) {
+      element.setAttribute('importance', importance);
+    }
+    final scrolling = this.scrolling;
+    if (scrolling != element.getAttribute('scrolling')) {
+      element.setAttribute('scrolling', scrolling);
+    }
   }
 }

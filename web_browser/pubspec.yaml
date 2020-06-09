@@ -1,5 +1,5 @@
 name: web_browser
-version: 0.2.1
+version: 0.2.2
 description: Widgets for showing web pages and web content. Uses webview_flutter in Android/iOS and
   iframe in browsers.
 homepage: https://github.com/dint-dev/web_browser

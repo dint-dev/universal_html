@@ -73,9 +73,12 @@ void _testHistory() {
 
       // Add listener
       PopStateEvent previousEvent;
-      window.onPopState.listen(expectAsync1((event) {
+      final streamSubscription = window.onPopState.listen(expectAsync1((event) {
         previousEvent = event;
       }, count: 4));
+      addTearDown(() async {
+        await streamSubscription.cancel();
+      });
 
       // Push second state
       final state1 = {
@@ -113,6 +116,69 @@ void _testHistory() {
       // Go back
       history.back();
       expect(history.state, isNull);
+    });
+
+    test('drops the succeeding states when calling pushState', () async {
+      if (!isVm) {
+        return;
+      }
+      final history = window.history;
+      final location = window.location;
+
+      // Initial state
+      expect(history.state, isNull);
+
+      Map<String, int> createState(int index) {
+        return {
+          'x': index,
+        };
+      }
+
+      Future<void> pushState(int index) async {
+        // Push state
+        final state = createState(index);
+        final title = 'title$index';
+        final url = '/path/to/$index';
+        history.pushState(state, title, url);
+
+        // Wait a bit
+        await Future.delayed(const Duration(milliseconds: 10));
+
+        // Check state
+        expect(history.state, equals(state));
+
+        expect(location.protocol, 'http:');
+        expect(location.origin, 'http://localhost');
+        expect(location.host, 'localhost:80');
+        expect(location.hostname, 'localhost');
+        expect(location.port, '80');
+        expect(location.pathname, url);
+        expect(location.href, 'http://localhost$url');
+      }
+
+      // Push state
+      await pushState(1);
+
+      // Push second state
+      await pushState(2);
+
+      // Push third state
+      await pushState(3);
+
+      // Go back
+      history.back();
+      expect(history.state, createState(2));
+
+      // Go back
+      history.back();
+      expect(history.state, createState(1));
+
+      // Push fourth state
+      await pushState(4);
+
+      // Go back
+      history.back();
+      expect(history.state, createState(1));
     });
   });
 }

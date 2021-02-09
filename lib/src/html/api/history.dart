@@ -92,6 +92,7 @@ class History {
   void pushState(dynamic data, String title, String url) {
     url = _resolve(url);
     final state = _HistoryState(data, title, url);
+    _stack.removeRange(_index + 1, _stack.length);
     _stack.add(state);
     _index = _stack.length - 1;
     _setStateAndDispatchEvent(state);

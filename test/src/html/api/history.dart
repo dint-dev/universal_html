@@ -16,7 +16,7 @@ part of main_test;
 
 void _testHistory() {
   group('History:', () {
-    Future<void> delay() => Future.delayed(Duration(milliseconds: 1));
+    Future<void> delay() => Future.delayed(Duration(milliseconds: 10));
 
     // Always restore old location
     setUp(() {

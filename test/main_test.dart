@@ -49,13 +49,18 @@ part 'src/html/dom/helpers.dart';
 part 'src/html/dom/node.dart';
 part 'src/html/dom/parsing.dart';
 
+var _isVM = false;
+var _isBrowser = false;
+
 void main() {
   // Use groups for producing better error messages in IDEs
   group('In VM: ', () {
+    _isVM = true;
     _sharedTests();
   }, testOn: 'vm');
 
   group('In Chrome: ', () {
+    _isBrowser = true;
     _sharedTests();
   }, testOn: 'chrome');
 
@@ -65,6 +70,20 @@ void main() {
 }
 
 void _sharedTests() {
+  setUpAll(() async {
+    // Do not run in Flutter or Node.JS
+    if (!(_isVM || _isBrowser)) {
+      return;
+    }
+
+    final channel = spawnHybridUri('networking_test_server.dart', message: {});
+    final streamQueue = StreamQueue(channel.stream);
+    addTearDown(() {
+      channel.sink.close();
+    });
+    final port = await streamQueue.next;
+    _httpServerPort = port;
+  });
   // DOM
   _testCloning();
   _testNode();

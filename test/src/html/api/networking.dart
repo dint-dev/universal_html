@@ -15,7 +15,7 @@
 part of main_test;
 
 // Local TCP port that has a HTTP server.
-int _httpServerPort = 8989;
+late int _httpServerPort;
 
 // Local TCP port hat DOES NOT have HTTP server.
 // Used for testing connection failures.

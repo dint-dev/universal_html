@@ -161,7 +161,6 @@ some text
 
         // Parse
         final document = DomParser().parseFromString(source, contentType);
-        print('OK');
         expect(document.contentType, contentType);
         expect(document.childNodes, hasLength(3));
 

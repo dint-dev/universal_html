@@ -33,6 +33,55 @@ The source code adopted from 'dart:html' had the following license:
 
 library metadata;
 
+/// Metadata that specifies that that member is editable through generated
+/// files.
+class DocsEditable {
+  const DocsEditable();
+}
+
+/// Annotation that specifies that a member is editable through generate files.
+///
+/// This is used for API generation.
+///
+/// [name] should be formatted as `interface.member`.
+class DomName {
+  final String name;
+  const DomName(this.name);
+}
+
+/// An annotation used to mark an API as being experimental.
+///
+/// An API is considered to be experimental if it is still going through the
+/// process of stabilizing and is subject to change or removal.
+///
+/// See also:
+///
+/// * [W3C recommendation](http://en.wikipedia.org/wiki/W3C_recommendation)
+class Experimental {
+  const Experimental();
+}
+
+/// A metadata annotation placed on native methods and fields of native classes
+/// to specify the JavaScript name.
+///
+/// This example declares a Dart field + getter + setter called `$dom_title`
+/// that corresponds to the JavaScript property `title`.
+///
+///     class Document native "*Foo" {
+///       @JSName('title')
+///       String $dom_title;
+///     }
+class JSName {
+  final String name;
+  const JSName(this.name);
+}
+
+/// Marks a class as native and defines its JavaScript name(s).
+class Native {
+  final String name;
+  const Native(this.name);
+}
+
 /// An annotation used to mark a feature as only being supported by a subset
 /// of the browsers that Dart supports by default.
 ///
@@ -53,34 +102,6 @@ class SupportedBrowser {
   final String? minimumVersion;
 
   const SupportedBrowser(this.browserName, [this.minimumVersion]);
-}
-
-/// An annotation used to mark an API as being experimental.
-///
-/// An API is considered to be experimental if it is still going through the
-/// process of stabilizing and is subject to change or removal.
-///
-/// See also:
-///
-/// * [W3C recommendation](http://en.wikipedia.org/wiki/W3C_recommendation)
-class Experimental {
-  const Experimental();
-}
-
-/// Annotation that specifies that a member is editable through generate files.
-///
-/// This is used for API generation.
-///
-/// [name] should be formatted as `interface.member`.
-class DomName {
-  final String name;
-  const DomName(this.name);
-}
-
-/// Metadata that specifies that that member is editable through generated
-/// files.
-class DocsEditable {
-  const DocsEditable();
 }
 
 /// Annotation that indicates that an API is not expected to change but has

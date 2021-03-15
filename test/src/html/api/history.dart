@@ -23,7 +23,7 @@ void _testHistory() {
       final oldHref = window.location.href;
       addTearDown(() {
         // For loop so to avoid accidental infinite loops
-        for (var i=0;i<100;i++) {
+        for (var i = 0; i < 100; i++) {
           window.history.back();
           if (window.location.href == oldHref) {
             // Found original location.
@@ -178,7 +178,6 @@ void _testHistory() {
       await delay();
       expect(history.state, {'s': 'state2'});
       expect(location.pathname, '/path2');
-
 
       history.pushState({'s': 'stateNew'}, 'titleNew', '/pathNew');
       expect(location.pathname, '/pathNew');

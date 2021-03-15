@@ -274,7 +274,6 @@ void _testDocument() {
   });
 
   group('HtmlDocument', () {
-
     test('head', () {
       expect(universal_html.document.head, isNotNull);
     });

@@ -54,7 +54,7 @@ class HtmlDocument extends Document
   ///
   /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<Event> visibilityChangeEvent =
-  EventStreamProvider<Event>('visibilitychange');
+      EventStreamProvider<Event>('visibilitychange');
 
   /// An internal constructor that's NOT part of "dart:html".
   ///

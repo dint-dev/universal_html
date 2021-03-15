@@ -49,6 +49,13 @@ part of universal_html.internal;
 class HtmlDocument extends Document
     with _DocumentOrShadowRoot
     implements DocumentOrShadowRoot {
+  /// Static factory designed to expose `visibilityChange` events to event
+  /// handlers that are not necessarily instances of [Window].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<Event> visibilityChangeEvent =
+  EventStreamProvider<Event>('visibilitychange');
+
   /// An internal constructor that's NOT part of "dart:html".
   ///
   /// This API is not for public use.
@@ -132,6 +139,8 @@ class HtmlDocument extends Document
     }
     return null;
   }
+
+  Stream<Event> get onVisibilityChange => visibilityChangeEvent.forTarget(this);
 
   String? get referrer => null;
 

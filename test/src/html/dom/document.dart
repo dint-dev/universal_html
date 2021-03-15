@@ -232,10 +232,6 @@ void _testDocument() {
       }
     });
 
-    test('body', () {
-      expect(document.body, isNotNull);
-    });
-
     test('getElementById(...)', () {
       _temporarilyRemoveChildrenFromDocument();
 
@@ -275,9 +271,21 @@ void _testDocument() {
       expect(parsed.getElementsByName('div'), isEmpty);
       expect(parsed.getElementsByName('p'), isEmpty);
     });
+  });
+
+  group('HtmlDocument', () {
 
     test('head', () {
-      expect(document.head, isNotNull);
+      expect(universal_html.document.head, isNotNull);
+    });
+
+    test('body', () {
+      expect(universal_html.document.body, isNotNull);
+    });
+
+    test('onVisibilityChange', () {
+      final htmlDocument = universal_html.document;
+      expect(htmlDocument.onVisibilityChange, isA<Stream<Event>>());
     });
   });
 }

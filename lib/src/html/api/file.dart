@@ -104,17 +104,17 @@ class DirectoryReader {
 abstract class Entry {
   Entry._();
 
-  FileSystem get filesystem => null;
+  FileSystem? get filesystem => null;
 
-  String get fullPath => null;
+  String? get fullPath => null;
 
   bool get isDirectory => false;
 
   bool get isFile => false;
 
-  String get name => null;
+  String? get name => null;
 
-  Future<Entry> copyTo(DirectoryEntry parent, {String name}) {
+  Future<Entry> copyTo(DirectoryEntry parent, {String? name}) {
     throw UnimplementedError();
   }
 
@@ -126,7 +126,7 @@ abstract class Entry {
     throw UnimplementedError();
   }
 
-  Future<Entry> moveTo(DirectoryEntry parent, {String name}) {
+  Future<Entry> moveTo(DirectoryEntry parent, {String? name}) {
     throw UnimplementedError();
   }
 
@@ -140,7 +140,7 @@ abstract class Entry {
 }
 
 class File implements Blob {
-  factory File(List<Object> fileBits, String fileName, [Map options]) {
+  factory File(List<Object> fileBits, String fileName, [Map? options]) {
     throw UnimplementedError();
   }
 
@@ -159,7 +159,10 @@ class File implements Blob {
   String get type => throw UnimplementedError();
 
   @override
-  Blob slice([int start, int end, String contentType]) =>
+  Future<List<int>> internalBytes() => throw UnimplementedError();
+
+  @override
+  Blob slice([int? start, int? end, String? contentType]) =>
       throw UnimplementedError();
 }
 
@@ -232,7 +235,9 @@ class FileReader extends EventTarget {
 
   factory FileReader() = FileReader._;
 
-  FileReader._() : super._created();
+  FileReader._() : super.internal();
+
+  Error get error => throw UnimplementedError();
 
   /// Stream of `abort` events handled by this [FileReader].
   Stream<ProgressEvent> get onAbort => abortEvent.forTarget(this);
@@ -252,62 +257,24 @@ class FileReader extends EventTarget {
   /// Stream of `progress` events handled by this [FileReader].
   Stream<ProgressEvent> get onProgress => progressEvent.forTarget(this);
 
-  int _readyState = FileReader.EMPTY;
-  Object _result;
-  Error _error;
-  Object _id;
+  int get readyState => throw UnimplementedError();
 
-  Error get error => _error;
-
-  int get readyState => _readyState;
-
-  Object get result => _result;
+  Object get result => throw UnimplementedError();
 
   void abort() {
-    _id = null;
+    throw UnimplementedError();
   }
 
   void readAsArrayBuffer(Blob blob) {
-    _perform(() async {
-      return BrowserImplementationUtils.getBlobData(blob);
-    });
+    throw UnimplementedError();
   }
 
   void readAsDataUrl(Blob blob) {
-    _perform(() async {
-      final data = await BrowserImplementationUtils.getBlobData(blob);
-      return Uri.dataFromBytes(data).toString();
-    });
+    throw UnimplementedError();
   }
 
-  void readAsText(Blob blob, [String label]) {
-    _perform(() async {
-      final data = await BrowserImplementationUtils.getBlobData(blob);
-      return utf8.decode(data);
-    });
-  }
-
-  void _perform(Future<Object> Function() f) {
-    _readyState = FileReader.LOADING;
-    _result = null;
-    _error = null;
-    final id = Object();
-    _id = id;
-    f().then((result) {
-      // Check that the task wasn't aborted or replaced with another
-      if (!identical(id, _id)) {
-        return;
-      }
-      _readyState = FileReader.DONE;
-      _result = result;
-    }, onError: (error) {
-      // Check that the task wasn't aborted or replaced with another
-      if (!identical(id, _id)) {
-        return;
-      }
-      _readyState = FileReader.DONE;
-      _error = Error();
-    });
+  void readAsText(Blob blob, [String? label]) {
+    throw UnimplementedError();
   }
 }
 
@@ -318,9 +285,9 @@ class FileSystem {
     throw UnimplementedError();
   }
 
-  String get name => null;
+  String? get name => null;
 
-  DirectoryEntry get root => null;
+  DirectoryEntry? get root => null;
 }
 
 abstract class FileWriter extends EventTarget {
@@ -372,7 +339,7 @@ abstract class FileWriter extends EventTarget {
 
   static const int WRITING = 1;
 
-  FileWriter._() : super._created();
+  FileWriter._() : super.internal();
 
   Error get error;
 
@@ -414,7 +381,7 @@ class Metadata {
     throw UnimplementedError();
   }
 
-  DateTime get modificationTime => null;
+  DateTime get modificationTime => throw UnimplementedError();
 
-  int get size => null;
+  int get size => throw UnimplementedError();
 }

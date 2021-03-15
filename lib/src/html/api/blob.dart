@@ -49,7 +49,7 @@ part of universal_html.internal;
 typedef BlobCallback = void Function(Blob blob);
 
 abstract class Blob {
-  factory Blob(List blobParts, [String type, String encoding]) {
+  factory Blob(List blobParts, [String? type, String? encoding]) {
     for (var i = 0; i < blobParts.length; i++) {
       final part = blobParts[i];
       if (part is String && i + 1 < blobParts.length) {
@@ -88,29 +88,39 @@ abstract class Blob {
       result.setAll(i, part);
       i += part.length;
     }
-    return _Blob(result, type: type);
+    return _Blob(result, type: type ?? '');
   }
 
   int get size;
 
   String get type;
 
-  Blob slice([int start, int end, String contentType]);
+  Blob slice([int start = 0, int? end, String? contentType]);
+
+  /// Internal method. __Not part of "dart:html".__
+  @protected
+  Future<List<int>> internalBytes();
 }
 
-class _Blob extends BlobBase {
-  final Uint8List _data;
+class _Blob implements Blob {
+  final List<int> _data;
+
+  @override
+  Blob slice([int start = 0, int? end, String? contentType]) {
+    end ??= _data.length;
+    return _Blob(_data.sublist(start, end), type: contentType ?? type);
+  }
 
   @override
   final String type;
 
-  _Blob(this._data, {this.type});
+  _Blob(this._data, {required this.type});
 
   @override
   int get size => _data.length;
 
   @override
-  Future<Uint8List> toBytesFuture() {
-    return Future<Uint8List>.value(_data);
+  Future<List<int>> internalBytes() {
+    return Future<List<int>>.value(_data);
   }
 }

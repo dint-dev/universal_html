@@ -43,6 +43,31 @@ The original files in the Dart SDK had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+@visibleForTesting
+library universal_html.js_util.internal;
+
+import 'package:meta/meta.dart';
+
+dynamic callConstructor(Function constr, List arguments) {
+  throw UnimplementedError();
+}
+
+dynamic callMethod(o, String method, List args) {
+  throw UnimplementedError();
+}
+
+Object getProperty(o, name) {
+  throw UnimplementedError();
+}
+
+bool hasProperty(o, name) {
+  throw UnimplementedError();
+}
+
+bool instanceof(o, Function type) {
+  throw UnimplementedError();
+}
+
 /// WARNING: performance of this method is much worse than other util
 /// methods in this library. Only use this method as a last resort.
 ///
@@ -61,30 +86,6 @@ dynamic newObject() {
   throw UnimplementedError();
 }
 
-bool hasProperty(o, name) {
-  throw UnimplementedError();
-}
-
-Object getProperty(o, name) {
-  throw UnimplementedError();
-}
-
-void setProperty(o, name, value) {
-  throw UnimplementedError();
-}
-
-dynamic callMethod(o, String method, List args) {
-  throw UnimplementedError();
-}
-
-bool instanceof(o, Function type) {
-  throw UnimplementedError();
-}
-
-dynamic callConstructor(Function constr, List arguments) {
-  throw UnimplementedError();
-}
-
 /// Converts a JavaScript Promise to a Dart [Future].
 ///
 /// ```dart
@@ -96,5 +97,9 @@ dynamic callConstructor(Function constr, List arguments) {
 /// final three = await threeFuture; // == 3
 /// ```
 Future<T> promiseToFuture<T>(jsPromise) {
+  throw UnimplementedError();
+}
+
+void setProperty(o, name, value) {
   throw UnimplementedError();
 }

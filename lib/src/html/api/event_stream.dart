@@ -144,8 +144,7 @@ class EventStreamProvider<T extends Event> {
   ///
   /// * [EventTarget.addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)
   ///   from MDN.
-  ElementStream<T> _forElementList(ElementList<Element> e,
-      {bool useCapture = false}) {
+  ElementStream<T> _forElementList(ElementList<Element> e) {
     throw UnimplementedError();
   }
 }
@@ -173,11 +172,17 @@ class _EventStream<T extends Event> extends Stream<T> {
   _EventStream(this.target, this.type, this.useCapture);
 
   @override
-  StreamSubscription<T> listen(void Function(T event) onData,
-      {Function onError, void Function() onDone, bool cancelOnError}) {
+  StreamSubscription<T> listen(
+    void Function(T event)? onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) {
     final controller = StreamController<T>();
     final listener = (Event event) {
-      controller.add(event);
+      if (event is T) {
+        controller.add(event);
+      }
     };
     target.addEventListener(type, listener, useCapture);
     controller.onCancel = () {

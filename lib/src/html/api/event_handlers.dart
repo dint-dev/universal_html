@@ -343,12 +343,12 @@ abstract class GlobalEventHandlers implements EventTarget {
 
   @override
   void addEventListener(String type, dynamic Function(Event event) listener,
-      [bool useCapture]);
+      [bool? useCapture]);
 
   @override
   bool dispatchEvent(Event event);
 
   @override
   void removeEventListener(String type, dynamic Function(Event event) listener,
-      [bool useCapture]);
+      [bool? useCapture]);
 }

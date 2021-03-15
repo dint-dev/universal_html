@@ -190,7 +190,7 @@ abstract class CssRect implements Rectangle<num> {
   /// Returns the intersection of this and `other`, or `null` if they don't
   /// intersect.
   @override
-  Rectangle<num> intersection(Rectangle<num> other) {
+  Rectangle<num>? intersection(Rectangle<num> other) {
     var x0 = max(left, other.left);
     var x1 = min(left + width, other.left + other.width);
 
@@ -229,7 +229,7 @@ abstract class CssRect implements Rectangle<num> {
     // always dealing with pixels in this method.
     var styles = _element.getComputedStyle();
 
-    var val = 0;
+    num val = 0.0;
 
     for (var measurement in dimensions) {
       // The border-box and default box model both exclude margin in the regular
@@ -243,17 +243,16 @@ abstract class CssRect implements Rectangle<num> {
       // The border-box includes padding and border, so remove it if we want
       // just the content itself.
       if (augmentingMeasurement == _CONTENT) {
-        val -=
-            Dimension.css(styles.getPropertyValue('${_PADDING}-$measurement'))
-                .value;
+        val -= Dimension.css(styles.getPropertyValue('$_PADDING-$measurement'))
+            .value;
       }
 
       // At this point, we don't wan't to augment with border or margin,
       // so remove border.
       if (augmentingMeasurement != _MARGIN) {
-        val -= Dimension.css(
-                styles.getPropertyValue('border-${measurement}-width'))
-            .value;
+        val -=
+            Dimension.css(styles.getPropertyValue('border-$measurement-width'))
+                .value;
       }
     }
     return val;
@@ -281,11 +280,11 @@ class _BorderCssRect extends CssRect {
 /// A list of element content rectangles in the
 /// [box model](http://www.w3.org/TR/CSS2/box.html).
 class _ContentCssListRect extends _ContentCssRect {
-  List<Element> _elementList;
+  final List<Element> _elementList;
 
-  _ContentCssListRect(List<Element> elementList) : super(elementList.first) {
-    _elementList = elementList;
-  }
+  _ContentCssListRect(List<Element> elementList)
+      : _elementList = elementList,
+        super(elementList.first);
 
   /// Set the height to `newHeight`.
   ///
@@ -327,7 +326,7 @@ class _ContentCssRect extends CssRect {
   @override
   set height(dynamic newHeight) {
     if (newHeight is Dimension) {
-      Dimension newHeightAsDimension = newHeight;
+      var newHeightAsDimension = newHeight;
       if (newHeightAsDimension.value < 0) newHeight = Dimension.px(0);
       _element.style.height = newHeight.toString();
     } else if (newHeight is num) {
@@ -361,7 +360,7 @@ class _ContentCssRect extends CssRect {
   @override
   set width(dynamic newWidth) {
     if (newWidth is Dimension) {
-      Dimension newWidthAsDimension = newWidth;
+      var newWidthAsDimension = newWidth;
       if (newWidthAsDimension.value < 0) newWidth = Dimension.px(0);
       _element.style.width = newWidth.toString();
     } else if (newWidth is num) {

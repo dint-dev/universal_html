@@ -46,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
-class WebSocket extends EventTarget {
+abstract class WebSocket extends EventTarget {
   /// Static factory designed to expose `close` events to event
   /// handlers that are not necessarily instances of [WebSocket].
   ///
@@ -86,21 +86,20 @@ class WebSocket extends EventTarget {
   /// Checks if this type is supported on the current platform.
   static bool get supported => false;
 
-  String binaryType;
+  String? binaryType;
 
-  final int bufferedAmount;
+  int? get bufferedAmount;
 
-  final String extensions;
+  String? get extensions;
 
-  final String protocol;
+  String? get protocol;
 
-  final int readyState;
+  int get readyState;
 
-  final String url;
+  String get url;
 
-  factory WebSocket(String url, [Object protocols]) {
-    return HtmlDriver.current.browserImplementation
-        .newWebSocket(url, protocols);
+  factory WebSocket(String url, [Object? protocols]) {
+    throw UnimplementedError();
   }
 
   /// Stream of `close` events handled by this [WebSocket].
@@ -115,7 +114,7 @@ class WebSocket extends EventTarget {
   /// Stream of `open` events handled by this [WebSocket].
   Stream<Event> get onOpen => openEvent.forTarget(this);
 
-  void close([int code, String reason]) {
+  void close([int? code, String? reason]) {
     throw UnimplementedError();
   }
 

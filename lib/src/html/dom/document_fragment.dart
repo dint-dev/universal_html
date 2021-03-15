@@ -49,18 +49,18 @@ part of universal_html.internal;
 class DocumentFragment extends Node
     with _ElementOrDocument, _DocumentOrFragment {
   factory DocumentFragment() {
-    return DocumentFragment._(null);
+    return DocumentFragment.internal(window.document);
   }
 
   factory DocumentFragment.html(
-    String input, {
-    NodeValidator validator,
-    NodeTreeSanitizer treeSanitizer,
+    String? input, {
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
   }) {
     input ??= 'null';
     return const DomParserDriver().parseDocumentFragmentFromHtml(
-      document,
-      input,
+      ownerDocument: window.document,
+      content: input,
       validator: validator,
       treeSanitizer: treeSanitizer,
     );
@@ -68,18 +68,19 @@ class DocumentFragment extends Node
 
   factory DocumentFragment.svg(
     String input, {
-    NodeValidator validator,
-    NodeTreeSanitizer treeSanitizer,
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
   }) {
     return const DomParserDriver().parseDocumentFragmentFromSvg(
-      document,
-      input,
+      ownerDocument: window.document,
+      content: input,
       validator: validator,
       treeSanitizer: treeSanitizer,
     );
   }
 
-  DocumentFragment._(Document ownerDocument) : super._(ownerDocument);
+  /// Internal constructor. __Not part of dart:html__.
+  DocumentFragment.internal(Document ownerDocument) : super._(ownerDocument);
 
   List<Element> get children {
     return _ElementChildren(this);
@@ -93,13 +94,13 @@ class DocumentFragment extends Node
     children.addAll(copy);
   }
 
-  String get innerHtml {
+  String? get innerHtml {
     final e = DivElement();
     e.append(clone(true));
     return e.innerHtml;
   }
 
-  set innerHtml(String value) {
+  set innerHtml(String? value) {
     setInnerHtml(value);
   }
 
@@ -109,12 +110,12 @@ class DocumentFragment extends Node
   /// Parses the specified text as HTML and adds the resulting node after the
   /// last child of this document fragment.
   void appendHtml(
-    String text, {
-    NodeValidator validator,
-    NodeTreeSanitizer treeSanitizer,
+    String html, {
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
   }) {
-    append(DocumentFragment.html(
-      text,
+    append(Element.html(
+      html,
       validator: validator,
       treeSanitizer: treeSanitizer,
     ));
@@ -128,7 +129,7 @@ class DocumentFragment extends Node
 
   @visibleForTesting
   @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool? deep) {
     final clone = DocumentFragment();
     if (deep != false) {
       Node._cloneChildrenFrom(
@@ -141,12 +142,13 @@ class DocumentFragment extends Node
   }
 
   void setInnerHtml(
-    String html, {
-    NodeValidator validator,
-    NodeTreeSanitizer treeSanitizer,
+    String? html, {
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
   }) {
+    html ??= '';
     nodes.clear();
-    append(document.body.createFragment(
+    append(Element.html(
       html,
       validator: validator,
       treeSanitizer: treeSanitizer,
@@ -154,26 +156,26 @@ class DocumentFragment extends Node
   }
 }
 
-class ShadowRoot extends DocumentFragment {
+abstract class ShadowRoot extends DocumentFragment {
   static bool get supported => false;
 
-  final bool delegatesFocus;
+  bool? get delegatesFocus;
 
-  final Element host;
+  Element? get host;
 
-  final String mode;
+  String? get mode;
 
-  final ShadowRoot olderShadowRoot;
+  ShadowRoot? get olderShadowRoot;
 
-  final Element activeElement;
+  Element? get activeElement;
 
   // From DocumentOrShadowRoot
 
-  final Element fullscreenElement;
+  Element? get fullscreenElement;
 
-  final Element pointerLockElement;
+  Element? get pointerLockElement;
 
-  final List<StyleSheet> styleSheets;
+  List<StyleSheet>? get styleSheets;
 
   factory ShadowRoot._() {
     throw UnimplementedError();

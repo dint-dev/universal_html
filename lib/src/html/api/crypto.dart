@@ -45,27 +45,27 @@ The source code adopted from 'dart:html' had the following license:
 */
 part of universal_html.internal;
 
-class Crypto {
+abstract class Crypto {
   /// Checks if this type is supported on the current platform.
   static bool get supported => false;
 
   Crypto._();
 
-  Object get subtle => null;
+  Object? get subtle => null;
 
   TypedData getRandomValues(TypedData array) {
     throw UnimplementedError();
   }
 }
 
-class CryptoKey {
-  final Object algorithm;
+abstract class CryptoKey {
+  Object get algorithm;
 
-  final bool extractable;
+  bool get extractable;
 
-  final String type;
+  String get type;
 
-  final Object usages;
+  Object get usages;
 
   factory CryptoKey._() {
     throw UnimplementedError();

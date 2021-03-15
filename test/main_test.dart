@@ -19,14 +19,17 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:async/async.dart';
-import 'package:stream_channel/stream_channel.dart';
 import 'package:test/test.dart';
-import 'package:universal_html/driver.dart';
-import 'package:universal_html/prefer_universal/html.dart';
+import 'package:universal_html/controller.dart';
+import 'package:universal_html/html.dart' hide document;
+import 'package:universal_html/html.dart' as universal_html;
 import 'package:universal_html/src/internal/event_stream_decoder.dart';
+import 'package:universal_io/io.dart' as io;
 
 import 'src/libraries.dart';
 
+part 'src/controller/content_type_sniffer.dart';
+part 'src/controller/window_controller.dart';
 part 'src/html/api/blob.dart';
 part 'src/html/api/event_target.dart';
 part 'src/html/api/file.dart';
@@ -46,9 +49,8 @@ part 'src/html/dom/helpers.dart';
 part 'src/html/dom/node.dart';
 part 'src/html/dom/parsing.dart';
 
-void main({bool isFlutter = false}) {
-  _isFlutter = isFlutter;
-
+void main() {
+  // Use groups for producing better error messages in IDEs
   group('In VM: ', () {
     _sharedTests();
   }, testOn: 'vm');
@@ -57,12 +59,10 @@ void main({bool isFlutter = false}) {
     _sharedTests();
   }, testOn: 'chrome');
 
-//  group('In NodeJS: ', () {
-//    testLibraries();
-//  }, testOn: 'node');
+  group('In Node.JS: ', () {
+    _sharedTests();
+  }, testOn: 'node');
 }
-
-var _isFlutter = false;
 
 void _sharedTests() {
   // DOM
@@ -84,6 +84,12 @@ void _sharedTests() {
   _testNavigator();
   _testNetworking();
   _testWindow();
+
+  //
+  // Controller
+  //
+  _testContentTypeSniffer();
+  _testController();
 
   //
   // Mocked libraries

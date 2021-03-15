@@ -134,19 +134,19 @@ class HttpRequest extends HttpRequestEventTarget {
     return false;
   }
 
-  String _requestMethod;
+  String? _requestMethod;
 
-  Uri _requestUrl;
+  Uri? _requestUrl;
 
-  Map<String, String> _requestHeaders;
+  final Map<String, String> _requestHeaders = {};
 
-  int _status;
+  int? _status;
 
-  String _statusText;
+  String? _statusText;
 
-  Map<String, String> _responseHeaders;
+  final Map<String, String> _responseHeaders = {};
 
-  Uint8List _responseData;
+  Uint8List? _responseData;
 
   int _readyState = UNSENT;
 
@@ -156,14 +156,15 @@ class HttpRequest extends HttpRequestEventTarget {
 
   /// [String] telling the server the desired response format.
   ///
-  /// Default is `String`.
-  /// Other options are one of 'arraybuffer', 'blob', 'document', 'json',
+  /// Default is `text`.
+  ///
+  /// Options are one of 'arraybuffer', 'blob', 'document', 'json',
   /// 'text'. Some newer browsers will throw NS_ERROR_DOM_INVALID_ACCESS_ERR if
   /// `responseType` is set while performing a synchronous request.
   ///
   /// See also: [MDN
   /// responseType](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#xmlhttprequest-responsetype)
-  String responseType;
+  String responseType = 'text';
 
   /// Length of time in milliseconds before a request is automatically
   /// terminated.
@@ -178,13 +179,13 @@ class HttpRequest extends HttpRequestEventTarget {
   ///   from MDN.
   /// * [The timeout attribute](http://www.w3.org/TR/XMLHttpRequest/#the-timeout-attribute)
   ///   from W3C.
-  int timeout;
+  int timeout = 0;
 
   /// True if cross-site requests should use credentials such as cookies
   /// or authorization headers; false otherwise.
   ///
   /// This value is ignored for same-site requests.
-  bool withCredentials;
+  bool withCredentials = false;
 
   /// General constructor for any type of request (GET, POST, etc).
   ///
@@ -251,7 +252,7 @@ class HttpRequest extends HttpRequestEventTarget {
     if (data == null) {
       return null;
     }
-    switch (responseType ?? 'text') {
+    switch (responseType) {
       case 'arraybuffer':
         return data.buffer;
       case 'blob':
@@ -271,14 +272,15 @@ class HttpRequest extends HttpRequestEventTarget {
   /// separated by a comma and a space.
   ///
   /// See: http://www.w3.org/TR/XMLHttpRequest/#the-getresponseheader()-method
-  Map<String, String> get responseHeaders => _responseHeaders;
+  Map<String, String>? get responseHeaders => _responseHeaders;
 
   /// The response in String form or empty String on failure.
   String get responseText {
-    if (_responseData == null) {
+    final responseData = _responseData;
+    if (responseData == null) {
       return '';
     }
-    return utf8.decode(_responseData);
+    return utf8.decode(responseData);
   }
 
   String get responseUrl => throw UnimplementedError();
@@ -293,11 +295,11 @@ class HttpRequest extends HttpRequestEventTarget {
 
   /// The HTTP result code from the request (200, 404, etc).
   /// See also: [HTTP Status Codes](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
-  int get status => _status;
+  int? get status => _status;
 
   /// The request response string (such as \'200 OK\').
   /// See also: [HTTP Status Codes](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
-  String get statusText => _statusText;
+  String? get statusText => _statusText;
 
   /// [EventTarget] that can hold listeners to track the progress of the request.
   /// The events fired will be members of [HttpRequestUploadEvents].
@@ -332,10 +334,7 @@ class HttpRequest extends HttpRequestEventTarget {
   /// headers](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields#Response_fields)
   /// for a list of common response headers.
   @Unstable()
-  String getResponseHeader(String name) {
-    if (_responseHeaders == null) {
-      return null;
-    }
+  String? getResponseHeader(String name) {
     return _responseHeaders[name];
   }
 
@@ -352,8 +351,13 @@ class HttpRequest extends HttpRequestEventTarget {
   /// [request], [requestCrossOrigin], or [postFormData] methods. Use of this
   /// `open` method is intended only for more complex HTTP requests where
   /// finer-grained control is needed.
-  void open(String method, String url,
-      {bool async, String user, String password}) {
+  void open(
+    String method,
+    String url, {
+    bool? async,
+    String? user,
+    String? password,
+  }) {
     // Parse URL
     var parsedUri = Uri.parse(url);
 
@@ -370,7 +374,8 @@ class HttpRequest extends HttpRequestEventTarget {
     if (async == false) {
       throw ArgumentError.value(async, 'async');
     }
-    _requestHeaders = <String, String>{};
+    _requestHeaders.clear();
+    _responseHeaders.clear();
     if (password != null) {
       throw UnimplementedError();
     }
@@ -399,7 +404,7 @@ class HttpRequest extends HttpRequestEventTarget {
   ///   from MDN.
   void send([body_OR_data]) {
     // Read request body
-    Uint8List data;
+    Uint8List? data;
     if (body_OR_data != null) {
       if (body_OR_data is String) {
         data = Uint8List.fromList(utf8.encode(body_OR_data));
@@ -417,7 +422,7 @@ class HttpRequest extends HttpRequestEventTarget {
     // Reset response fields
     _status = 0;
     _statusText = '';
-    _responseHeaders = null;
+    _responseHeaders.clear();
     _responseData = null;
 
     // Send
@@ -443,16 +448,17 @@ class HttpRequest extends HttpRequestEventTarget {
     _requestHeaders[name] = value;
   }
 
-  Future<void> _send(int requestId, Uint8List data) async {
+  Future<void> _send(int requestId, Uint8List? data) async {
     // Was this request aborted while we waited?
     if (_requestId != requestId) {
       return;
     }
 
-    final httpClient = HtmlDriver.current.browserImplementation.newHttpClient();
+    final httpClient = io.HttpClient();
     try {
       // Wait for request
-      final httpRequest = await httpClient.openUrl(_requestMethod, _requestUrl);
+      final httpRequest =
+          await httpClient.openUrl(_requestMethod!, _requestUrl!);
 
       // Was this request aborted while we waited?
       if (_requestId != requestId) {
@@ -464,7 +470,10 @@ class HttpRequest extends HttpRequestEventTarget {
         httpRequest.headers.set(name, value);
       });
       httpRequest.headers.set('X-Requested-With', 'XMLHttpRequest');
-      httpRequest.headers.set('Origin', window.location.origin);
+      final origin = window.location.origin;
+      if (origin != null) {
+        httpRequest.headers.set('Origin', origin);
+      }
 
       if (data != null) {
         httpRequest.add(data);
@@ -483,13 +492,11 @@ class HttpRequest extends HttpRequestEventTarget {
       _statusText = httpResponse.reasonPhrase;
 
       // Set response headers
-      final responseHeaders = <String, String>{};
       httpResponse.headers.forEach((name, values) {
         if (values.isNotEmpty) {
-          responseHeaders[name] = values.first;
+          _responseHeaders[name] = values.first;
         }
       });
-      _responseHeaders = responseHeaders;
       _setReadyState(HEADERS_RECEIVED);
 
       // Wait for response data
@@ -536,11 +543,16 @@ class HttpRequest extends HttpRequestEventTarget {
   /// See also:
   ///
   /// * [request]
-  static Future<String> getString(String url,
-      {bool withCredentials, void Function(ProgressEvent e) onProgress}) {
-    return request(url,
-            withCredentials: withCredentials, onProgress: onProgress)
-        .then((HttpRequest xhr) => xhr.responseText);
+  static Future<String> getString(
+    String url, {
+    bool withCredentials = false,
+    void Function(ProgressEvent e)? onProgress,
+  }) {
+    return request(
+      url,
+      withCredentials: withCredentials,
+      onProgress: onProgress,
+    ).then((HttpRequest xhr) => xhr.responseText);
   }
 
   /// Makes a server POST request with the specified data encoded as form data.
@@ -566,11 +578,14 @@ class HttpRequest extends HttpRequestEventTarget {
   /// See also:
   ///
   /// * [request]
-  static Future<HttpRequest> postFormData(String url, Map<String, String> data,
-      {bool withCredentials,
-      String responseType,
-      Map<String, String> requestHeaders,
-      void Function(ProgressEvent e) onProgress}) {
+  static Future<HttpRequest> postFormData(
+    String url,
+    Map<String, String> data, {
+    bool? withCredentials,
+    String? responseType,
+    Map<String, String>? requestHeaders,
+    void Function(ProgressEvent e)? onProgress,
+  }) {
     var parts = [];
     data.forEach((key, value) {
       parts.add('${Uri.encodeQueryComponent(key)}='
@@ -645,14 +660,16 @@ class HttpRequest extends HttpRequestEventTarget {
   /// when the file cannot be found.
   ///
   /// See also: [authorization headers](http://en.wikipedia.org/wiki/Basic_access_authentication).
-  static Future<HttpRequest> request(String url,
-      {String method,
-      bool withCredentials,
-      String responseType,
-      String mimeType,
-      Map<String, String> requestHeaders,
-      sendData,
-      void Function(ProgressEvent e) onProgress}) {
+  static Future<HttpRequest> request(
+    String url, {
+    String? method,
+    bool? withCredentials,
+    String? responseType,
+    String? mimeType,
+    Map<String, String>? requestHeaders,
+    sendData,
+    void Function(ProgressEvent e)? onProgress,
+  }) {
     var completer = Completer<HttpRequest>();
 
     var xhr = HttpRequest();
@@ -682,7 +699,7 @@ class HttpRequest extends HttpRequestEventTarget {
     }
 
     xhr.onLoad.listen((e) {
-      var accepted = xhr.status >= 200 && xhr.status < 300;
+      var accepted = xhr.status! >= 200 && xhr.status! < 300;
       var fileUri = xhr.status == 0; // file:// URIs have status of 0.
       var notModified = xhr.status == 304;
       // Redirect status is specified up to 307, but others have been used in
@@ -690,7 +707,7 @@ class HttpRequest extends HttpRequestEventTarget {
       // resumable uploads, and it's also been used as a redirect. The
       // redirect case will be handled by the browser before it gets to us,
       // so if we see it we should pass it through to the user.
-      var unknownRedirect = xhr.status > 307 && xhr.status < 400;
+      var unknownRedirect = xhr.status! > 307 && xhr.status! < 400;
 
       if (accepted || fileUri || notModified || unknownRedirect) {
         completer.complete(xhr);
@@ -714,8 +731,11 @@ class HttpRequest extends HttpRequestEventTarget {
   ///
   /// This API provides a subset of [request] which works on IE9. If IE9
   /// cross-origin support is not required then [request] should be used instead.
-  static Future<String> requestCrossOrigin(String url,
-      {String method, String sendData}) async {
+  static Future<String> requestCrossOrigin(
+    String url, {
+    String? method,
+    String? sendData,
+  }) async {
     final xhr = await request(url, method: method, sendData: sendData);
     return xhr.response as String;
   }
@@ -771,7 +791,7 @@ class HttpRequestEventTarget extends EventTarget {
   static const EventStreamProvider<ProgressEvent> timeoutEvent =
       EventStreamProvider<ProgressEvent>('timeout');
 
-  HttpRequestEventTarget._() : super._created();
+  HttpRequestEventTarget._() : super.internal();
 
   /// Stream of `abort` events handled by this [HttpRequestEventTarget].
   Stream<ProgressEvent> get onAbort => abortEvent.forTarget(this);

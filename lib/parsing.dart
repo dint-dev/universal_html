@@ -15,36 +15,4 @@
 /// Helpers for parsing HTML / XML.
 library universal_html.parsing;
 
-import 'package:universal_html/html.dart';
-
-import 'src/parsing/parsing_impl_browser.dart'
-    if (dart.library.io) 'src/parsing/parsing_impl_vm.dart' as impl;
-
-/// Parses a [HtmlDocument].
-///
-/// ```
-/// import 'package:universal_html/parsing.dart';
-///
-/// void main() {
-///   final document = parseHtmlDocument('<html>...</html>');
-/// }
-/// ```
-HtmlDocument parseHtmlDocument(String content) {
-  ArgumentError.checkNotNull(content, 'content');
-  return impl.parseHtmlDocument(content);
-}
-
-/// Parses an [XmlDocument].
-///
-/// ```
-/// import 'package:universal_html/parsing.dart';
-///
-/// void main() {
-///   final document = parseXmlDocument('<xml>...</xml>');
-/// }
-/// ```
-XmlDocument parseXmlDocument(String content, {String mime = 'text/xml'}) {
-  ArgumentError.checkNotNull(content, 'content');
-  ArgumentError.checkNotNull(mime, 'mime');
-  return impl.parseXmlDocument(content, mime: mime);
-}
+export 'src/parsing/parsing.dart';

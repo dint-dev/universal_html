@@ -52,8 +52,6 @@ abstract class CssStyleDeclaration extends CssStyleDeclarationBase {
     return false;
   }
 
-  String cssFloat;
-
   factory CssStyleDeclaration() => CssStyleDeclaration.css('');
 
   factory CssStyleDeclaration.css(String css) {
@@ -63,6 +61,14 @@ abstract class CssStyleDeclaration extends CssStyleDeclarationBase {
   }
 
   CssStyleDeclaration._() : super._();
+
+  String get cssFloat {
+    throw UnimplementedError();
+  }
+
+  set cssFloat(String value) {
+    throw UnimplementedError();
+  }
 
   String get cssText {
     throw UnimplementedError();
@@ -91,7 +97,7 @@ abstract class CssStyleDeclaration extends CssStyleDeclarationBase {
   String removeProperty(String property);
 
   @override
-  void setProperty(String propertyName, String value, [String priority]);
+  void setProperty(String propertyName, String? value, [String? priority]);
 
   /// Returns true if the provided *CSS* property name is supported on this
   /// element.
@@ -111,7 +117,7 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
   final LinkedHashMap<String, String> _map = LinkedHashMap<String, String>();
 
   /// Original source that was parsed or produced.
-  String _source;
+  String? _source;
 
   /// Whether [_source] contains the latest changes.
   bool _sourceIsLatest = false;
@@ -148,19 +154,20 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
   @override
   String removeProperty(String name) {
     _sourceIsLatest = false;
-    return _map.remove(name);
+    return _map.remove(name) ?? '';
   }
 
   @override
-  void setProperty(String propertyName, String value, [String priority]) {
+  void setProperty(String propertyName, String? value, [String? priority]) {
     _sourceIsLatest = false;
     _map[propertyName] = (value ?? '');
   }
 
   @override
   String toString() {
-    if (_sourceIsLatest) {
-      return _source;
+    final source = _source;
+    if (source != null && _sourceIsLatest) {
+      return source;
     }
     final map = _map;
     if (map.isEmpty) {
@@ -173,18 +180,18 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
       sb.write(value);
       sb.write(';');
     });
-    final source = sb.toString();
-    _source = source;
+    final s = sb.toString();
+    _source = s;
     _sourceIsLatest = true;
-    return source;
+    return s;
   }
 
-  CssStyleDeclaration _clone() {
+  _CssStyleDeclaration _clone() {
     final result = _CssStyleDeclaration._();
     result._source = _source;
     result._sourceIsLatest = _sourceIsLatest;
     final resultMap = result._map;
-    _map?.forEach((k, v) {
+    _map.forEach((k, v) {
       resultMap[k] = v;
     });
     return result;
@@ -195,9 +202,6 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
     _sourceIsLatest = true;
     final map = _map;
     map.clear();
-    if (source == null) {
-      return;
-    }
     var offset = 0;
     while (offset < source.length) {
       final endOfName = source.indexOf(':', offset);

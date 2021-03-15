@@ -52,7 +52,7 @@ class _Attribute {
   final String _qualifiedName;
   final String _localName;
   String value;
-  _Attribute _next;
+  _Attribute? _next;
 
   _Attribute(
     this._isNamespaced,
@@ -60,12 +60,12 @@ class _Attribute {
     this._qualifiedName,
     this._localName,
     this.value,
-  ) : assert(_namespaceUri != '');
+  );
 
   _Attribute cloneChain() {
-    _Attribute firstClone;
-    _Attribute previousClone;
-    var attribute = this;
+    _Attribute? firstClone;
+    _Attribute? previousClone;
+    _Attribute? attribute = this;
     while (attribute != null) {
       final clone = _Attribute(
         attribute._isNamespaced,
@@ -82,7 +82,7 @@ class _Attribute {
       previousClone = clone;
       attribute = attribute._next;
     }
-    return firstClone;
+    return firstClone!;
   }
 }
 
@@ -96,24 +96,27 @@ class _Attributes extends MapBase<String, String> {
   @override
   Iterable<String> get keys sync* {
     final namespace = _namespace;
-    if (namespace == null) {
+    if (namespace == '') {
       final style = _element._style;
       if (style != null && style._map.isNotEmpty) {
         yield ('style');
       }
     }
-    var current = _element._firstAttribute;
-    while (current != null) {
-      final next = current._next;
-      if (current._namespaceUri == namespace) {
-        yield (current._localName);
+    var attribute = _element._firstAttribute;
+    while (attribute != null) {
+      final next = attribute._next;
+      if (attribute._namespaceUri == namespace) {
+        yield (attribute._localName);
       }
-      current = next;
+      attribute = next;
     }
   }
 
   @override
-  String operator [](Object key) {
+  String? operator [](Object? key) {
+    if (key is! String) {
+      return null;
+    }
     return _element.getAttributeNS(_namespace, key);
   }
 
@@ -125,11 +128,11 @@ class _Attributes extends MapBase<String, String> {
   @override
   void clear() {
     final namespace = _namespace;
-    if (namespace == null) {
+    if (namespace == '') {
       _element._style = null;
     }
 
-    _Attribute previous;
+    _Attribute? previous;
     var current = _element._firstAttribute;
     while (current != null) {
       final next = current._next;
@@ -148,13 +151,16 @@ class _Attributes extends MapBase<String, String> {
   }
 
   @override
-  String remove(Object key) {
-    final oldValue = _element.getAttributeNS(_namespace, key);
-    if (oldValue == null) {
-      return null;
+  String? remove(Object? key) {
+    if (key is String) {
+      final oldValue = _element.getAttributeNS(_namespace, key);
+      if (oldValue == null) {
+        return null;
+      }
+      _element.removeAttributeNS(_namespace, key);
+      return oldValue;
     }
-    _element.removeAttributeNS(_namespace, key);
-    return oldValue;
+    return null;
   }
 }
 
@@ -200,7 +206,8 @@ class _DataAttributeMap extends MapBase<String, String> {
   }
 
   @override
-  String operator [](Object key) => _attributes[_attr(key)];
+  String? operator [](Object? key) =>
+      key is! String ? null : _attributes[_attr(key)];
 
   @override
   void operator []=(String key, String value) {
@@ -226,10 +233,11 @@ class _DataAttributeMap extends MapBase<String, String> {
   }
 
   @override
-  bool containsKey(Object key) => _attributes.containsKey(_attr(key));
+  bool containsKey(Object? key) =>
+      key is! String ? false : _attributes.containsKey(_attr(key));
 
   @override
-  bool containsValue(Object value) => values.any((v) => v == value);
+  bool containsValue(Object? value) => values.any((v) => v == value);
 
   @override
   void forEach(void Function(String key, String value) f) {
@@ -246,7 +254,9 @@ class _DataAttributeMap extends MapBase<String, String> {
       _attributes.putIfAbsent(_attr(key), ifAbsent);
 
   @override
-  String remove(Object key) => _attributes.remove(_attr(key));
+  String? remove(Object? key) {
+    return key is! String ? null : _attributes.remove(_attr(key));
+  }
 
   // Helpers.
   String _attr(String key) => 'data-${_toHyphenedName(key)}';

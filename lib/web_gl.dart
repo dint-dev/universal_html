@@ -14,4 +14,7 @@
 
 library universal_html.web_gl;
 
-export 'prefer_sdk/web_gl.dart';
+export 'dart:web_gl'
+    if (dart.library.web_gl) 'dart:web_gl' // Browser
+    if (dart.library.io) 'src/web_gl.dart' // VM
+    if (dart.library.js) 'src/web_gl.dart'; // Node.JS

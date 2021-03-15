@@ -61,17 +61,22 @@ class CssStyleRule extends CssRule {
   final _CssStyleDeclaration _style;
   final List<_PriotizedSelector> _parsedSelectors;
 
-  factory CssStyleRule._(CssStyleSheet parentStyleSheet, css.RuleSet node) {
-    final selectorText = node.selectorGroup.span.text;
+  factory CssStyleRule.internal(
+      CssStyleSheet parentStyleSheet, css.RuleSet node) {
+    final selectorGroup = node.selectorGroup!;
+    final selectorText = selectorGroup.span!.text;
     final priotizedSelectors = <_PriotizedSelector>[];
-    for (var selector in node.selectorGroup.selectors) {
+    for (var selector in selectorGroup.selectors) {
       priotizedSelectors.add(_PriotizedSelector(selector));
     }
     final styleDeclaration = _CssStyleDeclaration._();
     for (var declaration in node.declarationGroup.declarations) {
       if (declaration is css.Declaration) {
+        final expression = declaration.expression!;
         styleDeclaration.setProperty(
-            declaration.property, declaration.expression.span.text);
+          declaration.property,
+          expression.span!.text,
+        );
       }
     }
     return CssStyleRule._constructor(
@@ -93,11 +98,14 @@ class CssStyleRule extends CssRule {
 }
 
 class CssStyleSheet extends StyleSheet {
-  final String href;
-  final CssStyleSheet parentStyleSheet;
+  final String? href;
+  final CssStyleSheet? parentStyleSheet;
   final List<CssRule> cssRules = [];
 
-  CssStyleSheet._({this.href, this.parentStyleSheet}) : super._();
+  CssStyleSheet._({
+    this.href,
+    this.parentStyleSheet,
+  }) : super._();
 
   void deleteRule(int index) {
     cssRules.removeAt(index);
@@ -129,11 +137,16 @@ class CssViewportRule extends CssRule {
 /// [length measurement](https://developer.mozilla.org/en-US/docs/Web/CSS/length)
 /// in CSS.
 class Dimension {
-  num _value;
-  String _unit;
+  /// Return a unitless, numerical value of this CSS value.
+  final num value;
+
+  final String _unit;
+
+  /// NOT part of 'dart:html'.
+  String get internalUnit => _unit;
 
   /// Set this CSS Dimension to a centimeter `value`.
-  Dimension.cm(this._value) : _unit = 'cm';
+  Dimension.cm(this.value) : _unit = 'cm';
 
   /// Construct a Dimension object from the valid, simple CSS string `cssValue`
   /// that represents a distance measurement.
@@ -142,60 +155,63 @@ class Dimension {
   /// simplistic CSS length measurements. Non-numeric values such as `auto` or
   /// `inherit` or invalid CSS will cause this constructor to throw a
   /// FormatError.
-  Dimension.css(String cssValue) {
+  factory Dimension.css(String cssValue) {
+    late num value;
+    var unit = '';
     if (cssValue == '') cssValue = '0px';
     if (cssValue.endsWith('%')) {
-      _unit = '%';
+      unit = '%';
     } else {
-      _unit = cssValue.substring(cssValue.length - 2);
+      // All other units are assumed to have length 2
+      unit = cssValue.substring(cssValue.length - 2);
     }
     if (cssValue.contains('.')) {
-      _value =
-          double.parse(cssValue.substring(0, cssValue.length - _unit.length));
+      final s = cssValue.substring(0, cssValue.length - unit.length);
+      value = double.parse(s);
     } else {
-      _value = int.parse(cssValue.substring(0, cssValue.length - _unit.length));
+      final s = cssValue.substring(0, cssValue.length - unit.length);
+      value = int.parse(s);
     }
+    return Dimension._(value, unit);
   }
+  Dimension._(this.value, this._unit);
 
   /// Set this CSS Dimension to the specified number of ems.
   ///
   /// 1em is equal to the current font size. (So 2ems is equal to double the font
   /// size). This is useful for producing website layouts that scale nicely with
   /// the user's desired font size.
-  Dimension.em(this._value) : _unit = 'em';
+  Dimension.em(this.value) : _unit = 'em';
 
   /// Set this CSS Dimension to the specified number of x-heights.
   ///
   /// One ex is equal to the x-height of a font's baseline to its mean line,
   /// generally the height of the letter 'x' in the font, which is usually about
   /// half the font-size.
-  Dimension.ex(this._value) : _unit = 'ex';
+  Dimension.ex(this.value) : _unit = 'ex';
 
   /// Set this CSS Dimension to an inch `value`.
-  Dimension.inch(this._value) : _unit = 'in';
+  Dimension.inch(this.value) : _unit = 'in';
 
   /// Set this CSS Dimension to a millimeter `value`.
-  Dimension.mm(this._value) : _unit = 'mm';
+  Dimension.mm(this.value) : _unit = 'mm';
 
   /// Set this CSS Dimension to a pica `value`.
-  Dimension.pc(this._value) : _unit = 'pc';
+  Dimension.pc(this.value) : _unit = 'pc';
 
   /// Set this CSS Dimension to a percentage `value`.
-  Dimension.percent(this._value) : _unit = '%';
+  Dimension.percent(this.value) : _unit = '%';
 
   /// Set this CSS Dimension to a point `value`.
-  Dimension.pt(this._value) : _unit = 'pt';
+  Dimension.pt(this.value) : _unit = 'pt';
 
   /// Set this CSS Dimension to a pixel `value`.
-  Dimension.px(this._value) : _unit = 'px';
-
-  /// Return a unitless, numerical value of this CSS value.
-  num get value => _value;
+  Dimension.px(this.value) : _unit = 'px';
 
   /// Print out the CSS String representation of this value.
   @override
   String toString() {
-    return '${_value}${_unit}';
+    return '$value$_unit';
   }
 }
 
@@ -287,7 +303,7 @@ class _PriotizedSelector {
       return 4;
     } else {
       throw UnsupportedError(
-        'Unsupported selector: "${selector.span.text}"',
+        'Unsupported selector: "${selector.span!.text}"',
       );
     }
   }

@@ -46,7 +46,8 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
-Window get window => HtmlDriver.current.window;
+/// Global window.
+Window get window => WindowController.topLevel.window as Window;
 
 class Window extends EventTarget
     with WindowBase
@@ -198,27 +199,7 @@ class Window extends EventTarget
   /// see http://dev.w3.org/csswg/cssom-view/#geometry
   static bool get supportsPointConversions => false;
 
-  @override
-  final HtmlDriver _htmlDriver;
-
-  Navigator _navigator;
-
-  Storage _localStorage;
-
-  Storage _sessionStorage;
-
-  Console _console;
-
-  Location _location;
-
-  History _history;
-
   bool _closed = false;
-
-  Performance _performance;
-
-  // TODO: consider forcing users to do: window.location.assign('string').
-  ApplicationCache _applicationCache;
 
   /// The name of this window.
   ///
@@ -226,7 +207,7 @@ class Window extends EventTarget
   ///
   /// * [Window.name](https://developer.mozilla.org/en-US/docs/Web/API/Window/name)
   ///   from MDN.
-  String name;
+  String name = '';
 
   /// The height of this window including all user interface elements.
   ///
@@ -245,10 +226,23 @@ class Window extends EventTarget
   final int outerWidth;
 
   /// *Deprecated*.
-  String status;
+  String status = '';
 
-  Window._(this._htmlDriver, {this.outerWidth = 0, this.outerHeight = 0})
-      : super._created();
+  final WindowController internalWindowController;
+
+  /// An internal constructor that's NOT part of "dart:html".
+  ///
+  /// This API is not for public use.
+  /// We may do backwards-incompatible changes.
+  Window.internal({
+    required this.internalWindowController,
+    required String href,
+    this.outerWidth = 0,
+    this.outerHeight = 0,
+  })  : _initialHref = href,
+        super.internal();
+
+  final String _initialHref;
 
   /// Returns a Future that completes just before the window is about to
   /// repaint so the user can draw an animation frame.
@@ -283,10 +277,7 @@ class Window extends EventTarget
   /// * [Application cache
   ///   API](https://html.spec.whatwg.org/multipage/browsers.html#application-cache-api)
   ///   from WHATWG.
-  ApplicationCache get applicationCache =>
-      _applicationCache ??
-      (_applicationCache =
-          _htmlDriver.browserImplementation.newApplicationCache());
+  late final ApplicationCache applicationCache = ApplicationCache.internal();
 
   _Worklet get audioWorklet => throw UnimplementedError();
 
@@ -296,8 +287,7 @@ class Window extends EventTarget
   bool get closed => _closed;
 
   /// The debugging console for this window.
-  Console get console =>
-      _console ?? (_console = _htmlDriver.browserImplementation.newConsole());
+  late final Console console = Console.internal();
 
   CookieStore get cookieStore => CookieStore._();
 
@@ -306,15 +296,15 @@ class Window extends EventTarget
   /// ## Other resources
   ///
   /// * [Web cryptography API](http://www.w3.org/TR/WebCryptoAPI/) from W3C.
-  Crypto get crypto => Crypto._();
+  Crypto? get crypto => null;
 
-  CustomElementRegistry get customElements => null;
-
-  /// *Deprecated*.
-  String get defaultstatus => throw UnimplementedError();
+  CustomElementRegistry? get customElements => null;
 
   /// *Deprecated*.
-  String get defaultStatus => throw UnimplementedError();
+  String? get defaultstatus => throw UnimplementedError();
+
+  /// *Deprecated*.
+  String? get defaultStatus => throw UnimplementedError();
 
   /// The ratio between physical pixels and logical CSS pixels.
   ///
@@ -333,19 +323,25 @@ class Window extends EventTarget
   /// * [Loading web
   ///   pages](https://html.spec.whatwg.org/multipage/browsers.html)
   ///   from WHATWG.
-  Document get document => null;
+  late final Document document = () {
+    // Note that `as` expressions are required because of
+    // "dart:html OR universal_html" confusion by the analyzer.
+    final window = this as universal_html_in_browser_or_vm.Window;
+    final document =
+        internalWindowController.windowBehavior.newDocument(window: window);
+    return document as Document;
+  }();
 
-  External get external => External._();
+  late final External external = External.internal();
 
   @override
-  History get history =>
-      _history ?? (_history = _htmlDriver.browserImplementation.newHistory());
+  late final History history = History.internal();
 
   /// Gets an instance of the Indexed DB factory to being using Indexed DB.
   ///
   /// Use [indexed_db.IdbFactory.supported] to check if Indexed DB is supported on the
   /// current platform.
-  IdbFactory get indexedDB => null;
+  IdbFactory? get indexedDB => null;
 
   /// The height of the viewport including scrollbars.
   ///
@@ -375,24 +371,14 @@ class Window extends EventTarget
   ///   applications](http://diveintohtml5.info/storage.html) from Dive Into HTML5.
   /// * [Local storage specification](http://www.w3.org/TR/webstorage/#the-localstorage-attribute)
   ///   from W3C.
-  Storage get localStorage =>
-      _localStorage ??
-      (_localStorage = _htmlDriver.browserImplementation.newStorage());
+  late final Storage localStorage = Storage._(this);
 
   /// The current location of this window.
   ///
   ///     Location currentLocation = window.location;
   ///     print(currentLocation.href); // 'http://www.example.com:80/'
   @override
-  Location get location =>
-      _location ??
-      (_location = _htmlDriver.browserImplementation.newLocation());
-
-  /// Sets the window's location, which causes the browser to navigate to the new
-  /// location. [value] may be a Location object or a String.
-  set location(value) {
-    _location = value;
-  }
+  late Location location = Location.internal(href: _initialHref);
 
   /// This window's location bar, which displays the URL.
   ///
@@ -419,9 +405,14 @@ class Window extends EventTarget
   /// * [The navigator
   ///   object](https://html.spec.whatwg.org/multipage/webappapis.html#the-navigator-object)
   ///   from WHATWG.
-  Navigator get navigator =>
-      _navigator ??
-      (_navigator = _htmlDriver.browserImplementation.newNavigator());
+  late final Navigator navigator = () {
+    // Note that `as` expressions are required because of
+    // "dart:html OR universal_html" confusion by the analyzer.
+    final window = this as universal_html_in_browser_or_vm.Window;
+    final navigator =
+        internalWindowController.windowBehavior.newNavigator(window: window);
+    return navigator as Navigator;
+  }();
 
   /// Whether objects are drawn offscreen before being displayed.
   ///
@@ -668,22 +659,22 @@ class Window extends EventTarget
   Stream<WheelEvent> get onWheel => Element.wheelEvent.forTarget(this);
 
   @override
-  WindowBase get opener => null;
+  WindowBase? get opener => null;
 
-  set opener(Window value) {
+  set opener(WindowBase? value) {
     throw UnimplementedError();
   }
 
-  int get orientation => 0;
+  int? get orientation => 0;
 
-  String get origin => _htmlDriver.uri.origin;
+  String? get origin => location.origin;
 
   int get pageXOffset => 0;
 
   int get pageYOffset => 0;
 
   @override
-  WindowBase get parent => null;
+  WindowBase? get parent => null;
 
   /// Timing and navigation data for this window.
   ///
@@ -694,8 +685,7 @@ class Window extends EventTarget
   ///   from HTML5Rocks.
   /// * [Navigation timing
   ///   specification](http://www.w3.org/TR/navigation-timing/) from W3C.
-  Performance get performance =>
-      _performance ?? (_performance = Performance._());
+  late final Performance performance = Performance._();
 
   /// Information about the screen displaying this window.
   ///
@@ -755,7 +745,7 @@ class Window extends EventTarget
   ///   specification](http://www.w3.org/TR/cssom-view/#screen) from W3C.
   /// * [scrollX](https://developer.mozilla.org/en-US/docs/Web/API/Window.scrollX)
   ///   from MDN.
-  int get scrollX => document.documentElement.scrollLeft;
+  int get scrollX => document.documentElement!.scrollLeft;
 
   /// The distance this window has been scrolled vertically.
   ///
@@ -765,7 +755,7 @@ class Window extends EventTarget
   ///   specification](http://www.w3.org/TR/cssom-view/#screen) from W3C.
   /// * [scrollY](https://developer.mozilla.org/en-US/docs/Web/API/Window.scrollY)
   ///   from MDN.
-  int get scrollY => document.documentElement.scrollTop;
+  int get scrollY => document.documentElement!.scrollTop;
 
   /// The current window.
   ///
@@ -786,10 +776,7 @@ class Window extends EventTarget
   ///   applications](http://diveintohtml5.info/storage.html) from Dive Into HTML5.
   /// * [Local storage
   ///   specification](http://www.w3.org/TR/webstorage/#dom-sessionstorage) from W3C.
-  Storage get sessionStorage =>
-      _sessionStorage ??
-      (_sessionStorage =
-          _htmlDriver.browserImplementation.newStorage(sessionStorage: true));
+  late final Storage sessionStorage = Storage._(this);
 
   /// Access to speech synthesis in the browser.
   ///
@@ -828,7 +815,7 @@ class Window extends EventTarget
   _BarProp get toolbar => throw UnimplementedError();
 
   @override
-  WindowBase get top => null;
+  WindowBase? get top => null;
 
   VisualViewport get visualViewport => throw UnimplementedError();
 
@@ -846,7 +833,7 @@ class Window extends EventTarget
   ///
   /// * [User prompts](https://html.spec.whatwg.org/multipage/webappapis.html#user-prompts)
   ///   from WHATWG.
-  void alert([String message]) {}
+  void alert([String? message]) {}
 
   String atob(String atob) {
     throw UnimplementedError();
@@ -869,11 +856,11 @@ class Window extends EventTarget
   ///
   /// * [User prompts](https://html.spec.whatwg.org/multipage/webappapis.html#user-prompts)
   ///   from WHATWG.
-  bool confirm([String message]) {
+  bool confirm([String? message]) {
     throw UnimplementedError();
   }
 
-  Future fetch(/*RequestInfo*/ input, [Map init]) {
+  Future fetch(/*RequestInfo*/ input, [Map? init]) {
     throw UnimplementedError();
   }
 
@@ -903,9 +890,10 @@ class Window extends EventTarget
   ///
   /// * [Window.getSelection](https://developer.mozilla.org/en-US/docs/Web/API/Window.getSelection)
   ///   from MDN.
-  Selection getSelection() {
-    return _htmlDriver.selection;
-  }
+  Selection? getSelection() => internalSelection;
+
+  @protected
+  Selection? internalSelection;
 
   /// Returns a list of media queries for the given query string.
   ///
@@ -949,18 +937,14 @@ class Window extends EventTarget
   ///
   /// * [Window.open](https://developer.mozilla.org/en-US/docs/Web/API/Window.open)
   ///   from MDN.
-  WindowBase open(String url, String name, [String options]) {
+  WindowBase? open(String url, String name, [String? options]) {
     return null;
   }
 
   @override
   void postMessage(dynamic message, String targetOrigin,
-      [List<Object> transfer]) {
-    _htmlDriver.addOutgoingMessage(
-      message,
-      targetOrigin: targetOrigin,
-      transfer: transfer,
-    );
+      [List<Object>? transfer]) {
+    throw UnimplementedError();
   }
 
   /// Opens the print dialog for this window.
@@ -997,13 +981,10 @@ class Window extends EventTarget
   /// the sandboxed file system for use. Because the file system is sandboxed,
   /// applications cannot access file systems created in other web pages.
   Future<FileSystem> requestFileSystem(int size, {bool persistent = false}) {
-    return _htmlDriver.browserImplementation.windowRequestFileSystem(
-      size,
-      persistent: false,
-    );
+    throw UnimplementedError();
   }
 
-  int requestIdleCallback(IdleRequestCallback callback, [Map options]) {
+  int requestIdleCallback(IdleRequestCallback callback, [Map? options]) {
     Timer(const Duration(microseconds: 1), () {
       final idleDeadline =
           IdleDeadline._(DateTime.now().add(const Duration(microseconds: 10)));
@@ -1047,7 +1028,7 @@ class Window extends EventTarget
   ///
   /// * [Window.scroll](https://developer.mozilla.org/en-US/docs/Web/API/Window/scroll)
   ///   from MDN.
-  void scroll([options_OR_x, y, Map scrollOptions]) {}
+  void scroll([options_OR_x, y, Map? scrollOptions]) {}
 
   /// Scrolls the page horizontally and vertically by an offset.
   ///
@@ -1055,7 +1036,7 @@ class Window extends EventTarget
   ///
   /// * [Window.scrollBy](https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollBy)
   ///   from MDN.
-  void scrollBy([options_OR_x, y, Map scrollOptions]) {}
+  void scrollBy([options_OR_x, y, Map? scrollOptions]) {}
 
   /// Scrolls the page horizontally and vertically to a specific point.
   ///
@@ -1065,7 +1046,7 @@ class Window extends EventTarget
   ///
   /// * [Window.scrollTo](https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollTo)
   ///   from MDN.
-  void scrollTo([options_OR_x, y, Map scrollOptions]) {}
+  void scrollTo([options_OR_x, y, Map? scrollOptions]) {}
 
   /// Stops the window from loading.
   ///
@@ -1090,11 +1071,11 @@ mixin WindowBase implements EventTarget {
 
   Location get location;
 
-  WindowBase get opener => null;
+  WindowBase? get opener => null;
 
-  WindowBase get parent => null;
+  WindowBase? get parent => null;
 
-  WindowBase get top => null;
+  WindowBase? get top => null;
 
   void close();
 

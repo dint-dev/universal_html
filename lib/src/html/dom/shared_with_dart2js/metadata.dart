@@ -50,7 +50,7 @@ class SupportedBrowser {
 
   /// The minimum version of the browser that supports the feature, or null
   /// if supported on all versions.
-  final String minimumVersion;
+  final String? minimumVersion;
 
   const SupportedBrowser(this.browserName, [this.minimumVersion]);
 }

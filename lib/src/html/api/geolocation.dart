@@ -55,7 +55,8 @@ class Coordinates {
   final num longitude;
   final num speed;
 
-  const Coordinates._({
+  /// Internal constructor. __Not part of dart:html__.
+  const Coordinates.internal({
     this.accuracy = 0.0,
     this.altitude = 0.0,
     this.altitudeAccuracy = 0.0,
@@ -67,30 +68,31 @@ class Coordinates {
 }
 
 class Geolocation {
-  final Geoposition _geoPosition;
-
-  Geolocation._({Geoposition geoposition})
-      : _geoPosition = geoposition ?? Geoposition._();
+  /// Internal constructor. __Not part of dart:html__.
+  Geolocation.internal();
 
   Future<Geoposition> getCurrentPosition(
-      {bool enableHighAccuracy, Duration timeout, Duration maximumAge}) {
-    return Future<Geoposition>.value(_geoPosition);
+      {bool? enableHighAccuracy, Duration? timeout, Duration? maximumAge}) {
+    return Future<Geoposition>.value(Geoposition.internal(
+      coords: Coordinates.internal(),
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+    ));
   }
 
   Stream<Geoposition> watchPosition(
-      {bool enableHighAccuracy, Duration timeout, Duration maximumAge}) {
-    return Stream<Geoposition>.fromIterable(<Geoposition>[_geoPosition]);
+      {bool? enableHighAccuracy, Duration? timeout, Duration? maximumAge}) {
+    return Stream<Geoposition>.fromFuture(getCurrentPosition());
   }
 }
 
 class Geoposition {
-  final Coordinates coords;
+  final Coordinates? coords;
 
   final int timestamp;
 
-  /// IMPORTANT: Not part 'dart:html'.
-  Geoposition._({Coordinates coords, int timestamp})
-      : coords = coords ?? const Coordinates._(),
+  /// Internal constructor. __Not part of dart:html__.
+  Geoposition.internal({required Coordinates? coords, required int? timestamp})
+      : coords = coords ?? const Coordinates.internal(),
         timestamp = timestamp ?? DateTime.now().millisecondsSinceEpoch;
 }
 

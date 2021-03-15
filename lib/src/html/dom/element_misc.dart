@@ -126,13 +126,13 @@ class _ElementChildren extends ListBase<Element> {
 }
 
 class _ElementIterator extends Iterator<Element> {
-  final Element _parent;
-  Element _current;
+  final _ElementOrDocument _parent;
+  Element? _current;
 
   _ElementIterator(this._parent);
 
   @override
-  Element get current => _current;
+  Element get current => _current!;
 
   @override
   bool moveNext() {

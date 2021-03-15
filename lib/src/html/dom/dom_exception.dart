@@ -47,13 +47,13 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 class DomError implements Exception {
-  final String message;
+  final String? message;
   final String name;
 
   DomError(this.name, [this.message]);
 
   @override
-  String toString() => '${name}: ${message}';
+  String toString() => '$name: $message';
 }
 
 class DomException implements Exception {
@@ -89,7 +89,7 @@ class DomException implements Exception {
   static const String NOT_ALLOWED = 'NotAllowedError';
   static const String TYPE_ERROR = 'TypeError';
 
-  final String message;
+  final String? message;
   final String name;
 
   DomException._(this.name, [this.message]);
@@ -119,5 +119,5 @@ class DomException implements Exception {
   }
 
   @override
-  String toString() => '${name}: ${message}';
+  String toString() => '$name: $message';
 }

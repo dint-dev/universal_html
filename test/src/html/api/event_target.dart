@@ -17,7 +17,7 @@ part of main_test;
 void _testEvents() {
   group('events:', () {
     List<String> registerStepListeners(List<Element> elements,
-        {Element expectedTarget}) {
+        {Element? expectedTarget}) {
       // The list of steps will be built by listeners
       final steps = <String>[];
 

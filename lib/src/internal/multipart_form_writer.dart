@@ -7,7 +7,7 @@ class MultipartFormWriter {
   static final _random = Random.secure();
   final io.HttpClientRequest sink;
 
-  String _boundary;
+  late String _boundary;
 
   MultipartFormWriter(this.sink) {
     _boundary = _randomBoundary();
@@ -43,7 +43,7 @@ class MultipartFormWriter {
     sink.writeln();
   }
 
-  void writeFile(String name, Uint8List value, {String fileName}) {
+  void writeFile(String name, Uint8List value, {String? fileName}) {
     final parameters = <String, String>{
       'name': name,
     };

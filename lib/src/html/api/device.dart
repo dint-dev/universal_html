@@ -60,8 +60,8 @@ class Platform {
 
 /// Utils for device detection.
 class _Device {
-  static bool _isOpera;
-  static bool _isWebKit;
+  static bool? _isOpera;
+  static bool? _isWebKit;
 
   /// Determines if the current device is running Opera.
   static bool get isOpera {

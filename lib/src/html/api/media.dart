@@ -76,23 +76,23 @@ abstract class ImageCapture {
 abstract class MediaDeviceInfo {
   MediaDeviceInfo._();
 
-  String get deviceId;
+  String? get deviceId;
 
-  String get groupId;
+  String? get groupId;
 
-  String get kind;
+  String? get kind;
 
-  String get label;
+  String? get label;
 }
 
 class MediaDevices extends EventTarget {
-  MediaDevices._() : super._created();
+  MediaDevices._() : super.internal();
 
   Future<List<MediaDeviceInfo>> enumerateDevices() async {
     return const <MediaDeviceInfo>[];
   }
 
-  Map getSupportedConstraints() => null;
+  Map getSupportedConstraints() => {};
 }
 
 abstract class MediaError {
@@ -108,9 +108,9 @@ abstract class MediaError {
     throw UnimplementedError();
   }
 
-  int get code;
+  int? get code;
 
-  String get message;
+  String? get message;
 }
 
 abstract class MediaKeys {
@@ -128,7 +128,7 @@ abstract class MediaKeysPolicy {
     throw UnimplementedError();
   }
 
-  String get minHdcpVersion;
+  String? get minHdcpVersion;
 }
 
 abstract class MediaRecorder implements EventTarget {
@@ -139,7 +139,7 @@ abstract class MediaRecorder implements EventTarget {
   static const EventStreamProvider<Event> pauseEvent =
       EventStreamProvider<Event>('pause');
 
-  factory MediaRecorder(MediaStream stream, [Map options]) {
+  factory MediaRecorder(MediaStream stream, [Map? options]) {
     throw UnimplementedError();
   }
 
@@ -185,7 +185,7 @@ abstract class MediaSettingsRange {
 abstract class MediaSource extends EventTarget {
   static bool get supported => false;
 
-  MediaSource._() : super._created();
+  MediaSource._() : super.internal();
 
   List<SourceBuffer> get activeSourceBuffers;
 
@@ -244,19 +244,19 @@ abstract class MediaStream implements EventTarget {
   void removeTrack(MediaStreamTrack track);
 }
 
-class MediaStreamEvent extends Event {
+abstract class MediaStreamEvent extends Event {
   static bool get supported => false;
 
   MediaStreamEvent(String type) : super.internal(type);
 
-  MediaStream get stream => null;
+  MediaStream get stream;
 }
 
 abstract class MediaStreamTrack extends EventTarget {
-  String contentHint;
-  bool enabled;
+  String? contentHint;
+  bool? enabled;
 
-  MediaStreamTrack._() : super._created();
+  MediaStreamTrack._() : super.internal();
 
   String get id;
 
@@ -324,7 +324,7 @@ abstract class TimeRanges {
     throw UnimplementedError();
   }
 
-  int get length => null;
+  int get length;
 
   double end(int index);
 

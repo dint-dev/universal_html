@@ -47,8 +47,8 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 abstract class DataTransfer {
-  String dropEffect;
-  String effectAllowed;
+  String? dropEffect;
+  String? effectAllowed;
 
   List<File> get files;
 
@@ -88,7 +88,7 @@ abstract class DataTransferItemList {
     throw UnimplementedError();
   }
 
-  DataTransferItem add(dynamic data_OR_file, [String type]) {
+  DataTransferItem add(dynamic data_OR_file, [String? type]) {
     throw UnimplementedError();
   }
 

@@ -63,7 +63,7 @@ abstract class RtcDataChannel extends EventTarget {
   static const EventStreamProvider<Event> openEvent =
       EventStreamProvider<Event>('open');
 
-  RtcDataChannel._() : super._created();
+  RtcDataChannel._() : super.internal();
 
   Stream<Event> get onClose;
 
@@ -93,7 +93,7 @@ abstract class RtcDataChannel extends EventTarget {
 class RtcDataChannelEvent extends Event {
   RtcDataChannelEvent(String type) : super.internal(type);
 
-  RtcDataChannel get channel => null;
+  RtcDataChannel? get channel => null;
 }
 
 abstract class RtcDtmfSender {
@@ -120,11 +120,11 @@ abstract class RtcPeerConnection extends EventTarget {
   static const EventStreamProvider<Event> signalingStateChangeEvent =
       EventStreamProvider<Event>('signalignstatechange');
 
-  RtcPeerConnection._() : super._created();
+  RtcPeerConnection._() : super.internal();
 
-  String get iceConnectionState => null;
+  String get iceConnectionState;
 
-  String get iceGatheringState => null;
+  String get iceGatheringState;
 
   RtcSessionDescription get localDescription;
 

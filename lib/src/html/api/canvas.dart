@@ -72,22 +72,24 @@ abstract class CanvasRenderingContext2D extends _CanvasRenderingContext2DBase {
 }
 
 class ImageData {
-  final Uint8ClampedList data;
+  final Uint8ClampedList? data;
 
   final int height;
-
   final int width;
-  factory ImageData(data_OR_sw, int sh_OR_sw, [int sh]) {
+
+  factory ImageData(data_OR_sw, int sh_OR_sw, [int? sh]) {
     if (data_OR_sw is int) {
       final width = data_OR_sw;
       final height = sh_OR_sw;
       final data = Uint8ClampedList(4 * width * height);
       return ImageData._(data, width, height);
-    } else {
-      final data = Uint8ClampedList.fromList(data_OR_sw as List);
+    } else if (data_OR_sw is List<int>) {
+      final data = Uint8ClampedList.fromList(data_OR_sw);
       final width = sh_OR_sw;
       final height = sh ?? data.lengthInBytes ~/ (width * 4);
       return ImageData._(data, width, height);
+    } else {
+      throw ArgumentError.value(data_OR_sw);
     }
   }
   ImageData._(this.data, this.width, this.height);
@@ -97,7 +99,7 @@ abstract class OffscreenCanvas extends EventTarget {
   int height;
   int width;
 
-  OffscreenCanvas(this.width, this.height) : super._created();
+  OffscreenCanvas(this.width, this.height) : super.internal();
 
   Future convertToBlob([Map options]);
 
@@ -107,26 +109,26 @@ abstract class OffscreenCanvas extends EventTarget {
 }
 
 abstract class OffscreenCanvasRenderingContext2D {
-  String direction;
-  Object fillStyle;
-  String filter;
-  String font;
-  num globalAlpha;
-  String globalCompositeOperation;
-  bool imageSmoothingEnabled;
-  String imageSmoothingQuality;
-  String lineCap;
-  num lineDashOffset;
-  String lineJoin;
-  num lineWidth;
-  num miterLimit;
-  num shadowBlur;
-  String shadowColor;
-  num shadowOffsetX;
-  num shadowOffsetY;
-  Object strokeStyle;
-  String textAlign;
-  String textBaseline;
+  String? direction;
+  Object? fillStyle;
+  String? filter;
+  String? font;
+  num? globalAlpha;
+  String? globalCompositeOperation;
+  bool? imageSmoothingEnabled;
+  String? imageSmoothingQuality;
+  String? lineCap;
+  num? lineDashOffset;
+  String? lineJoin;
+  num? lineWidth;
+  num? miterLimit;
+  num? shadowBlur;
+  String? shadowColor;
+  num? shadowOffsetX;
+  num? shadowOffsetY;
+  Object? strokeStyle;
+  String? textAlign;
+  String? textBaseline;
   OffscreenCanvasRenderingContext2D._();
 
   void arc(num x, num y, num radius, num startAngle, num endAngle,
@@ -239,29 +241,29 @@ abstract class Path2D {
 }
 
 abstract class TextMetrics {
-  final num actualBoundingBoxAscent;
+  num? get actualBoundingBoxAscent;
 
-  final num actualBoundingBoxDescent;
+  num? get actualBoundingBoxDescent;
 
-  final num actualBoundingBoxLeft;
+  num? get actualBoundingBoxLeft;
 
-  final num actualBoundingBoxRight;
+  num? get actualBoundingBoxRight;
 
-  final num alphabeticBaseline;
+  num? get alphabeticBaseline;
 
-  final num emHeightAscent;
+  num? get emHeightAscent;
 
-  final num emHeightDescent;
+  num? get emHeightDescent;
 
-  final num fontBoundingBoxAscent;
+  num? get fontBoundingBoxAscent;
 
-  final num fontBoundingBoxDescent;
+  num? get fontBoundingBoxDescent;
 
-  final num hangingBaseline;
+  num? get hangingBaseline;
 
-  final num ideographicBaseline;
+  num? get ideographicBaseline;
 
-  final num width;
+  num? get width;
 
   factory TextMetrics._() {
     throw UnimplementedError();
@@ -269,26 +271,26 @@ abstract class TextMetrics {
 }
 
 abstract class _CanvasRenderingContext2DBase implements CanvasRenderingContext {
-  String direction;
-  Object fillStyle;
-  String filter;
-  String font;
-  num globalAlpha;
-  String globalCompositeOperation;
-  bool imageSmoothingEnabled;
-  String imageSmoothingQuality;
-  String lineCap;
-  num lineDashOffset;
-  String lineJoin;
-  num lineWidth;
-  num miterLimit;
-  num shadowBlur;
-  String shadowColor;
-  num shadowOffsetX;
-  num shadowOffsetY;
-  Object strokeStyle;
-  String textAlign;
-  String textBaseline;
+  String? direction;
+  Object? fillStyle;
+  String? filter;
+  String? font;
+  num? globalAlpha;
+  String? globalCompositeOperation;
+  bool? imageSmoothingEnabled;
+  String? imageSmoothingQuality;
+  String? lineCap;
+  num? lineDashOffset;
+  String? lineJoin;
+  num? lineWidth;
+  num? miterLimit;
+  num? shadowBlur;
+  String? shadowColor;
+  num? shadowOffsetX;
+  num? shadowOffsetY;
+  Object? strokeStyle;
+  String? textAlign;
+  String? textBaseline;
 
   void addHitRegion([Map options]);
 

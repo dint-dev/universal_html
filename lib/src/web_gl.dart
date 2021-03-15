@@ -43,6 +43,11 @@ The original files in the Dart SDK had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+@visibleForTesting
+library universal_html.web_gl.internal;
+
+import 'package:meta/meta.dart';
+
 import 'html.dart';
 
 class ContextEvent extends Event {

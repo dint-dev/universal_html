@@ -127,19 +127,16 @@ class Events {
 }
 
 abstract class EventTarget {
-  List<_AddedEventListener> _listeners;
+  List<_AddedEventListener>? _listeners;
 
-  EventTarget._created();
+  EventTarget.internal();
 
   Events get on => Events(this);
 
-  /// Returns instance of the [HtmlDriver] that should be used.
-  HtmlDriver get _htmlDriver => HtmlDriver.current;
-
-  EventTarget get _parentEventTarget => null;
+  EventTarget? get _parentEventTarget => null;
 
   void addEventListener(String type, EventListener listener,
-      [bool useCapture]) {
+      [bool? useCapture]) {
     final eventListener = _AddedEventListener(
       type,
       listener,
@@ -154,7 +151,7 @@ abstract class EventTarget {
       throw ArgumentError('Event.eventPhase is not Event._INITIAL_PHASE');
     }
     event._eventPhase = Event.AT_TARGET;
-    event._target = this;
+    event.internalSetTarget(this);
 
     // Capturing phase
     event._eventPhase = Event.CAPTURING_PHASE;
@@ -166,14 +163,26 @@ abstract class EventTarget {
     }
 
     // Bubbling phase
-    if (event.bubbles) {
+    if (event.bubbles ?? true) {
       event._eventPhase = Event.BUBBLING_PHASE;
       _invokeBubblingListeners(event);
     }
 
     // Invoke default behavior
     if (!event._defaultPrevented) {
-      _htmlDriver.browserImplementation.handleEventDefault(this, event);
+      Window? usedWindow;
+      final self = this;
+      if (self is Node) {
+        usedWindow = self.ownerDocument?.window;
+      }
+      // TODO: How to determine WindowController when there are many?
+      usedWindow ??= window;
+
+      // ignore: invalid_use_of_protected_member
+      usedWindow.internalWindowController.windowBehavior.handleEventDefault(
+        this as universal_html_in_browser_or_vm.EventTarget,
+        event as universal_html_in_browser_or_vm.Event,
+      );
     }
 
     // Return
@@ -181,7 +190,7 @@ abstract class EventTarget {
   }
 
   void removeEventListener(String type, EventListener listener,
-      [bool useCapture]) {
+      [bool? useCapture]) {
     useCapture ??= false;
     _listeners?.removeWhere((e) =>
         e._type == type &&
@@ -287,6 +296,5 @@ class _AddedEventListener {
   final EventListener _listener;
   final bool _useCapture;
 
-  _AddedEventListener(this._type, this._listener, this._useCapture)
-      : assert(_useCapture != null);
+  _AddedEventListener(this._type, this._listener, this._useCapture);
 }

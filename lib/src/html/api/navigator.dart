@@ -52,33 +52,39 @@ class Navigator extends NavigatorConcurrentHardware
         NavigatorOnLine,
         NavigatorAutomationInformation,
         NavigatorID {
-  final HtmlDriver _htmlDriver;
   final Permissions permissions = Permissions._();
 
   /// Amount of memory in the device.
-  final int deviceMemory;
+  final int? deviceMemory;
 
-  /// Lazily allocated [Geolocation].
-  Geolocation _geoLocation;
-
-  Navigator._(this._htmlDriver, {this.deviceMemory}) : super._();
+  final Window internalWindow;
 
   @override
-  String get appCodeName => null;
+  final String? appName;
 
   @override
-  String get appName => _htmlDriver.userAgent.appName;
+  final String? appVersion;
+
+  late final Geolocation geolocation = Geolocation.internal();
+
+  /// Internal constructor. NOT part of "dart:html".
+  Navigator.internal({
+    required this.internalWindow,
+    this.deviceMemory,
+    this.appName = 'Netscape',
+    this.appVersion = '5.0',
+  }) : super._();
 
   @override
-  String get appVersion => _htmlDriver.userAgent.appVersion;
+  String? get appCodeName => null;
 
-  _Clipboard get clipboard => throw UnimplementedError();
+  _Clipboard? get clipboard => throw UnimplementedError();
 
   NetworkInformation get connection => throw UnimplementedError();
 
   @Unstable()
   @override
-  bool get cookieEnabled => false;
+  bool? get cookieEnabled => false;
 
   CredentialsContainer get credentials => throw UnimplementedError();
 
@@ -87,19 +93,14 @@ class Navigator extends NavigatorConcurrentHardware
 
   String get doNotTrack => throw UnimplementedError();
 
-  Geolocation get geolocation {
-    return _geoLocation ??
-        (_geoLocation = _htmlDriver.browserImplementation.newGeolocation());
-  }
-
   @override
-  String get language {
+  String? get language {
     final languages = this.languages;
     return languages.isEmpty ? null : languages.first;
   }
 
   @override
-  List<String> get languages => _htmlDriver.languages;
+  List<String> get languages => throw UnimplementedError();
 
   int get maxTouchPoints => throw UnimplementedError();
 
@@ -111,44 +112,44 @@ class Navigator extends NavigatorConcurrentHardware
 
   List<MimeType> get mimeTypes => throw UnimplementedError();
 
-  Object get nfc => null;
+  Object? get nfc => null;
 
   @override
   bool get onLine => false;
 
   @deprecated
-  DeprecatedStorageQuota get persistentStorage => null;
+  DeprecatedStorageQuota? get persistentStorage => null;
 
   @override
   String get platform => 'Win32';
 
-  Presentation get presentation => null;
+  Presentation? get presentation => null;
 
   @override
-  String get product => _htmlDriver.userAgent.product;
+  String get product => 'Gecko';
 
-  String get productSub => _htmlDriver.userAgent.productSub;
+  String get productSub => '20030107';
 
   ServiceWorkerContainer get serviceWorker {
     throw UnimplementedError();
   }
 
-  StorageManager get storage => null;
+  StorageManager? get storage => null;
 
   @deprecated
-  DeprecatedStorageQuota get temporaryStorage => null;
+  DeprecatedStorageQuota? get temporaryStorage => null;
 
   @override
-  String get userAgent => _htmlDriver.userAgent.string;
+  String get userAgent => '-';
 
-  String get vendor => _htmlDriver.userAgent.vendor;
+  String get vendor => '-';
 
-  String get vendorSub => _htmlDriver.userAgent.vendorSub;
+  String get vendorSub => '';
 
-  VR get vr => null;
+  VR? get vr => null;
 
   @override
-  bool get webdriver => null;
+  bool? get webdriver => null;
 
   void cancelKeyboardLock() {
     // Ignore
@@ -208,7 +209,7 @@ class Navigator extends NavigatorConcurrentHardware
     // Ignore
   }
 
-  Future requestKeyboardLock([List<String> keyCodes]) {
+  Future requestKeyboardLock([List<String>? keyCodes]) {
     return Future.error(UnimplementedError());
   }
 
@@ -217,7 +218,7 @@ class Navigator extends NavigatorConcurrentHardware
     return Future.error(UnimplementedError());
   }
 
-  Future requestMidiAccess([Map options]) => throw UnimplementedError();
+  Future requestMidiAccess([Map? options]) => throw UnimplementedError();
 
   bool sendBeacon(String url, Object data) {
     // Send beacon later
@@ -227,7 +228,7 @@ class Navigator extends NavigatorConcurrentHardware
     return true;
   }
 
-  Future share([Map data]) {
+  Future share([Map? data]) {
     throw UnimplementedError();
   }
 

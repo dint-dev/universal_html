@@ -46,42 +46,6 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
-HtmlDocument get document => HtmlDriver.current.document;
-
-/// Finds the first descendant element of this document that matches the
-/// specified group of selectors.
-///
-/// Unless your webpage contains multiple documents, the top-level
-/// [querySelector]
-/// method behaves the same as this method, so you should use it instead to
-/// save typing a few characters.
-///
-/// [selectors] should be a string using CSS selector syntax.
-///
-///     var element1 = document.querySelector('.className');
-///     var element2 = document.querySelector('#id');
-///
-/// For details about CSS selector syntax, see the
-/// [CSS selector specification](http://www.w3.org/TR/css3-selectors/).
-T querySelector<T extends Element>(String s) => document.querySelector(s);
-
-/// Finds all descendant elements of this document that match the specified
-/// group of selectors.
-///
-/// Unless your webpage contains multiple documents, the top-level
-/// [querySelectorAll]
-/// method behaves the same as this method, so you should use it instead to
-/// save typing a few characters.
-///
-/// [selectors] should be a string using CSS selector syntax.
-///
-///     var items = document.querySelectorAll('.itemClassName');
-///
-/// For details about CSS selector syntax, see the
-/// [CSS selector specification](http://www.w3.org/TR/css3-selectors/).
-ElementList<T> querySelectorAll<T extends Element>(String s) =>
-    document.querySelectorAll<T>(s);
-
 abstract class Document extends Node
     with _ElementOrDocument, _DocumentOrFragment {
   static const EventStreamProvider<Event> pointerLockChangeEvent =
@@ -113,44 +77,42 @@ abstract class Document extends Node
   static const EventStreamProvider<Event> selectionChangeEvent =
       EventStreamProvider<Event>('selectionchange');
 
-  @override
-  final HtmlDriver _htmlDriver;
-
   final String contentType;
 
   final String _readyState = 'complete';
 
-  final String origin;
+  final String? origin;
 
-  String cookie;
+  String? cookie;
 
-  Element rootScroller;
+  Element? rootScroller;
 
   factory Document() {
-    return XmlDocument._(
-        htmlDriver: HtmlDriver.current, contentType: 'text/html');
+    return XmlDocument.internal(
+      window: universal_html.window,
+      contentType: 'text/html',
+    );
   }
 
   Document._({
-    @required HtmlDriver htmlDriver,
-    @required this.contentType,
+    required this.contentType,
+    required this.window,
     this.origin,
-  })  : _htmlDriver = htmlDriver,
-        super._document();
+  }) : super._document();
 
   /// Outside the browser, returns null.
-  Element get activeElement => null;
+  Element? get activeElement => null;
 
-  String get addressSpace => null;
+  String? get addressSpace => null;
 
   @override
-  String get baseUri {
+  String? get baseUri {
     return window.location.href;
   }
 
-  ScriptElement get currentScript => null;
+  ScriptElement? get currentScript => null;
 
-  Element get documentElement {
+  Element? get documentElement {
     var node = firstChild;
     while (node != null) {
       if (node is Element) {
@@ -161,15 +123,15 @@ abstract class Document extends Node
     return null;
   }
 
-  String get domain => null;
+  String? get domain => null;
 
-  Element get fullscreenElement => null;
+  Element? get fullscreenElement => null;
 
-  bool get fullscreenEnabled => false;
+  bool? get fullscreenEnabled => false;
 
-  bool get hidden => false;
+  bool? get hidden => false;
 
-  DomImplementation get implementation => DomImplementation._(_htmlDriver);
+  DomImplementation? get implementation => DomImplementation._();
 
   @override
   int get nodeType => Node.DOCUMENT_NODE;
@@ -380,28 +342,28 @@ abstract class Document extends Node
 
   Stream<Event> get onWaiting => Element.waitingEvent.forTarget(this);
 
-  Element get pointerLockElement => null;
+  Element? get pointerLockElement => null;
 
-  String get readyState => _readyState;
+  String? get readyState => _readyState;
 
-  Element get rootElement => documentElement;
+  Element? get rootElement => documentElement;
 
-  Element get scrollingElement => null;
+  Element? get scrollingElement => null;
 
-  String get suborigin => null;
+  String? get suborigin => null;
 
   bool get supportsRegister => false;
 
   bool get supportsRegisterElement => false;
 
   @override
-  String get text => null;
+  String? get text => null;
 
   DocumentTimeline get timeline => throw UnimplementedError();
 
-  String get visibilityState => null;
+  String? get visibilityState => null;
 
-  Window get window => _htmlDriver.window;
+  final Window window;
 
   bool get _isXml => false;
 
@@ -412,20 +374,20 @@ abstract class Document extends Node
   }
 
   DocumentFragment createDocumentFragment() {
-    return DocumentFragment._(this);
+    return DocumentFragment.internal(this);
   }
 
-  Element createElement(String tagName, [String typeExtension]) {
+  Element createElement(String tagName, [String? typeExtension]) {
     return Element.internalTag(this, tagName, typeExtension);
   }
 
   Element createElementNS(String namespaceUri, String qualifiedName,
-      [String typeExtension]) {
+      [String? typeExtension]) {
     return Element.internalTagNS(
         this, namespaceUri, qualifiedName, typeExtension);
   }
 
-  bool execCommand(String commandId, [bool showUI, String value]) {
+  bool execCommand(String commandId, [bool? showUI, String? value]) {
     return false;
   }
 
@@ -476,10 +438,10 @@ abstract class Document extends Node
     return result;
   }
 
-  Node importNode(Node node, [bool deep]) => throw UnimplementedError();
+  Node importNode(Node node, [bool? deep]) => throw UnimplementedError();
 
   @override
-  void insertBefore(Node node, Node before) {
+  void insertBefore(Node node, Node? before) {
     if (node is Element) {
       if (_firstElementChild != null) {
         throw DomException._failedToExecute(
@@ -489,13 +451,13 @@ abstract class Document extends Node
           'Only one element on document allowed.',
         );
       }
-    } else if (node is _DocumentType) {
+    } else if (node is InternalDocumentType) {
       // OK
     } else if (node is Comment) {
       // OK
     } else if (node is Text) {
       // Check that the text is whitespace
-      final value = node.text.replaceAll('\n', '').trim();
+      final value = node.text!.replaceAll('\n', '').trim();
       if (value.isNotEmpty) {
         throw DomException._mayNotBeInsertedInside(
           'Document',
@@ -530,7 +492,7 @@ abstract class Document extends Node
   String queryCommandValue(String commandId) => throw UnimplementedError();
 
   void registerElement(String tag, Type customElementClass,
-      {String extendsTag}) {
+      {String? extendsTag}) {
     registerElement2(
         tag, {'prototype': customElementClass, 'extends': extendsTag});
   }
@@ -574,7 +536,7 @@ abstract class Document extends Node
   /// This custom element can also be instantiated via HTML using the syntax
   /// `<input is="x-bar"></input>`
   ///
-  Function registerElement2(String tag, [Map options]) {
+  Function registerElement2(String tag, [Map? options]) {
     throw UnimplementedError();
   }
 
@@ -587,28 +549,28 @@ abstract class Document extends Node
 abstract class DocumentOrShadowRoot {
   DocumentOrShadowRoot._();
 
-  Element get activeElement;
+  Element? get activeElement;
 
-  Element get fullscreenElement;
+  Element? get fullscreenElement;
 
-  Element get pointerLockElement;
+  Element? get pointerLockElement;
 
   List<StyleSheet> get styleSheets;
 
-  Element elementFromPoint(int x, int y);
+  Element? elementFromPoint(int x, int y);
 
   List<Element> elementsFromPoint(int x, int y);
 }
 
 class DomImplementation {
-  final HtmlDriver _htmlDriver;
+  DomImplementation._();
 
-  DomImplementation._(this._htmlDriver);
-
-  XmlDocument createDocument(
-      String namespaceURI, String qualifiedName, _DocumentType doctype) {
-    final result =
-        XmlDocument._(htmlDriver: _htmlDriver, contentType: 'text/xml');
+  XmlDocument createDocument(String? namespaceURI, String qualifiedName,
+      InternalDocumentType? doctype) {
+    final result = XmlDocument.internal(
+      window: window,
+      contentType: 'text/xml',
+    );
     if (doctype != null) {
       result.append(doctype.internalCloneWithOwnerDocument(result, true));
     }
@@ -619,14 +581,14 @@ class DomImplementation {
     return result;
   }
 
-  _DocumentType createDocumentType(
+  InternalDocumentType createDocumentType(
       String qualifiedName, String publicId, String systemId) {
-    return _DocumentType._(null, null);
+    return InternalDocumentType.internal(window.document, null);
   }
 
-  HtmlDocument createHtmlDocument([String title]) {
-    return HtmlDocument._(
-      htmlDriver: _htmlDriver,
+  HtmlDocument createHtmlDocument([String? title]) {
+    return HtmlDocument.internal(
+      window: window,
       contentType: 'text/html',
       filled: false,
     );
@@ -634,8 +596,8 @@ class DomImplementation {
 }
 
 mixin _DocumentOrFragment implements Node, _ElementOrDocument {
-  Element getElementById(String id) {
-    Element result;
+  Element? getElementById(String id) {
+    Element? result;
     _forEachElementInTree((element) {
       if (element.id == id) {
         result = element;
@@ -652,19 +614,19 @@ mixin _DocumentOrFragment implements Node, _ElementOrDocument {
 
 mixin _DocumentOrShadowRoot implements DocumentOrShadowRoot {
   @override
-  Element get activeElement => null;
+  Element? get activeElement => null;
 
   @override
-  Element get fullscreenElement => null;
+  Element? get fullscreenElement => null;
 
   @override
-  Element get pointerLockElement => null;
+  Element? get pointerLockElement => null;
 
   @override
   List<StyleSheet> get styleSheets => <StyleSheet>[];
 
   @override
-  Element elementFromPoint(int x, int y) => null;
+  Element? elementFromPoint(int x, int y) => null;
 
   @override
   List<Element> elementsFromPoint(int x, int y) => <Element>[];

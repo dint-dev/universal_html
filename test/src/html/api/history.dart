@@ -16,10 +16,8 @@ part of main_test;
 
 void _testHistory() {
   group('History:', () {
-    final isVm = !window.location.hash.contains('metadata');
-
     test('initial state is correct', () {
-      HtmlDriver.current.setDocument(null, uri: Uri.parse('http://localhost/'));
+      window.location.href = 'http://localhost/';
       final history = window.history;
       final location = window.location;
 
@@ -33,16 +31,13 @@ void _testHistory() {
       expect(location.host, '${location.hostname}:${location.port}');
       var expectedHost = '${location.hostname}:${location.port}';
       if (location.port == '80') {
-        expectedHost = location.hostname;
+        expectedHost = location.hostname!;
       }
       expect(location.origin, 'http://$expectedHost');
       expect(location.href, matches('^http://$expectedHost/.*\$'));
     });
 
     test('push', () async {
-      if (!isVm) {
-        return;
-      }
       final history = window.history;
       final location = window.location;
 
@@ -72,7 +67,7 @@ void _testHistory() {
       expect(location.href, 'http://localhost/path/to/somewhere#fragment');
 
       // Add listener
-      PopStateEvent previousEvent;
+      PopStateEvent? previousEvent;
       final streamSubscription = window.onPopState.listen(expectAsync1((event) {
         previousEvent = event;
       }, count: 4));
@@ -93,7 +88,7 @@ void _testHistory() {
 
       // Check state
       expect(previousEvent, isNotNull);
-      expect(previousEvent.state, state1);
+      expect(previousEvent!.state, state1);
       expect(history.state, state1);
       expect(location.href, 'http://localhost/path/to/somewhere_else');
       expect(location.pathname, '/path/to/somewhere_else');
@@ -110,7 +105,7 @@ void _testHistory() {
 
       // Check state
       expect(previousEvent, isNotNull);
-      expect(previousEvent.state, state1);
+      expect(previousEvent!.state, state1);
       expect(history.state, state1);
 
       // Go back
@@ -180,5 +175,5 @@ void _testHistory() {
       history.back();
       expect(history.state, createState(1));
     });
-  });
+  }, testOn: '!browser'); // <-- OTHERWISE WILL HALT=
 }

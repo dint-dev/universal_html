@@ -47,66 +47,57 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 abstract class PaymentAddress {
-  final List<String> addressLine;
+  List<String>? get addressLine;
 
-  final String city;
+  String? get city;
 
-  final String country;
+  String? get country;
 
-  final String dependentLocality;
+  String? get dependentLocality;
 
-  final String languageCode;
+  String? get languageCode;
 
-  final String organization;
+  String? get organization;
 
-  final String phone;
+  String? get phone;
 
-  final String postalCode;
+  String? get postalCode;
 
-  final String recipient;
+  String? get recipient;
 
-  final String region;
+  String? get region;
 
-  final String sortingCode;
+  String? get sortingCode;
 
-  factory PaymentAddress._() {
-    throw UnimplementedError();
-  }
+  PaymentAddress._();
 }
 
-class PaymentInstruments {
-  factory PaymentInstruments._() {
-    throw UnimplementedError();
-  }
+abstract class PaymentInstruments {
+  PaymentInstruments._();
 
-  Future clear() => throw UnimplementedError();
+  Future clear();
 
-  Future<bool> delete(String instrumentKey) => throw UnimplementedError();
+  Future<bool> delete(String instrumentKey);
 
-  Future<Map<String, dynamic>> get(String instrumentKey) =>
-      throw UnimplementedError();
+  Future<Map<String, dynamic>> get(String instrumentKey);
 
-  Future has(String instrumentKey) => throw UnimplementedError();
+  Future has(String instrumentKey);
 
-  Future<List<String>> keys() => throw UnimplementedError();
+  Future<List<String>> keys();
 
-  Future set(String instrumentKey, Map details) {
-    throw UnimplementedError();
-  }
+  Future set(String instrumentKey, Map details);
 }
 
-class PaymentManager {
-  final PaymentInstruments instruments;
+abstract class PaymentManager {
+  PaymentInstruments get instruments;
 
-  String userHint;
+  String? userHint;
 
-  factory PaymentManager._() {
-    throw UnimplementedError();
-  }
+  PaymentManager._();
 }
 
 abstract class PaymentRequest extends EventTarget {
-  factory PaymentRequest(List<Map> methodData, Map details, [Map options]) {
+  factory PaymentRequest(List<Map> methodData, Map details, [Map? options]) {
     throw UnimplementedError();
   }
 
@@ -126,25 +117,23 @@ abstract class PaymentRequest extends EventTarget {
 }
 
 abstract class PaymentResponse {
-  final Object details;
+  Object get details;
 
-  final String methodName;
+  String get methodName;
 
-  final String payerEmail;
+  String get payerEmail;
 
-  final String payerName;
+  String get payerName;
 
-  final String payerPhone;
+  String get payerPhone;
 
-  final String requestId;
+  String get requestId;
 
-  final PaymentAddress shippingAddress;
+  PaymentAddress get shippingAddress;
 
-  final String shippingOption;
+  String get shippingOption;
 
-  factory PaymentResponse._() {
-    throw UnimplementedError();
-  }
+  PaymentResponse._();
 
   Future complete([String paymentResult]);
 }

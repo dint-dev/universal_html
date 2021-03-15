@@ -14,7 +14,68 @@
 
 part of main_test;
 
-void _testAttribute<T extends Element>(
+void _testAttribute<T extends Element>({
+  required String name,
+  required T element,
+  required String? Function(T e) getter,
+  required void Function(T element, String? value) setter,
+  String? defaultValue = '',
+  String value = 'x',
+}) {
+  // Test expectations
+  expect(
+    getter(element),
+    defaultValue,
+    reason: 'Default value is incorrect',
+  );
+
+  // Use element.setAttribute
+  element.setAttribute(name, value);
+
+  // Test expectations
+  expect(
+    element.getAttribute(name),
+    value,
+    reason: 'Setting with setAttribute fails (getAttribute)',
+  );
+  expect(
+    getter(element),
+    value,
+    reason: 'Setting with setAttribute fails (getter)',
+  );
+
+  // Reset
+  element.removeAttribute(name);
+
+  // Test expectations
+  expect(
+    element.getAttribute(name),
+    null,
+    reason: 'Removing fails (getAttribute)',
+  );
+  expect(
+    getter(element),
+    defaultValue,
+    reason: 'Removing fails (getter)',
+  );
+
+  // Use element.propertyName=
+  setter(element, value);
+
+  // Test expectations
+  expect(
+    getter(element),
+    value,
+    reason: 'Setting with setter fails (getter',
+  );
+  expect(
+    element.getAttribute(name),
+    value,
+    reason: 'Setting with setter fails (getAttribute)',
+  );
+}
+
+void _testNonNullableAttribute<T extends Element>(
   String name,
   T element,
   String Function(T e) getter,
@@ -76,7 +137,7 @@ void _testAttribute<T extends Element>(
 }
 
 void _testAttributeBool<T extends Element>(String name, T element,
-    bool Function(T e) getter, void Function(T element, bool value) setter) {
+    bool? Function(T e) getter, void Function(T element, bool value) setter) {
   // Test expectations
   expect(getter(element), false);
 
@@ -105,120 +166,104 @@ void _testAttributeBool<T extends Element>(String name, T element,
   expect(getter(element), true);
 }
 
-void _testAttributeBoolString<T extends Element>(String name, T element,
-    bool Function(T e) getter, void Function(T element, bool value) setter,
-    {String falseValue = 'false', String trueValue = 'true'}) {
-  final defaultValue = getter(element);
-  if (defaultValue == false) {
-    // Test expectations
-    expect(getter(element), false);
+void _testAttributeBoolString<T extends Element>({
+  required String name,
+  required T element,
+  required bool? Function(T e) getter,
+  required void Function(T element, bool? value) setter,
+  required bool? defaultValue,
+  String falseString = 'false',
+  String trueString = 'true',
+}) {
+  // Initial state
+  expect(getter(element), defaultValue);
 
-    // element.setAttribute
-    element.setAttribute(name, trueValue);
+  // element.setAttribute('attribute', 'true')
+  element.setAttribute(name, trueString);
+  expect(element.hasAttribute(name), true);
+  expect(element.getAttribute(name), trueString);
+  expect(getter(element), true);
 
-    // Test expectations
-    expect(element.hasAttribute(name), true);
-    expect(element.getAttribute(name), trueValue);
-    expect(getter(element), true);
+  // element.setAttribute('attribute', 'false')
+  element.setAttribute(name, falseString);
+  expect(element.hasAttribute(name), true);
+  expect(element.getAttribute(name), falseString);
+  expect(getter(element), false);
 
-    // Reset
-    element.removeAttribute(name);
-
-    // Test expectations
-    expect(element.hasAttribute(name), false);
-    expect(element.getAttribute(name), null);
-    expect(getter(element), false);
-
-    // element.propertyName=
-    setter(element, true);
-
-    // Test expectations
-    expect(element.hasAttribute(name), true);
-    expect(element.getAttribute(name), trueValue);
-    expect(getter(element), true);
-  } else {
-    // Test expectations
-    expect(getter(element), true);
-
-    // element.setAttribute
-    element.setAttribute(name, falseValue);
-
-    // Test expectations
-    expect(element.hasAttribute(name), true);
-    expect(element.getAttribute(name), falseValue);
-    expect(getter(element), false);
-
-    // Reset
-    element.removeAttribute(name);
-
-    // Test expectations
-    expect(element.hasAttribute(name), false);
-    expect(element.getAttribute(name), null);
-    expect(getter(element), true);
-
-    // element.propertyName=
-    setter(element, false);
-
-    // Test expectations
-    expect(element.hasAttribute(name), true);
-    expect(element.getAttribute(name), falseValue);
-    expect(getter(element), false);
-  }
-}
-
-void _testAttributeNumber<T extends Element>(String name, T element,
-    int Function(T e) getter, void Function(T element, int value) setter,
-    {int defaultValue}) {
-  // Test expectations
+  // Reset
+  element.removeAttribute(name);
+  expect(element.hasAttribute(name), false);
   expect(element.getAttribute(name), null);
   expect(getter(element), defaultValue);
 
-  // element.setAttribute
-  element.setAttribute(name, '42');
+  // element.propertyName = true
+  setter(element, true);
+  expect(element.hasAttribute(name), true);
+  expect(element.getAttribute(name), trueString);
+  expect(getter(element), true);
 
-  // Test expectations
+  // element.propertyName = false
+  setter(element, false);
+  expect(element.hasAttribute(name), true);
+  expect(element.getAttribute(name), falseString);
+  expect(getter(element), false);
+}
+
+void _testAttributeNumber<T extends Element>({
+  required String name,
+  required T element,
+  required int? Function(T e) getter,
+  required void Function(T element, int? value) setter,
+  int? defaultValue,
+}) {
+  // Initial value
+  expect(element.getAttribute(name), null);
+  expect(getter(element), defaultValue);
+
+  // element.setAttribute('name', 'value')
+  element.setAttribute(name, '42');
   expect(element.hasAttribute(name), true);
   expect(element.getAttribute(name), '42');
   expect(getter(element), 42);
 
-  // Reset
+  // element.removeAttribute('name')
   element.removeAttribute(name);
-
-  // Test expectations
   expect(element.hasAttribute(name), false);
   expect(element.getAttribute(name), null);
   expect(getter(element), defaultValue);
 
   // element.propertyName=
   setter(element, 42);
-
-  // Test expectations
   expect(element.hasAttribute(name), true);
   expect(element.getAttribute(name), '42');
   expect(getter(element), 42);
 }
 
-void _testAttributeResolvedUri<T extends Element>(
-  String name,
-  T element,
-  String Function(T e) getter,
-  void Function(T element, String value) setter,
-) {
-  expect(element.baseUri, isNotEmpty);
+void _testAttributeResolvedUri<T extends Element>({
+  required String name,
+  required T element,
+  required String? Function(T e) getter,
+  required void Function(T element, String? value) setter,
+}) {
+  // Default value
   expect(getter(element), '');
 
-  // Test absolute
+  // Absolute URL
   final absoluteUri = 'https://absolute/path';
   element.setAttribute(name, absoluteUri);
   expect(getter(element), absoluteUri);
   expect(element.getAttribute(name), absoluteUri);
 
+  // Base URL is required for resolving relative URLs
+  expect(element.baseUri, isNotEmpty);
+
+  // Relative URL
   final relativeUri = 'relative/example';
   setter(element, relativeUri);
   expect(element.getAttribute(name), 'relative/example');
   expect(
     getter(element),
-    matches(r'^.+:(?://localhost:[0-9]+(?:/.+)*)?/relative/example$'),
+    matches(r'^.+:(?://localhost(?::[0-9]+)?(?:/.+)*)?/relative/example$'),
   );
 }
 
@@ -227,26 +272,26 @@ void _testElementSubclasses() {
   // AnchorElement
   // ---------------------------------------------------------------------------
   group('AnchorElement:', () {
-    AnchorElement element;
+    late AnchorElement element;
     setUp(() {
       element = AnchorElement();
     });
 
     test('href', () {
       _testAttributeResolvedUri<AnchorElement>(
-        'href',
-        element,
-        (e) => e.href,
-        (e, v) => e.href = v,
+        name: 'href',
+        element: element,
+        getter: (e) => e.href,
+        setter: (e, v) => e.href = v,
       );
     });
 
     test('hreflang', () {
       _testAttribute<AnchorElement>(
-        'hreflang',
-        element,
-        (e) => e.hreflang,
-        (e, v) => e.hreflang = v,
+        name: 'hreflang',
+        element: element,
+        getter: (e) => e.hreflang,
+        setter: (e, v) => e.hreflang = v!,
       );
     });
 
@@ -264,20 +309,20 @@ void _testElementSubclasses() {
 
     test('referrerpolicy', () {
       _testAttribute<AnchorElement>(
-        'referrerpolicy',
-        element,
-        (e) => e.referrerPolicy,
-        (e, v) => e.referrerPolicy = v,
+        name: 'referrerpolicy',
+        element: element,
+        getter: (e) => e.referrerPolicy,
+        setter: (e, v) => e.referrerPolicy = v,
         value: 'origin',
       );
     });
 
     test('target', () {
       _testAttribute<AnchorElement>(
-        'target',
-        element,
-        (e) => e.target,
-        (e, v) => e.target = v,
+        name: 'target',
+        element: element,
+        getter: (e) => e.target,
+        setter: (e, v) => e.target = v!,
       );
     });
   });
@@ -286,17 +331,17 @@ void _testElementSubclasses() {
   // AreaElement
   // ---------------------------------------------------------------------------
   group('AreaElement: ', () {
-    AreaElement element;
+    late AreaElement element;
     setUp(() {
       element = AreaElement();
     });
 
     test('href', () {
       _testAttributeResolvedUri<AreaElement>(
-        'href',
-        element,
-        (e) => e.href,
-        (e, v) => e.href = v,
+        name: 'href',
+        element: element,
+        getter: (e) => e.href,
+        setter: (e, v) => e.href = v,
       );
     });
   });
@@ -305,17 +350,17 @@ void _testElementSubclasses() {
   // AudioElement
   // ---------------------------------------------------------------------------
   group('AudioElement: ', () {
-    AudioElement element;
+    late AudioElement element;
     setUp(() {
       element = AudioElement();
     });
 
     test('src', () {
       _testAttributeResolvedUri<AudioElement>(
-        'src',
-        element,
-        (e) => e.src,
-        (e, v) => e.src = v,
+        name: 'src',
+        element: element,
+        getter: (e) => e.src,
+        setter: (e, v) => e.src = v!,
       );
     });
   });
@@ -324,7 +369,7 @@ void _testElementSubclasses() {
   // ButtonElement
   // ---------------------------------------------------------------------------
   group('ButtonElement: ', () {
-    ButtonElement element;
+    late ButtonElement element;
 
     setUp(() {
       element = ButtonElement();
@@ -337,10 +382,10 @@ void _testElementSubclasses() {
 
     test('type', () {
       _testAttribute<ButtonElement>(
-        'type',
-        element,
-        (e) => e.type,
-        (e, v) => e.type = v,
+        name: 'type',
+        element: element,
+        getter: (e) => e.type,
+        setter: (e, v) => e.type = v!,
         defaultValue: 'submit',
         value: 'reset',
       );
@@ -351,41 +396,42 @@ void _testElementSubclasses() {
   // Element
   // ---------------------------------------------------------------------------
   group('Element: ', () {
-    Element element;
+    late DivElement element;
     setUp(() {
       element = DivElement();
     });
 
     test('className', () {
       _testAttribute<DivElement>(
-        'class',
-        element,
-        (e) => e.className,
-        (e, v) => e.className = v,
+        name: 'class',
+        element: element,
+        getter: (e) => e.className,
+        setter: (e, v) => e.className = v!,
       );
     });
 
     test('dir', () {
       _testAttribute<DivElement>(
-        'dir',
-        element,
-        (e) => e.dir,
-        (e, v) => e.dir = v,
+        name: 'dir',
+        element: element,
+        getter: (e) => e.dir,
+        setter: (e, v) => e.dir = v,
         value: 'rtl',
       );
     });
 
     test('draggable', () {
       _testAttributeBoolString<DivElement>(
-        'draggable',
-        element,
-        (e) => e.draggable,
-        (e, v) => e.draggable = v,
+        name: 'draggable',
+        element: element,
+        getter: (e) => e.draggable,
+        setter: (e, v) => e.draggable = v!,
+        defaultValue: false,
       );
     });
 
     test('id', () {
-      _testAttribute<DivElement>(
+      _testNonNullableAttribute<DivElement>(
         'id',
         element,
         (e) => e.id,
@@ -395,40 +441,42 @@ void _testElementSubclasses() {
 
     test('slot', () {
       _testAttribute<DivElement>(
-        'slot',
-        element,
-        (e) => e.slot,
-        (e, v) => e.slot = v,
+        name: 'slot',
+        element: element,
+        getter: (e) => e.slot,
+        setter: (e, v) => e.slot = v,
       );
     });
 
     test('spellcheck', () {
       _testAttributeBoolString<DivElement>(
-        'spellcheck',
-        element,
-        (e) => e.spellcheck,
-        (e, v) => e.spellcheck = v,
+        name: 'spellcheck',
+        element: element,
+        getter: (e) => e.spellcheck,
+        setter: (e, v) => e.spellcheck = v,
+        defaultValue: true,
       );
     });
 
     test('tabIndex', () {
       _testAttributeNumber<DivElement>(
-        'tabindex',
-        element,
-        (e) => e.tabIndex,
-        (e, v) => e.tabIndex = v,
+        name: 'tabindex',
+        element: element,
+        getter: (e) => e.tabIndex,
+        setter: (e, v) => e.tabIndex = v,
         defaultValue: -1,
       );
     });
 
     test('translate', () {
       _testAttributeBoolString<DivElement>(
-        'translate',
-        element,
-        (e) => e.translate,
-        (e, v) => e.translate = v,
-        falseValue: 'no',
-        trueValue: 'yes',
+        name: 'translate',
+        element: element,
+        getter: (e) => e.translate,
+        setter: (e, v) => e.translate = v,
+        falseString: 'no',
+        trueString: 'yes',
+        defaultValue: true,
       );
     });
   });
@@ -437,44 +485,44 @@ void _testElementSubclasses() {
   // IFrameElement
   // ---------------------------------------------------------------------------
   group('IFrameElement: ', () {
-    IFrameElement element;
+    late IFrameElement element;
     setUp(() {
       element = IFrameElement();
     });
 
     test('allow', () {
       _testAttribute<IFrameElement>(
-        'allow',
-        element,
-        (e) => e.allow,
-        (e, v) => e.allow = v,
+        name: 'allow',
+        element: element,
+        getter: (e) => e.allow,
+        setter: (e, v) => e.allow = v,
       );
     });
 
     test('height', () {
       _testAttribute<IFrameElement>(
-        'height',
-        element,
-        (e) => e.height,
-        (e, v) => e.height = v,
+        name: 'height',
+        element: element,
+        getter: (e) => e.height,
+        setter: (e, v) => e.height = v,
       );
     });
 
     test('src', () {
       _testAttributeResolvedUri<IFrameElement>(
-        'src',
-        element,
-        (e) => e.src,
-        (e, v) => e.src = v,
+        name: 'src',
+        element: element,
+        getter: (e) => e.src,
+        setter: (e, v) => e.src = v,
       );
     });
 
     test('width', () {
       _testAttribute<IFrameElement>(
-        'width',
-        element,
-        (e) => e.width,
-        (e, v) => e.width = v,
+        name: 'width',
+        element: element,
+        getter: (e) => e.width,
+        setter: (e, v) => e.width = v,
       );
     });
   });
@@ -483,17 +531,17 @@ void _testElementSubclasses() {
   // ImageElement
   // ---------------------------------------------------------------------------
   group('ImageElement: ', () {
-    ImageElement element;
+    late ImageElement element;
     setUp(() {
       element = ImageElement();
     });
 
     test('alt', () {
       _testAttribute<ImageElement>(
-        'alt',
-        element,
-        (e) => e.alt,
-        (e, v) => e.alt = v,
+        name: 'alt',
+        element: element,
+        getter: (e) => e.alt,
+        setter: (e, v) => e.alt = v,
       );
     });
 
@@ -505,10 +553,10 @@ void _testElementSubclasses() {
 
     test('src', () {
       _testAttributeResolvedUri<ImageElement>(
-        'src',
-        element,
-        (e) => e.src,
-        (e, v) => e.src = v,
+        name: 'src',
+        element: element,
+        getter: (e) => e.src,
+        setter: (e, v) => e.src = v,
       );
     });
 
@@ -523,7 +571,7 @@ void _testElementSubclasses() {
   // InputElement
   // ---------------------------------------------------------------------------
   group('InputElement: ', () {
-    InputElement element;
+    late InputElement element;
     setUp(() {
       element = InputElement();
     });
@@ -552,10 +600,10 @@ void _testElementSubclasses() {
 
     test('defaultValue', () {
       _testAttribute<InputElement>(
-        'value',
-        element,
-        (e) => e.defaultValue,
-        (e, v) => e.defaultValue = v,
+        name: 'value',
+        element: element,
+        getter: (e) => e.defaultValue,
+        setter: (e, v) => e.defaultValue = v,
       );
     });
 
@@ -570,19 +618,19 @@ void _testElementSubclasses() {
 
     test('pattern', () {
       _testAttribute<InputElement>(
-        'pattern',
-        element,
-        (e) => e.pattern,
-        (e, v) => e.pattern = v,
+        name: 'pattern',
+        element: element,
+        getter: (e) => e.pattern,
+        setter: (e, v) => e.pattern = v!,
       );
     });
 
     test('type', () {
       _testAttribute<InputElement>(
-        'type',
-        element,
-        (e) => e.type,
-        (e, v) => e.type = v,
+        name: 'type',
+        element: element,
+        getter: (e) => e.type,
+        setter: (e, v) => e.type = v,
         defaultValue: 'text',
         value: 'number',
       );
@@ -607,35 +655,35 @@ void _testElementSubclasses() {
   // LinkElement
   // ---------------------------------------------------------------------------
   group('LinkElement: ', () {
-    LinkElement element;
+    late LinkElement element;
     setUp(() {
       element = LinkElement();
     });
 
     test('href', () {
       _testAttributeResolvedUri<LinkElement>(
-        'href',
-        element,
-        (e) => e.href,
-        (e, v) => e.href = v,
+        name: 'href',
+        element: element,
+        getter: (e) => e.href,
+        setter: (e, v) => e.href = v!,
       );
     });
 
     test('rel', () {
       _testAttribute<LinkElement>(
-        'rel',
-        element,
-        (e) => e.rel,
-        (e, v) => e.rel = v,
+        name: 'rel',
+        element: element,
+        getter: (e) => e.rel,
+        setter: (e, v) => e.rel = v!,
       );
     });
 
     test('type', () {
       _testAttribute<LinkElement>(
-        'type',
-        element,
-        (e) => e.type,
-        (e, v) => e.type = v,
+        name: 'type',
+        element: element,
+        getter: (e) => e.type,
+        setter: (e, v) => e.type = v!,
       );
     });
   });
@@ -644,7 +692,7 @@ void _testElementSubclasses() {
   // MediaElement
   // ---------------------------------------------------------------------------
   group('MediaElement: ', () {
-    MediaElement element;
+    late MediaElement element;
     setUp(() {
       element = AudioElement();
     });
@@ -672,7 +720,7 @@ void _testElementSubclasses() {
   // OptionElement
   // ---------------------------------------------------------------------------
   group('OptionElement: ', () {
-    OptionElement element;
+    late OptionElement element;
     setUp(() {
       element = OptionElement();
     });
@@ -691,7 +739,7 @@ void _testElementSubclasses() {
   // SelectElement
   // ---------------------------------------------------------------------------
   group('SelectElement: ', () {
-    SelectElement element;
+    late SelectElement element;
     setUp(() {
       element = SelectElement();
     });
@@ -902,26 +950,26 @@ void _testElementSubclasses() {
   // ScriptElement
   // ---------------------------------------------------------------------------
   group('ScriptElement: ', () {
-    ScriptElement element;
+    late ScriptElement element;
     setUp(() {
       element = ScriptElement();
     });
 
     test('src', () {
       _testAttributeResolvedUri<ScriptElement>(
-        'src',
-        element,
-        (e) => e.src,
-        (e, v) => e.src = v,
+        name: 'src',
+        element: element,
+        getter: (e) => e.src,
+        setter: (e, v) => e.src = v!,
       );
     });
 
     test('type', () {
       _testAttribute<ScriptElement>(
-        'type',
-        element,
-        (e) => e.type,
-        (e, v) => e.type = v,
+        name: 'type',
+        element: element,
+        getter: (e) => e.type,
+        setter: (e, v) => e.type = v!,
       );
     });
   });
@@ -930,17 +978,17 @@ void _testElementSubclasses() {
   // TextArea
   // ---------------------------------------------------------------------------
   group('TextAreaElement: ', () {
-    TextAreaElement element;
+    late TextAreaElement element;
     setUp(() {
       element = TextAreaElement();
     });
 
     test('cols', () {
       _testAttributeNumber<TextAreaElement>(
-        'cols',
-        element,
-        (e) => e.cols,
-        (e, v) => e.cols = v?.toInt(),
+        name: 'cols',
+        element: element,
+        getter: (e) => e.cols,
+        setter: (e, v) => e.cols = v!,
         defaultValue: 20,
       );
     });
@@ -957,39 +1005,39 @@ void _testElementSubclasses() {
 
     test('maxLength', () {
       _testAttributeNumber<TextAreaElement>(
-        'maxlength',
-        element,
-        (e) => e.maxLength,
-        (e, v) => e.maxLength = v?.toInt(),
+        name: 'maxlength',
+        element: element,
+        getter: (e) => e.maxLength,
+        setter: (e, v) => e.maxLength = v!.toInt(),
         defaultValue: -1,
       );
     });
 
     test('minLength', () {
       _testAttributeNumber<TextAreaElement>(
-        'minlength',
-        element,
-        (e) => e.minLength,
-        (e, v) => e.minLength = v?.toInt(),
+        name: 'minlength',
+        element: element,
+        getter: (e) => e.minLength,
+        setter: (e, v) => e.minLength = v!.toInt(),
         defaultValue: -1,
       );
     });
 
     test('placeholder', () {
       _testAttribute<TextAreaElement>(
-        'placeholder',
-        element,
-        (e) => e.placeholder,
-        (e, v) => e.placeholder = v,
+        name: 'placeholder',
+        element: element,
+        getter: (e) => e.placeholder,
+        setter: (e, v) => e.placeholder = v!,
       );
     });
 
     test('rows', () {
       _testAttributeNumber<TextAreaElement>(
-        'rows',
-        element,
-        (e) => e.rows,
-        (e, v) => e.rows = v?.toInt(),
+        name: 'rows',
+        element: element,
+        getter: (e) => e.rows,
+        setter: (e, v) => e.rows = v!.toInt(),
         defaultValue: 2,
       );
     });
@@ -999,17 +1047,17 @@ void _testElementSubclasses() {
   // VideoElement
   // ---------------------------------------------------------------------------
   group('VideoElement: ', () {
-    VideoElement element;
+    late VideoElement element;
     setUp(() {
       element = VideoElement();
     });
 
     test('src', () {
       _testAttributeResolvedUri<VideoElement>(
-        'src',
-        element,
-        (e) => e.src,
-        (e, v) => e.src = v,
+        name: 'src',
+        element: element,
+        getter: (e) => e.src,
+        setter: (e, v) => e.src = v!,
       );
     });
   });

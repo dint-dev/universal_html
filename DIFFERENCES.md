@@ -1,6 +1,10 @@
+32710 APIs in "dart:html"
+29260 APIs in "package:universal_html/html.dart"
+
 # Missing APIs
   * AbsoluteOrientationSensor (class)
   * Accelerometer (class)
+  * AccessibleNodeList.length=
   * AmbientLightSensor (class)
   * AnchorElement.created
   * Animation.currentTime
@@ -111,6 +115,8 @@
   * CompositionEvent.detail
   * CompositionEvent.sourceCapabilities
   * CompositionEvent.view
+  * Console.countReset(...)
+  * Console.timeLog(...)
   * ContentElement.created
   * CredentialUserData (class)
   * Css (class)
@@ -192,9 +198,9 @@
   * DataElement.value=
   * DataListElement.created
   * DataListElement.options
-  * DatabaseCallback (typedef)
-  * DecodeErrorCallback (typedef)
-  * DecodeSuccessCallback (typedef)
+  * DatabaseCallback
+  * DecodeErrorCallback
+  * DecodeSuccessCallback
   * DedicatedWorkerGlobalScope (class)
   * DeprecatedStorageInfo (class)
   * DeprecatedStorageQuota (class)
@@ -266,6 +272,7 @@
   * ExtendableMessageEvent (class)
   * FaceDetector (class)
   * FederatedCredential (class)
+  * FetchEvent.request
   * FieldSetElement.checkValidity(...)
   * FieldSetElement.created
   * FieldSetElement.elements
@@ -280,11 +287,11 @@
   * FixedSizeListIterator (class)
   * FontFace (class)
   * FontFaceSet (class)
-  * FontFaceSetForEachCallback (typedef)
+  * FontFaceSetForEachCallback
   * FontFaceSetLoadEvent (class)
   * FontFaceSource (class)
   * ForeignFetchEvent.request
-  * FunctionStringCallback (typedef)
+  * FunctionStringCallback
   * GamepadEvent (class)
   * Gyroscope (class)
   * HRElement.color
@@ -333,7 +340,7 @@
   * InstallEvent.registerForeignFetch(...)
   * InstallEvent.waitUntil(...)
   * IntersectionObserver (class)
-  * IntersectionObserverCallback (typedef)
+  * IntersectionObserverCallback
   * IntersectionObserverEntry (class)
   * InterventionReport (class)
   * KeyCode.KeyCode
@@ -368,6 +375,7 @@
   * Magnetometer (class)
   * MapElement.areas
   * MapElement.created
+  * MediaDevices.getUserMedia(...)
   * MediaElement.audioDecodedByteCount
   * MediaElement.audioTracks
   * MediaElement.buffered
@@ -415,12 +423,12 @@
   * MediaStreamTrack.unmuteEvent
   * MediaStreamTrackEvent.supported
   * MenuElement.created
-  * MessageCallback (typedef)
+  * MessageCallback
   * MessageChannel (class)
   * MetaElement.created
   * MetaElement.httpEquiv
   * MetaElement.httpEquiv=
-  * MetadataCallback (typedef)
+  * MetadataCallback
   * MidiAccess (class)
   * MidiConnectionEvent (class)
   * MidiInput (class)
@@ -435,8 +443,8 @@
   * ModElement.created
   * ModElement.dateTime
   * ModElement.dateTime=
-  * MojoWatchCallback (typedef)
-  * MutationCallback (typedef)
+  * MojoWatchCallback
+  * MutationCallback
   * MutationObserver (class)
   * MutationRecord (class)
   * Navigator.budget
@@ -509,7 +517,7 @@
   * PerformanceNavigation (class)
   * PerformanceNavigationTiming (class)
   * PerformanceObserver (class)
-  * PerformanceObserverCallback (typedef)
+  * PerformanceObserverCallback
   * PerformanceObserverEntryList (class)
   * PerformancePaintTiming (class)
   * PerformanceResourceTiming (class)
@@ -577,10 +585,10 @@
   * RelativeOrientationSensor (class)
   * ReportBody (class)
   * ReportingObserver (class)
-  * ReportingObserverCallback (typedef)
-  * RequestAnimationFrameCallback (typedef)
+  * ReportingObserverCallback
+  * RequestAnimationFrameCallback
   * ResizeObserver (class)
-  * ResizeObserverCallback (typedef)
+  * ResizeObserverCallback
   * ResizeObserverEntry (class)
   * RtcCertificate (class)
   * RtcDataChannel.binaryType
@@ -614,8 +622,10 @@
   * RtcPeerConnection.generateCertificate(...)
   * RtcPeerConnection.negotiationNeededEvent
   * RtcPeerConnection.onNegotiationNeeded
+  * RtcPeerConnection.onTrack
   * RtcPeerConnection.signalingState
   * RtcPeerConnection.supported
+  * RtcPeerConnection.trackEvent
   * RtcPeerConnectionIceEvent.candidate
   * RtcRtpContributingSource (class)
   * RtcRtpReceiver.getContributingSources(...)
@@ -625,7 +635,7 @@
   * RtcSessionDescription.sdp=
   * RtcSessionDescription.type
   * RtcSessionDescription.type=
-  * RtcStatsCallback (typedef)
+  * RtcStatsCallback
   * RtcStatsReport.[](...)
   * RtcStatsReport.[]=(...)
   * RtcStatsReport.addAll(...)
@@ -653,7 +663,7 @@
   * ScriptElement.charset
   * ScriptElement.charset=
   * ScriptElement.created
-  * ScrollStateCallback (typedef)
+  * ScrollStateCallback
   * ScrollTimeline.orientation
   * ScrollTimeline.scrollSource
   * ScrollTimeline.timeRange
@@ -703,6 +713,12 @@
   * SpeechRecognitionError (class)
   * SpeechRecognitionEvent (class)
   * SpeechRecognitionResult (class)
+  * SpeechSynthesisUtterance.lang=
+  * SpeechSynthesisUtterance.pitch=
+  * SpeechSynthesisUtterance.rate=
+  * SpeechSynthesisUtterance.text=
+  * SpeechSynthesisUtterance.voice=
+  * SpeechSynthesisUtterance.volume=
   * StaticRange (class)
   * StyleElement.created
   * StyleElement.media
@@ -761,7 +777,7 @@
   * TimeElement.created
   * TimeInputElement.valueAsDate
   * TimeInputElement.valueAsDate=
-  * TimeoutHandler (typedef)
+  * TimeoutHandler
   * TitleElement.created
   * Touch.client
   * Touch.force
@@ -849,6 +865,7 @@
   * VideoTrackList (class)
   * VttCue (class)
   * VttRegion (class)
+  * WeekInputElement.valueAsDate=
   * Window.cancelAnimationFrame(...)
   * Window.defaultStatus=
   * Window.defaultstatus=
@@ -867,4 +884,7 @@
   * XmlDocument.elementsFromPoint(...)
   * XmlDocument.fonts
   * XmlDocument.getAnimations(...)
+  * document
   * promiseToFutureAsMap
+  * querySelector
+  * querySelectorAll

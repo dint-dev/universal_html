@@ -43,7 +43,10 @@ The original files in the Dart SDK had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-library universal_svg;
+@visibleForTesting
+library universal_html.svg.internal;
+
+import 'package:meta/meta.dart';
 
 import 'html.dart';
 
@@ -72,9 +75,22 @@ abstract class Matrix {
   Matrix translate(num x, num y);
 }
 
-class SvgElement extends Element {
-  factory SvgElement.svg(String svg,
-      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
+abstract class ScriptElement implements SvgElement {
+  ScriptElement._();
+}
+
+// Declared because this is needed by 'html.dart'.
+abstract class SvgElement extends Element {
+  /// IMPORTANT: Not part of 'dart:svg'.
+  factory SvgElement.internal(Document? document, String tag) {
+    throw UnimplementedError();
+  }
+
+  factory SvgElement.svg(
+    String svg, {
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
+  }) {
     throw UnimplementedError();
   }
 
@@ -82,25 +98,10 @@ class SvgElement extends Element {
     return SvgElement.internal(null, tag);
   }
 
-  /// IMPORTANT: Not part of 'dart:svg'.
-  factory SvgElement.internal(Document document, String tag) {
-    switch (tag) {
-      case 'script':
-        return ScriptElement();
-      default:
-        return SvgElement._(document, tag);
-    }
-  }
-
-  /// IMPORTANT: Not part of 'dart:svg'.
-  SvgElement._(Document document, String tagName)
-      // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-      : super.internal(document, tagName);
-
   // We need to reimplement this because superclass implementation depends
   // on implementing a private method.
   @override
-  SvgElement internalCloneWithOwnerDocument(Document document, bool deep) {
+  SvgElement internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
     // Create a new instance of the same class
     final clone = SvgElement.tag(tagName);
 
@@ -112,16 +113,13 @@ class SvgElement extends Element {
     // Clone children
     if (deep != false) {
       for (var childNode in childNodes) {
-        // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-        clone.append(childNode.internalCloneWithOwnerDocument(document, deep));
+        clone.append(
+          // ignore: invalid_use_of_visible_for_testing_member
+          childNode.internalCloneWithOwnerDocument(ownerDocument, deep),
+        );
       }
     }
 
     return clone;
   }
-}
-
-// Declared because this is needed by 'html.dart'.
-class ScriptElement extends SvgElement {
-  ScriptElement() : super._(null, 'script');
 }

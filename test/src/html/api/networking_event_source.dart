@@ -15,16 +15,16 @@
 part of main_test;
 
 void _testEventSource() {
-  Stream<Uint8List> _input(String s) {
-    return Stream<Uint8List>.fromIterable([utf8.encode(s)]);
+  Stream<List<int>> _input(String s) {
+    return Stream<List<int>>.fromIterable([utf8.encode(s)]);
   }
 
   group('EventSource: ', () {
-    String origin;
-    String baseUrl;
+    late String origin;
+    late String baseUrl;
 
     setUp(() {
-      origin = 'http://localhost:$httpServerPort';
+      origin = 'http://localhost:$_httpServerPort';
       baseUrl = '$origin/event_source';
     });
 
@@ -86,7 +86,7 @@ void _testEventSource() {
       // -----------------------------------------------------------------------
       // Close
       // -----------------------------------------------------------------------
-      await eventSource.close();
+      eventSource.close();
 
       // Check state
       expect(eventSource.readyState, EventSource.CLOSED);

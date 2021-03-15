@@ -47,14 +47,13 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 class XmlDocument extends Document {
-  /// IMPORTANT: Not part of 'dart:html' API.
-  XmlDocument._(
-      {@required HtmlDriver htmlDriver,
-      @required String contentType,
-      String origin})
-      : assert(contentType != null),
-        super._(
-          htmlDriver: htmlDriver,
+  /// Internal constructor. __Not part of dart:html__.
+  XmlDocument.internal({
+    required Window window,
+    required String contentType,
+    String? origin,
+  }) : super._(
+          window: window,
           contentType: contentType,
           origin: origin,
         );
@@ -64,9 +63,12 @@ class XmlDocument extends Document {
 
   @visibleForTesting
   @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
-    final clone =
-        XmlDocument._(htmlDriver: _htmlDriver, contentType: contentType);
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool? deep) {
+    final clone = XmlDocument.internal(
+      window: window,
+      contentType: contentType,
+      origin: origin,
+    );
     if (deep != false) {
       Node._cloneChildrenFrom(
         clone,

@@ -54,174 +54,130 @@ typedef StorageQuotaCallback = void Function(int grantedQuotaInBytes);
 typedef StorageUsageCallback = void Function(
     int currentUsageInBytes, int currentQuotaInBytes);
 
-class Credential {
-  final String id;
+abstract class Credential {
+  String get id;
 
-  final String type;
+  String get type;
 
-  factory Credential._() {
-    throw UnimplementedError();
-  }
+  Credential._();
 }
 
-class CredentialsContainer {
-  factory CredentialsContainer._() {
-    throw UnimplementedError();
-  }
+abstract class CredentialsContainer {
+  CredentialsContainer._();
 
-  Future create([Map options]) {
-    throw UnimplementedError();
-  }
+  Future create([Map? options]);
 
-  Future get([Map options]) {
-    throw UnimplementedError();
-  }
+  Future get([Map? options]);
 
-  Future preventSilentAccess() => throw UnimplementedError();
+  Future preventSilentAccess();
 
-  Future requireUserMediation() => throw UnimplementedError();
+  Future requireUserMediation();
 
-  Future store(Credential credential) => throw UnimplementedError();
+  Future store(Credential credential);
 }
 
 @deprecated
-class DeprecatedStorageQuota {
-  factory DeprecatedStorageQuota._() {
-    throw UnimplementedError();
-  }
+abstract class DeprecatedStorageQuota {
+  DeprecatedStorageQuota._();
 
   void queryUsageAndQuota(StorageUsageCallback usageCallback,
-          [StorageErrorCallback errorCallback]) =>
-      throw UnimplementedError();
+      [StorageErrorCallback? errorCallback]);
 
   void requestQuota(int newQuotaInBytes,
-          [StorageQuotaCallback quotaCallback,
-          StorageErrorCallback errorCallback]) =>
-      throw UnimplementedError();
+      [StorageQuotaCallback? quotaCallback,
+      StorageErrorCallback? errorCallback]);
 }
 
-class Gamepad {
-  final List<num> axes;
+abstract class Gamepad {
+  List<num>? get axes;
 
-  final List<GamepadButton> buttons;
+  List<GamepadButton>? get buttons;
 
-  final bool connected;
+  bool? get connected;
 
-  final int displayId;
+  int? get displayId;
 
-  final String hand;
+  String? get hand;
 
-  final String id;
+  String? get id;
 
-  final int index;
+  int? get index;
 
-  final String mapping;
+  String? get mapping;
 
-  final GamepadPose pose;
+  GamepadPose? get pose;
 
-  final int timestamp;
+  int? get timestamp;
 
-  Gamepad._({
-    this.axes,
-    this.buttons,
-    this.connected,
-    this.displayId,
-    this.hand,
-    this.id,
-    this.index,
-    this.mapping,
-    this.pose,
-    this.timestamp,
-  });
+  Gamepad._();
 }
 
-class GamepadButton {
-  final bool pressed;
+abstract class GamepadButton {
+  bool? get pressed;
 
-  final bool touched;
+  bool? get touched;
 
-  final num value;
+  num? get value;
 
-  GamepadButton._({
-    this.pressed,
-    this.touched,
-    this.value,
-  });
+  GamepadButton._();
 }
 
-class GamepadPose {
-  final Float32List angularAcceleration;
+abstract class GamepadPose {
+  Float32List? get angularAcceleration;
 
-  final Float32List angularVelocity;
+  Float32List? get angularVelocity;
 
-  final bool hasOrientation;
+  bool? get hasOrientation;
 
-  final bool hasPosition;
+  bool? get hasPosition;
 
-  final Float32List linearAcceleration;
+  Float32List? get linearAcceleration;
 
-  final Float32List linearVelocity;
+  Float32List? get linearVelocity;
 
-  final Float32List orientation;
+  Float32List? get orientation;
 
-  final Float32List position;
+  Float32List? get position;
 
-  GamepadPose._({
-    this.angularAcceleration,
-    this.angularVelocity,
-    this.hasOrientation,
-    this.hasPosition,
-    this.linearAcceleration,
-    this.linearVelocity,
-    this.orientation,
-    this.position,
-  });
+  GamepadPose._();
 }
 
-class MediaCapabilities {
-  factory MediaCapabilities._() {
-    throw UnimplementedError();
-  }
+abstract class MediaCapabilities {
+  MediaCapabilities._();
 
-  Future<MediaCapabilitiesInfo> decodingInfo(Map configuration) {
-    throw UnimplementedError();
-  }
+  Future<MediaCapabilitiesInfo> decodingInfo(Map configuration);
 
-  Future<MediaCapabilitiesInfo> encodingInfo(Map configuration) {
+  Future<MediaCapabilitiesInfo> encodingInfo(Map configuration);
+}
+
+abstract class MediaCapabilitiesInfo {
+  bool get powerEfficient;
+
+  bool get smooth;
+
+  bool get supported;
+
+  MediaCapabilitiesInfo._();
+}
+
+abstract class MediaMetadata {
+  String? album;
+
+  String? artist;
+
+  List? artwork;
+
+  String? title;
+
+  factory MediaMetadata([Map? metadata]) {
     throw UnimplementedError();
   }
 }
 
-class MediaCapabilitiesInfo {
-  final bool powerEfficient;
+abstract class MediaSession {
+  MediaMetadata? metadata;
 
-  final bool smooth;
-
-  final bool supported;
-
-  factory MediaCapabilitiesInfo._() {
-    throw UnimplementedError();
-  }
-}
-
-class MediaMetadata {
-  String album;
-
-  String artist;
-
-  List artwork;
-
-  String title;
-
-  factory MediaMetadata([Map metadata]) {
-    throw UnimplementedError();
-  }
-}
-
-class MediaSession {
-  MediaMetadata metadata;
-
-  String playbackState;
+  String? playbackState;
 
   factory MediaSession._() {
     throw UnimplementedError();
@@ -232,155 +188,133 @@ class MediaSession {
   }
 }
 
-class MimeType {
-  final String description;
+abstract class MimeType {
+  String? get description;
 
-  final Plugin enabledPlugin;
+  Plugin? get enabledPlugin;
 
-  final String suffixes;
+  String? get suffixes;
 
-  final String type;
+  String? get type;
 
-  factory MimeType._() {
-    throw UnimplementedError();
-  }
+  MimeType._();
 }
 
-class NavigatorAutomationInformation {
-  final bool webdriver;
+abstract class NavigatorAutomationInformation {
+  bool? get webdriver;
 
-  factory NavigatorAutomationInformation._() {
-    throw UnimplementedError();
-  }
+  NavigatorAutomationInformation._();
 }
 
-class NavigatorConcurrentHardware {
+abstract class NavigatorConcurrentHardware {
   NavigatorConcurrentHardware._();
 
-  int get hardwareConcurrency => 1;
+  int? get hardwareConcurrency => 1;
 }
 
-class NavigatorCookies {
-  final bool cookieEnabled;
+abstract class NavigatorCookies {
+  bool? get cookieEnabled;
 
-  factory NavigatorCookies._() {
-    throw UnimplementedError();
-  }
+  NavigatorCookies._();
 }
 
 abstract class NavigatorID {
-  final String appCodeName;
+  String? get appCodeName;
 
-  final String appName;
+  String? get appName;
 
-  final String appVersion;
+  String? get appVersion;
 
-  final bool dartEnabled;
+  bool? get dartEnabled;
 
-  final String platform;
+  String? get platform;
 
-  final String product;
+  String? get product;
 
-  final String userAgent;
+  String? get userAgent;
 
-  factory NavigatorID._() {
-    throw UnimplementedError();
-  }
+  NavigatorID._();
 }
 
 abstract class NavigatorLanguage {
-  final String language;
+  String? get language;
 
-  final List<String> languages;
+  List<String>? get languages;
 
-  factory NavigatorLanguage._() {
-    throw UnimplementedError();
-  }
+  NavigatorLanguage._();
 }
 
 abstract class NavigatorOnLine {
-  final bool onLine;
+  bool? get onLine;
 
-  factory NavigatorOnLine._() {
-    throw UnimplementedError();
-  }
+  NavigatorOnLine._();
 }
 
-class NetworkInformation extends EventTarget {
+abstract class NetworkInformation implements EventTarget {
   static const EventStreamProvider<Event> changeEvent =
       EventStreamProvider<Event>('change');
 
-  final num downlink;
+  num? get downlink;
 
-  final num downlinkMax;
+  num? get downlinkMax;
 
-  final String effectiveType;
+  String? get effectiveType;
 
-  final int rtt;
+  int? get rtt;
 
-  final String type;
+  String? get type;
 
-  factory NetworkInformation._() {
-    throw UnimplementedError();
-  }
+  NetworkInformation._();
 
   Stream<Event> get onChange => changeEvent.forTarget(this);
 }
 
-class Plugin {
-  final String description;
+abstract class Plugin {
+  String? get description;
 
-  final String filename;
+  String? get filename;
 
-  final int length;
+  int? get length;
 
-  final String name;
+  String? get name;
 
-  factory Plugin._() {
-    throw UnimplementedError();
-  }
+  Plugin._();
 
-  MimeType item(int index) {
-    throw UnimplementedError();
-  }
+  MimeType item(int index);
 
-  MimeType namedItem(String name) {
-    throw UnimplementedError();
-  }
+  MimeType namedItem(String name);
 }
 
-class Presentation {
-  PresentationRequest defaultRequest;
+abstract class Presentation {
+  PresentationRequest? defaultRequest;
 
   Presentation._();
 
-  PresentationReceiver get receiver => throw UnimplementedError();
+  PresentationReceiver? get receiver;
 }
 
-class PresentationAvailability extends EventTarget {
+abstract class PresentationAvailability implements EventTarget {
   static const EventStreamProvider<Event> changeEvent =
       EventStreamProvider<Event>('change');
 
-  final bool value;
+  bool? get value;
 
-  factory PresentationAvailability._() {
-    throw UnimplementedError();
-  }
+  PresentationAvailability._();
 
-  Stream<Event> get onChange => changeEvent.forTarget(this);
+  Stream<Event> get onChange;
 }
 
-class PresentationConnection extends EventTarget {
+abstract class PresentationConnection extends EventTarget {
   static const EventStreamProvider<MessageEvent> messageEvent =
       EventStreamProvider<MessageEvent>('message');
 
-  String binaryType;
+  String? binaryType;
 
-  final String id;
+  String? get id;
 
-  final String state;
+  String? get state;
 
-  final String url;
+  String? get url;
 
   factory PresentationConnection._() {
     throw UnimplementedError();
@@ -401,26 +335,26 @@ class PresentationConnection extends EventTarget {
   }
 }
 
-class PresentationConnectionAvailableEvent extends Event {
-  final PresentationConnection connection;
+abstract class PresentationConnectionAvailableEvent extends Event {
+  PresentationConnection get connection;
 
   factory PresentationConnectionAvailableEvent(String type, Map eventInitDict) {
     throw UnimplementedError();
   }
 }
 
-class PresentationConnectionCloseEvent extends Event {
-  final String message;
+abstract class PresentationConnectionCloseEvent extends Event {
+  String? get message;
 
-  final String reason;
+  String? get reason;
 
   factory PresentationConnectionCloseEvent(String type, Map eventInitDict) {
     throw UnimplementedError();
   }
 }
 
-class PresentationConnectionList extends EventTarget {
-  final List<PresentationConnection> connections;
+abstract class PresentationConnectionList extends EventTarget {
+  List<PresentationConnection> get connections;
 
   factory PresentationConnectionList._() {
     throw UnimplementedError();
@@ -450,34 +384,32 @@ class PresentationRequest extends EventTarget {
   Future<PresentationConnection> start() => throw UnimplementedError();
 }
 
-class RelatedApplication {
-  final String id;
-  final String platform;
-  final String url;
+abstract class RelatedApplication {
+  String? get id;
+  String? get platform;
+  String? get url;
 
-  RelatedApplication._({this.id, this.platform, this.url});
+  RelatedApplication._();
 }
 
-class StorageManager {
+abstract class StorageManager {
   StorageManager._();
 
-  Future<Map<String, dynamic>> estimate() => throw UnimplementedError();
+  Future<Map<String, dynamic>> estimate();
 
-  Future<bool> persist() => throw UnimplementedError();
+  Future<bool> persist();
 
-  Future<bool> persisted() => throw UnimplementedError();
+  Future<bool> persisted();
 }
 
-class VR extends EventTarget {
-  VR._() : super._created();
+abstract class VR implements EventTarget {
+  VR._();
 
-  Future getDevices() => throw UnimplementedError();
+  Future getDevices();
 }
 
-class _Clipboard extends EventTarget {
-  factory _Clipboard._() {
-    throw UnimplementedError();
-  }
+abstract class _Clipboard implements EventTarget {
+  _Clipboard._();
 
   Future<DataTransfer> read() => throw UnimplementedError();
 

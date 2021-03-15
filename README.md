@@ -1,30 +1,29 @@
 [![Pub Package](https://img.shields.io/pub/v/universal_html.svg)](https://pub.dartlang.org/packages/universal_html)
-[![Github Actions CI](https://github.com/dint-dev/web_browser/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/web_browser/actions?query=workflow%3A%22Dart+CI%22)
+[![Github Actions CI](https://github.com/dint-dev/universal_html/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/universal_html/actions?query=workflow%3A%22Dart+CI%22)
 
 # Introduction
 A cross-platform `dart:html`:
   * __Eases cross-platform development__
-    * You can use this package in browsers, mobile, and server-side.
-    * Just replace `dart:html` imports with `package:universal_html/html.dart`. In browsers,
-      _dart:html_ will be automatically used.
-  * __Extensive support for handling HTML and XML documents__
+    * You can use this package in browsers, mobile, desktop, and server-side VM, and server-side
+      Javascript (Node.JS, Cloud Functions, etc.).
+    * Just replace `dart:html` imports with `package:universal_html/html.dart`. Normal
+      _dart:html_ will continue to be used when application run in browsers.
+  * __Extensive support for processing HTML and XML documents__
     * Parse, manipulate, and print [DOM nodes](https://pub.dev/documentation/universal_html/latest/universal_html/Node-class.html).
     * Find DOM nodes with [querySelectorAll](https://pub.dev/documentation/universal_html/latest/universal_html/querySelectorAll.html)
       and other CSS query methods.
     * Submit forms and more.
+  * __EventSource streaming support__
+    * Implements _dart:html_ [EventSource API](https://developer.mozilla.org/en-US/docs/Web/API/EventSource).
 
 The project is licensed under the [Apache License 2.0](LICENSE). Some of the source code was adopted
 from the original [dart:html](https://github.com/dart-lang/sdk/tree/master/tools/dom), which is
 documented in the relevant files.
 
-## Links
-  * [API reference](https://pub.dev/documentation/universal_html/latest/universal_html/universal_html-library.html)
-  * [Github project](https://github.com/dint-dev/web_browser)
-  * [Issue tracker](https://github.com/dint-dev/web_browser/issues)
-
-## Used by
-  * [web_browser](https://pub.dev/packages/web_browser)
-    * A small web browser written in Flutter.
+## Documentation
+  * [API reference](https://pub.dev/documentation/universal_html/latest/)
+  * [Github project](https://github.com/dint-dev/universal_html)
+    * We appreciate feedback, issue reports, and pull requests.
 
 ## Similar projects
   * [universal_io](https://pub.dev/packages/universal_io) (cross-platform _dart:io_)
@@ -35,42 +34,17 @@ documented in the relevant files.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^1.2.4
+  universal_html: ^2.0.1
 ```
 
-## 2. Choose library
-### Option A (recommended)
-```dart
-import 'package:universal_html/html.dart';
-```
-
-This library exports _dart:html_ by default.
-You can also use `import 'package:universal_html/prefer_sdk/html.dart';`.
-
-If you use this library, Dart tools may mistakenly think that your package is not compatible with
-VM/Flutter.
-
-### Option B
-```dart
-import 'package:universal_html/prefer_universal/html.dart';
-```
-
-This library exports our implementation by default. The main advantage of this library is easier
-debugging. If you click "Go to declaration" in your IDE, you will see the implementation.
-
-Getting warnings? In some cases, when you mix _universal_io_ classes with _dart:html_ classes, your
-IDE produces type warnings ("universal_html Element is not dart:html Element"). Your application
-should still compile (in browser, _universal_html_ classes will be _dart:html_ classes).
-
-
-## 3. Use
+## 2. Use
 ```dart
 import "package:universal_html/html.dart";
 
 void main() {
   // Create a DOM tree
-  final div = new DivElement();
-  div.append(new Element.tag("h1")
+  final div = DivElement();
+  div.append(Element.tag("h1")
     ..classes.add("greeting")
     ..appendText("Hello world!"));
 
@@ -85,10 +59,6 @@ void main() {
 ```
 
 ## Implemented APIs
-### List of differences
-[DIFFERENCES.md](DIFFERENCES.md) contains a programmatically generated list of _dart:html_ APIs
-missing from this package.
-
 ### Summary
   * __Document node classes__
   * __DOM parsing__
@@ -101,60 +71,47 @@ missing from this package.
     * For example, _element.onClick.listen(...)_ receives invocation of _element.click()_.
   * __CSS classes__ (_CssStyleDeclaration_, etc.)
   * __Most CSS queries__
-  * __window.history__
-  * __Form submitting__
-  * __EventSource__ ("application/event-stream" client)
 
+# Examples
+## Parsing HTML
+Use [parseHtmlDocument](https://pub.dev/documentation/universal_html/latest/universal_html.parsing/parseHtmlDocument.html):
 
-# Additional helpers
-## Parsing HTML / XML
-We recommend that you use `package:universal_html/parsing.dart` (instead of _DomParser_):
 ```dart
 import 'package:universal_html/parsing.dart';
 
 void main() {
-  // HTML
   final htmlDocument = parseHtmlDocument('<html>...</html>');
+}
+```
 
-  // XML
+## Parsing XML
+Use [parseXmlDocument](https://pub.dev/documentation/universal_html/latest/universal_html.parsing/parseXmlDocument.html):
+
+```dart
+import 'package:universal_html/parsing.dart';
+
+void main() {
   final xmlDocument = parseXmlDocument('<xml>...</xml>');
 }
 ```
 
-## Server-side rendering
-The package comes with _ServerSideRenderer_, which is a web server for rendering your web
-application in the server-side.
+## Scraping a website
+Load a _Window_ with [WindowClient](https://pub.dev/documentation/universal_html/latest/universal_html.controller/WindowClient-class.html):
 
 ```dart
-import 'package:universal_html/driver.dart';
-import 'package:universal_html/html.dart';
-
-void main() {
-  final renderer = new ServerSideRenderer(webAppMain);
-  renderer.bind("localhost", 12345);
-}
-
-void webAppMain() {
-  document.body.appendText("Hello world!");
-}
-```
-
-## Browser simulators
-```dart
-import 'package:universal_html/driver.dart';
-import 'package:universal_html/html.dart';
+import 'package:universal_html/controller.dart';
 
 Future main() async {
-  // Construct a browser simulator.
-  final driver = new HtmlDriver();
-
-  // Open a web page.
-  await driver.setDocumentFromUri(Uri.parse("https://news.ycombinator.com/"));
+  // Load a document.
+  final controller = WindowController();
+  await controller.openHttp(
+    uri: Uri.parse("https://news.ycombinator.com/"),
+  );
 
   // Select the top story using a CSS query
-  final topStoryTitle = driver.document.querySelectorAll(".athing > .title").first.text;
+  final topStoryTitle = controller.document.querySelectorAll(".athing > .title").first.text;
 
   // Print result
-  print("Top Hacker News story is: ${topStoryTitle}");
+  print("Top Hacker News story is: $topStoryTitle");
 }
 ```

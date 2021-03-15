@@ -63,9 +63,10 @@ class History {
   int _index = 0;
   dynamic _state;
 
-  String scrollRestoration;
+  String? scrollRestoration;
 
-  History._();
+  /// Internal constructor. __Not part of dart:html__.
+  History.internal();
 
   int get length => _stack.length;
 
@@ -122,22 +123,16 @@ class History {
 }
 
 class Location extends Object with _UrlBase {
-  final HtmlDriver _htmlDriver;
-
-  Location._(this._htmlDriver);
-
   List<String> get ancestorOrigins => <String>[];
 
-  String get href => _htmlDriver.uriString;
+  String href;
 
-  set href(String value) {
-    _htmlDriver.uri = Uri.parse(value);
-  }
+  Location.internal({required this.href});
 
   @override
-  Uri get _uri => _htmlDriver.uri;
+  Uri get _uri => Uri.parse(href);
 
-  void assign([String url]) {
+  void assign([String? url]) {
     if (url == null) {
       return;
     }
@@ -145,7 +140,7 @@ class Location extends Object with _UrlBase {
   }
 
   void reload() {
-    _htmlDriver.reload();
+    throw UnimplementedError();
   }
 
   void replace(String url) {
@@ -189,7 +184,7 @@ class _HistoryState {
 mixin _UrlBase {
   String get hash {
     final uri = _uri;
-    if (uri.hasFragment) {
+    if (uri != null && uri.hasFragment) {
       return '#${uri.fragment}';
     }
     return '';
@@ -202,18 +197,18 @@ mixin _UrlBase {
   String get host {
     final uri = _uri;
     if (uri == null) return '';
-    final hostname = _uri.host ?? '';
-    final port = _uri.port;
-    return port == null ? hostname : '${hostname}:${port}';
+    final hostname = _uri?.host ?? '';
+    final port = _uri?.port;
+    return port == null ? hostname : '$hostname:$port';
   }
 
-  String get hostname => _uri?.host ?? '';
+  String? get hostname => _uri?.host ?? '';
 
-  String get origin => _uri?.origin;
+  String? get origin => _uri?.origin ?? '';
 
   String get pathname => _uri?.path ?? '';
 
-  set pathname(String value) {
+  set pathname(String? value) {
     throw UnimplementedError();
   }
 
@@ -240,5 +235,5 @@ mixin _UrlBase {
     throw UnimplementedError();
   }
 
-  Uri get _uri;
+  Uri? get _uri;
 }

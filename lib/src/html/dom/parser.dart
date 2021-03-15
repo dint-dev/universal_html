@@ -47,7 +47,11 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 class DomParser {
-  Document parseFromString(String input, String type) {
-    return HtmlDriver.current.domParserDriver.parseDocument(input, mime: type);
+  Document parseFromString(String content, String type) {
+    return DomParserDriver().parseDocument(
+      window: window,
+      content: content,
+      mime: type,
+    );
   }
 }

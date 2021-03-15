@@ -12,6 +12,6 @@ void main() {
   // --> <div><h1>Hello world</h1></div>
 
   // Do a CSS query
-  print(divElement.querySelector('div > .greeting').text);
+  print(divElement.querySelector('div > .greeting')!.text);
   // --> Hello world
 }

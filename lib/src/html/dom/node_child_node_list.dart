@@ -127,7 +127,7 @@ class _ChildNodeListLazy extends ListBase<Node> {
       if (!identical(otherList._this, _this)) {
         // Optimized route for copying between nodes.
         for (var i = 0, len = otherList.length; i < len; ++i) {
-          _this.append(otherList._this.firstChild);
+          _this.append(otherList._this.firstChild!);
         }
       }
       return;
@@ -143,7 +143,7 @@ class _ChildNodeListLazy extends ListBase<Node> {
   }
 
   @override
-  void fillRange(int start, int end, [Node fill]) {
+  void fillRange(int start, int end, [Node? fill]) {
     throw UnsupportedError('Cannot fillRange on Node list');
   }
 
@@ -170,29 +170,26 @@ class _ChildNodeListLazy extends ListBase<Node> {
   }
 
   @override
-  bool remove(Object object) {
-    if (object is! Node) return false;
-    Node node = object;
-    if (!identical(_this, node.parentNode)) return false;
-    _this._removeChild(node);
-    return true;
+  bool remove(Object? object) {
+    if (object is Node) {
+      if (!identical(_this, object.parentNode)) return false;
+      _this._removeChild(object);
+      return true;
+    }
+    return false;
   }
 
   @override
   Node removeAt(int index) {
     var result = this[index];
-    if (result != null) {
-      _this._removeChild(result);
-    }
+    _this._removeChild(result);
     return result;
   }
 
   @override
   Node removeLast() {
     final result = last;
-    if (result != null) {
-      _this._removeChild(result);
-    }
+    _this._removeChild(result);
     return result;
   }
 
@@ -223,12 +220,12 @@ class _ChildNodeListLazy extends ListBase<Node> {
   }
 
   @override
-  void shuffle([Random random]) {
+  void shuffle([Random? random]) {
     throw UnsupportedError('Cannot shuffle Node list');
   }
 
   @override
-  void sort([Comparator<Node> compare]) {
+  void sort([Comparator<Node>? compare]) {
     throw UnsupportedError('Cannot sort Node list');
   }
 

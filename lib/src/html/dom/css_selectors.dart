@@ -46,10 +46,7 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
-bool _matches(Element element, String selector, String pseudoElement) {
-  if (selector == null) {
-    throw ArgumentError.notNull(selector);
-  }
+bool _matches(Element element, String selector, String? pseudoElement) {
   if (selector.isEmpty) {
     throw DomException._('invalidSelector', 'Selector can\'t be blank');
   }
@@ -65,7 +62,7 @@ bool _matchesNthChildSelector(
     Element element, css.PseudoClassFunctionSelector selector) {
   // Find index of this node
   var index = 0;
-  for (var sibling in element.parent.childNodes) {
+  for (var sibling in element.parent!.childNodes) {
     if (identical(sibling, element)) {
       break;
     }
@@ -104,7 +101,7 @@ bool _matchesNthChildSelector(
             return index % 2 == 1;
         }
       }
-      throw _UnsupportedCssSelectorException(selector.span.text);
+      throw _UnsupportedCssSelectorException(selector.span!.text);
 
     case 2:
       //
@@ -130,7 +127,7 @@ bool _matchesNthChildSelector(
       final rem = (term2.value as num).toInt();
       return (index % mod) == (rem - 1);
     default:
-      throw _UnsupportedCssSelectorException(selector.span.text);
+      throw _UnsupportedCssSelectorException(selector.span!.text);
   }
 }
 
@@ -142,7 +139,7 @@ bool _matchesNthChildSelector(
 //     2.We try each parent that matches '.b'
 //     3.We match immediate parent for '#a'
 bool _matchesSelector(
-    Element element, css.Selector selector, int index, String pseudoElement) {
+    Element element, css.Selector selector, int index, String? pseudoElement) {
   final simpleSelectorSequences = selector.simpleSelectorSequences;
   if (simpleSelectorSequences.isEmpty) {
     throw ArgumentError();
@@ -175,7 +172,7 @@ bool _matchesSelector(
     //
     case css.TokenKind.COMBINATOR_DESCENDANT:
       // We try all parents
-      Node node = element.parent;
+      Node? node = element.parent;
       while (node != null) {
         if (node is Element &&
             _matchesSelector(node, selector, index, pseudoElement)) {
@@ -202,10 +199,11 @@ bool _matchesSelector(
     case css.TokenKind.COMBINATOR_TILDE:
       // We try only immediate parent
       while (true) {
-        element = element.previousElementSibling;
-        if (element == null) {
+        final previousElement = element.previousElementSibling;
+        if (previousElement == null) {
           return false;
         }
+        element = previousElement;
         if (_matchesSelector(
           element,
           selector,
@@ -215,7 +213,6 @@ bool _matchesSelector(
           return true;
         }
       }
-      break;
 
     //
     // s0 + s1 + s2
@@ -230,15 +227,13 @@ bool _matchesSelector(
 
     default:
       throw UnsupportedError(
-          'Unsupported combinator "$combinator" in "${simpleSelectorSequence.span.text}"');
+        'Unsupported combinator "$combinator" in "${simpleSelectorSequence.span!.text}"',
+      );
   }
 }
 
 bool _matchesSelectorGroup(
-    Element element, css.SelectorGroup selectorGroup, String pseudoElement) {
-  if (selectorGroup == null) {
-    throw ArgumentError.notNull();
-  }
+    Element element, css.SelectorGroup selectorGroup, String? pseudoElement) {
   final selectors = selectorGroup.selectors;
   if (selectors.isEmpty) {
     throw ArgumentError();
@@ -253,7 +248,7 @@ bool _matchesSelectorGroup(
 }
 
 bool _matchesSimpleSelector(
-    Element element, css.SimpleSelector selector, String pseudoElement) {
+    Element element, css.SimpleSelector selector, String? pseudoElement) {
   if (selector.isWildcard) {
     return true;
   } else if (selector is css.ElementSelector) {
@@ -292,7 +287,7 @@ bool _matchesSimpleSelector(
     // :not(selector)
     //
     return !_matchesSimpleSelector(
-        element, selector.negationArg, pseudoElement);
+        element, selector.negationArg!, pseudoElement);
   } else if (selector is css.PseudoClassSelector) {
     //
     // :somePseudoSelector
@@ -326,7 +321,7 @@ bool _matchesSimpleSelector(
       return false;
     }
 
-    var expectationValue = selector.value as String;
+    var expectationValue = selector.value;
 
     // Note: Csslib doesn't seem support case-insensitive attributes
     // like '[name='value' i]'
@@ -377,7 +372,7 @@ bool _matchesSimpleSelector(
         return true;
     }
   }
-  throw _UnsupportedCssSelectorException(selector.span.text);
+  throw _UnsupportedCssSelectorException(selector.span!.text);
 }
 
 class _UnsupportedCssSelectorException implements Exception {

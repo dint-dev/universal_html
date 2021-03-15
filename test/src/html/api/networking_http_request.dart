@@ -16,8 +16,8 @@ part of main_test;
 
 void _testHttpRequest() {
   group('HttpRequest', () {
-    HttpRequest request;
-    StreamQueue<ProgressEvent> onError, onTimeout, onLoadEnd;
+    late HttpRequest request;
+    late StreamQueue<ProgressEvent> onError, onTimeout, onLoadEnd;
     setUp(() {
       request = HttpRequest();
       onError = StreamQueue<ProgressEvent>(request.onError);
@@ -33,7 +33,7 @@ void _testHttpRequest() {
       expect(request.readyState, HttpRequest.UNSENT);
 
       // Open
-      request.open('GET', 'http://localhost:$httpServerPort/http_request/ok');
+      request.open('GET', 'http://localhost:$_httpServerPort/http_request/ok');
       expect(request.readyState, HttpRequest.OPENED);
 
       // Send
@@ -58,7 +58,7 @@ void _testHttpRequest() {
     }, timeout: Timeout(Duration(seconds: 5)));
 
     test('GET, type "arraybuffer"', () async {
-      request.open('GET', 'http://localhost:$httpServerPort/http_request/ok');
+      request.open('GET', 'http://localhost:$_httpServerPort/http_request/ok');
       request.responseType = 'arraybuffer';
       request.send();
       final event = await onLoadEnd.next.timeout(
@@ -83,7 +83,8 @@ void _testHttpRequest() {
     }, timeout: Timeout(Duration(seconds: 5)));
 
     test('GET, type "json"', () async {
-      request.open('GET', 'http://localhost:$httpServerPort/http_request/json');
+      request.open(
+          'GET', 'http://localhost:$_httpServerPort/http_request/json');
       request.responseType = 'json';
       request.send();
       final event = await onLoadEnd.next.timeout(
@@ -120,7 +121,7 @@ void _testHttpRequest() {
       // We assume port 314 doesn't have HTTP server
       request.open(
         'GET',
-        'http://localhost:$httpServerWrongPort/http_request/ok',
+        'http://localhost:$_httpServerWrongPort/http_request/ok',
       );
       expect(request.readyState, HttpRequest.OPENED);
 

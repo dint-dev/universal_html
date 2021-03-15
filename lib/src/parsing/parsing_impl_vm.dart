@@ -12,13 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:universal_html/driver.dart';
 import 'package:universal_html/src/html.dart';
+import 'package:universal_html/src/html/_dom_parser_driver.dart';
 
-HtmlDocument parseHtmlDocument(String content) {
-  return HtmlDriver.current.domParserDriver.parseHtml(content);
+HtmlDocument parseHtmlDocument({
+  required Window window,
+  required String content,
+}) {
+  return DomParserDriver().parseHtml(
+    window: window,
+    content: content,
+  );
 }
 
-XmlDocument parseXmlDocument(String content, {String mime = 'text/xml'}) {
-  return HtmlDriver.current.domParserDriver.parseXml(content, mime: mime);
+XmlDocument parseXmlDocument({
+  required Window window,
+  required String content,
+  String mime = 'text/xml',
+}) {
+  return DomParserDriver().parseXml(
+    window: window,
+    content: content,
+    mime: mime,
+  );
 }

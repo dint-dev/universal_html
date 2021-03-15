@@ -47,7 +47,8 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 class Console {
-  Console._();
+  /// Internal constructor. __Not part of dart:html__.
+  Console.internal();
 
   void assertCondition(bool condition, Object arg) {
     if (!condition) {
@@ -55,7 +56,7 @@ class Console {
     }
   }
 
-  MemoryInfo get memory => null;
+  MemoryInfo? get memory => null;
 
   void clear(Object arg) {}
 

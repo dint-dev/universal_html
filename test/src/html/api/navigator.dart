@@ -16,7 +16,7 @@ part of main_test;
 
 void _testNavigator() {
   group('Navigator', () {
-    Navigator navigator;
+    late Navigator navigator;
     setUp(() {
       navigator = window.navigator;
     });
@@ -24,7 +24,7 @@ void _testNavigator() {
       expect(navigator.appName, 'Netscape');
     });
     test('appVersion', () {
-      expect(navigator.appVersion, anyOf('5.0', matches(r'5.0 \(.*')));
+      expect(navigator.appVersion, matches(r'^5.0.*$'));
     });
     test('geolocation', () async {
       final timeout = const Duration(milliseconds: 1);
@@ -35,8 +35,9 @@ void _testNavigator() {
       );
       try {
         final location = await future.timeout(timeout);
-        expect(location.coords.latitude, isNotNull);
-        expect(location.coords.longitude, isNotNull);
+        final coords = location.coords!;
+        expect(coords.latitude, isNotNull);
+        expect(coords.longitude, isNotNull);
       } on TimeoutException {
         // Ignore
       } on PositionError {

@@ -218,7 +218,7 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
 
   @override
   String firstWhere(bool Function(String value) test,
-      {String Function()? orElse}) =>
+          {String Function()? orElse}) =>
       readClasses().firstWhere(test, orElse: orElse);
 
   @override
@@ -241,7 +241,7 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
 
   @override
   String lastWhere(bool Function(String value) test,
-      {String Function()? orElse}) =>
+          {String Function()? orElse}) =>
       readClasses().lastWhere(test, orElse: orElse);
 
   /// Lookup from the Set interface. Not interesting for a String set.
@@ -320,7 +320,7 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
 
   @override
   String singleWhere(bool Function(String value) test,
-      {String Function()? orElse}) =>
+          {String Function()? orElse}) =>
       readClasses().singleWhere(test, orElse: orElse);
 
   @override
@@ -528,8 +528,8 @@ class _MultiElementCssClassSet extends _CssClassSetImpl {
   @override
   bool toggle(String value, [bool? shouldAdd]) => _sets.fold(
       false,
-          (bool changed, _CssClassSetImpl e) =>
-      e.toggle(value, shouldAdd) || changed);
+      (bool changed, _CssClassSetImpl e) =>
+          e.toggle(value, shouldAdd) || changed);
 
   @override
   void writeClasses(Set<String> s) {

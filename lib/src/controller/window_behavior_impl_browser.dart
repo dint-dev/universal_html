@@ -16,19 +16,6 @@ import 'dart:html';
 
 import 'window_controller.dart';
 
-HtmlDocument newHtmlDocument({
-  required Window window,
-  required String? contentType,
-}) {
-  return DomParser().parseFromString('<html></html>', 'text/html') as HtmlDocument;
-}
-
-Window newWindow({
-  required WindowController windowController,
-}) {
-  throw UnsupportedError('Constructing new window is unsupported in browser');
-}
-
 Document newDocument({
   required Window window,
   required String contentType,
@@ -37,8 +24,23 @@ Document newDocument({
   return DomParser().parseFromString('<html></html>', 'text/html');
 }
 
+HtmlDocument newHtmlDocument({
+  required Window window,
+  required String? contentType,
+}) {
+  return DomParser().parseFromString('<html></html>', 'text/html')
+      as HtmlDocument;
+}
+
 Navigator newNavigator({
   required Window window,
 }) {
-  throw UnsupportedError('Constructing new navigator is unsupported in browser');
+  throw UnsupportedError(
+      'Constructing new navigator is unsupported in browser');
+}
+
+Window newWindow({
+  required WindowController windowController,
+}) {
+  throw UnsupportedError('Constructing new window is unsupported in browser');
 }

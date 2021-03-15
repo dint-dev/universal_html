@@ -13,29 +13,7 @@
 // limitations under the License.
 
 import '../html.dart';
-
 import 'window_controller.dart';
-
-HtmlDocument newHtmlDocument({
-  required Window window,
-  required String? contentType,
-}) {
-  return HtmlDocument.internal(
-    window: window,
-    contentType: contentType ?? 'text/html',
-    filled: true,
-  );
-}
-
-Window newWindow({
-  required WindowController windowController,
-  String href = 'http://localhost/',
-}) {
-  return Window.internal(
-    internalWindowController: windowController,
-    href: href,
-  );
-}
 
 Document newDocument({
   required Window window,
@@ -51,6 +29,17 @@ Document newDocument({
   return document;
 }
 
+HtmlDocument newHtmlDocument({
+  required Window window,
+  required String? contentType,
+}) {
+  return HtmlDocument.internal(
+    window: window,
+    contentType: contentType ?? 'text/html',
+    filled: true,
+  );
+}
+
 Navigator newNavigator({
   required Window window,
 }) {
@@ -59,4 +48,14 @@ Navigator newNavigator({
   );
   assert(identical(navigator.internalWindow, window));
   return navigator;
+}
+
+Window newWindow({
+  required WindowController windowController,
+  String href = 'http://localhost/',
+}) {
+  return Window.internal(
+    internalWindowController: windowController,
+    href: href,
+  );
 }

@@ -1,3 +1,6 @@
+## 2.0.1
+* Small bug fixes.
+
 ## 2.0.0
 * Migrated to null safety and the latest version of dart:html.
 * BREAKING CHANGES: The API for controlling browser windows has been revamped.

@@ -67,6 +67,6 @@ void _testController() {
       final document = windowController.window!.document as HtmlDocument;
       final body = document.body!;
       expect(body.text, 'Hello world!');
-    }, testOn: '!browser');
+    }, tags: 'networking', testOn: '!browser');
   });
 }

@@ -327,7 +327,8 @@ class Window extends EventTarget
     // Note that `as` expressions are required because of
     // "dart:html OR universal_html" confusion by the analyzer.
     final window = this as universal_html_in_browser_or_vm.Window;
-    final document = internalWindowController.windowBehavior.newDocument(window: window);
+    final document =
+        internalWindowController.windowBehavior.newDocument(window: window);
     return document as Document;
   }();
 
@@ -408,7 +409,8 @@ class Window extends EventTarget
     // Note that `as` expressions are required because of
     // "dart:html OR universal_html" confusion by the analyzer.
     final window = this as universal_html_in_browser_or_vm.Window;
-    final navigator = internalWindowController.windowBehavior.newNavigator(window: window);
+    final navigator =
+        internalWindowController.windowBehavior.newNavigator(window: window);
     return navigator as Navigator;
   }();
 

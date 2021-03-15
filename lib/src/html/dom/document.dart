@@ -565,8 +565,8 @@ abstract class DocumentOrShadowRoot {
 class DomImplementation {
   DomImplementation._();
 
-  XmlDocument createDocument(
-      String? namespaceURI, String qualifiedName, InternalDocumentType? doctype) {
+  XmlDocument createDocument(String? namespaceURI, String qualifiedName,
+      InternalDocumentType? doctype) {
     final result = XmlDocument.internal(
       window: window,
       contentType: 'text/xml',

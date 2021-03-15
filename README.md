@@ -1,5 +1,5 @@
 [![Pub Package](https://img.shields.io/pub/v/universal_html.svg)](https://pub.dartlang.org/packages/universal_html)
-[![Github Actions CI](https://github.com/dint-dev/web_browser/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/web_browser/actions?query=workflow%3A%22Dart+CI%22)
+[![Github Actions CI](https://github.com/dint-dev/universal_html/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/universal_html/actions?query=workflow%3A%22Dart+CI%22)
 
 # Introduction
 A cross-platform `dart:html`:
@@ -34,7 +34,7 @@ documented in the relevant files.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^2.0.0
+  universal_html: ^2.0.1
 ```
 
 ## 2. Use

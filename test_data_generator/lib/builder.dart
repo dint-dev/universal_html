@@ -58,8 +58,7 @@ class InfoBuilder implements Builder {
           continue;
         }
         if (member is ClassElement) {
-          if (member.name == 'Object' ||
-              member.name.startsWith('Internal')) {
+          if (member.name == 'Object' || member.name.startsWith('Internal')) {
             continue;
           }
           libraryInfo['${member.name} (class)'] = null;

@@ -71,8 +71,8 @@ class Navigator extends NavigatorConcurrentHardware
   Navigator.internal({
     required this.internalWindow,
     this.deviceMemory,
-    this.appName='Netscape',
-    this.appVersion='5.0',
+    this.appName = 'Netscape',
+    this.appVersion = '5.0',
   }) : super._();
 
   @override

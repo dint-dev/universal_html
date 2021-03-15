@@ -548,8 +548,9 @@ abstract class Element extends Node
   _CssStyleDeclaration? _style;
 
   @override
-  late final InternalElementData internalElementData =
-      ownerDocument!.window.internalWindowController.windowBehavior.newInternalElementData(
+  late final InternalElementData internalElementData = ownerDocument!
+      .window.internalWindowController.windowBehavior
+      .newInternalElementData(
     element: this as universal_html_in_browser_or_vm.Element,
   );
 
@@ -1126,7 +1127,7 @@ abstract class Element extends Node
   set innerHtml(String? html) {
     setInnerHtml(html);
   }
-  
+
   String get innerText => text ?? '';
 
   set innerText(String value) {

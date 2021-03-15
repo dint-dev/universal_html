@@ -70,10 +70,10 @@ class WindowController {
       throw StateError('Failed to mutate the main window inside a browser');
     }
 
-    if (contentType==null) {
+    if (contentType == null) {
       // Sniff MIME.
       final mime = const ContentTypeSniffer().sniffMime(content);
-      if (mime!=null) {
+      if (mime != null) {
         contentType = ContentType.parse(mime);
       }
     }
@@ -84,7 +84,7 @@ class WindowController {
     // Construct a new window
     final window = windowBehavior.newWindow(windowController: this);
 
-    if (contentType.subType=='xml' || contentType.subType=='xhtml') {
+    if (contentType.subType == 'xml' || contentType.subType == 'xhtml') {
       // Parse XML.
       final parsedDocument = parsing.parseXmlDocument(content, window: window);
 

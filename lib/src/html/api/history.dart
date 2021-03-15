@@ -61,7 +61,7 @@ class History {
   ];
 
   int _index = 0;
-  dynamic _state;
+  Object? _state;
 
   String? scrollRestoration;
 
@@ -70,7 +70,7 @@ class History {
 
   int get length => _stack.length;
 
-  dynamic get state => _state;
+  Object? get state => _state;
 
   void back() {
     go(-1);
@@ -80,26 +80,31 @@ class History {
     go(1);
   }
 
-  void go(int delta) {
-    final newIndex = _index + delta;
-    if (newIndex < 0 || newIndex >= _stack.length) {
-      // Fail silently
-      return;
-    }
-    _setStateAndDispatchEvent(_stack[newIndex]);
-    _index = newIndex;
+  void go([int? delta]) {
+    // The effect is is asynchronous
+    scheduleMicrotask(() {
+      final newIndex = _index + (delta ?? 0);
+      if (newIndex < 0 || newIndex >= _stack.length) {
+        // Fail silently
+        return;
+      }
+      _setStateAndDispatchEvent(_stack[newIndex]);
+      _index = newIndex;
+    });
   }
 
-  void pushState(dynamic data, String title, String url) {
-    url = _resolve(url);
+  void pushState(dynamic data, String title, String? url) {
+    url = _resolve(url ?? window.location.href);
     final state = _HistoryState(data, title, url);
-    _stack.add(state);
-    _index = _stack.length - 1;
+    final stack = _stack;
+    stack.removeRange(_index + 1, stack.length);
+    stack.add(state);
+    _index = stack.length - 1;
     _setStateAndDispatchEvent(state);
   }
 
-  void replaceState(dynamic data, String title, String url) {
-    url = _resolve(url);
+  void replaceState(dynamic data, String title, String? url) {
+    url = _resolve(url ?? window.location.href);
     final state = _HistoryState(data, title, url);
     _stack.removeLast();
     _stack.add(state);
@@ -173,7 +178,7 @@ class Url with _UrlBase {
 }
 
 class _HistoryState {
-  final dynamic data;
+  final Object? data;
   final String title;
   final String url;
 

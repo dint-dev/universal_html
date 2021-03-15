@@ -16,6 +16,23 @@ part of main_test;
 
 void _testHistory() {
   group('History:', () {
+    Future<void> delay() => Future.delayed(Duration(milliseconds: 1));
+
+    // Always restore old location
+    setUp(() {
+      final oldHref = window.location.href;
+      addTearDown(() {
+        // For loop so to avoid accidental infinite loops
+        for (var i=0;i<100;i++) {
+          window.history.back();
+          if (window.location.href == oldHref) {
+            // Found original location.
+            return;
+          }
+        }
+      });
+    });
+
     test('initial state is correct', () {
       window.location.href = 'http://localhost/';
       final history = window.history;
@@ -35,11 +52,12 @@ void _testHistory() {
       }
       expect(location.origin, 'http://$expectedHost');
       expect(location.href, matches('^http://$expectedHost/.*\$'));
-    });
+    }, testOn: '!browser');
 
     test('push', () async {
       final history = window.history;
       final location = window.location;
+      final oldState = history.state;
 
       // Initial state
       expect(history.state, isNull);
@@ -68,9 +86,12 @@ void _testHistory() {
 
       // Add listener
       PopStateEvent? previousEvent;
-      window.onPopState.listen(expectAsync1((event) {
+      final streamSubscription = window.onPopState.listen(expectAsync1((event) {
         previousEvent = event;
       }, count: 4));
+      addTearDown(() async {
+        await streamSubscription.cancel();
+      });
 
       // Push second state
       final state1 = {
@@ -81,7 +102,7 @@ void _testHistory() {
       history.pushState(state1, title1, url1);
 
       // Wait a bit
-      await Future.delayed(const Duration(milliseconds: 10));
+      await delay();
 
       // Check state
       expect(previousEvent, isNotNull);
@@ -92,13 +113,15 @@ void _testHistory() {
 
       // Go back
       history.back();
+      expect(history.state, state1);
+      await delay();
       expect(history.state, state0);
 
       // Replace
       history.replaceState(state1, title1, url1);
 
       // Wait a bit
-      await Future.delayed(const Duration(milliseconds: 10));
+      await delay();
 
       // Check state
       expect(previousEvent, isNotNull);
@@ -107,7 +130,73 @@ void _testHistory() {
 
       // Go back
       history.back();
-      expect(history.state, isNull);
-    }); // <-- OTHERWISE WILL HALT
-  }, testOn: '!browser');
+      await delay();
+      expect(history.state, oldState);
+    }, testOn: '!browser'); // <-- OTHERWISE WILL HALT
+
+    test('History.supportsState', () async {
+      expect(History.supportsState, isTrue);
+    });
+
+    test('backward(), forward(), pushState()', () async {
+      final location = window.location;
+      final history = window.history;
+      final oldHref = location.href;
+      final oldState = history.state;
+
+      history.pushState({'s': 'state0'}, 'title0', '/path0');
+      history.pushState({'s': 'state1'}, 'title1', '/path1');
+      history.pushState({'s': 'state2'}, 'title2', '/path2');
+      history.pushState({'s': 'state3'}, 'title3', '/path3');
+      history.pushState({'s': 'state4'}, 'title4', '/path4');
+
+      history.back();
+
+      // Nothing happens yet.
+      expect(location.pathname, '/path4');
+      expect(history.state, {'s': 'state4'});
+
+      // Wait a bit
+      await delay();
+
+      history.back();
+      await delay();
+      expect(location.pathname, '/path2');
+      expect(history.state, {'s': 'state2'});
+
+      history.forward();
+      await delay();
+      expect(location.pathname, '/path3');
+      expect(history.state, {'s': 'state3'});
+
+      history.forward();
+      await delay();
+      expect(location.pathname, '/path4');
+      expect(history.state, {'s': 'state4'});
+
+      history.go(-2);
+      await delay();
+      expect(history.state, {'s': 'state2'});
+      expect(location.pathname, '/path2');
+
+
+      history.pushState({'s': 'stateNew'}, 'titleNew', '/pathNew');
+      expect(location.pathname, '/pathNew');
+      expect(history.state, {'s': 'stateNew'});
+
+      history.forward();
+      expect(location.pathname, '/pathNew');
+      expect(history.state, {'s': 'stateNew'});
+
+      history.back();
+      history.back();
+      history.back();
+      history.back();
+      expect(location.pathname, '/pathNew');
+      expect(history.state, {'s': 'stateNew'});
+      await delay();
+      expect(location.href, oldHref);
+      expect(history.state, oldState);
+    });
+  });
 }

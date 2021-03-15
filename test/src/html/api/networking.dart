@@ -31,6 +31,7 @@ void _testNetworking() {
       _testHttpRequest();
       _testEventSource();
     },
+    tags: 'networking',
     timeout: Timeout(const Duration(seconds: 30)),
   );
 }

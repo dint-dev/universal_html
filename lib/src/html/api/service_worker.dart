@@ -64,7 +64,7 @@ class BackgroundFetchManager {
   }
 
   Future<BackgroundFetchRegistration> fetch(String id, Object requests,
-      [Map options]) {
+      [Map? options]) {
     throw UnimplementedError();
   }
 
@@ -74,60 +74,60 @@ class BackgroundFetchManager {
   Future<List<String>> getIds() => throw UnimplementedError();
 }
 
-class BackgroundFetchRegistration extends EventTarget {
-  final int downloadTotal;
-
-  final int downloaded;
-
-  final String id;
-
-  final String title;
-
-  final int totalDownloadSize;
-
-  final int uploadTotal;
-
-  final int uploaded;
-
+abstract class BackgroundFetchRegistration extends EventTarget {
   factory BackgroundFetchRegistration._() {
     throw UnimplementedError();
   }
 
+  int get downloaded;
+
+  int get downloadTotal;
+
+  String get id;
+
+  String get title;
+
+  int get totalDownloadSize;
+
+  int get uploaded;
+
+  int get uploadTotal;
+
   Future<bool> abort() => throw UnimplementedError();
 }
 
-class Body {
-  final bool bodyUsed;
-
+abstract class Body {
   factory Body._() {
     throw UnimplementedError();
   }
 
-  Future arrayBuffer() => throw UnimplementedError();
+  bool? get bodyUsed;
 
-  Future<Blob> blob() => throw UnimplementedError();
+  Future arrayBuffer();
 
-  Future<FormData> formData() => throw UnimplementedError();
+  Future<Blob> blob();
 
-  Future json() => throw UnimplementedError();
+  Future<FormData> formData();
 
-  Future<String> text() => throw UnimplementedError();
+  Future json();
+
+  Future<String> text();
 }
 
-class Client {
-  final String frameType;
-
-  final String id;
-
-  final String type;
-
-  final String url;
-
+abstract class Client {
   factory Client._() {
     throw UnimplementedError();
   }
 
-  void postMessage(Object message, [List<Object> transfer]) {
+  String? get frameType;
+
+  String? get id;
+
+  String? get type;
+
+  String? get url;
+
+  void postMessage(Object message, [List<Object>? transfer]) {
     throw UnimplementedError();
   }
 }
@@ -145,7 +145,7 @@ class Clients {
     throw UnimplementedError();
   }
 
-  Future<List<Client>> matchAll([Map options]) {
+  Future<List<Client>> matchAll([Map? options]) {
     throw UnimplementedError();
   }
 
@@ -154,12 +154,12 @@ class Clients {
   }
 }
 
-class ForeignFetchEvent extends ExtendableEvent {
-  final String origin;
-
+abstract class ForeignFetchEvent extends ExtendableEvent {
   factory ForeignFetchEvent(String type, Map eventInitDict) {
     throw UnimplementedError();
   }
+
+  String? get origin;
 
   // final _Request request;
 
@@ -172,13 +172,13 @@ class FormData {
   /// Checks if this type is supported on the current platform.
   static bool get supported => false;
 
-  factory FormData([FormElement form]) {
+  factory FormData([FormElement? form]) {
     throw UnimplementedError();
   }
 
   void append(String name, String value) => throw UnimplementedError();
 
-  void appendBlob(String name, Blob value, [String filename]) =>
+  void appendBlob(String name, Blob value, [String? filename]) =>
       throw UnimplementedError();
 
   void delete(String name) => throw UnimplementedError();
@@ -189,11 +189,12 @@ class FormData {
 
   bool has(String name) => throw UnimplementedError();
 
-  void set(String name, value, [String filename]) => throw UnimplementedError();
+  void set(String name, value, [String? filename]) =>
+      throw UnimplementedError();
 }
 
 class Headers {
-  factory Headers([Object init]) {
+  factory Headers([Object? init]) {
     throw UnimplementedError();
   }
 }
@@ -221,11 +222,11 @@ abstract class PushManager {
     throw UnimplementedError();
   }
 
-  Future permissionState([Map options]) {
+  Future permissionState([Map? options]) {
     throw UnimplementedError();
   }
 
-  Future<PushSubscription> subscribe([Map options]) {
+  Future<PushSubscription> subscribe([Map? options]) {
     throw UnimplementedError();
   }
 }
@@ -252,16 +253,16 @@ class PushMessageData {
   }
 }
 
-class PushSubscription {
-  final String endpoint;
-
-  final int expirationTime;
-
-  final PushSubscriptionOptions options;
-
+abstract class PushSubscription {
   factory PushSubscription._() {
     throw UnimplementedError();
   }
+
+  String get endpoint;
+
+  int get expirationTime;
+
+  PushSubscriptionOptions get options;
 
   ByteBuffer getKey(String name) {
     throw UnimplementedError();
@@ -272,23 +273,19 @@ class PushSubscription {
   }
 }
 
-class PushSubscriptionOptions {
-  final ByteBuffer applicationServerKey;
-
-  final bool userVisibleOnly;
-
+abstract class PushSubscriptionOptions {
   factory PushSubscriptionOptions._() {
     throw UnimplementedError();
   }
+
+  ByteBuffer get applicationServerKey;
+
+  bool get userVisibleOnly;
 }
 
-class ServiceWorker extends EventTarget implements AbstractWorker {
+abstract class ServiceWorker extends EventTarget implements AbstractWorker {
   static const EventStreamProvider<Event> errorEvent =
       EventStreamProvider<Event>('error');
-
-  final String scriptUrl;
-
-  final String state;
 
   factory ServiceWorker._() {
     throw UnsupportedError('Not supported');
@@ -297,20 +294,24 @@ class ServiceWorker extends EventTarget implements AbstractWorker {
   @override
   Stream<Event> get onError => errorEvent.forTarget(this);
 
-  void postMessage(/*any*/ message, [List<Object> transfer]) {
+  String get scriptUrl;
+
+  String get state;
+
+  void postMessage(/*any*/ message, [List<Object>? transfer]) {
     throw UnimplementedError();
   }
 }
 
-class ServiceWorkerContainer extends EventTarget {
+abstract class ServiceWorkerContainer extends EventTarget {
   static const EventStreamProvider<MessageEvent> messageEvent =
       EventStreamProvider<MessageEvent>('message');
-
-  final ServiceWorker controller;
 
   factory ServiceWorkerContainer._() {
     throw UnsupportedError('Not supported');
   }
+
+  ServiceWorker get controller;
 
   Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
 
@@ -318,7 +319,7 @@ class ServiceWorkerContainer extends EventTarget {
     throw UnimplementedError();
   }
 
-  Future<ServiceWorkerRegistration> getRegistration([String documentURL]) {
+  Future<ServiceWorkerRegistration> getRegistration([String? documentURL]) {
     throw UnimplementedError();
   }
 
@@ -326,12 +327,12 @@ class ServiceWorkerContainer extends EventTarget {
     throw UnimplementedError();
   }
 
-  Future<ServiceWorkerRegistration> register(String url, [Map options]) {
+  Future<ServiceWorkerRegistration> register(String url, [Map? options]) {
     throw UnimplementedError();
   }
 }
 
-class ServiceWorkerGlobalScope extends WorkerGlobalScope {
+abstract class ServiceWorkerGlobalScope extends WorkerGlobalScope {
   static const EventStreamProvider<Event> activateEvent =
       EventStreamProvider<Event>('activate');
 
@@ -351,15 +352,13 @@ class ServiceWorkerGlobalScope extends WorkerGlobalScope {
     throw UnimplementedError();
   }
 
-  final Clients clients;
-
-  final ServiceWorkerRegistration registration;
-
   factory ServiceWorkerGlobalScope._() {
     throw UnimplementedError();
   }
 
   ApplicationCache get caches => throw UnimplementedError();
+
+  Clients get clients;
 
   Crypto get crypto => throw UnimplementedError();
 
@@ -380,39 +379,41 @@ class ServiceWorkerGlobalScope extends WorkerGlobalScope {
 
   Performance get performance => throw UnimplementedError();
 
+  ServiceWorkerRegistration get registration;
+
   Future skipWaiting() {
     throw UnimplementedError();
   }
 }
 
-class ServiceWorkerRegistration extends EventTarget {
-  final ServiceWorker active;
-
-  final ServiceWorker installing;
-
-  final PushManager pushManager;
-
-  final String scope;
-
-  final ServiceWorker waiting;
-
-  final BackgroundFetchManager backgroundFetch;
-
-  final NavigationPreloadManager navigationPreload;
-
-  final PaymentManager paymentManager;
-
-  final SyncManager sync;
-
+abstract class ServiceWorkerRegistration extends EventTarget {
   factory ServiceWorkerRegistration._() {
     throw UnsupportedError('Not supported');
   }
 
-  Future<List<Notification>> getNotifications([Map filter]) {
+  ServiceWorker get active;
+
+  BackgroundFetchManager get backgroundFetch;
+
+  ServiceWorker get installing;
+
+  NavigationPreloadManager get navigationPreload;
+
+  PaymentManager get paymentManager;
+
+  PushManager get pushManager;
+
+  String get scope;
+
+  SyncManager get sync;
+
+  ServiceWorker get waiting;
+
+  Future<List<Notification>> getNotifications([Map? filter]) {
     throw UnimplementedError();
   }
 
-  Future showNotification(String title, [Map options]) {
+  Future showNotification(String title, [Map? options]) {
     throw UnimplementedError();
   }
 
@@ -425,7 +426,7 @@ class ServiceWorkerRegistration extends EventTarget {
   }
 }
 
-class SyncManager {
+abstract class SyncManager {
   factory SyncManager._() {
     throw UnimplementedError();
   }
@@ -435,14 +436,14 @@ class SyncManager {
   Future register(String tag) => throw UnimplementedError();
 }
 
-class WindowClient extends Client {
-  final bool focused;
-
-  final String visibilityState;
-
+abstract class WindowClient extends Client {
   factory WindowClient._() {
     throw UnimplementedError();
   }
+
+  bool get focused;
+
+  String get visibilityState;
 
   Future<WindowClient> focus() {
     throw UnimplementedError();
@@ -453,7 +454,7 @@ class WindowClient extends Client {
   }
 }
 
-class WorkerGlobalScope extends EventTarget {
+abstract class WorkerGlobalScope extends EventTarget {
   /// Static factory designed to expose `error` events to event
   /// handlers that are not necessarily instances of [WorkerGlobalScope].
   ///
@@ -465,32 +466,32 @@ class WorkerGlobalScope extends EventTarget {
     throw UnimplementedError();
   }
 
-  final String addressSpace;
+  factory WorkerGlobalScope._() {
+    throw UnsupportedError('Not supported');
+  }
 
   // final CacheStorage caches;
 
   // final Crypto crypto;
 
-  final IdbFactory indexedDB;
+  String get addressSpace;
 
-  final bool isSecureContext;
+  IdbFactory get indexedDB;
 
   // final _WorkerLocation location;
 
   // final _WorkerNavigator navigator;
 
-  final String origin;
+  bool get isSecureContext;
 
   // final WorkerPerformance performance;
 
-  final WorkerGlobalScope self;
-
-  factory WorkerGlobalScope._() {
-    throw UnsupportedError('Not supported');
-  }
-
   /// Stream of `error` events handled by this [WorkerGlobalScope].
   Stream<Event> get onError => errorEvent.forTarget(this);
+
+  String get origin;
+
+  WorkerGlobalScope? get self;
 
   String atob(String atob) {
     throw UnimplementedError();
@@ -500,39 +501,11 @@ class WorkerGlobalScope extends EventTarget {
     throw UnimplementedError();
   }
 
-  Future fetch(/*RequestInfo*/ input, [Map init]) {
+  Future fetch(/*RequestInfo*/ input, [Map? init]) {
     throw UnimplementedError();
   }
 
   void importScripts(String urls) {
-    throw UnimplementedError();
-  }
-}
-
-class _Request extends Body {
-  final String cache;
-
-  final String credentials;
-
-  final Headers headers;
-
-  final String integrity;
-
-  final String mode;
-
-  final String redirect;
-
-  final String referrer;
-
-  final String referrerPolicy;
-
-  final String url;
-
-  factory _Request(Object input, [Map requestInitDict]) {
-    throw UnimplementedError();
-  }
-
-  _Request clone() {
     throw UnimplementedError();
   }
 }

@@ -16,8 +16,10 @@ part of main_test;
 
 void _testCss() {
   group('CSS-related tests for Element:', () {
+    final document = universal_html.document;
+
     test('computedStyle', () {
-      _temporarilyRemoveChildrenFromDocument(root: document.body);
+      _temporarilyRemoveChildrenFromDocument(root: document.body!);
 
       final styleElement = StyleElement()..appendText('''
 .exampleClass {
@@ -26,10 +28,10 @@ void _testCss() {
       addTearDown(() {
         styleElement.remove();
       });
-      document.head.insertBefore(styleElement, null);
+      document.head!.insertBefore(styleElement, null);
 
       final element = DivElement()..className = 'exampleClass';
-      document.body.insertBefore(element, null);
+      document.body!.insertBefore(element, null);
       addTearDown(() {
         element.remove();
       });
@@ -40,11 +42,15 @@ void _testCss() {
     group('matches:', () {
       void expectMatches(Element element, String selector, Matcher matcher) {
         final root = element.getRootNode() as Element;
-        final idOrOuterHtml =
-            element.id == null ? element.outerHtml : '#${element.id}';
-        expect(element.matches(selector), matcher,
-            reason:
-                'Element: "${idOrOuterHtml}"\nSelector: "${selector}"\nTree: ${root.outerHtml}');
+        final id = element.id;
+        final idOrOuterHtml = id == '' ? element.outerHtml : '#$id';
+        expect(
+          element.matches(selector),
+          matcher,
+          reason: 'Element: "$idOrOuterHtml"\n'
+              'Selector: "$selector"\n'
+              'Tree: ${root.outerHtml}',
+        );
       }
 
       test('blank string throws DomException', () {
@@ -98,27 +104,27 @@ void _testCss() {
           ..id = 'e0'
           ..append(DivElement()..id = 'e1')
           ..append(DivElement()..id = 'e2');
-        expectMatches(e.firstChild, ':first-child', isTrue);
-        expectMatches(e.lastChild, ':first-child', isFalse);
+        expectMatches(e.firstChild as Element, ':first-child', isTrue);
+        expectMatches(e.lastChild as Element, ':first-child', isFalse);
       });
       test(':last-child', () {
         final e = DivElement()
           ..id = 'e0'
           ..append(DivElement()..id = 'e1')
           ..append(DivElement()..id = 'e2');
-        expectMatches(e.firstChild, ':last-child', isFalse);
-        expectMatches(e.lastChild, ':last-child', isTrue);
+        expectMatches(e.firstChild as Element, ':last-child', isFalse);
+        expectMatches(e.lastChild as Element, ':last-child', isTrue);
       });
       test(':nth-child(2)', () {
         final e = DivElement()
           ..id = 'root'
           ..append(DivElement()..id = 'child0')
           ..append(DivElement()..id = 'child1');
-        expectMatches(e.childNodes[0], ':nth-child(1)', isTrue);
-        expectMatches(e.childNodes[0], ':nth-child(2)', isFalse);
-        expectMatches(e.childNodes[1], ':nth-child(1)', isFalse);
-        expectMatches(e.childNodes[1], ':nth-child(2)', isTrue);
-        expectMatches(e.childNodes[1], ':nth-child(3)', isFalse);
+        expectMatches(e.childNodes[0] as Element, ':nth-child(1)', isTrue);
+        expectMatches(e.childNodes[0] as Element, ':nth-child(2)', isFalse);
+        expectMatches(e.childNodes[1] as Element, ':nth-child(1)', isFalse);
+        expectMatches(e.childNodes[1] as Element, ':nth-child(2)', isTrue);
+        expectMatches(e.childNodes[1] as Element, ':nth-child(3)', isFalse);
       });
       test(':nth-child(2n)', () {
         final e = DivElement()
@@ -127,10 +133,10 @@ void _testCss() {
           ..append(DivElement()..id = 'child1')
           ..append(DivElement()..id = 'child2')
           ..append(DivElement()..id = 'child3');
-        expectMatches(e.childNodes[0], ':nth-child(2n)', isFalse);
-        expectMatches(e.childNodes[1], ':nth-child(2n)', isTrue);
-        expectMatches(e.childNodes[2], ':nth-child(2n)', isFalse);
-        expectMatches(e.childNodes[3], ':nth-child(2n)', isTrue);
+        expectMatches(e.childNodes[0] as Element, ':nth-child(2n)', isFalse);
+        expectMatches(e.childNodes[1] as Element, ':nth-child(2n)', isTrue);
+        expectMatches(e.childNodes[2] as Element, ':nth-child(2n)', isFalse);
+        expectMatches(e.childNodes[3] as Element, ':nth-child(2n)', isTrue);
       });
       test(':nth-child(2n+1)', () {
         final e = DivElement()
@@ -139,10 +145,10 @@ void _testCss() {
           ..append(DivElement()..id = 'child1')
           ..append(DivElement()..id = 'child2')
           ..append(DivElement()..id = 'child3');
-        expectMatches(e.childNodes[0], ':nth-child(2n+1)', isTrue);
-        expectMatches(e.childNodes[1], ':nth-child(2n+1)', isFalse);
-        expectMatches(e.childNodes[2], ':nth-child(2n+1)', isTrue);
-        expectMatches(e.childNodes[3], ':nth-child(2n+1)', isFalse);
+        expectMatches(e.childNodes[0] as Element, ':nth-child(2n+1)', isTrue);
+        expectMatches(e.childNodes[1] as Element, ':nth-child(2n+1)', isFalse);
+        expectMatches(e.childNodes[2] as Element, ':nth-child(2n+1)', isTrue);
+        expectMatches(e.childNodes[3] as Element, ':nth-child(2n+1)', isFalse);
       });
       test('[name]', () {
         final e = DivElement()..setAttribute('k', '');
@@ -286,15 +292,18 @@ void _testCss() {
     group('querySelectorAll:', () {
       void expectQuery(
           Element root, String selector, List<Element> expectedElements) {
-        final actual = root
+        final actualIds = root
             .querySelectorAll(selector)
             .map((item) => '#${item.id}')
             .join(', ');
-        final expected =
+        final expectedIds =
             expectedElements.map((item) => '#${item.id}').join(', ');
-        expect(actual, equals(expected),
-            reason:
-                'Root: "#${root.id}"\nSelector: "${selector}"\nTree: ${root.outerHtml}');
+        expect(
+          actualIds,
+          expectedIds,
+          reason:
+              'Root: "#${root.id}"\nSelector: "$selector"\nTree: ${root.outerHtml}',
+        );
       }
 
       test('Complex example #1', () {

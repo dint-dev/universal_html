@@ -536,17 +536,22 @@ abstract class Element extends Node
   /// For [localName] and case-insensitive DOM queries.
   final String _lowerCaseTagName;
 
-  AccessibleNode _accessibleNode;
+  AccessibleNode? _accessibleNode;
 
   /// Attributes is a linked list of [_Attribute] nodes.
   /// This is the first attribute.
-  _Attribute _firstAttribute;
-  _Attributes _attributes;
+  _Attribute? _firstAttribute;
+
+  _Attributes? _attributes;
 
   /// Contains style. The instance is allocated lazily.
-  _CssStyleDeclaration _style;
+  _CssStyleDeclaration? _style;
 
-  RenderData _renderDataField;
+  @override
+  late final InternalElementData internalElementData =
+      ownerDocument!.window.internalWindowController.windowBehavior.newInternalElementData(
+    element: this as universal_html_in_browser_or_vm.Element,
+  );
 
   /// Creates a new `<a>` element.
   ///
@@ -579,9 +584,9 @@ abstract class Element extends Node
   factory Element.canvas() = CanvasElement;
 
   Element.created()
-      : _nodeName = null,
-        _lowerCaseTagName = null,
-        super._(document) {
+      : _nodeName = '',
+        _lowerCaseTagName = '',
+        super._(window.document) {
     throw UnimplementedError();
   }
 
@@ -624,12 +629,14 @@ abstract class Element extends Node
   ///
   /// * [NodeValidator]
   ///
-  factory Element.html(String html,
-      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    final domParser = HtmlDriver.current.domParserDriver;
-    final fragment = domParser.parseDocumentFragmentFromHtml(
-      document,
-      html.trim(),
+  factory Element.html(
+    String html, {
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
+  }) {
+    final fragment = DomParserDriver().parseDocumentFragmentFromHtml(
+      ownerDocument: window.document,
+      content: html.trim(),
       validator: validator,
       treeSanitizer: treeSanitizer,
     );
@@ -648,15 +655,13 @@ abstract class Element extends Node
   /// This is equivalent to calling `new Element.tag('img')`.
   factory Element.img() = ImageElement;
 
-  /// IMPORTANT: Not part of 'dart:html' API.
-  @visibleForTesting
+  /// Internal constructor. __Not part of dart:html__.
   Element.internal(Document document, String tagName)
       : this._(document, tagName);
 
-  /// IMPORTANT: Not part 'dart:html'.
-  @visibleForTesting
+  /// Internal constructor. __Not part of dart:html__.
   factory Element.internalTag(Document ownerDocument, String name,
-      [String typeExtension]) {
+      [String? typeExtension]) {
     return Element._internalTag(
       ownerDocument,
       name,
@@ -664,16 +669,15 @@ abstract class Element extends Node
     );
   }
 
-  /// IMPORTANT: Not part 'dart:html'.
-  @visibleForTesting
+  /// Internal constructor. __Not part of dart:html__.
   factory Element.internalTagNS(
       Document ownerDocument, String namespaceUri, String name,
-      [String typeExtension]) {
+      [String? typeExtension]) {
     final normalizedName = name.toLowerCase();
     if (!Element._normalizedElementNameRegExp.hasMatch(normalizedName)) {
       throw ArgumentError.value(name);
     }
-    return UnknownElement._(ownerDocument, namespaceUri, normalizedName);
+    return UnknownElement.internal(ownerDocument, namespaceUri, normalizedName);
   }
 
   /// Creates a new `<li>` element.
@@ -733,8 +737,9 @@ abstract class Element extends Node
 
   /// Creates a new element with the tag name.
   /// If the name is invalid, throws an error or exception.
-  factory Element.tag(String name, [String typeExtension]) {
-    return Element.internalTag(null, name.toUpperCase(), typeExtension);
+  factory Element.tag(String name, [String? typeExtension]) {
+    return Element.internalTag(
+        window.document, name.toUpperCase(), typeExtension);
   }
 
   /// Creates a new `<td>` element.
@@ -776,7 +781,7 @@ abstract class Element extends Node
         super._(ownerDocument);
 
   factory Element._internalTag(Document ownerDocument, String name,
-      [String typeExtension]) {
+      [String? typeExtension]) {
     final lowerCaseName = name.toLowerCase();
     switch (lowerCaseName) {
       case 'a':
@@ -922,23 +927,23 @@ abstract class Element extends Node
             '"$name" is an invalid element name.',
           );
         }
-        return UnknownElement._(ownerDocument, null, name);
+        return UnknownElement.internal(ownerDocument, null, name);
     }
   }
 
   AccessibleNode get accessibleNode {
-    return _accessibleNode ??= AccessibleNode._();
+    return _accessibleNode ??= AccessibleNode();
   }
 
-  Element get assignedSlot => null;
+  Element? get assignedSlot => null;
 
   /// Returns a modifiable map of attributes.
   Map<String, String> get attributes {
-    return _attributes ??= _Attributes(this, null);
+    return _attributes ??= _Attributes(this, '');
   }
 
   set attributes(Map<String, String> value) {
-    attributes..clear();
+    attributes.clear();
     for (var entry in value.entries) {
       setAttribute(entry.key, entry.value);
     }
@@ -987,13 +992,13 @@ abstract class Element extends Node
     classSet.addAll(value);
   }
 
-  String get className => _getAttribute('class');
+  String? get className => _getAttribute('class');
 
-  set className(String newValue) {
+  set className(String? newValue) {
     _setAttribute('class', newValue);
   }
 
-  Rectangle<int> get client => _renderData.client;
+  Rectangle<int> get client => internalElementData.client;
 
   /// Returns 0 outside browser.tagWithoutValidation
   int get clientHeight => client.height;
@@ -1007,9 +1012,9 @@ abstract class Element extends Node
   /// Returns 0 outside browser.
   int get clientWidth => client.width;
 
-  String get computedName => null;
+  String? get computedName => null;
 
-  String get computedRole => null;
+  String? get computedRole => null;
 
   /// Access this element's content position.
   ///
@@ -1024,12 +1029,12 @@ abstract class Element extends Node
   /// [Browser Reflow](https://developers.google.com/speed/articles/reflow)
   CssRect get contentEdge => _ContentCssRect(this);
 
-  bool get contentEditable {
-    return _getAttributeBool('contenteditable');
+  String get contentEditable {
+    return _getAttribute('contenteditable') ?? '';
   }
 
-  set contentEditable(bool value) {
-    _setAttributeBool('contentEditable', value);
+  set contentEditable(String value) {
+    _setAttribute('contentEditable', value);
   }
 
   /// Allows access to all custom data attributes (data-*) set on this element.
@@ -1060,13 +1065,13 @@ abstract class Element extends Node
     final data = dataset;
     data.clear();
     for (var key in value.keys) {
-      data[key] = value[key];
+      data[key] = value[key]!;
     }
   }
 
-  String get dir => _getAttribute('dir');
+  String? get dir => _getAttribute('dir');
 
-  set dir(String value) {
+  set dir(String? value) {
     _setAttribute('dir', value);
   }
 
@@ -1075,7 +1080,7 @@ abstract class Element extends Node
   ///
   /// This method is the Dart equivalent to jQuery's
   /// [offset](http://api.jquery.com/offset/) method.
-  Point get documentOffset => offsetTo(document.documentElement);
+  Point get documentOffset => offsetTo(window.document.documentElement!);
 
   bool get draggable => _getAttributeBoolString('draggable') ?? false;
 
@@ -1084,26 +1089,26 @@ abstract class Element extends Node
   }
 
   bool get hidden {
-    return _getAttributeBool('hidden') ?? false;
+    return _getAttributeBool('hidden');
   }
 
   set hidden(bool value) {
     _setAttributeBool('hidden', value);
   }
 
-  String get id => _getAttribute('id');
+  String get id => _getAttribute('id') ?? '';
 
   set id(String value) {
     _setAttribute('id', value);
   }
 
-  bool get inert => _getAttributeBool('inert') ?? false;
+  bool get inert => _getAttributeBool('inert');
 
   set inert(bool value) {
     _setAttributeBool('inert', value);
   }
 
-  String get innerHtml {
+  String? get innerHtml {
     final sb = StringBuffer();
     final flags = _getPrintingFlags(this);
     var next = firstChild;
@@ -1118,30 +1123,28 @@ abstract class Element extends Node
   ///
   /// This uses the default sanitization behavior to sanitize the HTML fragment,
   /// use [setInnerHtml] to override the default behavior.
-  set innerHtml(String html) {
+  set innerHtml(String? html) {
     setInnerHtml(html);
   }
-
-  String get innerText {
-    return text;
-  }
+  
+  String get innerText => text ?? '';
 
   set innerText(String value) {
     text = value.replaceAll('\n', '');
   }
 
-  String get inputMode => _getAttribute('inputmode');
+  String? get inputMode => _getAttribute('inputmode');
 
-  set inputMode(String value) {
+  set inputMode(String? value) {
     _setAttribute('inputmode', value);
   }
 
   bool get isContentEditable => false;
 
-  String get lang => getAttribute('lang');
+  String? get lang => getAttribute('lang');
 
-  set lang(String value) {
-    setAttribute('lang', value);
+  set lang(String? value) {
+    setAttribute('lang', value ?? '');
   }
 
   String get localName {
@@ -1169,7 +1172,7 @@ abstract class Element extends Node
   /// [Browser Reflow](https://developers.google.com/speed/articles/reflow)
   CssRect get marginEdge => _MarginCssRect(this);
 
-  String get namespaceUri {
+  String? get namespaceUri {
     final nodeName = this.nodeName;
     final i = nodeName.indexOf(':');
     if (i >= 0) {
@@ -1187,7 +1190,7 @@ abstract class Element extends Node
   }
 
   @override
-  Element get nextElementSibling {
+  Element? get nextElementSibling {
     var sibling = nextNode;
     while (sibling != null) {
       if (sibling is Element) {
@@ -1207,7 +1210,7 @@ abstract class Element extends Node
   @override
   int get nodeType => Node.ELEMENT_NODE;
 
-  Rectangle<int> get offset => _renderData.offset;
+  Rectangle<int> get offset => internalElementData.offset;
 
   /// Returns 0 outside browser.
   int get offsetHeight => offset.height;
@@ -1215,7 +1218,7 @@ abstract class Element extends Node
   /// Returns 0 outside browser.
   int get offsetLeft => offset.left;
 
-  Element get offsetParent => parent;
+  Element? get offsetParent => parent;
 
   /// Returns 0 outside browser.
   int get offsetTop => offset.top;
@@ -1572,7 +1575,7 @@ abstract class Element extends Node
   @override
   ElementStream<WheelEvent> get onWheel => wheelEvent.forElement(this);
 
-  String get outerHtml {
+  String? get outerHtml {
     final sb = StringBuffer();
     final flags = _getPrintingFlags(this);
     _printNode(sb, flags, this);
@@ -1597,7 +1600,7 @@ abstract class Element extends Node
   CssRect get paddingEdge => _PaddingCssRect(this);
 
   @override
-  Element get previousElementSibling {
+  Element? get previousElementSibling {
     var sibling = previousNode;
     while (sibling != null) {
       if (sibling is Element) {
@@ -1609,19 +1612,19 @@ abstract class Element extends Node
   }
 
   /// Returns 0 outside browser.
-  int get scrollHeight => _renderData.scroll.height;
+  int get scrollHeight => internalElementData.scroll.height;
 
-  int get scrollLeft => _renderData.scroll.left;
+  int get scrollLeft => internalElementData.scroll.left;
 
   set scrollLeft(int value) {}
 
   /// Returns 0 outside browser.
-  int get scrollTop => _renderData.scroll.top;
+  int get scrollTop => internalElementData.scroll.top;
 
   set scrollTop(int value) {}
 
   /// Returns 0 outside browser.
-  int get scrollWidth => _renderData.scroll.width;
+  int get scrollWidth => internalElementData.scroll.width;
 
   /// The shadow root of this shadow host.
   ///
@@ -1632,15 +1635,15 @@ abstract class Element extends Node
   /// * [Shadow DOM specification](http://www.w3.org/TR/shadow-dom/)
   ///   from W3C.
   @SupportedBrowser(SupportedBrowser.CHROME, '25')
-  ShadowRoot get shadowRoot => null;
+  ShadowRoot? get shadowRoot => null;
 
-  String get slot => _getAttribute('slot');
+  String? get slot => _getAttribute('slot');
 
-  set slot(String value) {
+  set slot(String? value) {
     _setAttribute('slot', value);
   }
 
-  bool get spellcheck {
+  bool? get spellcheck {
     final value = _getAttributeBoolString('spellcheck') ?? _defaultSpellcheck;
     if (value != null) {
       return value;
@@ -1649,10 +1652,10 @@ abstract class Element extends Node
     if (parent != null) {
       return parent.spellcheck;
     }
-    return false;
+    return true;
   }
 
-  set spellcheck(bool value) {
+  set spellcheck(bool? value) {
     _setAttributeBoolString('spellcheck', value);
   }
 
@@ -1660,48 +1663,46 @@ abstract class Element extends Node
 
   StylePropertyMap get styleMap => StylePropertyMap._();
 
-  int get tabIndex => _getAttributeInt('tabindex') ?? -1;
+  int? get tabIndex => _getAttributeInt('tabindex') ?? -1;
 
-  set tabIndex(int value) {
+  set tabIndex(int? value) {
     _setAttributeInt('tabindex', value ?? -1);
   }
 
   /// Returns node name in uppercase.
   String get tagName => nodeName;
 
-  String get title => getAttribute('title');
+  String? get title => getAttribute('title');
 
-  set title(String value) {
-    setAttribute('title', value);
+  set title(String? value) {
+    setAttribute('title', value ?? '');
   }
 
-  bool get translate {
+  bool? get translate {
     final result = _getAttributeBoolString(
       'translate',
-      falseValue: 'no',
-      trueValue: 'yes',
+      falseString: 'no',
+      trueString: 'yes',
     );
     return result ?? true;
   }
 
-  set translate(bool value) {
+  set translate(bool? value) {
+    if (value == null) {
+      removeAttribute('translate');
+      return;
+    }
     _setAttribute('translate', value ? 'yes' : 'no');
   }
 
   /// Default value of [spellcheck]. Null means that it's inherited.
-  bool get _defaultSpellcheck => null;
-
-  bool get _isXml {
-    return ownerDocument?._isXml ?? false;
-  }
+  bool? get _defaultSpellcheck => null;
 
   /// Tells whether the element is in a HTML document.
   bool get _isHtmlDocument => ownerDocument is HtmlDocument;
 
-  @override
-  RenderData get _renderData {
-    return _renderDataField ??=
-        _htmlDriver.browserImplementation.newRenderData(this);
+  bool get _isXml {
+    return ownerDocument?._isXml ?? false;
   }
 
   /// Creates a new AnimationEffect object whose target element is the object
@@ -1735,11 +1736,16 @@ abstract class Element extends Node
 
   /// Parses the specified text as HTML and adds the resulting node after the
   /// last child of this element.
-  void appendHtml(String text,
-      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
+  void appendHtml(
+    String text, {
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
+  }) {
     final fragment = const DomParserDriver().parseDocumentFragmentFromHtml(
-        ownerDocument, text,
-        validator: validator, treeSanitizer: treeSanitizer);
+        ownerDocument: ownerDocument!,
+        content: text,
+        validator: validator,
+        treeSanitizer: treeSanitizer);
     while (true) {
       final child = fragment.firstChild;
       if (child == null) {
@@ -1801,15 +1807,15 @@ abstract class Element extends Node
   /// * [NodeTreeSanitizer]
   DocumentFragment createFragment(
     String html, {
-    NodeValidator validator,
-    NodeTreeSanitizer treeSanitizer,
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
   }) {
     final fragment = DocumentFragment.html(
       html,
       validator: validator,
       treeSanitizer: treeSanitizer,
     );
-    document.adoptNode(fragment);
+    window.document.adoptNode(fragment);
     return fragment;
   }
 
@@ -1841,7 +1847,7 @@ abstract class Element extends Node
     return const <Animation>[];
   }
 
-  String getAttribute(String name) {
+  String? getAttribute(String name) {
     //
     // Loosely based on:
     // https://dom.spec.whatwg.org/#dom-element-getattribute
@@ -1877,15 +1883,13 @@ abstract class Element extends Node
     return list;
   }
 
-  String getAttributeNS(String namespaceUri, String name) {
+  String? getAttributeNS(String? namespaceUri, String name) {
     //
     // Loosely based on:
     // https://dom.spec.whatwg.org/#dom-element-getattributens
     //
 
-    if (namespaceUri == '') {
-      namespaceUri = null;
-    }
+    namespaceUri ??= '';
 
     // Should we ignore the case?
     // XML is case sensitive, but HTML is not.
@@ -1929,7 +1933,7 @@ abstract class Element extends Node
     throw UnimplementedError();
   }
 
-  CssStyleDeclaration getComputedStyle([String pseudoElement]) {
+  CssStyleDeclaration getComputedStyle([String? pseudoElement]) {
     return _ComputedStyle._(this, pseudoElement);
   }
 
@@ -1955,9 +1959,6 @@ abstract class Element extends Node
 
   Map<String, String> getNamespacedAttributes(String namespaceUri) {
     if (namespaceUri == '') {
-      namespaceUri = null;
-    }
-    if (namespaceUri == null) {
       return attributes;
     }
     return _Attributes(this, namespaceUri);
@@ -1967,7 +1968,7 @@ abstract class Element extends Node
     return getAttribute(name) != null;
   }
 
-  bool hasAttributeNS(String namespaceUri, String name) {
+  bool hasAttributeNS(String? namespaceUri, String name) {
     return getAttributeNS(namespaceUri, name) != null;
   }
 
@@ -2008,7 +2009,7 @@ abstract class Element extends Node
   /// * [insertAdjacentText]
   /// * [insertAdjacentElement]
   void insertAdjacentHtml(String where, String html,
-      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
+      {NodeValidator? validator, NodeTreeSanitizer? treeSanitizer}) {
     throw UnimplementedError();
   }
 
@@ -2048,18 +2049,69 @@ abstract class Element extends Node
     return clone;
   }
 
+  /// Returns all descending elements. __Not part of "dart:html".__
+  Iterable<Element> internalDescendingElements() sync* {
+    for (var child in children) {
+      yield (child);
+      yield* (child.internalDescendingElements());
+    }
+  }
+
+  /// Internal method. __Not part of "dart:html".__
+  void internalSetAttributeNSFromParser({
+    String? namespaceUri,
+    required String qualifiedName,
+    required String localName,
+    String? value,
+  }) {
+    namespaceUri ??= '';
+    value ??= 'null';
+    if (!_isXml) {
+      qualifiedName = qualifiedName.toLowerCase();
+      localName = localName.toLowerCase();
+
+      if (qualifiedName == 'style' && namespaceUri == '') {
+        _setAttribute('style', value);
+        return;
+      }
+    }
+
+    _Attribute? previous;
+    var attribute = _firstAttribute;
+    while (attribute != null) {
+      if (attribute._qualifiedName == qualifiedName) {
+        attribute.value = value;
+        return;
+      }
+      previous = attribute;
+      attribute = attribute._next;
+    }
+    final newAttribute = _Attribute(
+      namespaceUri != '',
+      namespaceUri,
+      qualifiedName,
+      localName,
+      value,
+    );
+    if (previous == null) {
+      _firstAttribute = newAttribute;
+    } else {
+      previous._next = newAttribute;
+    }
+  }
+
   bool matches(String selectors) {
     return _matches(this, selectors, null);
   }
 
   bool matchesWithAncestors(String selectors) {
-    var element = this;
-    do {
+    Element? element = this;
+    while (element != null) {
       if (_matches(element, selectors, null)) {
         return true;
       }
       element = element.parent;
-    } while (element != null);
+    }
     return false;
   }
 
@@ -2084,8 +2136,6 @@ abstract class Element extends Node
     // https://dom.spec.whatwg.org/#dom-element-removeattribute
     //
 
-    ArgumentError.checkNotNull(name);
-
     if (!_isXml) {
       name = name.toLowerCase();
 
@@ -2099,7 +2149,7 @@ abstract class Element extends Node
       }
     }
 
-    _Attribute previous;
+    _Attribute? previous;
     var current = _firstAttribute;
     while (current != null) {
       final next = current._next;
@@ -2116,17 +2166,14 @@ abstract class Element extends Node
     }
   }
 
-  void removeAttributeNS(String namespaceUri, String name) {
+  void removeAttributeNS(String? namespaceUri, String name) {
     //
     // Loosely based on:
     // https://dom.spec.whatwg.org/#dom-element-removeattributens
     //
 
-    ArgumentError.checkNotNull(name);
+    namespaceUri ??= '';
 
-    if (namespaceUri == '') {
-      namespaceUri = null;
-    }
     if (!_isXml) {
       name = name.toLowerCase();
 
@@ -2140,7 +2187,7 @@ abstract class Element extends Node
       }
     }
 
-    _Attribute previous;
+    _Attribute? previous;
     var current = _firstAttribute;
     while (current != null) {
       final next = current._next;
@@ -2161,9 +2208,9 @@ abstract class Element extends Node
 
   void requestPointerLock() {}
 
-  void scroll([dynamic options_OR_x, num y]) {}
+  void scroll([dynamic? options_OR_x, num? y]) {}
 
-  void scrollBy([dynamic options_OR_x, num y]) {}
+  void scrollBy([dynamic? options_OR_x, num? y]) {}
 
   /// Scrolls this element into view.
   ///
@@ -2182,11 +2229,11 @@ abstract class Element extends Node
   ///   from MDN.
   /// * [scrollIntoViewIfNeeded](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded)
   ///   from MDN.
-  void scrollIntoView([ScrollAlignment alignment]) {
+  void scrollIntoView([ScrollAlignment? alignment]) {
     // Ignore
   }
 
-  void scrollTo([dynamic options_OR_x, num y]) {}
+  void scrollTo([dynamic? options_OR_x, num? y]) {}
 
   Future<ScrollState> setApplyScroll(String nativeScrollBehavior) {
     throw UnimplementedError();
@@ -2200,7 +2247,6 @@ abstract class Element extends Node
 
     _validateAttributeName('setAttribute', null, name);
 
-    value ??= 'null';
     if (!_isXml) {
       name = name.toLowerCase();
 
@@ -2210,7 +2256,7 @@ abstract class Element extends Node
       }
     }
 
-    _Attribute previous;
+    _Attribute? previous;
     var attribute = _firstAttribute;
     while (attribute != null) {
       if (attribute._localName == name) {
@@ -2222,7 +2268,7 @@ abstract class Element extends Node
     }
     final newAttribute = _Attribute(
       false,
-      null,
+      '',
       name,
       name,
       value,
@@ -2234,7 +2280,7 @@ abstract class Element extends Node
     }
   }
 
-  void setAttributeNS(String namespaceUri, String name, String value) {
+  void setAttributeNS(String? namespaceUri, String name, String value) {
     //
     // Loosely based on:
     // https://dom.spec.whatwg.org/#dom-element-setattributens
@@ -2242,14 +2288,12 @@ abstract class Element extends Node
 
     _validateAttributeName('setAttributeNS', namespaceUri, name);
 
-    if (namespaceUri == '') {
-      namespaceUri = null;
-    }
-    value ??= 'null';
+    namespaceUri ??= '';
+
     if (!_isXml) {
       name = name.toLowerCase();
 
-      if (name == 'style' && namespaceUri == null) {
+      if (name == 'style' && namespaceUri == '') {
         _setAttribute('style', value);
         return;
       }
@@ -2262,7 +2306,7 @@ abstract class Element extends Node
       localName = localName.substring(i + 1);
     }
 
-    _Attribute previous;
+    _Attribute? previous;
     var attribute = _firstAttribute;
     while (attribute != null) {
       if (attribute._localName == localName &&
@@ -2310,11 +2354,19 @@ abstract class Element extends Node
   ///
   /// * [NodeValidator]
   /// * [NodeTreeSanitizer]
-  void setInnerHtml(String html,
-      {NodeValidator validator, NodeTreeSanitizer treeSanitizer}) {
-    while (firstChild != null) {
+  void setInnerHtml(
+    String? html, {
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
+  }) {
+    while (true) {
+      final firstChild = this.firstChild;
+      if (firstChild == null) {
+        break;
+      }
       firstChild.remove();
     }
+    html ??= 'null';
     final fragment = createFragment(
       html,
       validator: validator,
@@ -2333,7 +2385,7 @@ abstract class Element extends Node
 
   @override
   String toString() {
-    final outerHtml = this.outerHtml;
+    final outerHtml = this.outerHtml ?? '';
     if (outerHtml.length < 256) {
       return outerHtml;
     }
@@ -2346,7 +2398,7 @@ abstract class Element extends Node
   }
 
   /// Returns value of the attribute. The name MUST be lowercase.
-  String _getAttribute(String name, {String defaultValue = ''}) {
+  String? _getAttribute(String name, {String? defaultValue = ''}) {
     switch (name) {
       case 'style':
         return _style?.toString() ?? defaultValue;
@@ -2354,7 +2406,7 @@ abstract class Element extends Node
         var attribute = _firstAttribute;
         while (attribute != null) {
           if (attribute._qualifiedName == name &&
-              attribute._namespaceUri == null) {
+              attribute._namespaceUri == '') {
             return attribute.value;
           }
           attribute = attribute._next;
@@ -2376,20 +2428,26 @@ abstract class Element extends Node
   /// If the value is something else, returns null.
   ///
   /// See also [_getAttributeBool].
-  bool _getAttributeBoolString(String name,
-      {String falseValue = 'false', String trueValue = 'true'}) {
-    final value = _getAttribute(name, defaultValue: null);
-    if (value == falseValue) {
+  bool? _getAttributeBoolString(
+    String name, {
+    String falseString = 'false',
+    String trueString = 'true',
+  }) {
+    final value = _getAttribute(
+      name,
+      defaultValue: null,
+    );
+    if (value == falseString) {
       return false;
     }
-    if (value == trueValue) {
+    if (value == trueString) {
       return true;
     }
     return null;
   }
 
   /// Returns integer value of the attribute. The name MUST be lowercase.
-  int _getAttributeInt(String name) {
+  int? _getAttributeInt(String name) {
     final s = _getAttribute(name, defaultValue: null);
     if (s == null) {
       return null;
@@ -2398,7 +2456,7 @@ abstract class Element extends Node
   }
 
   /// Returns number value of the attribute. The name MUST be lowercase.
-  num _getAttributeNum(String name, {num defaultValue}) {
+  num? _getAttributeNum(String name, {required num? defaultValue}) {
     final s = _getAttribute(name, defaultValue: null);
     if (s == null) {
       return null;
@@ -2407,7 +2465,7 @@ abstract class Element extends Node
   }
 
   /// Returns resolved URI value of the attribute. The name MUST be lowercase.
-  String _getAttributeResolvedUri(String name) {
+  String? _getAttributeResolvedUri(String name) {
     final uriString = _getAttribute(name, defaultValue: null);
     if (uriString == null) {
       return null;
@@ -2423,7 +2481,7 @@ abstract class Element extends Node
     if (baseUriString == null) {
       return uriString;
     }
-    final baseUri = Uri.parse(baseUriString);
+    final baseUri = Uri.tryParse(baseUriString);
     if (baseUri == null) {
       return uriString;
     }
@@ -2436,7 +2494,7 @@ abstract class Element extends Node
       var attribute = _firstAttribute;
       while (attribute != null) {
         if (attribute._qualifiedName == 'style' &&
-            attribute._namespaceUri == null) {
+            attribute._namespaceUri == '') {
           break;
         }
         attribute = attribute._next;
@@ -2459,7 +2517,7 @@ abstract class Element extends Node
         var attribute = _firstAttribute;
         while (attribute != null) {
           if (attribute._qualifiedName == name &&
-              attribute._namespaceUri == null) {
+              attribute._namespaceUri == '') {
             return true;
           }
           attribute = attribute._next;
@@ -2470,15 +2528,15 @@ abstract class Element extends Node
 
   /// Tells whether the namespace URI refers to standard HTML elements.
   bool _isHtmlNamespaceUri(String namespaceUri) {
-    return _isHtmlDocument && (namespaceUri ?? '') == '';
+    return _isHtmlDocument && namespaceUri == '';
   }
 
-  String _namespaceUriFromPrefix(String prefix) {
+  String? _namespaceUriFromPrefix(String? prefix) {
     if (prefix == null) {
       return null;
     }
     final attributeName = 'xmlns:$prefix';
-    Node node = this;
+    Node? node = this;
     for (; node != null; node = node.parent) {
       if (node is Element) {
         var attribute = node._firstAttribute;
@@ -2493,10 +2551,14 @@ abstract class Element extends Node
     return null;
   }
 
-  Element _newInstance(Document document);
+  Element _newInstance(Document ownerDocument);
 
-  /// Sets value of an attribute. The name MUST be lowercase.
-  void _setAttribute(String name, String value) {
+  /// Sets value of an attribute.
+  ///
+  /// Unlike [setAttribute], this method assumes that:
+  ///   * The name is valid.
+  ///   * The name is lowercase.
+  void _setAttribute(String name, String? value) {
     assert(name == name.toLowerCase());
     value ??= 'null';
 
@@ -2510,10 +2572,10 @@ abstract class Element extends Node
         return;
     }
 
-    _Attribute previous;
+    _Attribute? previous;
     var attribute = _firstAttribute;
     while (attribute != null) {
-      if (attribute._qualifiedName == name && attribute._namespaceUri == null) {
+      if (attribute._qualifiedName == name && attribute._namespaceUri == '') {
         if (attribute.value != value) {
           attribute.value = value;
           _markDirty();
@@ -2525,7 +2587,7 @@ abstract class Element extends Node
     }
     final newAttribute = _Attribute(
       false,
-      null,
+      '',
       name,
       name,
       value,
@@ -2539,8 +2601,8 @@ abstract class Element extends Node
   }
 
   /// Sets boolean value of the attribute. The name MUST be lowercase.
-  void _setAttributeBool(String name, bool value) {
-    if (value) {
+  void _setAttributeBool(String name, bool? value) {
+    if (value != null && value) {
       _setAttribute(name, '');
     } else {
       _setAttribute(name, null);
@@ -2548,17 +2610,21 @@ abstract class Element extends Node
   }
 
   /// Sets boolean value of the attribute. The name MUST be lowercase.
-  void _setAttributeBoolString(String name, bool value) {
+  void _setAttributeBoolString(String name, bool? value) {
+    if (value == null) {
+      _setAttribute(name, null);
+      return;
+    }
     _setAttribute(name, value ? 'true' : 'false');
   }
 
   /// Sets integer value of the attribute. The name MUST be lowercase.
-  void _setAttributeInt(String name, int value) {
+  void _setAttributeInt(String name, int? value) {
     _setAttribute(name, value?.toString());
   }
 
   /// Sets number value of the attribute. The name MUST be lowercase.
-  void _setAttributeNum(String name, num value) {
+  void _setAttributeNum(String name, num? value) {
     _setAttribute(name, value?.toString());
   }
 
@@ -2570,7 +2636,7 @@ abstract class Element extends Node
 
   static bool _hasCorruptedAttributesAdditionalCheck(Element element) => false;
 
-  static Point _offsetToHelper(Element current, Element parent) {
+  static Point _offsetToHelper(Element? current, Element parent) {
     // We're hopping from _offsetParent_ to offsetParent (not just parent), so
     // offsetParent, 'tops out' at BODY. But people could conceivably pass in
     // the document.documentElement and I want it to return an absolute offset,
@@ -2595,7 +2661,7 @@ abstract class Element extends Node
 
   static void _validateAttributeName(
     String methodName,
-    String namespace,
+    String? namespace,
     String name,
   ) {
     //

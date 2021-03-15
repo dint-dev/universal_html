@@ -22,14 +22,14 @@ void main() {
   test('parseHtmlDocument()', () {
     final document = parseHtmlDocument('<html><body>abc</body></html>');
     expect(document, isA<HtmlDocument>());
-    expect(document.body.firstChild.text, 'abc');
+    expect(document.body!.firstChild!.text, 'abc');
   });
 
   group('parseXmlDocument():', () {
     test('a simple example', () {
       final document = parseXmlDocument('<e0><e1>abc</e1></e0>');
       expect(document, isA<XmlDocument>());
-      expect(document.documentElement.children.first.text, 'abc');
+      expect(document.documentElement!.children.first.text, 'abc');
     });
 
     group('<?xml?>:', () {
@@ -39,7 +39,7 @@ void main() {
         );
         expect(document, isA<XmlDocument>());
 
-        final node = document.documentElement;
+        final node = document.documentElement!;
         expect(node.tagName, 'doc');
         expect(node.firstChild, isNull);
       });
@@ -63,13 +63,13 @@ void main() {
           Node.ELEMENT_NODE,
         );
 
-        final docType = document.firstChild;
+        final docType = document.firstChild!;
         expect(docType.nodeType, Node.DOCUMENT_TYPE_NODE);
         expect(docType.nodeName, 'x');
         expect(docType.nodeValue, isNull);
         expect(docType.text, isNull);
 
-        final node = document.documentElement;
+        final node = document.documentElement!;
         expect(node.tagName, 'doc');
         expect(node.firstChild, isNull);
       });
@@ -90,13 +90,13 @@ void main() {
           Node.ELEMENT_NODE,
         );
 
-        final docType = document.firstChild;
+        final docType = document.firstChild!;
         expect(docType.nodeType, Node.DOCUMENT_TYPE_NODE);
         expect(docType.nodeName, 'html');
         expect(docType.nodeValue, isNull);
         expect(docType.text, isNull);
 
-        final node = document.documentElement;
+        final node = document.documentElement!;
         expect(node.tagName, 'doc');
         expect(node.firstChild, isNull);
       });
@@ -106,7 +106,7 @@ void main() {
       test('<!-- value -->', () {
         final document = parseXmlDocument('<xml><!-- value --></xml>');
         expect(document, isA<XmlDocument>());
-        final node = document.firstChild.firstChild;
+        final node = document.firstChild!.firstChild!;
         expect(node, isA<Comment>());
         expect(node.nodeValue, ' value ');
         expect(node.text, ' value ');
@@ -115,16 +115,16 @@ void main() {
       test(r'<!--\n\t-->', () {
         final document = parseXmlDocument('<xml><!--\n\t--></xml>');
         expect(document, isA<XmlDocument>());
-        final node = document.firstChild.firstChild;
+        final node = document.firstChild!.firstChild!;
         expect(node, isA<Comment>());
         expect(node.nodeValue, '\n\t');
         expect(node.text, '\n\t');
       });
 
-      test('<!--->-->', () {
-        final document = parseXmlDocument('<xml><!--->--></xml>');
+      test(('<!--') + '->' + '-->', () {
+        final document = parseXmlDocument(('<xml><!--') + '->' + '--></xml>');
         expect(document, isA<XmlDocument>());
-        final node = document.firstChild.firstChild;
+        final node = document.firstChild!.firstChild!;
         expect(node, isA<Comment>());
         expect(node.nodeValue, '->');
         expect(node.text, '->');
@@ -134,7 +134,7 @@ void main() {
     test('cdata', () {
       final document = parseXmlDocument('<xml><![CDATA[ value ]]></xml>');
       expect(document, isA<XmlDocument>());
-      final node = document.firstChild.firstChild;
+      final node = document.firstChild!.firstChild!;
       expect(node, isA<Text>());
       expect(node.text, ' value ');
     });
@@ -142,28 +142,28 @@ void main() {
     group('entities in text:', () {
       test('&amp;', () {
         final document = parseXmlDocument('<xml>&amp;</xml>');
-        expect(document.firstChild.text, '&');
+        expect(document.firstChild!.text, '&');
       });
       test('a&amp;b', () {
         final document = parseXmlDocument('<xml>a&amp;b</xml>');
-        expect(document.firstChild.text, 'a&b');
+        expect(document.firstChild!.text, 'a&b');
       });
       test('&quot;', () {
         final document = parseXmlDocument('<xml>&quot;</xml>');
-        expect(document.firstChild.text, '"');
+        expect(document.firstChild!.text, '"');
       });
       test('&lt;', () {
         final document = parseXmlDocument('<xml>&lt;</xml>');
-        expect(document.firstChild.text, '<');
+        expect(document.firstChild!.text, '<');
       });
       test('&gt;', () {
         final document = parseXmlDocument('<xml>&gt;</xml>');
-        expect(document.firstChild.text, '>');
+        expect(document.firstChild!.text, '>');
       });
       test('&nabla;', () {
         final document = parseXmlDocument('<xml>&nabla;</xml>');
         expect(
-          document.firstChild.text,
+          document.firstChild!.text,
           contains('Entity \'nabla\' not defined'),
         );
       });
@@ -172,32 +172,32 @@ void main() {
     group('entities in attributes:', () {
       test('&amp;', () {
         final document = parseXmlDocument('<xml><e k="&amp;"/></xml>');
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.getAttribute('k'), '&');
       });
       test('a&amp;b', () {
         final document = parseXmlDocument('<xml><e k="a&amp;b"/></xml>');
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.getAttribute('k'), 'a&b');
       });
       test('&quot;', () {
         final document = parseXmlDocument('<xml><e k="&quot;"/></xml>');
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.getAttribute('k'), '"');
       });
       test('&lt;', () {
         final document = parseXmlDocument('<xml><e k="&lt;"/></xml>');
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.getAttribute('k'), '<');
       });
       test('&gt;', () {
         final document = parseXmlDocument('<xml><e k="&gt;"/></xml>');
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.getAttribute('k'), '>');
       });
       test('&nabla;', () {
         final document = parseXmlDocument('<xml><e k="&nabla;"/></xml>');
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(
           element.text,
           contains('Entity \'nabla\' not defined'),
@@ -209,28 +209,28 @@ void main() {
       test('<x/>', () {
         final document = parseXmlDocument('<xml><x/></xml>');
         expect(document, isA<XmlDocument>());
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.tagName, 'x');
         expect(element.attributes.keys, isEmpty);
       });
       test('<x/><y/>', () {
         final document = parseXmlDocument('<xml><x/><y/></xml>');
         expect(document, isA<XmlDocument>());
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.tagName, 'x');
         expect(element.attributes.keys, isEmpty);
       });
       test('<x />', () {
         final document = parseXmlDocument('<xml><x /></xml>');
         expect(document, isA<XmlDocument>());
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.tagName, 'x');
         expect(element.attributes.keys, isEmpty);
       });
       test('<x k0="v0" k1="v1"/>', () {
         final document = parseXmlDocument('<xml><x k0="v0" k1="v1"/></xml>');
         expect(document, isA<XmlDocument>());
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.tagName, 'x');
         expect(element.attributes.keys.toList()..sort(), ['k0', 'k1']);
         expect(element.getAttribute('k0'), 'v0');
@@ -239,7 +239,7 @@ void main() {
       test('<x k=" a b c " />', () {
         final document = parseXmlDocument('<xml><x k=" a b c " /></xml>');
         expect(document, isA<XmlDocument>());
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.tagName, 'x');
         expect(element.attributes.keys.toList(), ['k']);
         expect(element.getAttribute('k'), ' a b c ');
@@ -248,35 +248,35 @@ void main() {
         final document =
             parseXmlDocument('<xml><x k0="v0" k1="v1">abc</x></xml>');
         expect(document, isA<XmlDocument>());
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.tagName, 'x');
         expect(element.attributes.keys.toList()..sort(), ['k0', 'k1']);
         expect(element.getAttribute('k0'), 'v0');
         expect(element.getAttribute('k1'), 'v1');
         expect(element.childNodes, hasLength(1));
         expect(element.firstChild, isA<Text>());
-        expect(element.firstChild.text, 'abc');
+        expect(element.firstChild!.text, 'abc');
       });
       test('<x k="v" >abc</x>', () {
         final document = parseXmlDocument('<xml><x k="v" >abc</x></xml>');
         expect(document, isA<XmlDocument>());
-        final element = document.firstChild.firstChild as Element;
+        final element = document.firstChild!.firstChild as Element;
         expect(element.tagName, 'x');
         expect(element.attributes.keys.toList(), ['k']);
         expect(element.childNodes, hasLength(1));
         expect(element.firstChild, isA<Text>());
-        expect(element.firstChild.text, 'abc');
+        expect(element.firstChild!.text, 'abc');
       });
       test('<x></x><y></y>', () {
         final document = parseXmlDocument('<xml><x></x><y></y></xml>');
         expect(document, isA<XmlDocument>());
 
-        final x = document.firstChild.firstChild as Element;
+        final x = document.firstChild!.firstChild as Element;
         expect(x.tagName, 'x');
         expect(x.attributes.keys.toList(), []);
         expect(x.childNodes, hasLength(0));
 
-        final y = document.firstChild.firstChild.nextNode as Element;
+        final y = document.firstChild!.firstChild!.nextNode as Element;
         expect(y.tagName, 'y');
         expect(y.attributes.keys.toList(), []);
         expect(y.childNodes, hasLength(0));
@@ -286,7 +286,7 @@ void main() {
         final document = parseXmlDocument('<xml><x><y>abc</y></x></xml>');
         expect(document, isA<XmlDocument>());
 
-        final x = document.firstChild.firstChild as Element;
+        final x = document.firstChild!.firstChild as Element;
         expect(x.tagName, 'x');
         expect(x.attributes.keys.toList(), []);
         expect(x.childNodes, hasLength(1));
@@ -297,7 +297,7 @@ void main() {
         expect(y.childNodes, hasLength(1));
 
         expect(y.firstChild, isA<Text>());
-        expect(y.firstChild.text, 'abc');
+        expect(y.firstChild!.text, 'abc');
       });
     });
   });

@@ -64,105 +64,101 @@ class AccessibleNode extends EventTarget {
   static const EventStreamProvider<Event> accessibleScrollIntoViewEvent =
       EventStreamProvider<Event>('accessiblescrollintoview');
 
-  AccessibleNode activeDescendant;
+  AccessibleNode() : super.internal();
 
-  bool atomic;
+  AccessibleNode? activeDescendant;
 
-  String autocomplete;
+  bool? atomic;
 
-  bool busy;
+  String? autocomplete;
 
-  String checked;
+  bool? busy;
 
-  int colCount;
+  String? checked;
 
-  int colIndex;
+  int? colCount;
 
-  int colSpan;
+  int? colIndex;
 
-  AccessibleNodeList controls;
+  int? colSpan;
 
-  String current;
+  AccessibleNodeList? controls;
 
-  AccessibleNodeList describedBy;
+  String? current;
 
-  AccessibleNode details;
+  AccessibleNodeList? describedBy;
 
-  bool disabled;
+  AccessibleNode? details;
 
-  AccessibleNode errorMessage;
+  bool? disabled;
 
-  bool expanded;
+  AccessibleNode? errorMessage;
 
-  AccessibleNodeList flowTo;
+  bool? expanded;
 
-  String hasPopUp;
+  AccessibleNodeList? flowTo;
 
-  bool hidden;
+  String? hasPopUp;
 
-  String invalid;
+  bool? hidden;
 
-  String keyShortcuts;
+  String? invalid;
 
-  String label;
+  String? keyShortcuts;
 
-  AccessibleNodeList labeledBy;
+  String? label;
 
-  int level;
+  AccessibleNodeList? labeledBy;
 
-  String live;
+  int? level;
 
-  bool modal;
+  String? live;
 
-  bool multiline;
+  bool? modal;
 
-  bool multiselectable;
+  bool? multiline;
 
-  String orientation;
+  bool? multiselectable;
 
-  AccessibleNodeList owns;
+  String? orientation;
 
-  String placeholder;
+  AccessibleNodeList? owns;
 
-  int posInSet;
+  String? placeholder;
 
-  String pressed;
+  int? posInSet;
 
-  bool readOnly;
+  String? pressed;
 
-  String relevant;
+  bool? readOnly;
 
-  bool required;
+  String? relevant;
 
-  String role;
+  bool? required;
 
-  String roleDescription;
+  String? role;
 
-  int rowCount;
+  String? roleDescription;
 
-  int rowIndex;
+  int? rowCount;
 
-  int rowSpan;
+  int? rowIndex;
 
-  bool selected;
+  int? rowSpan;
 
-  int setSize;
+  bool? selected;
 
-  String sort;
+  int? setSize;
 
-  num valueMax;
+  String? sort;
 
-  num valueMin;
+  num? valueMax;
 
-  num valueNow;
+  num? valueMin;
 
-  String valueText;
+  num? valueNow;
 
-  factory AccessibleNode() {
-    return AccessibleNode._();
-  }
-
-  AccessibleNode._() : super._created();
+  String? valueText;
 
   Stream<Event> get onAccessibleClick => accessibleClickEvent.forTarget(this);
 
@@ -183,10 +179,10 @@ class AccessibleNode extends EventTarget {
   void appendChild(AccessibleNode child) {}
 }
 
-class AccessibleNodeList {
-  int length;
+abstract class AccessibleNodeList {
+  int get length;
 
-  factory AccessibleNodeList([List<AccessibleNode> nodes]) {
+  factory AccessibleNodeList([List<AccessibleNode>? nodes]) {
     throw UnimplementedError();
   }
 

@@ -49,25 +49,32 @@ part of universal_html.internal;
 class HtmlDocument extends Document
     with _DocumentOrShadowRoot
     implements DocumentOrShadowRoot {
+  /// An internal constructor that's NOT part of "dart:html".
+  ///
+  /// This API is not for public use.
+  /// We may do backwards-incompatible changes.
+  ///
   /// If [filled] is true, returns document:
   ///
-  ///     <doctype html>
-  ///     <html>
-  ///     <head></head>
-  ///     <body></body>
-  ///     </html>
-  HtmlDocument._(
-      {@required HtmlDriver htmlDriver,
-      @required String contentType,
-      @required bool filled,
-      String origin})
-      : super._(
-          htmlDriver: htmlDriver,
+  /// ```html
+  /// <doctype html>
+  /// <html>
+  /// <head></head>
+  /// <body></body>
+  /// </html>
+  /// ```
+  HtmlDocument.internal({
+    required Window window,
+    required String contentType,
+    required bool filled,
+    String? origin,
+  }) : super._(
+          window: window,
           contentType: contentType,
           origin: origin,
         ) {
     if (filled) {
-      final docType = _DocumentType._(this, 'html');
+      final docType = InternalDocumentType.internal(this, 'html');
       append(docType);
       final htmlElement = HtmlHtmlElement._(this);
       append(htmlElement);
@@ -77,9 +84,9 @@ class HtmlDocument extends Document
   }
 
   @override
-  String get baseUri {
+  String? get baseUri {
     if (head != null) {
-      for (var child in head.children) {
+      for (var child in head?.children ?? const []) {
         if (child is BaseElement) {
           return child.href;
         }
@@ -88,7 +95,7 @@ class HtmlDocument extends Document
     return super.baseUri;
   }
 
-  BodyElement get body {
+  BodyElement? get body {
     var element = _html?._firstElementChild;
     while (element != null) {
       if (element is BodyElement) {
@@ -99,17 +106,23 @@ class HtmlDocument extends Document
     return null;
   }
 
-  set body(BodyElement newValue) {
+  set body(BodyElement? newValue) {
     final existing = head;
     if (existing == null) {
-      _html?.append(newValue);
+      if (newValue != null) {
+        _html?.append(newValue);
+      }
     } else {
-      existing.replaceWith(newValue);
+      if (newValue == null) {
+        existing.remove();
+      } else {
+        existing.replaceWith(newValue);
+      }
     }
     assert(identical(body, newValue));
   }
 
-  HeadElement get head {
+  HeadElement? get head {
     var element = _html?._firstElementChild;
     while (element != null) {
       if (element is HeadElement) {
@@ -120,21 +133,29 @@ class HtmlDocument extends Document
     return null;
   }
 
-  String get referrer => null;
+  String? get referrer => null;
 
   @override
   List<StyleSheet> get styleSheets {
     final list = <StyleSheet>[];
     _forEachElementInTree((element) {
       if (element is StyleElement) {
-        list.add(element.sheet);
+        final sheet = element.sheet;
+        if (sheet != null) {
+          list.add(sheet);
+        }
       }
     });
     return list;
   }
 
-  String get title {
-    final head = this.head;
+  String? get title {
+    var head = this.head;
+    if (head == null) {
+      final documentElement = this.documentElement!;
+      documentElement.append(HeadElement());
+      head = this.head!;
+    }
     for (var element in head.children) {
       if (element is TitleElement) {
         return element.text;
@@ -143,8 +164,13 @@ class HtmlDocument extends Document
     return null;
   }
 
-  set title(String value) {
-    final head = this.head;
+  set title(String? value) {
+    var head = this.head;
+    if (head == null) {
+      final documentElement = this.documentElement!;
+      documentElement.append(HeadElement());
+      head = this.head!;
+    }
     for (var element in head.children) {
       if (element is TitleElement) {
         element.text = value;
@@ -155,7 +181,7 @@ class HtmlDocument extends Document
     return null;
   }
 
-  HtmlHtmlElement get _html {
+  HtmlHtmlElement? get _html {
     var element = _firstElementChild;
     while (element != null) {
       if (element is HtmlHtmlElement) {
@@ -168,9 +194,9 @@ class HtmlDocument extends Document
 
   @visibleForTesting
   @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
-    final clone = HtmlDocument._(
-      htmlDriver: _htmlDriver,
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool? deep) {
+    final clone = HtmlDocument.internal(
+      window: window,
       contentType: contentType,
       filled: false,
     );

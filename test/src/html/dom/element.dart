@@ -27,7 +27,7 @@ void _testElement() {
         const invalidChars = ['<', '>', '"', ' ', '&'];
         for (var c in invalidChars) {
           expect(() {
-            Element.tag('${c}');
+            Element.tag('$c');
           }, throwsDomException);
 
           expect(() {
@@ -86,8 +86,8 @@ void _testElement() {
       test('elements, text', () {
         final input = DivElement();
         input.innerHtml = '<span>a</span><span>b</span>';
-        expect(input.firstChild.text, 'a');
-        expect(input.lastChild.text, 'b');
+        expect(input.firstChild!.text, 'a');
+        expect(input.lastChild!.text, 'b');
       });
     });
 
@@ -247,9 +247,9 @@ void _testElement() {
       });
       test('complex element', () {
         final node = Element.div()
-          ..setAttribute('k0', 'v0')
+          ..setAttribute('data-k0', 'v0')
           ..appendText('abc');
-        expect(node.toString(), '''<div k0="v0">abc</div>''');
+        expect(node.toString(), '''<div data-k0="v0">abc</div>''');
       });
     }, testOn: 'vm');
   });

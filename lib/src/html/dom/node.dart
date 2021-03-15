@@ -49,72 +49,78 @@ part of universal_html.internal;
 abstract class CharacterData extends Node
     with _ChildNode, _NonDocumentTypeChildNode
     implements ChildNode, NonDocumentTypeChildNode {
-  String data;
+  String? data;
 
-  CharacterData._(Document ownerDocument, this.data) : super._(ownerDocument) {
-    if (data == null) {
-      throw ArgumentError.notNull('data');
-    }
-  }
+  CharacterData._(Document ownerDocument, this.data) : super._(ownerDocument);
 
-  int get length => data.length;
+  int get length => data!.length;
 
   @override
-  Element get nextElementSibling {
+  Element? get nextElementSibling {
     var node = nextNode;
-    while (node != null && node is! Element) {
+    while (true) {
+      if (node == null) {
+        return null;
+      }
+      if (node is Element) {
+        return node;
+      }
       node = node.nextNode;
     }
-    return node;
   }
 
   @override
-  String get nodeValue => data;
+  String? get nodeValue => data;
 
   @override
-  Element get previousElementSibling {
+  Element? get previousElementSibling {
     var node = previousNode;
-    while (node != null && node is! Element) {
+    while (true) {
+      if (node == null) {
+        return null;
+      }
+      if (node is Element) {
+        return node;
+      }
       node = node.previousNode;
     }
-    return node;
   }
 
   @override
-  String get text => nodeValue;
+  String? get text => nodeValue;
 
   void appendData(String data) {
-    final oldData = this.data;
+    final oldData = this.data!;
     this.data = '$oldData$data';
   }
 
   void deleteData(int offset, int count) {
-    final oldData = data;
+    final oldData = data!;
     final a = oldData.substring(0, offset);
     final b = oldData.substring(offset + count);
     data = '$a$b';
   }
 
   void insertData(int offset, String data) {
-    final oldData = this.data;
+    final oldData = this.data!;
     final a = oldData.substring(0, offset);
     final b = oldData.substring(offset);
     this.data = '$a$data$b';
   }
 
   void replaceData(int offset, int count, String data) {
-    final oldData = this.data;
+    final oldData = this.data!;
     final a = oldData.substring(0, offset);
     final b = oldData.substring(offset + count);
     this.data = '$a$data$b';
   }
 
   String substringData(int offset, int count) {
-    return data.substring(offset, offset + count);
+    return data!.substring(offset, offset + count);
   }
 
   @override
-  String toString() => nodeValue;
+  String toString() => nodeValue!;
 }
 
 abstract class ChildNode {
@@ -125,14 +131,14 @@ abstract class ChildNode {
 }
 
 class Comment extends CharacterData {
-  factory Comment([String value]) {
+  factory Comment([String? value]) {
     if (value != null && value.contains('-->')) {
       throw ArgumentError.value(value);
     }
-    return Comment._(null, value);
+    return Comment.internal(window.document, value ?? '');
   }
 
-  Comment._(Document ownerDocument, String value)
+  Comment.internal(Document ownerDocument, String? value)
       : super._(ownerDocument, value ?? '');
 
   @override
@@ -140,8 +146,39 @@ class Comment extends CharacterData {
 
   @visibleForTesting
   @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      Comment._(ownerDocument, nodeValue);
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool? deep) =>
+      Comment.internal(ownerDocument, data!);
+}
+
+/// Internal class. __Not part of dart:html__.
+@protected
+class InternalDocumentType extends Node {
+  final String? _value;
+
+  /// Internal constructor. __Not part of dart:html__.
+  InternalDocumentType.internal(Document ownerDocument, this._value)
+      : super._(ownerDocument);
+
+  @override
+  String get nodeName {
+    final value = _value ?? 'null';
+    final i = value.indexOf(' ');
+    if (i < 0) {
+      return value;
+    }
+    return value.substring(0, i);
+  }
+
+  @override
+  int get nodeType => Node.DOCUMENT_TYPE_NODE;
+
+  @override
+  String? get text => null;
+
+  @visibleForTesting
+  @override
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool? deep) =>
+      InternalDocumentType.internal(ownerDocument, _value);
 }
 
 abstract class Node extends EventTarget {
@@ -158,37 +195,48 @@ abstract class Node extends EventTarget {
   static const int PROCESSING_INSTRUCTION_NODE = 7;
   static const int TEXT_NODE = 3;
 
-  final Document ownerDocument;
-  _ElementOrDocument _parent;
+  /// Document that owns this node.
+  ///
+  /// In [Document] nodes, the value is null. In all other nodes, the value
+  /// is non-null.
+  final Document? ownerDocument;
 
-  Node _nextNode;
-  Node _previousNode;
+  /// Parent node.
+  _ElementOrDocument? _parent;
+
+  /// Next node (if this has a parent).
+  Node? _nextNode;
+
+  /// Previous node (if this has a parent).
+  Node? _previousNode;
 
   /// Constructor for most subclasses.
   Node._(Document ownerDocument)
-      : ownerDocument = ownerDocument ?? document,
-        super._created();
+      : ownerDocument = ownerDocument,
+        super.internal();
 
   /// Constructor used by [Document].
   Node._document()
       : ownerDocument = null,
-        super._created();
+        super.internal();
 
-  String get baseUri {
-    return ownerDocument.baseUri;
+  String? get baseUri {
+    return ownerDocument?.baseUri;
   }
 
   List<Node> get childNodes => _ChildNodeListLazy(this);
 
-  Node get firstChild => null;
+  Node? get firstChild => null;
+
+  InternalElementData? get internalElementData => parent?.internalElementData;
 
   bool get isConnected => Node.DOCUMENT_NODE == getRootNode().nodeType;
 
-  Node get lastChild => null;
+  Node? get lastChild => null;
 
-  Node get nextNode => _nextNode;
+  Node? get nextNode => _nextNode;
 
-  String get nodeName => null;
+  String? get nodeName => null;
 
   List<Node> get nodes => _ChildNodeListLazy(this);
 
@@ -201,9 +249,9 @@ abstract class Node extends EventTarget {
 
   int get nodeType;
 
-  String get nodeValue => null;
+  String? get nodeValue => null;
 
-  Element get parent {
+  Element? get parent {
     final parent = _parent;
     if (parent is Element) {
       return parent;
@@ -211,22 +259,22 @@ abstract class Node extends EventTarget {
     return null;
   }
 
-  Node get parentNode => _parent;
+  Node? get parentNode => _parent;
 
-  Node get previousNode => _previousNode;
+  Node? get previousNode => _previousNode;
 
-  String get text {
+  String? get text {
     final sb = StringBuffer();
     _buildText(sb);
     return sb.toString();
   }
 
-  set text(String newValue) {
+  set text(String? newValue) {
     _clearChildren();
     append(Text(newValue.toString()));
   }
 
-  Element get _firstElementChild {
+  Element? get _firstElementChild {
     var node = firstChild;
     while (node != null) {
       if (node is Element) {
@@ -235,19 +283,6 @@ abstract class Node extends EventTarget {
       node = node.nextNode;
     }
     return null;
-  }
-
-  @override
-  HtmlDriver get _htmlDriver {
-    // We store HtmlDriver instance in the owner document.
-    final ownerDocument = this.ownerDocument;
-    if (ownerDocument != null) {
-      final result = ownerDocument._htmlDriver;
-      if (result != null) {
-        return result;
-      }
-    }
-    return HtmlDriver.current;
   }
 
   /// Used by error messages.
@@ -279,9 +314,7 @@ abstract class Node extends EventTarget {
   }
 
   @override
-  EventTarget get _parentEventTarget => parent;
-
-  RenderData get _renderData => parent?._renderData;
+  EventTarget? get _parentEventTarget => parent;
 
   Node append(Node node) {
     insertBefore(node, null);
@@ -294,14 +327,14 @@ abstract class Node extends EventTarget {
     return node;
   }
 
-  Node clone(bool deep) {
-    final clone = internalCloneWithOwnerDocument(ownerDocument, deep);
+  Node clone(bool? deep) {
+    final clone = internalCloneWithOwnerDocument(ownerDocument!, deep ?? false);
     clone._parent = null;
     return clone;
   }
 
-  bool contains(Node node) {
-    while (true) {
+  bool contains(Node? node) {
+    while (node != null) {
       node = node.parentNode;
       if (node == null) {
         return false;
@@ -310,6 +343,7 @@ abstract class Node extends EventTarget {
         return true;
       }
     }
+    return false;
   }
 
   Node getRootNode() {
@@ -325,16 +359,25 @@ abstract class Node extends EventTarget {
 
   bool hasChildNodes() => firstChild != null;
 
-  void insertAllBefore(Iterable<Node> nodes, Node before) {
+  void insertAllBefore(Iterable<Node> nodes, Node? before) {
     throw DomException._invalidMethod('Node', 'insertAllBefore');
   }
 
-  void insertBefore(Node node, Node before) {
+  void insertBefore(Node node, Node? before) {
     throw DomException._invalidMethod('Node', 'insertBefore');
   }
 
   @visibleForTesting
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep);
+
+  /// Internal method. __Not part of "dart:html".
+  ///
+  /// Produces string representation of DOM tree.
+  String internalToString() {
+    final sb = StringBuffer();
+    _printNode(sb, _getPrintingFlags(this), this);
+    return sb.toString();
+  }
 
   void remove() {
     final parent = _parent;
@@ -437,7 +480,7 @@ abstract class Node extends EventTarget {
   }
 
   void _markDirty() {
-    _renderData?.markDirty();
+    internalElementData?.beforeNonElementChildMutation();
   }
 
   /// Invoked when this is:
@@ -457,10 +500,10 @@ abstract class Node extends EventTarget {
   /// Clones all siblings starting from the argument.
   static void _cloneChildrenFrom(
     Document ownerDocument, {
-    @required _ElementOrDocument newParent,
-    @required _ElementOrDocument oldParent,
+    required _ElementOrDocument newParent,
+    required _ElementOrDocument oldParent,
   }) {
-    Node newChildPrevious;
+    Node? newChildPrevious;
     var oldChild = oldParent._firstChild;
     while (oldChild != null) {
       final newChild = oldChild.internalCloneWithOwnerDocument(
@@ -484,20 +527,22 @@ abstract class Node extends EventTarget {
 
 abstract class NonDocumentTypeChildNode {
   NonDocumentTypeChildNode._();
-  Element get nextElementSibling;
-  Element get previousElementSibling;
+  Element? get nextElementSibling;
+  Element? get previousElementSibling;
 }
 
 abstract class ParentNode {
   ParentNode._();
-  Element querySelector(String selectors);
+  Element? querySelector(String selectors);
 }
 
 class ProcessingInstruction extends CharacterData {
-  final StyleSheet sheet;
-  final String target;
+  final StyleSheet? sheet;
+  final String? target;
 
-  ProcessingInstruction._(Document ownerDocument, {this.sheet, this.target})
+  /// Internal constructor. __Not part of dart:html__.
+  ProcessingInstruction.internal(Document ownerDocument,
+      {this.sheet, this.target})
       : super._(ownerDocument, '');
 
   @override
@@ -505,8 +550,8 @@ class ProcessingInstruction extends CharacterData {
 
   @visibleForTesting
   @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) {
-    return ProcessingInstruction._(
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool? deep) {
+    return ProcessingInstruction.internal(
       ownerDocument,
       sheet: sheet,
       target: target,
@@ -518,25 +563,27 @@ class Range {}
 
 class Text extends CharacterData {
   factory Text(String value) {
-    return Text._(null, value);
+    return Text.internal(window.document, value);
   }
 
-  Text._(Document ownerDocument, String value) : super._(ownerDocument, value);
+  /// Internal constructor. __Not part of dart:html__.
+  Text.internal(Document ownerDocument, String value)
+      : super._(ownerDocument, value);
 
   @override
-  int get length => nodeValue.length;
+  int get length => data!.length;
 
   @override
   int get nodeType => Node.TEXT_NODE;
 
   @visibleForTesting
   @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      Text._(ownerDocument, nodeValue);
+  Node internalCloneWithOwnerDocument(Document ownerDocument, bool? deep) =>
+      Text.internal(ownerDocument, data!);
 
   @override
   void _buildText(StringBuffer sb) {
-    sb.write(nodeValue);
+    sb.write(data!);
   }
 }
 
@@ -553,12 +600,14 @@ mixin _ChildNode implements ChildNode {
 
 class _ChildNodeIterator extends Iterator<Node> {
   final Node _parent;
-  Node _current;
+  Node? _current;
 
   _ChildNodeIterator(this._parent);
 
   @override
-  Node get current => _current;
+  Node get current {
+    return _current!;
+  }
 
   @override
   bool moveNext() {
@@ -584,43 +633,16 @@ class _ChildNodeIterator extends Iterator<Node> {
   }
 }
 
-class _DocumentType extends Node {
-  final String _value;
-
-  _DocumentType._(Document ownerDocument, this._value) : super._(ownerDocument);
-
-  @override
-  String get nodeName {
-    final value = _value;
-    final i = value.indexOf(' ');
-    if (i < 0) {
-      return value;
-    }
-    return value.substring(0, i);
-  }
-
-  @override
-  int get nodeType => Node.DOCUMENT_TYPE_NODE;
-
-  @override
-  String get text => null;
-
-  @visibleForTesting
-  @override
-  Node internalCloneWithOwnerDocument(Document ownerDocument, bool deep) =>
-      _DocumentType._(ownerDocument, _value);
-}
-
 /// Mixin for [Element] and [Document].
 mixin _ElementOrDocument implements Node, ParentNode {
-  Node _firstChild;
-  Node _lastChild;
+  Node? _firstChild;
+  Node? _lastChild;
 
   @override
-  Node get firstChild => _firstChild;
+  Node? get firstChild => _firstChild;
 
   @override
-  Node get lastChild => _lastChild;
+  Node? get lastChild => _lastChild;
 
   Iterable<Element> get _ancestors sync* {
     var ancestor = parent;
@@ -631,7 +653,7 @@ mixin _ElementOrDocument implements Node, ParentNode {
   }
 
   @override
-  void insertAllBefore(Iterable<Node> nodes, Node before) {
+  void insertAllBefore(Iterable<Node> nodes, Node? before) {
     var previous = before == null ? lastChild : before.previousNode;
     var isFirstIteration = true;
     for (var node in nodes) {
@@ -650,16 +672,11 @@ mixin _ElementOrDocument implements Node, ParentNode {
       node._parent = this;
       previous = node;
     }
-    previous._nextNode = before;
+    previous!._nextNode = before;
   }
 
   @override
-  void insertBefore(Node node, Node before) {
-    // Can't add null
-    if (node == null) {
-      throw ArgumentError.notNull('node');
-    }
-
+  void insertBefore(Node node, Node? before) {
     // Can't add document
     if (node is Document) {
       throw ArgumentError.value(node, 'node');
@@ -719,7 +736,7 @@ mixin _ElementOrDocument implements Node, ParentNode {
   }
 
   @override
-  Element querySelector(String selectors) {
+  Element? querySelector(String selectors) {
     final all = querySelectorAll(selectors);
     if (all.isEmpty) return null;
     return all.first;
@@ -740,10 +757,7 @@ mixin _ElementOrDocument implements Node, ParentNode {
   /// For details about CSS selector syntax, see the
   /// [CSS selector specification](http://www.w3.org/TR/css3-selectors/).
   ElementList<T> querySelectorAll<T extends Element>(String input) {
-    if (input == null) {
-      throw ArgumentError.notNull(input);
-    }
-    final selectorGroup = css.parseSelectorGroup(input);
+    final selectorGroup = css.parseSelectorGroup(input)!;
     final result = <Element>[];
     _forEachElementInTree((element) {
       if (_matchesSelectorGroup(element, selectorGroup, null)) {
@@ -754,10 +768,11 @@ mixin _ElementOrDocument implements Node, ParentNode {
   }
 
   void _forEachElementInTree(void Function(Element element) f) {
-    var node = firstChild;
-    if (node == null) {
+    final root = firstChild;
+    if (root == null) {
       return;
     }
+    var node = root;
     loop:
     while (true) {
       if (node is Element) {
@@ -774,10 +789,11 @@ mixin _ElementOrDocument implements Node, ParentNode {
           node = nextNode;
           continue loop;
         }
-        node = node.parentNode;
-        if (identical(node, this)) {
+        final parent = node.parentNode;
+        if (parent == null || identical(node, this)) {
           return;
         }
+        node = parent;
       }
     }
   }
@@ -790,7 +806,7 @@ abstract class _NodeListWrapper {
 
 mixin _NonDocumentTypeChildNode implements Node, NonDocumentTypeChildNode {
   @override
-  Element get nextElementSibling {
+  Element? get nextElementSibling {
     var node = nextNode;
     while (node != null) {
       if (Node.ELEMENT_NODE == node.nodeType) {
@@ -802,7 +818,7 @@ mixin _NonDocumentTypeChildNode implements Node, NonDocumentTypeChildNode {
   }
 
   @override
-  Element get previousElementSibling {
+  Element? get previousElementSibling {
     var node = previousNode;
     while (node != null) {
       if (Node.ELEMENT_NODE == node.nodeType) {

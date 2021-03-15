@@ -25,10 +25,6 @@ void _testNode() {
       e.append(Text('c'));
       expect(e.outerHtml, '<e>abc</e>');
     });
-    test('append null fails', () {
-      final e = Element.tag('e');
-      expect(() => e.append(null), throwsA(anything));
-    });
     test('append self fails', () {
       final e = Element.tag('e');
       expect(() => e.append(e), throwsA(anything));
@@ -56,7 +52,7 @@ void _testNode() {
 
       // Replace child #1 of 'e1'
       {
-        final replaced = e1.firstChild;
+        final replaced = e1.firstChild!;
         final replacement = Text('e1-text-replaced');
         expect(replaced.parent, same(e1));
 
@@ -64,7 +60,7 @@ void _testNode() {
 
         expect(replaced.parent, isNull);
         expect(e1.firstChild, same(replacement));
-        expect(e1.firstChild.parent, same(e1));
+        expect(e1.firstChild!.parent, same(e1));
         expect(
             root.outerHtml,
             equals(
@@ -96,11 +92,6 @@ void _testNode() {
       e0.replaceWith(e1);
     });
 
-    test('replaceWith when replacement is null', () {
-      final e0 = Element.tag('e0')..appendText('e0-text');
-      e0.replaceWith(null);
-    });
-
     test('remove', () {
       final e0 = Element.tag('e0')..appendText('e0-text');
       final e1 = Element.tag('e1')..appendText('e1-text');
@@ -117,7 +108,7 @@ void _testNode() {
 
       // Remove child #1 of 'e1'
       {
-        final removed = e1.firstChild;
+        final removed = e1.firstChild!;
         removed.remove();
 
         expect(removed.parent, isNull);

@@ -47,7 +47,7 @@ part of universal_html.internal;
 
 class _CssStyleDeclarationSet extends CssStyleDeclarationBase {
   final Iterable<Element> _elementIterable;
-  Iterable<CssStyleDeclaration> _elementCssStyleDeclarationSetIterable;
+  late Iterable<CssStyleDeclaration> _elementCssStyleDeclarationSetIterable;
 
   _CssStyleDeclarationSet(this._elementIterable) : super._() {
     _elementCssStyleDeclarationSetIterable =
@@ -604,13 +604,12 @@ class _CssStyleDeclarationSet extends CssStyleDeclarationBase {
           .getPropertyValue(propertyName);
 
   @override
-  void setProperty(String propertyName, String value, [String priority]) {
+  void setProperty(String propertyName, String? value, [String? priority]) {
     _elementCssStyleDeclarationSetIterable
         .forEach((e) => e.setProperty(propertyName, value, priority));
   }
 
   void _setAll(String propertyName, String value) {
-    value ??= '';
     for (var element in _elementIterable) {
       element.style.setProperty(propertyName, value);
     }

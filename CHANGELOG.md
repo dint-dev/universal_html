@@ -1,3 +1,12 @@
+## 2.0.0
+* Migrated to null safety and the latest version of dart:html.
+* BREAKING CHANGES: The API for controlling browser windows has been revamped.
+  It's easier to work with than the earlier one.
+* BREAKING CHANGES: Removed "package:universal_html/prefer_universal/X.dart" and
+  "package:universal_html/prefer_sdk/X.dart". Developers should import
+  "package:universal_html/html.dart".
+* Some refactoring.
+
 ## 1.2.4
 * Fixes dependency constraints.
 

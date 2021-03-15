@@ -98,7 +98,7 @@ void _printAttribute(StringBuffer sb, int flags, String name, String value) {
   var writeFrom = 0;
   for (var i = 0; i < value.length; i++) {
     final codeUnit = value.codeUnitAt(i);
-    String escape;
+    String? escape;
     switch (codeUnit) {
       case charcode.$ampersand:
         escape = '&amp;';
@@ -174,14 +174,14 @@ void _printNode(StringBuffer sb, int flags, Node node) {
       break;
 
     case Node.TEXT_NODE:
-      final value = node.nodeValue;
+      final value = node.nodeValue!;
 
       // The choice of escaped characters should be identical to
       // 'outerHTML' in Chrome.
       var writeFrom = 0;
       for (var i = 0; i < value.length; i++) {
         final codeUnit = value.codeUnitAt(i);
-        String escape;
+        String? escape;
         switch (codeUnit) {
           case charcode.$ampersand:
             escape = '&amp;';
@@ -204,9 +204,9 @@ void _printNode(StringBuffer sb, int flags, Node node) {
 
     case Node.COMMENT_NODE:
       // To be safe, escape value.
-      final value = node.nodeValue;
+      final value = node.nodeValue!;
       if (value.contains('-->')) {
-        throw StateError('Comment contains "-->": "${value}"');
+        throw StateError('Comment contains "-->": "$value"');
       }
 
       sb.write('<!--');

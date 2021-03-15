@@ -1,6 +1,10 @@
+32711 APIs in "dart:html"
+29955 APIs in "package:universal_html/html.dart"
+
 # Missing APIs
   * AbsoluteOrientationSensor (class)
   * Accelerometer (class)
+  * AccessibleNodeList.length=
   * AmbientLightSensor (class)
   * AnchorElement.created
   * Animation.currentTime
@@ -111,6 +115,8 @@
   * CompositionEvent.detail
   * CompositionEvent.sourceCapabilities
   * CompositionEvent.view
+  * Console.countReset(...)
+  * Console.timeLog(...)
   * ContentElement.created
   * CredentialUserData (class)
   * Css (class)
@@ -368,6 +374,7 @@
   * Magnetometer (class)
   * MapElement.areas
   * MapElement.created
+  * MediaDevices.getUserMedia(...)
   * MediaElement.audioDecodedByteCount
   * MediaElement.audioTracks
   * MediaElement.buffered
@@ -614,8 +621,10 @@
   * RtcPeerConnection.generateCertificate(...)
   * RtcPeerConnection.negotiationNeededEvent
   * RtcPeerConnection.onNegotiationNeeded
+  * RtcPeerConnection.onTrack
   * RtcPeerConnection.signalingState
   * RtcPeerConnection.supported
+  * RtcPeerConnection.trackEvent
   * RtcPeerConnectionIceEvent.candidate
   * RtcRtpContributingSource (class)
   * RtcRtpReceiver.getContributingSources(...)
@@ -703,6 +712,12 @@
   * SpeechRecognitionError (class)
   * SpeechRecognitionEvent (class)
   * SpeechRecognitionResult (class)
+  * SpeechSynthesisUtterance.lang=
+  * SpeechSynthesisUtterance.pitch=
+  * SpeechSynthesisUtterance.rate=
+  * SpeechSynthesisUtterance.text=
+  * SpeechSynthesisUtterance.voice=
+  * SpeechSynthesisUtterance.volume=
   * StaticRange (class)
   * StyleElement.created
   * StyleElement.media
@@ -849,6 +864,7 @@
   * VideoTrackList (class)
   * VttCue (class)
   * VttRegion (class)
+  * WeekInputElement.valueAsDate=
   * Window.cancelAnimationFrame(...)
   * Window.defaultStatus=
   * Window.defaultstatus=
@@ -867,4 +883,7 @@
   * XmlDocument.elementsFromPoint(...)
   * XmlDocument.fonts
   * XmlDocument.getAnimations(...)
+  * document
   * promiseToFutureAsMap
+  * querySelector
+  * querySelectorAll

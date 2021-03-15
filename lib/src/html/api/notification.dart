@@ -82,43 +82,43 @@ class Notification extends EventTarget {
   /// Checks if this type is supported on the current platform.
   static bool get supported => false;
 
-  final List actions;
+  final List? actions;
 
-  final String badge;
+  final String? badge;
 
-  final String body;
+  final String? body;
 
-  final Object data;
+  final Object? data;
 
-  final String dir;
+  final String? dir;
 
-  final String icon;
+  final String? icon;
 
-  final String image;
+  final String? image;
 
-  final String lang;
+  final String? lang;
 
-  final bool renotify;
+  final bool? renotify;
 
-  final bool requireInteraction;
+  final bool? requireInteraction;
 
-  final bool silent;
+  final bool? silent;
 
-  final String tag;
+  final String? tag;
 
-  final int timestamp;
+  final int? timestamp;
 
-  final String title;
+  final String? title;
 
-  final List<int> vibrate;
+  final List<int>? vibrate;
 
   Notification(
     String title, {
-    String dir,
-    String body,
-    String lang,
-    String tag,
-    String icon,
+    String? dir,
+    String? body,
+    String? lang,
+    String? tag,
+    String? icon,
   }) : this._(
           title,
           dir: dir,
@@ -144,7 +144,7 @@ class Notification extends EventTarget {
     this.tag,
     this.timestamp,
     this.vibrate,
-  }) : super._created();
+  }) : super.internal();
 
   /// Stream of `click` events handled by this [Notification].
   Stream<Event> get onClick => clickEvent.forTarget(this);

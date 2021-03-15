@@ -16,31 +16,32 @@ part of main_test;
 
 void _testDocument() {
   group('Document:', () {
+    final document = universal_html.document;
     test('initial state', () {
       expect(document, isNotNull);
       _expectSaneDocument(document);
 
-      final docType = document.firstChild;
+      final docType = document.firstChild!;
       expect(docType, isNotNull);
       expect(docType.nodeType, equals(Node.DOCUMENT_TYPE_NODE));
       expect(docType.nodeName, equals('html'));
 
-      final htmlHtml = docType.nextNode;
+      final htmlHtml = docType.nextNode!;
       expect(htmlHtml, const TypeMatcher<HtmlHtmlElement>());
 
       // Helper that skips text nodes
-      Node _nonText(Node node) {
+      Node? _nonText(Node? node) {
         while (node != null && node.nodeType == Node.TEXT_NODE) {
           node = node.nextNode;
         }
         return node;
       }
 
-      final head = _nonText(htmlHtml.firstChild);
+      final head = _nonText(htmlHtml.firstChild!)!;
       expect(head, const TypeMatcher<HeadElement>());
       expect(document.head, same(head));
 
-      final body = _nonText(head.nextNode);
+      final body = _nonText(head.nextNode!);
       expect(body, const TypeMatcher<BodyElement>());
       expect(document.body, same(body));
     });

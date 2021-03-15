@@ -47,31 +47,31 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 abstract class ScrollState {
-  final num deltaGranularity;
+  num get deltaGranularity;
 
-  final num deltaX;
+  num get deltaX;
 
-  final num deltaY;
+  num get deltaY;
 
-  final bool fromUserInput;
+  bool get fromUserInput;
 
-  final bool inInertialPhase;
+  bool get inInertialPhase;
 
-  final bool isBeginning;
+  bool get isBeginning;
 
-  final bool isDirectManipulation;
+  bool get isDirectManipulation;
 
-  final bool isEnding;
+  bool get isEnding;
 
-  final int positionX;
+  int get positionX;
 
-  final int positionY;
+  int get positionY;
 
-  final num velocityX;
+  num get velocityX;
 
-  final num velocityY;
+  num get velocityY;
 
-  factory ScrollState([Map scrollStateInit]) {
+  factory ScrollState([Map? scrollStateInit]) {
     throw UnimplementedError();
   }
 

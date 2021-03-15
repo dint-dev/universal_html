@@ -79,13 +79,11 @@ class Event {
 
   final String type;
 
-  final bool bubbles;
+  final bool? bubbles;
 
-  final bool cancelable;
+  final bool? cancelable;
 
-  final bool _composed = false;
-
-  EventTarget _currentTarget;
+  EventTarget? _currentTarget;
 
   bool _defaultPrevented = false;
 
@@ -96,11 +94,7 @@ class Event {
 
   bool _stoppedPropagation = false;
 
-  EventTarget _target;
-
-  final num timeStamp;
-
-  bool _cancelable;
+  final num? timeStamp;
 
   // In JS, canBubble and cancelable are technically required parameters to
   // init*Event. In practice, though, if they aren't provided they simply
@@ -108,6 +102,9 @@ class Event {
   //
   // Contrary to JS, we default canBubble and cancelable to true, since that's
   // what people want most of the time anyway.
+  EventTarget? _target;
+  final bool? composed;
+
   factory Event(String type, {bool canBubble = true, bool cancelable = true}) {
     return Event.eventType(
       'Event',
@@ -143,46 +140,55 @@ class Event {
   }
 
   @visibleForTesting
-  Event.internal(this.type, {bool canBubble = true, this.cancelable = true})
-      : assert(type != null && type.isNotEmpty),
-        bubbles = canBubble,
+  Event.internal(
+    this.type, {
+    EventTarget? target,
+    this.composed = false,
+    bool canBubble = true,
+    this.cancelable = true,
+  })  : bubbles = canBubble,
+        _target = target,
         timeStamp = DateTime.now().microsecondsSinceEpoch;
 
-  bool get composed => _composed;
-
-  EventTarget get currentTarget => _currentTarget;
+  EventTarget? get currentTarget => _currentTarget;
 
   bool get defaultPrevented => _defaultPrevented;
 
   int get eventPhase => _eventPhase;
 
-  bool get isTrusted => true;
+  bool? get isTrusted => true;
 
   /// A pointer to the element whose CSS selector matched within which an event
   /// was fired. If this Event was not associated with any Event delegation,
   /// accessing this value will throw an [UnsupportedError].
-  EventTarget get matchingTarget => null;
+  Element get matchingTarget {
+    throw UnsupportedError('No matchingTarget');
+  }
 
   List<EventTarget> get path => const [];
 
-  EventTarget get target => _target;
+  EventTarget? get target => _target;
 
   List<EventTarget> composedPath() => const [];
 
+  void internalSetTarget(EventTarget? target) {
+    _target = target;
+  }
+
   void preventDefault() {
-    if (_cancelable) {
+    if (cancelable ?? true) {
       _defaultPrevented = true;
     }
   }
 
   void stopImmediatePropagation() {
-    if (_cancelable) {
+    if (cancelable ?? true) {
       _stoppedPropagation = true;
     }
   }
 
   void stopPropagation() {
-    if (_cancelable) {
+    if (cancelable ?? true) {
       _stoppedPropagation = true;
     }
   }

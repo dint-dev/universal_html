@@ -47,9 +47,9 @@ part of universal_html.internal;
 
 class _ComputedStyle extends CssStyleDeclaration {
   final Element _element;
-  final String _pseudoElement;
+  final String? _pseudoElement;
 
-  _CssStyleDeclaration _style;
+  CssStyleDeclaration? _style;
 
   _ComputedStyle._(this._element, this._pseudoElement) : super._();
 
@@ -61,7 +61,7 @@ class _ComputedStyle extends CssStyleDeclaration {
     throw UnimplementedError();
   }
 
-  _CssStyleDeclaration compute() {
+  CssStyleDeclaration compute() {
     final cachedStyle = _style;
     if (cachedStyle != null) {
       return cachedStyle;
@@ -143,7 +143,7 @@ class _ComputedStyle extends CssStyleDeclaration {
   }
 
   @override
-  void setProperty(String name, String value, [String priority]) {
+  void setProperty(String name, String? value, [String? priority]) {
     throw UnsupportedError("Computed style can't be modified.");
   }
 
@@ -156,7 +156,8 @@ class _ComputedStyle extends CssStyleDeclaration {
         }
       }
     }
-    if (node.parent == null) {
+    final parent = node.parent;
+    if (parent == null) {
       for (var styleSheet in (node.ownerDocument as HtmlDocument).styleSheets) {
         if (!result.contains(styleSheet)) {
           result.add(styleSheet);
@@ -164,7 +165,7 @@ class _ComputedStyle extends CssStyleDeclaration {
       }
       return;
     } else {
-      _findStyleSheets(node.parent, result);
+      _findStyleSheets(parent, result);
     }
   }
 }

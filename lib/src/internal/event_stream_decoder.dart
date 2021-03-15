@@ -11,27 +11,28 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 import 'dart:async';
-import 'dart:typed_data';
+import 'dart:convert';
 
 import 'package:typed_data/typed_buffers.dart';
+// ignore: deprecated_member_use_from_same_package
 import 'package:universal_html/src/html.dart';
-import 'dart:convert';
 
 /// Decodes 'application/event-stream' streams.
 class EventStreamDecoder
-    extends StreamTransformerBase<Uint8List, MessageEvent> {
-  final String origin;
-  final void Function(Duration timeout) onReceivedTimeout;
+    extends StreamTransformerBase<List<int>, MessageEvent> {
+  final String? origin;
+  final void Function(Duration timeout)? onReceivedTimeout;
 
   EventStreamDecoder({this.origin, this.onReceivedTimeout});
 
   @override
-  Stream<MessageEvent> bind(Stream<Uint8List> stream) async* {
+  Stream<MessageEvent> bind(Stream<List<int>> stream) async* {
     var dataBuilder = StringBuffer();
     var hasData = false;
-    String id;
-    String type;
+    String? id;
+    String? type;
 
     var buffer = Uint8Buffer();
     await for (var chunk in stream) {
@@ -81,6 +82,7 @@ class EventStreamDecoder
           switch (name) {
             case 'retry':
               final amount = int.tryParse(value);
+              final onReceivedTimeout = this.onReceivedTimeout;
               if (amount != null && onReceivedTimeout != null) {
                 onReceivedTimeout(Duration(milliseconds: amount));
               }

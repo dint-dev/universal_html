@@ -49,37 +49,37 @@ part of universal_html.internal;
 class AnchorElement extends HtmlElement
     with _HtmlHyperlinkElementUtils, _UrlBase, _HrefAttributeElement
     implements HtmlHyperlinkElementUtils {
-  factory AnchorElement() => AnchorElement._(null);
+  factory AnchorElement() => AnchorElement._(window.document);
 
   AnchorElement._(Document ownerDocument) : super._(ownerDocument, 'A');
 
-  String get download => _getAttribute('download');
+  String? get download => _getAttribute('download');
 
-  set download(String value) {
+  set download(String? value) {
     _setAttribute('download', value);
   }
 
-  String get hreflang => _getAttribute('hreflang');
+  String? get hreflang => _getAttribute('hreflang');
 
-  set hreflang(String value) {
+  set hreflang(String? value) {
     _setAttribute('hreflang', value);
   }
 
-  String get rel => _getAttribute('rel');
+  String get rel => _getAttribute('rel') ?? '';
 
   set rel(String value) {
     _setAttribute('rel', value);
   }
 
-  String get target => _getAttribute('target');
+  String? get target => _getAttribute('target');
 
-  set target(String value) {
+  set target(String? value) {
     _setAttribute('target', value);
   }
 
-  String get type => _getAttribute('type');
+  String? get type => _getAttribute('type');
 
-  set type(String value) {
+  set type(String? value) {
     _setAttribute('type', value);
   }
 
@@ -91,18 +91,18 @@ class AnchorElement extends HtmlElement
 class AreaElement extends HtmlElement
     with _HtmlHyperlinkElementUtils, _UrlBase, _HrefAttributeElement
     implements HtmlHyperlinkElementUtils {
-  factory AreaElement() => AreaElement._(null);
+  factory AreaElement() => AreaElement._(window.document);
 
   AreaElement._(Document ownerDocument, {String nodeName = 'AREA'})
       : super._(ownerDocument, nodeName);
 
-  String get download => _getAttribute('download');
+  String? get download => _getAttribute('download');
 
-  set download(String value) {
+  set download(String? value) {
     _setAttribute('download', value);
   }
 
-  String get rel => _getAttribute('rel');
+  String get rel => _getAttribute('rel') ?? '';
 
   set rel(String value) {
     _setAttribute('rel', value);
@@ -113,7 +113,7 @@ class AreaElement extends HtmlElement
 }
 
 class AudioElement extends MediaElement {
-  factory AudioElement() => AudioElement._(null);
+  factory AudioElement() => AudioElement._(window.document);
 
   AudioElement._(Document ownerDocument) : super._(ownerDocument, 'AUDIO');
 
@@ -122,15 +122,18 @@ class AudioElement extends MediaElement {
 }
 
 class BaseElement extends HtmlElement {
-  BaseElement() : this._(null);
+  BaseElement() : this._(window.document);
+
   BaseElement._(Document ownerDocument) : super._(ownerDocument, 'BASE');
 
-  String get href => _getAttribute('href');
+  String get href => _getAttribute('href') ?? '';
+
   set href(String value) {
     _setAttribute('href', value);
   }
 
-  String get target => _getAttribute('target');
+  String get target => _getAttribute('target') ?? '';
+
   set target(String value) {
     _setAttribute('target', value);
   }
@@ -227,7 +230,7 @@ class BodyElement extends HtmlElement implements WindowEventHandlers {
   static const EventStreamProvider<Event> unloadEvent =
       EventStreamProvider<Event>('unload');
 
-  factory BodyElement() => BodyElement._(null);
+  factory BodyElement() => BodyElement._(window.document);
 
   /// Constructor instantiated by the DOM when a custom element has been created.
   ///
@@ -292,7 +295,7 @@ class BodyElement extends HtmlElement implements WindowEventHandlers {
 }
 
 class BRElement extends HtmlElement {
-  factory BRElement() => BRElement._(null);
+  factory BRElement() => BRElement._(window.document);
 
   BRElement._(Document ownerDocument) : super._(ownerDocument, 'BR');
 
@@ -302,47 +305,47 @@ class BRElement extends HtmlElement {
 
 class ButtonElement extends HtmlElement
     with _DisabledElement, _FormFieldElement {
-  bool formNoValidate;
+  bool? formNoValidate;
 
-  String formTarget;
+  String? formTarget;
 
-  factory ButtonElement() => ButtonElement._(null);
+  factory ButtonElement() => ButtonElement._(window.document);
 
   ButtonElement._(Document ownerDocument) : super._(ownerDocument, 'BUTTON');
 
   bool get autofocus => _getAttributeBool('autofocus');
 
   set autofocus(bool value) {
-    _setAttributeBool(name, value);
+    _setAttributeBool('autofocus', value);
   }
 
-  String get formAction => _getAttributeResolvedUri('formaction') ?? '';
+  String? get formAction => _getAttributeResolvedUri('formaction') ?? '';
 
-  set formAction(String value) {
+  set formAction(String? value) {
     _setAttribute('formaction', value);
   }
 
-  String get formEnctype => _getAttribute('formenctype');
+  String get formEnctype => _getAttribute('formenctype') ?? '';
 
   set formEnctype(String value) {
     _setAttribute('formenctype', value);
   }
 
-  String get formMethod => _getAttribute('formmethod');
+  String get formMethod => _getAttribute('formmethod') ?? '';
 
   set formMethod(String value) {
     _setAttribute('formmethod', value);
   }
 
-  String get name => _getAttribute('name');
+  String? get name => _getAttribute('name');
 
-  set name(String value) {
-    _setAttribute(name, value);
+  set name(String? value) {
+    _setAttribute('name', value);
   }
 
-  String get type => _getAttribute('type', defaultValue: 'submit');
+  String? get type => _getAttribute('type', defaultValue: 'submit');
 
-  set type(String value) {
+  set type(String? value) {
     _setAttribute('type', value);
   }
 
@@ -366,9 +369,11 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
   static const EventStreamProvider<gl.ContextEvent> webGlContextRestoredEvent =
       EventStreamProvider<gl.ContextEvent>('webglcontextrestored');
 
-  CanvasRenderingContext2D _context2D;
+  /// An API for drawing on this canvas.
+  late final CanvasRenderingContext2D context2D = throw UnimplementedError();
 
-  CanvasElement({int width, int height}) : super._(null, 'CANVAS') {
+  CanvasElement({int? width, int? height})
+      : super._(window.document, 'CANVAS') {
     if (width != null) {
       _setAttributeInt('width', width);
     }
@@ -379,16 +384,10 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
 
   CanvasElement._(Document ownerDocument) : super._(ownerDocument, 'CANVAS');
 
-  /// An API for drawing on this canvas.
-  CanvasRenderingContext2D get context2D {
-    return _context2D ??=
-        _htmlDriver.browserImplementation.newCanvasRenderingContext2D(this);
-  }
-
   /// The height of this canvas element in CSS pixels.
-  int get height => _getAttributeInt('height');
+  int? get height => _getAttributeInt('height');
 
-  set height(int value) {
+  set height(int? value) {
     _setAttributeInt('height', value);
   }
 
@@ -401,17 +400,17 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
       webGlContextRestoredEvent.forElement(this);
 
   /// The width of this canvas element in CSS pixels.
-  int get width => _getAttributeInt('width');
+  int? get width => _getAttributeInt('width');
 
-  set width(int value) {
+  set width(int? value) {
     _setAttributeInt('width', value);
   }
 
-  MediaStream captureStream([num frameRate]) {
+  MediaStream captureStream([num? frameRate]) {
     throw UnimplementedError();
   }
 
-  Object getContext(String contextId, [Map attributes]) {
+  Object? getContext(String contextId, [Map? attributes]) {
     throw UnimplementedError();
   }
 
@@ -424,13 +423,14 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
   /// * [WebGL homepage](http://get.webgl.org/).
   @SupportedBrowser(SupportedBrowser.CHROME)
   @SupportedBrowser(SupportedBrowser.FIREFOX)
-  gl.RenderingContext getContext3d(
-      {alpha = true,
-      depth = true,
-      stencil = false,
-      antialias = true,
-      premultipliedAlpha = true,
-      preserveDrawingBuffer = false}) {
+  gl.RenderingContext getContext3d({
+    alpha = true,
+    depth = true,
+    stencil = false,
+    antialias = true,
+    premultipliedAlpha = true,
+    preserveDrawingBuffer = false,
+  }) {
     var options = {
       'alpha': alpha,
       'depth': depth,
@@ -441,10 +441,10 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
     };
     var context = getContext('webgl', options);
     context ??= getContext('experimental-webgl', options);
-    return context;
+    return context as gl.RenderingContext;
   }
 
-  Future<Blob> toBlob(String type, [Object arguments]) {
+  Future<Blob> toBlob(String type, [Object? arguments]) {
     throw UnimplementedError();
   }
 
@@ -487,7 +487,7 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
   /// * [HTMLCanvasElement](https://developer.mozilla.org/en-US/docs/DOM/HTMLCanvasElement) from MDN.
   ///
   /// * [toDataUrl](http://dev.w3.org/html5/spec/the-canvas-element.html#dom-canvas-todataurl) from W3C.
-  String toDataUrl([String type = 'image/png', num quality]) {
+  String toDataUrl([String type = 'image/png', num? quality]) {
     throw UnimplementedError();
   }
 
@@ -503,11 +503,11 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
 class ContentElement extends HtmlElement {
   static bool get supported => false;
 
-  String select;
+  String? select;
 
-  factory ContentElement() => ContentElement._(null);
+  factory ContentElement() => ContentElement._(window.document);
 
-  ContentElement._(Document ownerDocument) : super._(ownerDocument, 'CONTENTN');
+  ContentElement._(Document ownerDocument) : super._(ownerDocument, 'CONTENT');
 
   List<Node> getDistributedNodes() {
     throw UnimplementedError();
@@ -528,7 +528,7 @@ class DataElement extends HtmlElement {
 class DataListElement extends HtmlElement {
   static bool get supported => true;
 
-  factory DataListElement() => DataListElement._(null);
+  factory DataListElement() => DataListElement._(window.document);
 
   DataListElement._(Document ownerDocument)
       : super._(ownerDocument, 'DATALIST');
@@ -541,7 +541,7 @@ class DataListElement extends HtmlElement {
 class DetailsElement extends HtmlElement {
   static bool get supported => true;
 
-  factory DetailsElement() => DetailsElement._(null);
+  factory DetailsElement() => DetailsElement._(window.document);
 
   DetailsElement._(Document ownerDocument) : super._(ownerDocument, 'DETAILS');
 
@@ -557,13 +557,13 @@ class DetailsElement extends HtmlElement {
 }
 
 class DialogElement extends HtmlElement {
-  bool open;
+  bool? open;
 
-  String returnValue;
+  String? returnValue;
 
   DialogElement._(Document ownerDocument) : super._(ownerDocument, 'DIALOG');
 
-  void close([String returnValue]) {
+  void close([String? returnValue]) {
     // Ignore
   }
 
@@ -581,7 +581,7 @@ class DialogElement extends HtmlElement {
 }
 
 class DivElement extends HtmlElement {
-  factory DivElement() => DivElement._(null);
+  factory DivElement() => DivElement._(window.document);
 
   DivElement._(Document ownerDocument) : super._(ownerDocument, 'DIV');
 
@@ -590,7 +590,7 @@ class DivElement extends HtmlElement {
 }
 
 class DListElement extends HtmlElement {
-  factory DListElement() => DListElement._(null);
+  factory DListElement() => DListElement._(window.document);
 
   DListElement._(Document ownerDocument) : super._(ownerDocument, 'DL');
 
@@ -625,7 +625,7 @@ class DomTokenList {
     throw UnimplementedError();
   }
 
-  bool toggle(String token, [bool force]) {
+  bool toggle(String token, [bool? force]) {
     throw UnimplementedError();
   }
 }
@@ -633,7 +633,7 @@ class DomTokenList {
 class EmbedElement extends HtmlElement {
   static bool get supported => true;
 
-  factory EmbedElement() => EmbedElement._(null);
+  factory EmbedElement() => EmbedElement._(window.document);
 
   EmbedElement._(Document ownerDocument) : super._(ownerDocument, 'EMBED');
 
@@ -642,7 +642,7 @@ class EmbedElement extends HtmlElement {
 }
 
 class FieldSetElement extends HtmlElement with _FormFieldElement {
-  factory FieldSetElement() => FieldSetElement._(null);
+  factory FieldSetElement() => FieldSetElement._(window.document);
 
   FieldSetElement._(Document ownerDocument)
       : super._(ownerDocument, 'FIELDSET');
@@ -653,7 +653,7 @@ class FieldSetElement extends HtmlElement with _FormFieldElement {
     _setAttributeBool('disabled', value);
   }
 
-  String get type => null;
+  String? get type => null;
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -661,7 +661,7 @@ class FieldSetElement extends HtmlElement with _FormFieldElement {
 }
 
 class FormElement extends HtmlElement {
-  factory FormElement() => FormElement._(null);
+  factory FormElement() => FormElement._(window.document);
 
   /// Constructor instantiated by the DOM when a custom element has been created.
   ///
@@ -670,117 +670,74 @@ class FormElement extends HtmlElement {
 
   FormElement._(Document ownerDocument) : super._(ownerDocument, 'FORM');
 
-  String get acceptCharset => _getAttribute('acceptcharset');
+  String? get acceptCharset => _getAttribute('acceptcharset');
 
-  set acceptCharset(String value) {
+  set acceptCharset(String? value) {
     _setAttribute('acceptcharset', value);
   }
 
-  String get action => _getAttributeResolvedUri('action') ?? '';
+  String? get action => _getAttributeResolvedUri('action') ?? '';
 
-  set action(String value) {
+  set action(String? value) {
     _setAttribute('action', value);
   }
 
-  String get autocomplete => _getAttribute('autocomplete');
+  String? get autocomplete => _getAttribute('autocomplete');
 
-  set autocomplete(String value) {
+  set autocomplete(String? value) {
     _setAttribute('autocomplete', value);
   }
 
-  String get encoding => _getAttribute('encoding');
+  String? get encoding => _getAttribute('encoding');
 
-  set encoding(String value) {
+  set encoding(String? value) {
     _setAttribute('encoding', value);
   }
 
-  String get enctype => _getAttribute('enctype');
+  String? get enctype => _getAttribute('enctype');
 
-  set enctype(String value) {
+  set enctype(String? value) {
     _setAttribute('enctype', value);
   }
 
-  int get length => _items.length;
+  int? get length => _items.length;
 
-  String get method => _getAttribute('method');
+  String? get method => _getAttribute('method');
 
-  set method(String value) {
+  set method(String? value) {
     _setAttribute('method', value);
   }
 
-  String get name => _getAttribute('name');
+  String? get name => _getAttribute('name');
 
-  set name(String value) {
+  set name(String? value) {
     _setAttribute('name', value);
   }
 
-  bool get noValidate => _getAttributeBool('novalidate');
+  bool? get noValidate => _getAttributeBool('novalidate');
 
-  set noValidate(bool value) {
+  set noValidate(bool? value) {
     _setAttributeBool('novalidate', value);
   }
 
-  String get target => _getAttribute('target');
+  String? get target => _getAttribute('target');
 
-  set target(String value) {
+  set target(String? value) {
     _setAttribute('target', value);
   }
 
-  Iterable<Element> get _items sync* {
-    for (var element in BrowserImplementationUtils.descendingElements(this)) {
-      if (element is InputElement && identical(element.form, this)) {
-        yield (element);
-      }
-    }
+  /// Returns all items of this form.
+  Iterable<Element> get _items {
+    return _treeAsIterable(this)
+        .whereType<InputElement>()
+        .where((element) => identical(element.form, this));
   }
 
   bool checkValidity() {
     return true;
   }
 
-  Element item(int index) {
-    return _items.skip(index).first;
-  }
-
-  bool reportValidity() {
-    return true;
-  }
-
-  void requestAutocomplete(Map details) {}
-
-  /// Resets the form.
-  ///
-  /// No event is dispatched.
-  void reset() {
-    _htmlDriver.browserImplementation.handleFormReset(this);
-  }
-
-  /// Resets the form.
-  ///
-  /// No event is dispatched.
-  void submit() {
-    _htmlDriver.browserImplementation.handleFormSubmit(this);
-  }
-
-  /// Gets the URL where the form should be sent.
-  String _getFormAction(Element button) {
-    String action;
-    if (button is ButtonElement) {
-      action = button.formAction;
-    } else if (button is InputElement) {
-      action = button.formAction;
-    }
-    if (action == null || action.isEmpty) {
-      action = this.action;
-    }
-
-    return action;
-  }
-
-  @override
-  Element _newInstance(Document ownerDocument) => FormElement._(ownerDocument);
-
-  void _reset() {
+  void internalReset() {
     for (var element in _items) {
       if (element is InputElement) {
         element._reset();
@@ -788,121 +745,18 @@ class FormElement extends HtmlElement {
     }
   }
 
-  /// Sends values in 'multipart/form-data' format.
-  Future<void> _sendMultiPart(
-    Uri uri,
-  ) async {
-    final httpClient = _htmlDriver.browserImplementation.newHttpClient();
-    final httpRequest = await httpClient.openUrl(method, uri);
-
-    final writer = MultipartFormWriter(httpRequest);
-
-    httpRequest.headers.contentType = io.ContentType(
-      'multipart',
-      'form-data',
-      parameters: {
-        'boundary': writer.boundary,
-      },
-    );
-
-    for (var item in _items) {
-      _sendMultiPartElement(writer, item);
-    }
-
-    // Load response page
-    await _htmlDriver.setDocumentFromHttpClientRequest(httpRequest);
-  }
-
-  /// Sends an element in 'multipart/form-data' format.
-  /// Called by [_sendMultiPart].
-  void _sendMultiPartElement(
-      MultipartFormWriter writer, Element element) async {
-    if (element is InputElement) {
-      final name = element.name;
-      if (name.isEmpty) {
-        return;
-      }
-      final value = element.value;
-      switch (element.type.toLowerCase()) {
-        case 'button':
-          break;
-
-        case 'reset':
-          break;
-
-        case 'submit':
-          break;
-
-        case 'file':
-          for (var file in element.files ?? []) {
-            writer.writeFile(name, file, fileName: file._qualifiedName);
-          }
-          break;
-
-        case 'checkbox':
-          if (element.checked) {
-            writer.writeFieldValue(name, value);
-          }
-          break;
-
-        case 'radio':
-          if (element.checked) {
-            writer.writeFieldValue(name, value);
-          }
-          break;
-
-        default:
-          writer.writeFieldValue(name, value);
-          break;
-      }
-    }
-  }
-
-  /// Sends values in 'application/x-www-form-urlencoded' format.
-  Future<void> _sendUrlEncoded(
-    String method,
-    Uri uri,
-  ) async {
-    switch (method) {
-      case 'get':
-        uri = uri.replace(
-          queryParameters: _valuesToQueryParameters(uri.queryParameters),
-        );
-        final httpClient = _htmlDriver.browserImplementation.newHttpClient();
-        final httpRequest = await httpClient.openUrl(method, uri);
-        await _htmlDriver.setDocumentFromHttpClientRequest(httpRequest);
-        break;
-
-      case 'post':
-        final httpClient = _htmlDriver.browserImplementation.newHttpClient();
-        final httpRequest = await httpClient.openUrl(method, uri);
-        httpRequest.headers.contentType = io.ContentType(
-          'application',
-          'x-www-form-urlencoded',
-        );
-        final tmpUri = Uri(queryParameters: _valuesToQueryParameters());
-        final s = tmpUri.toString().substring(1);
-        httpRequest.write(s);
-        await _htmlDriver.setDocumentFromHttpClientRequest(httpRequest);
-        break;
-
-      default:
-        throw StateError('Unsupported HTTP method: "$method"');
-    }
-  }
-
   /// Submits the form.
-  Future<void> _submit(Element buttonElement) async {
+  Future<void> internalSubmit(Element? buttonElement) async {
     // Get method
-    var method = this.method.toLowerCase();
+    var method = (this.method ?? 'get').toLowerCase();
     if (method == '') {
       method = 'get';
     }
 
     // Get URI
-    var uriString = _getFormAction(buttonElement);
+    var uriString = _getFormAction(buttonElement!) ?? '';
     if (uriString.isEmpty) {
-      uriString = baseUri;
+      uriString = baseUri!;
     }
     final uri = Uri.parse(uriString);
     switch (uri.scheme) {
@@ -934,8 +788,159 @@ class FormElement extends HtmlElement {
     }
   }
 
+  Element item(int index) {
+    return _items.skip(index).first;
+  }
+
+  bool reportValidity() {
+    return true;
+  }
+
+  void requestAutocomplete(Map details) {}
+
+  /// Resets the form.
+  ///
+  /// No event is dispatched.
+  void reset() {
+    throw UnimplementedError();
+  }
+
+  /// Resets the form.
+  ///
+  /// No event is dispatched.
+  void submit() {
+    throw UnimplementedError();
+  }
+
+  /// Gets the URL where the form should be sent.
+  String? _getFormAction(Element button) {
+    String? action;
+    if (button is ButtonElement) {
+      action = button.formAction;
+    } else if (button is InputElement) {
+      action = button.formAction;
+    }
+    if (action == null || action.isEmpty) {
+      action = this.action;
+    }
+
+    return action;
+  }
+
+  @override
+  Element _newInstance(Document ownerDocument) => FormElement._(ownerDocument);
+
+  /// Sends values in 'multipart/form-data' format.
+  Future<void> _sendMultiPart(
+    Uri uri,
+  ) async {
+    final httpClient = io.HttpClient();
+    final httpRequest = await httpClient.openUrl(method ?? 'POST', uri);
+
+    final writer = MultipartFormWriter(httpRequest);
+
+    httpRequest.headers.contentType = io.ContentType(
+      'multipart',
+      'form-data',
+      parameters: {
+        'boundary': writer.boundary,
+      },
+    );
+
+    for (var item in _items) {
+      _sendMultiPartElement(writer, item);
+    }
+
+    // Load response page
+    throw UnimplementedError();
+  }
+
+  /// Sends an element in 'multipart/form-data' format.
+  /// Called by [_sendMultiPart].
+  void _sendMultiPartElement(
+      MultipartFormWriter writer, Element element) async {
+    if (element is InputElement) {
+      final name = element.name;
+      if (name == null || name.isEmpty) {
+        return;
+      }
+      final value = element.value;
+      if (value == null) {
+        return;
+      }
+      final elementType = element.type!;
+      switch (elementType.toLowerCase()) {
+        case 'button':
+          break;
+
+        case 'reset':
+          break;
+
+        case 'submit':
+          break;
+
+        case 'file':
+          for (var file in element.files ?? []) {
+            writer.writeFile(name, file, fileName: file._qualifiedName);
+          }
+          break;
+
+        case 'checkbox':
+          if (element.checked ?? false) {
+            writer.writeFieldValue(name, value);
+          }
+          break;
+
+        case 'radio':
+          if (element.checked ?? false) {
+            writer.writeFieldValue(name, value);
+          }
+          break;
+
+        default:
+          writer.writeFieldValue(name, value);
+          break;
+      }
+    }
+  }
+
+  /// Sends values in 'application/x-www-form-urlencoded' format.
+  Future<void> _sendUrlEncoded(
+    String method,
+    Uri uri,
+  ) async {
+    final windowController = ownerDocument!.window.internalWindowController;
+    switch (method.toLowerCase()) {
+      case 'get':
+        uri = uri.replace(
+          queryParameters: _valuesToQueryParameters(uri.queryParameters),
+        );
+        return windowController.openHttp(
+          method: 'GET',
+          uri: uri,
+        );
+
+      case 'post':
+        final httpClient = io.HttpClient();
+        final httpRequest = await httpClient.openUrl(method, uri);
+        httpRequest.headers.contentType = io.ContentType(
+          'application',
+          'x-www-form-urlencoded',
+        );
+        final tmpUri = Uri(queryParameters: _valuesToQueryParameters());
+        return windowController.openHttp(
+          method: 'POST',
+          uri: tmpUri,
+          contentType: io.ContentType('application', 'x-www-form-urlencoded'),
+        );
+
+      default:
+        throw StateError('Unsupported HTTP method: "$method"');
+    }
+  }
+
   /// Builds a map that contains all field values.
-  Map<String, dynamic> _valuesToQueryParameters([Map<String, dynamic> args]) {
+  Map<String, dynamic> _valuesToQueryParameters([Map<String, dynamic>? args]) {
     final result = <String, dynamic>{};
     if (args != null) {
       result.addAll(args);
@@ -944,13 +949,13 @@ class FormElement extends HtmlElement {
     for (var element in _items) {
       if (element is InputElement) {
         // Ignore empty keys
-        final name = element.name;
+        final name = element.name ?? '';
         if (name.isEmpty) {
           continue;
         }
-        final value = element.value;
-
-        switch (element.type.toLowerCase()) {
+        final value = element.value ?? '';
+        final type = element.type ?? '';
+        switch (type.toLowerCase()) {
           case 'button':
             continue elementLoop;
 
@@ -964,13 +969,13 @@ class FormElement extends HtmlElement {
             continue elementLoop;
 
           case 'radio':
-            if (!element.checked) {
+            if (!(element.checked ?? false)) {
               continue elementLoop;
             }
             break;
 
           case 'checkbox':
-            if (!element.checked) {
+            if (!(element.checked ?? false)) {
               continue elementLoop;
             }
             break;
@@ -990,10 +995,18 @@ class FormElement extends HtmlElement {
     }
     return result;
   }
+
+  /// Iterates all nodes in DOM subtree.
+  static Iterable<Element> _treeAsIterable(Element root) sync* {
+    for (var child in root.children) {
+      yield (child);
+      yield* (_treeAsIterable(child));
+    }
+  }
 }
 
 class HeadElement extends HtmlElement {
-  factory HeadElement() => HeadElement._(null);
+  factory HeadElement() => HeadElement._(window.document);
 
   HeadElement._(Document ownerDocument) : super._(ownerDocument, 'HEAD');
 
@@ -1002,17 +1015,17 @@ class HeadElement extends HtmlElement {
 }
 
 class HeadingElement extends HtmlElement {
-  factory HeadingElement.h1() => HeadingElement._(null, 'H1');
+  factory HeadingElement.h1() => HeadingElement._(window.document, 'H1');
 
-  factory HeadingElement.h2() => HeadingElement._(null, 'H2');
+  factory HeadingElement.h2() => HeadingElement._(window.document, 'H2');
 
-  factory HeadingElement.h3() => HeadingElement._(null, 'H3');
+  factory HeadingElement.h3() => HeadingElement._(window.document, 'H3');
 
-  factory HeadingElement.h4() => HeadingElement._(null, 'H4');
+  factory HeadingElement.h4() => HeadingElement._(window.document, 'H4');
 
-  factory HeadingElement.h5() => HeadingElement._(null, 'H5');
+  factory HeadingElement.h5() => HeadingElement._(window.document, 'H5');
 
-  factory HeadingElement.h6() => HeadingElement._(null, 'H6');
+  factory HeadingElement.h6() => HeadingElement._(window.document, 'H6');
 
   HeadingElement._(Document ownerDocument, String name)
       : super._(ownerDocument, name);
@@ -1023,7 +1036,7 @@ class HeadingElement extends HtmlElement {
 }
 
 class HRElement extends HtmlElement {
-  factory HRElement() => HRElement._(null);
+  factory HRElement() => HRElement._(window.document);
 
   HRElement._(Document ownerDocument) : super._(ownerDocument, 'HR');
 
@@ -1042,16 +1055,16 @@ abstract class HtmlElement extends Element implements NoncedElement {
       : super._(ownerDocument, tagName);
 
   @override
-  String get nonce => _getAttribute('nonce');
+  String? get nonce => _getAttribute('nonce');
 
   @override
-  set nonce(String value) {
+  set nonce(String? value) {
     _setAttribute('nonce', value);
   }
 }
 
 class HtmlHtmlElement extends HtmlElement {
-  factory HtmlHtmlElement() => HtmlHtmlElement._(null);
+  factory HtmlHtmlElement() => HtmlHtmlElement._(window.document);
 
   HtmlHtmlElement._(Document ownerDocument) : super._(ownerDocument, 'HTML');
 
@@ -1061,63 +1074,71 @@ class HtmlHtmlElement extends HtmlElement {
 }
 
 abstract class HtmlHyperlinkElementUtils implements _UrlBase {
-  String href;
+  String? href;
+
   HtmlHyperlinkElementUtils._();
-  set host(String value);
-  set hostname(String value);
-  String get password;
-  set password(String value);
-  set protocol(String value);
-  String get username;
-  set username(String value);
+
+  set host(String? value);
+
+  set hostname(String? value);
+
+  String? get password;
+
+  set password(String? value);
+
+  set protocol(String? value);
+
+  String? get username;
+
+  set username(String? value);
 }
 
 class IFrameElement extends HtmlElement {
-  factory IFrameElement() => IFrameElement._(null);
+  factory IFrameElement() => IFrameElement._(window.document);
 
   IFrameElement._(Document ownerDocument) : super._(ownerDocument, 'IFRAME');
 
-  String get allow => _getAttribute('allow');
+  String? get allow => _getAttribute('allow');
 
-  set allow(String value) {
+  set allow(String? value) {
     _setAttribute('allow', value);
   }
 
-  bool get allowFullscreen => _getAttributeBool('allowfullscreen');
+  bool? get allowFullscreen => _getAttributeBool('allowfullscreen');
 
-  set allowFullscreen(bool value) {
+  set allowFullscreen(bool? value) {
     _setAttributeBool('allowfullscreen', value);
   }
 
-  bool get allowPaymentRequest => _getAttributeBool('allowpaymentrequest');
+  bool? get allowPaymentRequest => _getAttributeBool('allowpaymentrequest');
 
-  set allowPaymentRequest(bool value) {
+  set allowPaymentRequest(bool? value) {
     _setAttributeBool('allowpaymentrequest', value);
   }
 
-  WindowBase get contentWindow => null;
+  WindowBase? get contentWindow => null;
 
-  String get csp => _getAttribute('csp');
+  String? get csp => _getAttribute('csp');
 
-  set csp(String value) {
+  set csp(String? value) {
     _setAttribute('csp', value);
   }
 
-  String get height => _getAttribute('height');
+  String? get height => _getAttribute('height');
 
-  set height(String value) {
+  set height(String? value) {
     _setAttribute('height', value);
   }
 
-  String get name => _getAttribute('name');
+  String? get name => _getAttribute('name');
 
-  set name(String value) {
+  set name(String? value) {
     _setAttribute('name', value);
   }
 
-  String get referrerPolicy => _getAttribute('referrerpolicy');
+  String? get referrerPolicy => _getAttribute('referrerpolicy');
 
-  set referrerPolicy(String value) {
+  set referrerPolicy(String? value) {
     _setAttribute('referrerpolicy', value);
   }
 
@@ -1125,21 +1146,21 @@ class IFrameElement extends HtmlElement {
     throw UnimplementedError();
   }
 
-  String get src => _getAttributeResolvedUri('src') ?? '';
+  String? get src => _getAttributeResolvedUri('src') ?? '';
 
-  set src(String value) {
+  set src(String? value) {
     _setAttribute('src', value);
   }
 
-  String get srcdoc => _getAttribute('srcdoc');
+  String? get srcdoc => _getAttribute('srcdoc');
 
-  set srcdoc(String value) {
+  set srcdoc(String? value) {
     _setAttribute('srcdoc', value);
   }
 
-  String get width => _getAttribute('width');
+  String? get width => _getAttribute('width');
 
-  set width(String value) {
+  set width(String? value) {
     _setAttribute('width', value);
   }
 
@@ -1149,35 +1170,35 @@ class IFrameElement extends HtmlElement {
 }
 
 class ImageElement extends HtmlElement implements CanvasImageSource {
-  factory ImageElement() => ImageElement._(null);
+  factory ImageElement() => ImageElement._(window.document);
 
   ImageElement._(Document ownerDocument) : super._(ownerDocument, 'IMG');
 
-  String get alt => _getAttribute('alt');
+  String? get alt => _getAttribute('alt');
 
-  set alt(String value) {
+  set alt(String? value) {
     _setAttribute('alt', value);
   }
 
-  bool get async => _getAttributeBool('async');
+  bool? get async => _getAttributeBool('async');
 
-  set async(bool value) {
+  set async(bool? value) {
     _setAttributeBool('async', value);
   }
 
   bool get complete => false;
 
-  String get crossOrigin => _getAttribute('crossorigin');
+  String? get crossOrigin => _getAttribute('crossorigin');
 
-  set crossOrigin(String value) {
+  set crossOrigin(String? value) {
     _setAttribute('crossorigin', value);
   }
 
-  String get currentSrc => null;
+  String? get currentSrc => null;
 
-  int get height => _getAttributeInt('height') ?? 0;
+  int? get height => _getAttributeInt('height') ?? 0;
 
-  set height(int value) {
+  set height(int? value) {
     _setAttributeInt('height', value);
   }
 
@@ -1187,45 +1208,45 @@ class ImageElement extends HtmlElement implements CanvasImageSource {
     _setAttributeBool('ismap', value);
   }
 
-  int get naturalHeight => null;
+  int? get naturalHeight => null;
 
-  int get naturalWidth => null;
+  int? get naturalWidth => null;
 
-  String get referrerPolicy => _getAttribute('referrerpolicy');
+  String? get referrerPolicy => _getAttribute('referrerpolicy');
 
-  set referrerPolicy(String value) {
+  set referrerPolicy(String? value) {
     _setAttribute('referrerpolicy', value);
   }
 
-  String get sizes => _getAttribute('sizes');
+  String? get sizes => _getAttribute('sizes');
 
-  set sizes(String value) {
+  set sizes(String? value) {
     _setAttribute('sizes', value);
   }
 
-  String get src {
+  String? get src {
     return _getAttributeResolvedUri('src') ?? '';
   }
 
-  set src(String value) {
+  set src(String? value) {
     _setAttribute('src', value);
   }
 
-  String get srcset => _getAttribute('srcset');
+  String? get srcset => _getAttribute('srcset');
 
-  set srcset(String value) {
+  set srcset(String? value) {
     _setAttribute('srcset', value);
   }
 
-  String get useMap => _getAttribute('usemap');
+  String? get useMap => _getAttribute('usemap');
 
-  set useMap(String value) {
+  set useMap(String? value) {
     _setAttribute('usemap', value);
   }
 
-  int get width => _getAttributeInt('width') ?? 0;
+  int? get width => _getAttributeInt('width') ?? 0;
 
-  set width(int value) {
+  set width(int? value) {
     _setAttributeInt('width', value);
   }
 
@@ -1263,30 +1284,30 @@ class InputElement extends HtmlElement
 
   /// Current value. This is different from attribute 'value', which can be
   /// accessed with [defaultValue].
-  String _value;
+  String? internalValue;
 
   /// Current checked value. This is different from attribute 'checked', which
   /// can be accessed with [defaultChecked].
-  bool _checked;
+  bool? internalChecked;
 
   /// Prevously compiled pattern.
-  RegExp _lastRegExp;
+  RegExp? _lastRegExp;
 
-  bool directory;
-
-  @override
-  String selectionDirection;
+  bool? directory;
 
   @override
-  int selectionStart;
+  String? selectionDirection;
 
   @override
-  int selectionEnd;
+  int? selectionStart;
 
-  List<File> _files;
+  @override
+  int? selectionEnd;
 
-  factory InputElement({String type}) {
-    final e = InputElement._(null);
+  List<File>? _files;
+
+  factory InputElement({String? type}) {
+    final e = InputElement._(window.document);
     if (type != null) {
       e.type = type;
     }
@@ -1296,29 +1317,29 @@ class InputElement extends HtmlElement
   InputElement._(Document ownerDocument) : super._(ownerDocument, 'INPUT');
 
   @override
-  String get accept => _getAttribute('accept');
+  String? get accept => _getAttribute('accept');
 
   @override
-  set accept(String value) {
+  set accept(String? value) {
     _setAttribute('accept', value);
   }
 
   @override
-  String get alt => _getAttribute('alt');
+  String? get alt => _getAttribute('alt');
 
   @override
-  set alt(String value) {
+  set alt(String? value) {
     _setAttribute('alt', value);
   }
 
-  String get autocapitalize => _getAttribute('autocapitalize');
+  String? get autocapitalize => _getAttribute('autocapitalize');
 
-  set autocapitalize(String value) {
+  set autocapitalize(String? value) {
     _setAttribute('autocapitalize', value);
   }
 
   @override
-  String get autocomplete => _getAttribute('autocomplete');
+  String get autocomplete => _getAttribute('autocomplete') ?? '';
 
   @override
   set autocomplete(String value) {
@@ -1333,45 +1354,45 @@ class InputElement extends HtmlElement
     _setAttributeBool('autofocus', value);
   }
 
-  String get capture => _getAttribute('capture');
+  String? get capture => _getAttribute('capture');
 
-  set capture(String value) {
+  set capture(String? value) {
     _setAttribute('capture', value);
   }
 
   @override
-  bool get checked => _checked ?? defaultChecked;
+  bool? get checked => internalChecked ?? defaultChecked;
 
   @override
-  set checked(bool value) {
-    if (value != _checked) {
+  set checked(bool? value) {
+    if (value != internalChecked) {
       _markDirty();
-      _checked = value;
+      internalChecked = value;
     }
   }
 
-  bool get defaultChecked => _getAttributeBool('checked');
+  bool? get defaultChecked => _getAttributeBool('checked');
 
-  set defaultChecked(bool value) {
+  set defaultChecked(bool? value) {
     _setAttributeBool('checked', value);
   }
 
-  String get defaultValue => _getAttribute('value');
+  String? get defaultValue => _getAttribute('value');
 
-  set defaultValue(String value) {
+  set defaultValue(String? value) {
     _setAttribute('value', value);
   }
 
   @override
-  String get dirName => _getAttribute('dirname');
+  String? get dirName => _getAttribute('dirname');
 
   @override
-  set dirName(String value) {
+  set dirName(String? value) {
     _setAttribute('dirname', value);
   }
 
   @override
-  set disabled(bool value) {
+  set disabled(bool? value) {
     _setAttributeBool('disabled', value);
   }
 
@@ -1380,24 +1401,24 @@ class InputElement extends HtmlElement
   List<Entry> get entries => const <Entry>[];
 
   @override
-  List<File> get files => _files;
+  List<File>? get files => _files;
 
   @override
-  set files(List<File> value) {
+  set files(List<File>? value) {
     _markDirty();
     _files = value;
   }
 
   @override
-  String get formAction => _getAttributeResolvedUri('formaction') ?? '';
+  String? get formAction => _getAttributeResolvedUri('formaction') ?? '';
 
   @override
-  set formAction(String value) {
+  set formAction(String? value) {
     _setAttribute('formaction', value);
   }
 
   @override
-  String get formEnctype => _getAttribute('formenctype');
+  String get formEnctype => _getAttribute('formenctype') ?? '';
 
   @override
   set formEnctype(String value) {
@@ -1405,7 +1426,7 @@ class InputElement extends HtmlElement
   }
 
   @override
-  String get formMethod => _getAttribute('formmethod');
+  String get formMethod => _getAttribute('formmethod') ?? '';
 
   @override
   set formMethod(String value) {
@@ -1421,88 +1442,88 @@ class InputElement extends HtmlElement
   }
 
   @override
-  String get formTarget => _getAttribute('formtarget');
+  String? get formTarget => _getAttribute('formtarget') ?? '';
 
   @override
-  set formTarget(String value) {
+  set formTarget(String? value) {
     _setAttribute('formtarget', value);
   }
 
   @override
-  int get height => _getAttributeInt('height');
+  int? get height => _getAttributeInt('height');
 
   @override
-  set height(int value) {
+  set height(int? value) {
     _setAttributeInt('height', value);
   }
 
   @override
-  bool get incremental => _getAttributeBool('incremental');
+  bool? get incremental => _getAttributeBool('incremental');
 
   @override
-  set incremental(bool value) {
+  set incremental(bool? value) {
     _setAttributeBool('incremental', value);
   }
 
   @override
-  bool get indeterminate => _getAttributeBool('indeterminate');
+  bool? get indeterminate => _getAttributeBool('indeterminate');
 
   @override
-  set indeterminate(bool value) {
+  set indeterminate(bool? value) {
     _setAttributeBool('indeterminate', value);
   }
 
   @override
-  Element get list => null;
+  Element? get list => null;
 
   @override
-  String get max => _getAttribute('max');
+  String? get max => _getAttribute('max');
 
   @override
-  set max(String value) {
+  set max(String? value) {
     _setAttribute('max', value);
   }
 
   @override
-  int get maxLength => _getAttributeInt('maxlength');
+  int? get maxLength => _getAttributeInt('maxlength');
 
   @override
-  set maxLength(int value) {
+  set maxLength(int? value) {
     _setAttributeInt('maxlength', value);
   }
 
   @override
-  String get min => _getAttribute('min');
+  String? get min => _getAttribute('min');
 
   @override
-  set min(String value) {
+  set min(String? value) {
     _setAttribute('min', value);
   }
 
-  int get minLength => _getAttributeInt('minlength');
+  int? get minLength => _getAttributeInt('minlength');
 
-  set minLength(int value) {
+  set minLength(int? value) {
     _setAttributeInt('minlength', value);
   }
 
   @override
-  bool get multiple => _getAttributeBool('multiple');
+  bool? get multiple => _getAttributeBool('multiple');
 
   @override
-  set multiple(bool value) {
+  set multiple(bool? value) {
     _setAttributeBool('multiple', value);
   }
 
   @override
-  String get name => _getAttribute('name');
+  String? get name => _getAttribute('name');
 
   @override
-  set name(String value) {
+  set name(String? value) {
     _setAttribute('name', value);
   }
 
   @override
-  String get pattern => _getAttribute('pattern');
+  String get pattern => _getAttribute('pattern') ?? '';
 
   @override
   set pattern(String value) {
@@ -1510,7 +1531,7 @@ class InputElement extends HtmlElement
   }
 
   @override
-  String get placeholder => _getAttribute('placeholder');
+  String get placeholder => _getAttribute('placeholder') ?? '';
 
   @override
   set placeholder(String value) {
@@ -1518,10 +1539,10 @@ class InputElement extends HtmlElement
   }
 
   @override
-  bool get readOnly => _getAttributeBool('readonly');
+  bool? get readOnly => _getAttributeBool('readonly');
 
   @override
-  set readOnly(bool value) {
+  set readOnly(bool? value) {
     _setAttributeBool('readonly', value);
   }
 
@@ -1534,37 +1555,37 @@ class InputElement extends HtmlElement
   }
 
   @override
-  int get size => _getAttributeInt('size');
+  int? get size => _getAttributeInt('size');
 
   @override
-  set size(int value) {
+  set size(int? value) {
     _setAttributeInt('size', value);
   }
 
   @override
-  String get src => _getAttribute('src');
+  String? get src => _getAttribute('src');
 
   @override
-  set src(String value) {
+  set src(String? value) {
     _setAttribute('src', value);
   }
 
   @override
-  String get step => _getAttribute('step');
+  String? get step => _getAttribute('step');
 
   @override
-  set step(String value) {
+  set step(String? value) {
     _setAttribute('step', value);
   }
 
-  String get type => _getAttribute('type', defaultValue: 'text');
+  String? get type => _getAttribute('type', defaultValue: 'text');
 
-  set type(String value) {
+  set type(String? value) {
     _setAttribute('type', value);
   }
 
   @override
-  String get validationMessage {
+  String? get validationMessage {
     return null;
   }
 
@@ -1574,19 +1595,19 @@ class InputElement extends HtmlElement
   }
 
   @override
-  String get value => _value ?? '';
+  String? get value => internalValue ?? '';
 
   @override
-  set value(String value) {
-    if (value != _value) {
+  set value(String? value) {
+    if (value != internalValue) {
       _markDirty();
-      _value = value;
+      internalValue = value;
     }
   }
 
   @override
   DateTime get valueAsDate {
-    return DateTime.parse(value);
+    return DateTime.parse(value ?? '');
   }
 
   @override
@@ -1595,21 +1616,21 @@ class InputElement extends HtmlElement
   }
 
   @override
-  num get valueAsNumber {
+  num? get valueAsNumber {
     final value = this.value;
     return value == null ? null : num.parse(value);
   }
 
   @override
-  set valueAsNumber(num value) {
+  set valueAsNumber(num? value) {
     this.value = value?.toString();
   }
 
   @override
-  int get width => _getAttributeInt('width');
+  int? get width => _getAttributeInt('width');
 
   @override
-  set width(int value) {
+  set width(int? value) {
     _setAttributeInt('width', value);
   }
 
@@ -1621,9 +1642,9 @@ class InputElement extends HtmlElement
   }
 
   /// Gets regular expression.
-  RegExp get _regExp {
+  RegExp? get _regExp {
     final pattern = this.pattern;
-    if (pattern == null) {
+    if (pattern == '') {
       return null;
     }
     final lastRegExp = _lastRegExp;
@@ -1645,6 +1666,45 @@ class InputElement extends HtmlElement
     }
   }
 
+  /// Default action when [click] is called.
+  @protected
+  void internalDefaultClick() {
+    final type = (this.type ?? '').toLowerCase();
+    switch (type) {
+      case 'file':
+        throw UnimplementedError();
+
+      case 'reset':
+        form?.reset();
+        break;
+
+      case 'submit':
+        form?.internalSubmit(this);
+        break;
+
+      case 'radio':
+        final form = this.form;
+        if (form != null) {
+          final name = this.name;
+          for (var item in form._items) {
+            if (item is InputElement && item.name == name) {
+              item.checked = false;
+            }
+          }
+          checked = true;
+        }
+        break;
+
+      case 'checkbox':
+        checked = !(checked ?? false);
+        break;
+
+      default:
+        focus();
+        break;
+    }
+  }
+
   bool reportValidity() {
     return checkValidity();
   }
@@ -1655,23 +1715,29 @@ class InputElement extends HtmlElement
   @override
   void setCustomValidity(String error) {}
 
-  void setRangeText(String replacement,
-      {int start, int end, String selectionMode}) {}
+  void setRangeText(
+    String replacement, {
+    int? start,
+    int? end,
+    String? selectionMode,
+  }) {}
 
   @override
-  void setSelectionRange(int start, int end, [String direction]) {}
+  void setSelectionRange(int start, int end, [String? direction]) {}
 
   @override
-  void stepDown([int n]) {
-    valueAsNumber -= n;
+  void stepDown([int? n]) {
+    n ??= 1;
+    valueAsNumber = (valueAsNumber ?? 0) - n;
   }
 
   @override
-  void stepUp([int n]) {
-    valueAsNumber += n;
+  void stepUp([int? n]) {
+    n ??= 1;
+    valueAsNumber = (valueAsNumber ?? 0) + n;
   }
 
-  bool _checkTextValidity(String value) {
+  bool _checkTextValidity(String? value) {
     // Required?
     if (value == null) return !required;
 
@@ -1706,20 +1772,20 @@ class InputElement extends HtmlElement
 
   /// Resets values.
   void _reset() {
-    _value = null;
-    _checked = null;
+    internalValue = null;
+    internalChecked = null;
     files = null;
   }
 }
 
 class LabelElement extends HtmlElement with _FormFieldElement {
-  factory LabelElement() => LabelElement._(null);
+  factory LabelElement() => LabelElement._(window.document);
 
   LabelElement._(Document ownerDocument) : super._(ownerDocument, 'LABEL');
 
-  String get htmlFor => _getAttribute('for');
+  String? get htmlFor => _getAttribute('for');
 
-  set htmlFor(String value) {
+  set htmlFor(String? value) {
     _setAttribute('for', value);
   }
 
@@ -1728,7 +1794,7 @@ class LabelElement extends HtmlElement with _FormFieldElement {
 }
 
 class LegendElement extends HtmlElement with _FormFieldElement {
-  factory LegendElement() => LegendElement._(null);
+  factory LegendElement() => LegendElement._(window.document);
 
   LegendElement._(Document ownerDocument) : super._(ownerDocument, 'LEGEND');
 
@@ -1738,13 +1804,13 @@ class LegendElement extends HtmlElement with _FormFieldElement {
 }
 
 class LIElement extends HtmlElement {
-  factory LIElement() => LIElement._(null);
+  factory LIElement() => LIElement._(window.document);
 
   LIElement._(Document ownerDocument) : super._(ownerDocument, 'LI');
 
-  int get value => _getAttributeInt('value');
+  int? get value => _getAttributeInt('value');
 
-  set value(int value) {
+  set value(int? value) {
     _setAttributeInt('value', value);
   }
 
@@ -1754,55 +1820,55 @@ class LIElement extends HtmlElement {
 
 class LinkElement extends HtmlElement
     with _HrefAttributeElement, _DisabledElement {
-  factory LinkElement() => LinkElement._(null);
+  factory LinkElement() => LinkElement._(window.document);
 
   LinkElement._(Document ownerDocument) : super._(ownerDocument, 'LINK');
 
-  String get as => _getAttribute('as');
+  String? get as => _getAttribute('as');
 
-  set as(String value) {
+  set as(String? value) {
     _setAttribute('as', value);
   }
 
-  String get crossOrigin => _getAttribute('crossorigin');
+  String? get crossOrigin => _getAttribute('crossorigin');
 
-  set crossOrigin(String value) {
+  set crossOrigin(String? value) {
     _setAttribute('crossorigin', value);
   }
 
-  String get hreflang => _getAttribute('hreflang');
+  String? get hreflang => _getAttribute('hreflang');
 
-  set hreflang(String value) {
+  set hreflang(String? value) {
     _setAttribute('hreflang', value);
   }
 
-  String get integrity => _getAttribute('integrity');
+  String? get integrity => _getAttribute('integrity');
 
-  set integrity(String value) {
+  set integrity(String? value) {
     _setAttribute('integrity', value);
   }
 
-  String get media => _getAttribute('media');
+  String? get media => _getAttribute('media');
 
-  set media(String value) {
+  set media(String? value) {
     _setAttribute('media', value);
   }
 
-  String get rel => _getAttribute('rel');
+  String get rel => _getAttribute('rel') ?? '';
 
   set rel(String value) {
     _setAttribute('rel', value);
   }
 
-  String get scope => _getAttribute('scope');
+  String? get scope => _getAttribute('scope');
 
-  set scope(String value) {
+  set scope(String? value) {
     _setAttribute('scope', value);
   }
 
-  String get type => _getAttribute('type');
+  String? get type => _getAttribute('type');
 
-  set type(String value) {
+  set type(String? value) {
     _setAttribute('type', value);
   }
 
@@ -1811,13 +1877,13 @@ class LinkElement extends HtmlElement
 }
 
 class MapElement extends HtmlElement {
-  factory MapElement() => MapElement._(null);
+  factory MapElement() => MapElement._(window.document);
 
   MapElement._(Document ownerDocument) : super._(ownerDocument, 'MAP');
 
-  String get name => _getAttribute('name');
+  String? get name => _getAttribute('name');
 
-  set name(String value) {
+  set name(String? value) {
     _setAttribute('name', value);
   }
 
@@ -1844,11 +1910,11 @@ abstract class MediaElement extends HtmlElement {
 
   static const int NETWORK_NO_SOURCE = 3;
 
-  bool _muted;
+  bool muted = false;
 
-  num defaultPlaybackRate;
+  num defaultPlaybackRate = 1.0;
 
-  bool disableRemotePlayback;
+  bool disableRemotePlayback = false;
 
   MediaElement._(Document ownerDocument, String tag)
       : super._(ownerDocument, tag);
@@ -1865,9 +1931,9 @@ abstract class MediaElement extends HtmlElement {
     _setAttributeBool('controls', value);
   }
 
-  String get crossOrigin => _getAttribute('crossorigin');
+  String? get crossOrigin => _getAttribute('crossorigin');
 
-  set crossOrigin(String value) {
+  set crossOrigin(String? value) {
     _setAttribute('crossorigin', value);
   }
 
@@ -1877,7 +1943,7 @@ abstract class MediaElement extends HtmlElement {
     _setAttributeBool('muted', value);
   }
 
-  MediaError get error => null;
+  MediaError? get error => null;
 
   bool get loop => _getAttributeBool('loop');
 
@@ -1885,27 +1951,21 @@ abstract class MediaElement extends HtmlElement {
     _setAttributeBool('loop', value);
   }
 
-  MediaKeys get mediaKeys => null;
+  MediaKeys? get mediaKeys => null;
 
-  bool get muted => _muted ?? false;
+  int? get networkState => NETWORK_EMPTY;
 
-  set muted(bool value) {
-    _muted = value;
-  }
-
-  int get networkState => NETWORK_EMPTY;
-
-  String get preload => _getAttribute('preload');
+  String get preload => _getAttribute('preload') ?? '';
 
   set preload(String value) {
     _setAttribute('preload', value);
   }
 
-  int get readyState => null;
+  int get readyState => 0;
 
-  RemotePlayback get remote => null;
+  RemotePlayback? get remote => null;
 
-  TimeRanges get seekable => null;
+  TimeRanges? get seekable => null;
 
   String get src => _getAttributeResolvedUri('src') ?? '';
 
@@ -1913,25 +1973,25 @@ abstract class MediaElement extends HtmlElement {
     _setAttribute('src', value);
   }
 
-  String get srcObject {
+  MediaStream? get srcObject {
     throw UnimplementedError();
   }
 
-  set srcObject(Object value) {
+  set srcObject(MediaStream? value) {
     throw UnimplementedError();
   }
 
-  String get volume => _getAttribute('volume');
+  num get volume => _getAttributeNum('volume', defaultValue: 1.0) ?? 1.0;
 
-  set volume(String value) {
-    _setAttribute('volume', value);
+  set volume(num value) {
+    _setAttributeNum('volume', value);
   }
 
-  TextTrack addTextTrack(String kind, [String label, String language]) {
+  TextTrack addTextTrack(String kind, [String? label, String? language]) {
     throw UnimplementedError();
   }
 
-  String canPlayType(String type, [String keySystem]) {
+  String canPlayType(String type, [String? keySystem]) {
     throw UnimplementedError();
   }
 
@@ -1957,7 +2017,7 @@ abstract class MediaElement extends HtmlElement {
 }
 
 class MenuElement extends HtmlElement {
-  factory MenuElement() => MenuElement._(null);
+  factory MenuElement() => MenuElement._(window.document);
 
   MenuElement._(Document ownerDocument) : super._(ownerDocument, 'MENU');
 
@@ -1966,17 +2026,17 @@ class MenuElement extends HtmlElement {
 }
 
 class MetaElement extends HtmlElement {
-  factory MetaElement() => MetaElement._(null);
+  factory MetaElement() => MetaElement._(window.document);
 
   MetaElement._(Document ownerDocument) : super._(ownerDocument, 'META');
 
-  String get content => _getAttribute('content');
+  String get content => _getAttribute('content') ?? '';
 
   set content(String value) {
     _setAttribute('content', value);
   }
 
-  String get name => _getAttribute('name');
+  String get name => _getAttribute('name') ?? '';
 
   set name(String value) {
     _setAttribute('name', value);
@@ -1990,7 +2050,7 @@ class MeterElement extends HtmlElement {
   /// Checks if this type is supported on the current platform.
   static bool get supported => Element.isTagSupported('meter');
 
-  factory MeterElement() => document.createElement('meter');
+  factory MeterElement() => MeterElement._(window.document);
 
   /// Constructor instantiated by the DOM when a custom element has been created.
   ///
@@ -1999,41 +2059,41 @@ class MeterElement extends HtmlElement {
 
   MeterElement._(Document ownerDocument) : super._(ownerDocument, 'METER');
 
-  num get high => _getAttributeNum('high');
+  num? get high => _getAttributeNum('high', defaultValue: 0.0) ?? 1;
 
-  set high(num value) {
+  set high(num? value) {
     _setAttributeNum('high', value);
   }
 
   List<Node> get labels => <Node>[];
 
-  num get low => _getAttributeNum('low');
+  num? get low => _getAttributeNum('low', defaultValue: 0.0) ?? 0;
 
-  set low(num value) {
+  set low(num? value) {
     _setAttributeNum('low', value);
   }
 
-  num get max => _getAttributeNum('max');
+  num? get max => _getAttributeNum('max', defaultValue: 0.0) ?? 1;
 
-  set max(num value) {
+  set max(num? value) {
     _setAttributeNum('max', value);
   }
 
-  num get min => _getAttributeNum('min');
+  num? get min => _getAttributeNum('min', defaultValue: 0.0) ?? 0;
 
-  set min(num value) {
+  set min(num? value) {
     _setAttributeNum('min', value);
   }
 
-  num get optimum => _getAttributeNum('optimum');
+  num? get optimum => _getAttributeNum('optimum', defaultValue: 0.0);
 
-  set optimum(num value) {
+  set optimum(num? value) {
     _setAttributeNum('optimum', value);
   }
 
-  num get value => _getAttributeNum('value');
+  num? get value => _getAttributeNum('value', defaultValue: 0.0);
 
-  set value(num value) {
+  set value(num? value) {
     _setAttributeNum('value', value);
   }
 
@@ -2049,7 +2109,7 @@ class ModElement extends HtmlElement {
 }
 
 class NoncedElement {
-  String nonce;
+  String? nonce;
 
   factory NoncedElement._() {
     throw UnimplementedError();
@@ -2059,34 +2119,34 @@ class NoncedElement {
 class ObjectElement extends HtmlElement with _FormFieldElement {
   static bool get supported => true;
 
-  factory ObjectElement() => ObjectElement._(null);
+  factory ObjectElement() => ObjectElement._(window.document);
 
   ObjectElement._(Document ownerDocument) : super._(ownerDocument, 'OBJECT');
 
-  WindowBase get contentWindow => null;
+  WindowBase? get contentWindow => null;
 
-  int get height => _getAttributeInt('height');
+  String get height => _getAttribute('height') ?? '';
 
-  set height(int value) {
-    _setAttributeInt('height', value);
+  set height(String value) {
+    _setAttribute('height', value);
   }
 
-  String get name => _getAttribute('name');
+  String get name => _getAttribute('name') ?? '';
 
   set name(String value) {
     _setAttribute('name', value);
   }
 
-  String get type => _getAttribute('type');
+  String? get type => _getAttribute('type') ?? '';
 
-  set type(String value) {
+  set type(String? value) {
     _setAttribute('type', value);
   }
 
-  int get width => _getAttributeInt('width');
+  String get width => _getAttribute('width') ?? '';
 
-  set width(int value) {
-    _setAttributeInt('width', value);
+  set width(String value) {
+    _setAttribute('width', value);
   }
 
   @override
@@ -2095,7 +2155,7 @@ class ObjectElement extends HtmlElement with _FormFieldElement {
 }
 
 class OListElement extends HtmlElement {
-  factory OListElement() => OListElement._(null);
+  factory OListElement() => OListElement._(window.document);
 
   OListElement._(Document ownerDocument) : super._(ownerDocument, 'OL');
 
@@ -2104,7 +2164,7 @@ class OListElement extends HtmlElement {
 }
 
 class OptGroupElement extends HtmlElement {
-  factory OptGroupElement() => OptGroupElement._(null);
+  factory OptGroupElement() => OptGroupElement._(window.document);
 
   OptGroupElement._(Document ownerDocument)
       : super._(ownerDocument, 'OPTGROUP');
@@ -2122,12 +2182,14 @@ class OptGroupElement extends HtmlElement {
 
 class OptionElement extends HtmlElement
     with _DisabledElement, _FormFieldElement {
-  String label;
+  String? label;
+  bool? _selected;
 
-  bool _selected;
-
-  OptionElement({String data = '', String value = '', bool selected = false})
-      : super._(null, 'option') {
+  OptionElement({
+    String data = '',
+    String value = '',
+    bool selected = false,
+  }) : super._(window.document, 'option') {
     if (data.isNotEmpty) {
       appendText(data);
     }
@@ -2153,7 +2215,7 @@ class OptionElement extends HtmlElement
     _setAttributeBool('selected', value);
   }
 
-  int get index {
+  int? get index {
     final selectElement = _selectElement;
     if (selectElement == null) {
       return null;
@@ -2171,9 +2233,9 @@ class OptionElement extends HtmlElement
     return null;
   }
 
-  bool get selected => _selected ?? defaultSelected;
+  bool? get selected => _selected ?? defaultSelected;
 
-  set selected(bool value) {
+  set selected(bool? value) {
     final selectElement = _selectElement;
     if (selectElement == null) {
       return null;
@@ -2186,13 +2248,13 @@ class OptionElement extends HtmlElement
     }
   }
 
-  String get value => _getAttribute('value');
+  String get value => _getAttribute('value') ?? '';
 
   set value(String value) {
     _setAttribute('value', value);
   }
 
-  SelectElement get _selectElement {
+  SelectElement? get _selectElement {
     var parent = this.parent;
     if (parent is SelectElement) {
       return parent;
@@ -2214,27 +2276,27 @@ class OptionElement extends HtmlElement
 class OutputElement extends HtmlElement with _FormFieldElement {
   static bool get supported => true;
 
-  factory OutputElement() => OutputElement._(null);
+  factory OutputElement() => OutputElement._(window.document);
 
   OutputElement._(Document ownerDocument) : super._(ownerDocument, 'OUTPUT');
 
-  String get defaultValue => _getAttribute('value');
+  String? get defaultValue => _getAttribute('value');
 
-  set defaultValue(String value) {
+  set defaultValue(String? value) {
     _setAttribute('value', value);
   }
 
-  String get name => _getAttribute('name');
+  String? get name => _getAttribute('name');
 
-  set name(String value) {
+  set name(String? value) {
     _setAttribute('name', value);
   }
 
-  String get type => _getAttribute('type');
+  String? get type => _getAttribute('type');
 
-  String get value => _getAttribute('value');
+  String? get value => _getAttribute('value');
 
-  set value(String value) {
+  set value(String? value) {
     _setAttribute('value', value);
   }
 
@@ -2246,7 +2308,7 @@ class OutputElement extends HtmlElement with _FormFieldElement {
 }
 
 class ParagraphElement extends HtmlElement {
-  factory ParagraphElement() => ParagraphElement._(null);
+  factory ParagraphElement() => ParagraphElement._(window.document);
 
   ParagraphElement._(Document ownerDocument, {String nodeName = 'P'})
       : super._(ownerDocument, nodeName);
@@ -2257,19 +2319,19 @@ class ParagraphElement extends HtmlElement {
 }
 
 class ParamElement extends HtmlElement {
-  factory ParamElement() => ParamElement._(null);
+  factory ParamElement() => ParamElement._(window.document);
 
   ParamElement._(Document ownerDocument) : super._(ownerDocument, 'PARAM');
 
-  String get name => _getAttribute('name');
+  String? get name => _getAttribute('name');
 
-  set name(String value) {
+  set name(String? value) {
     _setAttribute('name', value);
   }
 
-  String get value => _getAttribute('value');
+  String? get value => _getAttribute('value');
 
-  set value(String value) {
+  set value(String? value) {
     _setAttribute('value', value);
   }
 
@@ -2278,7 +2340,7 @@ class ParamElement extends HtmlElement {
 }
 
 class PictureElement extends HtmlElement {
-  factory PictureElement.created() => PictureElement._(null);
+  factory PictureElement.created() => PictureElement._(window.document);
 
   PictureElement._(Document ownerDocument, {String nodeName = 'PICTURE'})
       : super._(ownerDocument, nodeName);
@@ -2289,7 +2351,7 @@ class PictureElement extends HtmlElement {
 }
 
 class PreElement extends HtmlElement {
-  factory PreElement() => PreElement._(null);
+  factory PreElement() => PreElement._(window.document);
 
   PreElement._(Document ownerDocument, {String nodeName = 'PRE'})
       : super._(ownerDocument, nodeName);
@@ -2301,22 +2363,22 @@ class PreElement extends HtmlElement {
 class ProgressElement extends HtmlElement {
   static bool get supported => true;
 
-  factory ProgressElement() => ProgressElement._(null);
+  factory ProgressElement() => ProgressElement._(window.document);
 
   ProgressElement._(Document ownerDocument, {String nodeName = 'PROGRESS'})
       : super._(ownerDocument, nodeName);
 
-  num get max => _getAttributeNum('max');
+  num? get max => _getAttributeNum('max', defaultValue: null);
 
-  set max(num value) {
+  set max(num? value) {
     _setAttributeNum('max', value);
   }
 
-  num get position => _getAttributeNum('position');
+  num? get position => _getAttributeNum('position', defaultValue: null);
 
-  num get value => _getAttributeNum('value');
+  num? get value => _getAttributeNum('value', defaultValue: null);
 
-  set value(num value) {
+  set value(num? value) {
     _setAttributeNum('value', value);
   }
 
@@ -2333,7 +2395,7 @@ class QuoteElement extends HtmlElement {
 }
 
 class ScriptElement extends HtmlElement {
-  factory ScriptElement() => ScriptElement._(null);
+  factory ScriptElement() => ScriptElement._(window.document);
 
   ScriptElement._(Document ownerDocument, {String nodeName = 'SCRIPT'})
       : super._(ownerDocument, nodeName);
@@ -2344,27 +2406,27 @@ class ScriptElement extends HtmlElement {
     _setAttributeBool('async', value);
   }
 
-  String get crossOrigin => _getAttribute('crossorigin');
+  String? get crossOrigin => _getAttribute('crossorigin');
 
-  set crossOrigin(String value) {
+  set crossOrigin(String? value) {
     _setAttribute('crossorigin', value);
   }
 
-  bool get defer => _getAttributeBool('defer');
+  bool? get defer => _getAttributeBool('defer');
 
-  set defer(bool value) {
+  set defer(bool? value) {
     _setAttributeBool('defer', value);
   }
 
-  String get integrity => _getAttribute('integrity');
+  String? get integrity => _getAttribute('integrity');
 
-  set integrity(String value) {
+  set integrity(String? value) {
     _setAttribute('integrity', value);
   }
 
-  bool get noModule => _getAttributeBool('nomodule') ?? '';
+  bool? get noModule => _getAttributeBool('nomodule');
 
-  set noModule(bool value) {
+  set noModule(bool? value) {
     _setAttributeBool('nomodule', value);
   }
 
@@ -2374,9 +2436,9 @@ class ScriptElement extends HtmlElement {
     _setAttribute('src', value);
   }
 
-  String get type => _getAttribute('type');
+  String? get type => _getAttribute('type');
 
-  set type(String value) {
+  set type(String? value) {
     _setAttribute('type', value);
   }
 
@@ -2387,7 +2449,7 @@ class ScriptElement extends HtmlElement {
 
 class SelectElement extends HtmlElement
     with _DisabledElement, _FormFieldElement, _LabelsElement {
-  factory SelectElement() => SelectElement._(null);
+  factory SelectElement() => SelectElement._(window.document);
 
   /// Constructor instantiated by the DOM when a custom element has been created.
   ///
@@ -2402,9 +2464,10 @@ class SelectElement extends HtmlElement
     _setAttributeBool('autofocus', value);
   }
 
-  int get length => options.length;
+  int? get length => options.length;
 
-  set length(int newLength) {
+  set length(int? newLength) {
+    newLength ??= 0;
     while (options.length < newLength) {
       append(OptionElement());
     }
@@ -2413,15 +2476,15 @@ class SelectElement extends HtmlElement
     }
   }
 
-  bool get multiple => _getAttributeBool('multiple');
+  bool? get multiple => _getAttributeBool('multiple');
 
-  set multiple(bool value) {
+  set multiple(bool? value) {
     _setAttributeBool('multiple', value);
   }
 
-  String get name => _getAttribute('name');
+  String? get name => _getAttribute('name');
 
-  set name(String value) {
+  set name(String? value) {
     _setAttribute('name', value);
   }
 
@@ -2450,11 +2513,11 @@ class SelectElement extends HtmlElement
   int get selectedIndex {
     final options = this.options;
     for (var i = 0; i < options.length; i++) {
-      if (options[i].selected) {
+      if (options[i].selected ?? false) {
         return i;
       }
     }
-    return multiple ? -1 : 0;
+    return (multiple ?? false) ? -1 : 0;
   }
 
   set selectedIndex(int value) {
@@ -2465,22 +2528,22 @@ class SelectElement extends HtmlElement
   }
 
   List<OptionElement> get selectedOptions {
-    if (multiple) {
-      var options = this.options.where((o) => o.selected).toList();
+    if (multiple ?? false) {
+      var options = this.options.where((o) => o.selected ?? false).toList();
       return UnmodifiableListView<OptionElement>(options);
     } else {
       return <OptionElement>[options[selectedIndex]];
     }
   }
 
-  int get size => _getAttributeInt('size');
+  int? get size => _getAttributeInt('size');
 
-  set size(int value) {
+  set size(int? value) {
     _setAttributeInt('size', value);
   }
 
   String get type {
-    if (multiple) {
+    if (multiple ?? false) {
       return 'select-multiple';
     }
     return 'select-one';
@@ -2493,11 +2556,11 @@ class SelectElement extends HtmlElement
   String get value {
     final options = this.options;
     for (var option in options) {
-      if (option.selected) {
+      if (option.selected ?? false) {
         return option.value;
       }
     }
-    if (multiple) {
+    if (multiple ?? false) {
       return '';
     }
     return options.first.value;
@@ -2523,7 +2586,7 @@ class SelectElement extends HtmlElement
     return options[index];
   }
 
-  OptionElement namedItem(String name) {
+  OptionElement? namedItem(String name) {
     for (var option in options) {
       if (option.value == name) {
         return option;
@@ -2556,9 +2619,9 @@ class ShadowElement extends HtmlElement {
 class SlotElement extends HtmlElement {
   SlotElement._(Document ownerDocument) : super._(ownerDocument, 'SLOT');
 
-  String get name => _getAttribute('name');
+  String? get name => _getAttribute('name');
 
-  set name(String value) {
+  set name(String? value) {
     _setAttribute('name', value);
   }
 
@@ -2567,35 +2630,35 @@ class SlotElement extends HtmlElement {
 }
 
 class SourceElement extends HtmlElement {
-  factory SourceElement() => SourceElement._(null);
+  factory SourceElement() => SourceElement._(window.document);
 
   SourceElement._(Document ownerDocument) : super._(ownerDocument, 'SOURCE');
 
-  String get media => _getAttribute('media');
+  String get media => _getAttribute('media') ?? '';
 
   set media(String value) {
     _setAttribute('media', value);
   }
 
-  String get sizes => _getAttribute('sizes');
+  String? get sizes => _getAttribute('sizes');
 
-  set sizes(String value) {
+  set sizes(String? value) {
     _setAttribute('sizes', value);
   }
 
-  String get src => _getAttribute('src');
+  String? get src => _getAttribute('src') ?? '';
 
-  set src(String value) {
+  set src(String? value) {
     _setAttribute('src', value);
   }
 
-  String get srcset => _getAttribute('srcset');
+  String? get srcset => _getAttribute('srcset') ?? '';
 
-  set srcset(String value) {
+  set srcset(String? value) {
     _setAttribute('srcset', value);
   }
 
-  String get type => _getAttribute('type');
+  String get type => _getAttribute('type') ?? '';
 
   set type(String value) {
     _setAttribute('type', value);
@@ -2607,7 +2670,7 @@ class SourceElement extends HtmlElement {
 }
 
 class SpanElement extends HtmlElement {
-  factory SpanElement() => SpanElement._(null);
+  factory SpanElement() => SpanElement._(window.document);
 
   SpanElement._(Document ownerDocument) : super._(ownerDocument, 'SPAN');
 
@@ -2616,9 +2679,9 @@ class SpanElement extends HtmlElement {
 }
 
 class StyleElement extends HtmlElement {
-  StyleSheet _sheet;
+  StyleSheet? _sheet;
 
-  factory StyleElement() => StyleElement._(null);
+  factory StyleElement() => StyleElement._(window.document);
 
   StyleElement._(Document ownerDocument) : super._(ownerDocument, 'STYLE');
 
@@ -2628,9 +2691,10 @@ class StyleElement extends HtmlElement {
     _setAttributeBool('disabled', value);
   }
 
-  StyleSheet get sheet {
-    if (_sheet != null) {
-      return _sheet;
+  StyleSheet? get sheet {
+    final existing = _sheet;
+    if (existing != null) {
+      return existing;
     }
     final type = this.type;
     if (type != null && type != '' && type != 'text/css') {
@@ -2640,8 +2704,8 @@ class StyleElement extends HtmlElement {
     final parsed = css.parse(text);
     final styleSheet = CssStyleSheet._();
     for (var node in parsed.topLevels) {
-      final styleRule = CssStyleRule._(styleSheet, node);
-      if (styleRule != null) {
+      if (node is css.RuleSet) {
+        final styleRule = CssStyleRule.internal(styleSheet, node);
         styleSheet.cssRules.add(styleRule);
       }
     }
@@ -2649,9 +2713,9 @@ class StyleElement extends HtmlElement {
     return styleSheet;
   }
 
-  String get type => _getAttribute('type');
+  String? get type => _getAttribute('type');
 
-  set type(String value) {
+  set type(String? value) {
     _setAttribute('type', value);
   }
 
@@ -2660,7 +2724,7 @@ class StyleElement extends HtmlElement {
 }
 
 class TableCaptionElement extends HtmlElement {
-  factory TableCaptionElement() => TableCaptionElement._(null);
+  factory TableCaptionElement() => TableCaptionElement._(window.document);
 
   TableCaptionElement._(Document ownerDocument)
       : super._(ownerDocument, 'CAPTION');
@@ -2671,21 +2735,22 @@ class TableCaptionElement extends HtmlElement {
 }
 
 class TableCellElement extends HtmlElement {
-  factory TableCellElement() => TableCellElement._(null);
+  factory TableCellElement() => TableCellElement._(window.document);
 
   TableCellElement._(Document ownerDocument) : super._(ownerDocument, 'TD');
 
   int get cellIndex {
+    final parent = this.parent!;
     return parent.children.whereType<TableCellElement>().toList().indexOf(this);
   }
 
-  int get colSpan => _getAttributeInt('colspan');
+  int get colSpan => _getAttributeInt('colspan') ?? 1;
 
   set colSpan(int value) {
     _setAttributeInt('colspan', value);
   }
 
-  int get rowSpan => _getAttributeInt('rowspan');
+  int get rowSpan => _getAttributeInt('rowspan') ?? 1;
 
   set rowSpan(int value) {
     _setAttributeInt('rowspan', value);
@@ -2697,7 +2762,7 @@ class TableCellElement extends HtmlElement {
 }
 
 class TableColElement extends HtmlElement {
-  factory TableColElement() => TableColElement._(null);
+  factory TableColElement() => TableColElement._(window.document);
 
   TableColElement._(Document ownerDocument) : super._(ownerDocument, 'COL');
 
@@ -2707,7 +2772,7 @@ class TableColElement extends HtmlElement {
 }
 
 class TableElement extends HtmlElement {
-  factory TableElement() => TableElement._(null);
+  factory TableElement() => TableElement._(window.document);
 
   /// Constructor instantiated by the DOM when a custom element has been created.
   ///
@@ -2716,8 +2781,8 @@ class TableElement extends HtmlElement {
 
   TableElement._(Document ownerDocument) : super._(ownerDocument, 'TABLE');
 
-  TableCaptionElement get caption => children
-      .whereType<TableCaptionElement>()
+  TableCaptionElement? get caption => children
+      .whereType<TableCaptionElement?>()
       .firstWhere((e) => true, orElse: () => null);
 
   List<TableRowElement> get rows {
@@ -2728,7 +2793,9 @@ class TableElement extends HtmlElement {
       }
       if (child._lowerCaseTagName == 'tbody') {
         for (var grandChild in child.children) {
-          tableRows.add(grandChild);
+          if (grandChild is TableRowElement) {
+            tableRows.add(grandChild);
+          }
         }
       }
     }
@@ -2753,22 +2820,31 @@ class TableElement extends HtmlElement {
   TableRowElement addRow() => createTBody().addRow();
 
   TableCaptionElement createCaption() {
-    return _createUniqueChild('_table', () => TableCaptionElement());
+    return _createUniqueChild(
+      lowerCaseTagName: '_table',
+      constructor: () => TableCaptionElement(),
+    );
   }
 
   TableSectionElement createTBody() {
     return _createUniqueChild(
-        '_tbody', () => TableSectionElement._(ownerDocument, 'tbody'));
+      lowerCaseTagName: '_tbody',
+      constructor: () => TableSectionElement._(ownerDocument!, 'tbody'),
+    );
   }
 
   TableSectionElement createTFoot() {
     return _createUniqueChild(
-        '_tfoot', () => TableSectionElement._(ownerDocument, 'tfoot'));
+      lowerCaseTagName: '_tfoot',
+      constructor: () => TableSectionElement._(ownerDocument!, 'tfoot'),
+    );
   }
 
   TableSectionElement createTHead() {
     return _createUniqueChild(
-        '_thead', () => TableSectionElement._(ownerDocument, 'thead'));
+      lowerCaseTagName: '_thead',
+      constructor: () => TableSectionElement._(ownerDocument!, 'thead'),
+    );
   }
 
   void deleteCaption() =>
@@ -2790,13 +2866,17 @@ class TableElement extends HtmlElement {
     return createTBody().insertRow(index);
   }
 
-  Element _createUniqueChild<T extends Element>(String name, T Function() f) {
-    final existing = children.firstWhere((e) => e._lowerCaseTagName == name,
+  T _createUniqueChild<T extends Element>({
+    required String lowerCaseTagName,
+    required T Function() constructor,
+  }) {
+    final existing = children.whereType<T?>().firstWhere(
+        (e) => e != null && e._lowerCaseTagName == lowerCaseTagName,
         orElse: () => null);
     if (existing != null) {
       return existing;
     }
-    final section = f();
+    final section = constructor();
     append(section);
     return section;
   }
@@ -2806,7 +2886,7 @@ class TableElement extends HtmlElement {
 }
 
 class TableRowElement extends HtmlElement {
-  factory TableRowElement() => TableRowElement._(null);
+  factory TableRowElement() => TableRowElement._(window.document);
 
   /// Constructor instantiated by the DOM when a custom element has been created.
   ///
@@ -2820,6 +2900,7 @@ class TableRowElement extends HtmlElement {
   }
 
   int get rowIndex {
+    final parent = this.parent!;
     final siblings = parent.children.toList();
     for (var i = 0; i < siblings.length; i++) {
       if (identical(siblings[i], this)) {
@@ -2830,6 +2911,7 @@ class TableRowElement extends HtmlElement {
   }
 
   int get sectionRowIndex {
+    final parent = this.parent!;
     final siblings = parent.children.whereType<TableCellElement>().toList();
     for (var i = 0; i < siblings.length; i++) {
       if (identical(siblings[i], this)) {
@@ -2844,7 +2926,7 @@ class TableRowElement extends HtmlElement {
   }
 
   void deleteCell(int index) {
-    cells[index]?.remove();
+    cells[index].remove();
   }
 
   TableCellElement insertCell(int index) {
@@ -2888,7 +2970,7 @@ class TableSectionElement extends HtmlElement {
   }
 
   TableRowElement insertRow(int index) {
-    TableRowElement before;
+    TableRowElement? before;
     for (var existing in childNodes) {
       if (existing is TableRowElement) {
         index--;
@@ -2912,7 +2994,7 @@ class TemplateElement extends HtmlElement {
   /// Checks if this type is supported on the current platform.
   static bool get supported => Element.isTagSupported('template');
 
-  factory TemplateElement() => TemplateElement._(null);
+  factory TemplateElement() => TemplateElement._(window.document);
 
   TemplateElement._(Document ownerDocument)
       : super._(ownerDocument, 'TEMPLATE');
@@ -2928,13 +3010,13 @@ class TemplateElement extends HtmlElement {
   /// * <https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#innerhtml-on-templates>
   @override
   void setInnerHtml(
-    String html, {
-    NodeValidator validator,
-    NodeTreeSanitizer treeSanitizer,
+    String? html, {
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
   }) {
     text = null;
     var fragment = createFragment(
-      html,
+      html ?? '',
       validator: validator,
       treeSanitizer: treeSanitizer,
     );
@@ -2948,15 +3030,12 @@ class TemplateElement extends HtmlElement {
 
 class TextAreaElement extends HtmlElement
     with _DisabledElement, _FormFieldElement, _LabelsElement {
-  String dirName;
+  String dirName = '';
+  String selectionDirection = '';
+  int selectionEnd = -1;
+  int selectionStart = -1;
 
-  String selectionDirection;
-
-  int selectionEnd;
-
-  int selectionStart;
-
-  factory TextAreaElement() => TextAreaElement._(null);
+  factory TextAreaElement() => TextAreaElement._(window.document);
 
   /// Constructor instantiated by the DOM when a custom element has been created.
   ///
@@ -2966,9 +3045,9 @@ class TextAreaElement extends HtmlElement
   TextAreaElement._(Document ownerDocument)
       : super._(ownerDocument, 'TEXTAREA');
 
-  String get autocapitalize => _getAttribute('autocapitalize');
+  String? get autocapitalize => _getAttribute('autocapitalize');
 
-  set autocapitalize(String value) {
+  set autocapitalize(String? value) {
     _setAttribute('autocapitalize', value);
   }
 
@@ -2984,7 +3063,7 @@ class TextAreaElement extends HtmlElement
     _setAttributeInt('cols', value);
   }
 
-  String get defaultValue => _getAttribute('value');
+  String get defaultValue => _getAttribute('value') ?? '';
 
   set defaultValue(String value) {
     _setAttribute('value', value);
@@ -3005,21 +3084,21 @@ class TextAreaElement extends HtmlElement
     _setAttributeInt('minlength', value);
   }
 
-  String get name => _getAttribute('name');
+  String get name => _getAttribute('name') ?? '';
 
   set name(String value) {
     _setAttribute('name', value);
   }
 
-  String get placeholder => _getAttribute('placeholder');
+  String get placeholder => _getAttribute('placeholder') ?? '';
 
   set placeholder(String value) {
     _setAttribute('placeholder', value);
   }
 
-  bool get readOnly => _getAttributeBool('readonly');
+  bool? get readOnly => _getAttributeBool('readonly');
 
-  set readOnly(bool value) {
+  set readOnly(bool? value) {
     _setAttributeBool('readonly', value);
   }
 
@@ -3037,23 +3116,23 @@ class TextAreaElement extends HtmlElement
 
   int get textLength => value.length;
 
-  String get type => null;
+  String? get type => null;
 
-  String get validationMessage => null;
+  String? get validationMessage => null;
 
   ValidityState get validity => ValidityState._();
 
-  String get value => innerText;
+  String get value => text ?? '';
 
   set value(String value) {
-    innerText = value;
+    text = value.replaceAll('\n', '');
   }
 
   bool get willValidate {
     return !(_ancestors.any((e) => e is DataListElement) || disabled);
   }
 
-  String get wrap => _getAttribute('wrap');
+  String get wrap => _getAttribute('wrap') ?? '';
 
   set wrap(String value) {
     _setAttribute('wrap', value);
@@ -3076,13 +3155,17 @@ class TextAreaElement extends HtmlElement
 
   void setCustomValidity(String error) {}
 
-  void setRangeText(String replacement,
-      {int start, int end, String selectionMode}) {}
+  void setRangeText(
+    String replacement, {
+    int? start,
+    int? end,
+    String? selectionMode,
+  }) {}
 
-  void setSelectionRange(int start, int end, [String direction]) {
+  void setSelectionRange(int start, int end, [String? direction]) {
     selectionStart = start;
     selectionEnd = end;
-    selectionDirection = direction;
+    selectionDirection = direction ?? '';
   }
 
   @override
@@ -3093,7 +3176,7 @@ class TextAreaElement extends HtmlElement
 class TimeElement extends HtmlElement {
   TimeElement._(Document ownerDocument) : super._(ownerDocument, 'TIME');
 
-  String get dateTime => _getAttribute('datetime');
+  String get dateTime => _getAttribute('datetime') ?? '';
 
   set dateTime(String value) {
     _setAttribute('datetime', value);
@@ -3104,7 +3187,7 @@ class TimeElement extends HtmlElement {
 }
 
 class TitleElement extends HtmlElement {
-  factory TitleElement() => TitleElement._(null);
+  factory TitleElement() => TitleElement._(window.document);
 
   TitleElement._(Document ownerDocument) : super._(ownerDocument, 'TITLE');
 
@@ -3115,25 +3198,25 @@ class TitleElement extends HtmlElement {
 class TrackElement extends HtmlElement {
   static bool get supported => true;
 
-  factory TrackElement() => TrackElement._(null);
+  factory TrackElement() => TrackElement._(window.document);
 
   TrackElement._(Document ownerDocument) : super._(ownerDocument, 'TRACK');
 
-  String get kind => _getAttribute('kind');
+  String? get kind => _getAttribute('kind');
 
-  set kind(String value) {
+  set kind(String? value) {
     _setAttribute('kind', value);
   }
 
-  String get label => _getAttribute('label');
+  String? get label => _getAttribute('label');
 
-  set label(String value) {
+  set label(String? value) {
     _setAttribute('label', value);
   }
 
-  String get src => _getAttributeResolvedUri('src') ?? '';
+  String? get src => _getAttributeResolvedUri('src') ?? '';
 
-  set src(String value) {
+  set src(String? value) {
     _setAttribute('src', value);
   }
 
@@ -3142,7 +3225,7 @@ class TrackElement extends HtmlElement {
 }
 
 class UListElement extends HtmlElement {
-  factory UListElement() => UListElement._(null);
+  factory UListElement() => UListElement._(window.document);
 
   UListElement._(Document ownerDocument) : super._(ownerDocument, 'UL');
 
@@ -3151,13 +3234,15 @@ class UListElement extends HtmlElement {
 }
 
 class UnknownElement extends HtmlElement {
-  final String _namespaceUri;
+  final String? _namespaceUri;
 
-  UnknownElement._(Document ownerDocument, this._namespaceUri, String tag)
+  /// Internal constructor. __Not part of dart:html__.
+  UnknownElement.internal(
+      Document ownerDocument, this._namespaceUri, String tag)
       : super._(ownerDocument, tag);
 
   @override
-  String get namespaceUri {
+  String? get namespaceUri {
     if (_namespaceUri != null) {
       return _namespaceUri;
     }
@@ -3166,21 +3251,21 @@ class UnknownElement extends HtmlElement {
 
   @override
   Element _newInstance(Document ownerDocument) =>
-      UnknownElement._(ownerDocument, namespaceUri, _lowerCaseTagName);
+      UnknownElement.internal(ownerDocument, namespaceUri, _lowerCaseTagName);
 }
 
 class ValidityState {
-  final bool badInput;
-  final bool customError;
-  final bool patternMismatch;
-  final bool rangeOverflow;
-  final bool rangeUnderflow;
-  final bool stepMismatch;
-  final bool tooLong;
-  final bool tooShort;
-  final bool typeMismatch;
-  final bool valid;
-  final bool valueMissing;
+  final bool? badInput;
+  final bool? customError;
+  final bool? patternMismatch;
+  final bool? rangeOverflow;
+  final bool? rangeUnderflow;
+  final bool? stepMismatch;
+  final bool? tooLong;
+  final bool? tooShort;
+  final bool? typeMismatch;
+  final bool? valid;
+  final bool? valueMissing;
 
   ValidityState._({
     this.badInput,
@@ -3198,15 +3283,15 @@ class ValidityState {
 }
 
 class VideoElement extends MediaElement implements CanvasImageSource {
-  factory VideoElement() => VideoElement._(null);
+  factory VideoElement() => VideoElement._(window.document);
 
   VideoElement._(Document ownerDocument) : super._(ownerDocument, 'VIDEO');
 
-  num get duration => null;
+  num get duration => 0;
 
   bool get ended => false;
 
-  int get height => _getAttributeInt('height');
+  int get height => _getAttributeInt('height') ?? 0;
 
   set height(int value) {
     _setAttributeInt('height', value);
@@ -3214,13 +3299,13 @@ class VideoElement extends MediaElement implements CanvasImageSource {
 
   bool get paused => false;
 
-  String get poster => _getAttribute('poster');
+  String get poster => _getAttribute('poster') ?? '';
 
   set poster(String value) {
     _setAttribute('poster', value);
   }
 
-  int get width => _getAttributeInt('width');
+  int get width => _getAttributeInt('width') ?? 0;
 
   set width(int value) {
     _setAttributeInt('width', value);
@@ -3247,7 +3332,7 @@ mixin _DisabledElement implements HtmlElement {
 }
 
 mixin _FormFieldElement implements HtmlElement {
-  FormElement get form {
+  FormElement? get form {
     var ancestor = parent;
     while (ancestor != null) {
       if (ancestor is FormElement) {
@@ -3260,17 +3345,17 @@ mixin _FormFieldElement implements HtmlElement {
 }
 
 mixin _HrefAttributeElement implements HtmlElement {
-  String get href {
+  String? get href {
     return _getAttributeResolvedUri('href') ?? '';
   }
 
-  set href(String value) {
+  set href(String? value) {
     _setAttribute('href', value);
   }
 
-  String get referrerPolicy => _getAttribute('referrerpolicy');
+  String? get referrerPolicy => _getAttribute('referrerpolicy') ?? '';
 
-  set referrerPolicy(String value) {
+  set referrerPolicy(String? value) {
     _setAttribute('referrerpolicy', value);
   }
 }
@@ -3278,23 +3363,23 @@ mixin _HrefAttributeElement implements HtmlElement {
 mixin _HtmlHyperlinkElementUtils
     implements HtmlHyperlinkElementUtils, _UrlBase {
   @override
-  set host(String value) {
+  set host(String? value) {
     throw UnimplementedError();
   }
 
   @override
-  set hostname(String value) {
+  set hostname(String? value) {
     throw UnimplementedError();
   }
 
   @override
-  String get href;
+  String? get href;
 
   @override
-  set href(String value);
+  set href(String? value);
 
   @override
-  String get password {
+  String? get password {
     final userInfo = _uri?.userInfo;
     if (userInfo == null) {
       return null;
@@ -3307,17 +3392,17 @@ mixin _HtmlHyperlinkElementUtils
   }
 
   @override
-  set password(String value) {
+  set password(String? value) {
     throw UnimplementedError();
   }
 
   @override
-  set protocol(String value) {
+  set protocol(String? value) {
     throw UnimplementedError();
   }
 
   @override
-  String get username {
+  String? get username {
     final userInfo = _uri?.userInfo;
     if (userInfo == null) {
       return null;
@@ -3330,12 +3415,12 @@ mixin _HtmlHyperlinkElementUtils
   }
 
   @override
-  set username(String value) {
+  set username(String? value) {
     throw UnimplementedError();
   }
 
   @override
-  Uri get _uri => Uri.parse(href);
+  Uri? get _uri => Uri.parse(href!);
 }
 
 mixin _LabelsElement implements HtmlElement {

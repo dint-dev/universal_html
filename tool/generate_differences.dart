@@ -36,6 +36,10 @@ void main() {
 
   // Generate a Markdown file
   final sb = StringBuffer();
+  sb.writeln('${dartHtmlApis.length} APIs in "dart:html"');
+  sb.writeln(
+      '${universalHtmlApis.length} APIs in "package:universal_html/html.dart"');
+  sb.writeln('');
   sb.writeln('# Missing APIs');
   for (var element in missingAPIs) {
     sb.writeln('  * $element');

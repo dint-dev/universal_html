@@ -56,7 +56,7 @@ abstract class Animation extends EventTarget {
   static bool get supported => false;
 
   factory Animation(
-      [AnimationEffectTimingReadOnly effect, AnimationTimeline timeline]) {
+      [AnimationEffectTimingReadOnly? effect, AnimationTimeline? timeline]) {
     throw UnimplementedError();
   }
 
@@ -82,14 +82,14 @@ abstract class Animation extends EventTarget {
 }
 
 abstract class AnimationEffectTiming extends AnimationEffectTimingReadOnly {
-  num delay;
-  String direction;
-  Object duration;
-  String easing;
-  num endDelay;
-  String fill;
-  num iterations;
-  num iterationStart;
+  num? delay;
+  String? direction;
+  Object? duration;
+  String? easing;
+  num? endDelay;
+  String? fill;
+  num? iterations;
+  num? iterationStart;
   AnimationEffectTiming._() : super._();
 }
 
@@ -103,7 +103,7 @@ abstract class AnimationTimeline {
 }
 
 abstract class DocumentTimeline extends AnimationTimeline {
-  factory DocumentTimeline([Map options]) {
+  factory DocumentTimeline([Map? options]) {
     throw UnimplementedError();
   }
 
@@ -112,7 +112,7 @@ abstract class DocumentTimeline extends AnimationTimeline {
 }
 
 abstract class ScrollTimeline extends AnimationTimeline {
-  factory ScrollTimeline([Map options]) {
+  factory ScrollTimeline([Map? options]) {
     throw UnimplementedError();
   }
 

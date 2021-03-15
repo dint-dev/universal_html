@@ -51,11 +51,11 @@ abstract class SpeechSynthesis extends EventTarget {
     throw UnimplementedError();
   }
 
-  bool get paused;
+  bool? get paused;
 
-  bool get pending;
+  bool? get pending;
 
-  bool get speaking;
+  bool? get speaking;
 
   void cancel();
 
@@ -68,21 +68,21 @@ abstract class SpeechSynthesis extends EventTarget {
   void speak(SpeechSynthesisUtterance utterance);
 }
 
-class SpeechSynthesisEvent extends Event {
-  final int charIndex;
+abstract class SpeechSynthesisEvent extends Event {
+  int? get charIndex;
 
-  final num elapsedTime;
+  num? get elapsedTime;
 
-  final String name;
+  String? get name;
 
-  final SpeechSynthesisUtterance utterance;
+  SpeechSynthesisUtterance? get utterance;
 
   factory SpeechSynthesisEvent._() {
     throw UnimplementedError();
   }
 }
 
-class SpeechSynthesisUtterance extends EventTarget {
+abstract class SpeechSynthesisUtterance extends EventTarget {
   /// Static factory designed to expose `boundary` events to event
   /// handlers that are not necessarily instances of [SpeechSynthesisUtterance].
   ///
@@ -132,19 +132,19 @@ class SpeechSynthesisUtterance extends EventTarget {
   static const EventStreamProvider<SpeechSynthesisEvent> startEvent =
       EventStreamProvider<SpeechSynthesisEvent>('start');
 
-  String lang;
+  String? get lang;
 
-  num pitch;
+  num? get pitch;
 
-  num rate;
+  num? get rate;
 
-  String text;
+  String? get text;
 
-  SpeechSynthesisVoice voice;
+  SpeechSynthesisVoice? get voice;
 
-  num volume;
+  num? get volume;
 
-  factory SpeechSynthesisUtterance([String text]) {
+  factory SpeechSynthesisUtterance([String? text]) {
     throw UnimplementedError();
   }
 
@@ -170,16 +170,16 @@ class SpeechSynthesisUtterance extends EventTarget {
   Stream<SpeechSynthesisEvent> get onStart => startEvent.forTarget(this);
 }
 
-class SpeechSynthesisVoice {
-  final bool defaultValue;
+abstract class SpeechSynthesisVoice {
+  bool? get defaultValue;
 
-  final String lang;
+  String? get lang;
 
-  final bool localService;
+  bool? get localService;
 
-  final String name;
+  String? get name;
 
-  final String voiceUri;
+  String? get voiceUri;
 
   factory SpeechSynthesisVoice._() {
     throw UnimplementedError();

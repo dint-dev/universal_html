@@ -14,9 +14,9 @@
 
 part of main_test;
 
-void _temporarilyRemoveChildrenFromDocument({Node root}) {
+void _temporarilyRemoveChildrenFromDocument({Node? root}) {
   // Save nodes
-  root ??= document;
+  root ??= universal_html.document;
 
   // Remove nodes
   final nodes = List<Node>.from(root.childNodes);
@@ -24,14 +24,15 @@ void _temporarilyRemoveChildrenFromDocument({Node root}) {
     node.remove();
   }
 
+  final finalRoot = root;
   addTearDown(() {
     // Removes
-    while (root.firstChild != null) {
-      root.firstChild.remove();
+    while (finalRoot.firstChild != null) {
+      finalRoot.firstChild!.remove();
     }
     // Restore old nodes
     for (var node in nodes) {
-      root.append(node);
+      finalRoot.append(node);
     }
   });
 }
@@ -41,32 +42,35 @@ void _expectSaneDocument(Document document) {
 }
 
 /// Does sanity checks on the tree.
-void _expectSaneTree(Node node,
-    {Document expectedOwnerDocument, Node expectedParentNode}) {
+void _expectSaneTree(
+  Node node, {
+  Document? expectedOwnerDocument,
+  Node? expectedParentNode,
+}) {
   // 'ownerDocument'
   if (expectedOwnerDocument != null && node is! Document) {
     expect(node.ownerDocument, expectedOwnerDocument,
-        reason: "Node '${node}' has incorrect 'ownerDocument': ${node}");
+        reason: "Node '$node' has incorrect 'ownerDocument': $node");
   }
 
   // 'parentNode'
   if (expectedParentNode != null) {
     expect(node.parentNode, same(expectedParentNode),
-        reason: "Node '${node}' has incorrect 'parentNode': ${node}");
+        reason: "Node '$node' has incorrect 'parentNode': $node");
   }
 
   // 'previousNode.nextNode' or 'parentNode.firstChild'
   if (node.previousNode == null) {
     if (node.parent != null) {
       expect(
-        node.parent.firstChild,
+        node.parent!.firstChild,
         same(node),
         reason: "'node.parentNode.firstNode' should be same as 'node'",
       );
     }
   } else {
     expect(
-      node.previousNode.nextNode,
+      node.previousNode!.nextNode,
       same(node),
       reason: "'node.previousNode.nextNode' should be same as 'node'",
     );
@@ -76,21 +80,21 @@ void _expectSaneTree(Node node,
   if (node.nextNode == null) {
     if (node.parent != null) {
       expect(
-        node.parent.lastChild,
+        node.parent!.lastChild,
         same(node),
         reason: "'node.parentNode.lastNode' should be same as 'node'",
       );
     }
   } else {
     expect(
-      node.nextNode.previousNode,
+      node.nextNode!.previousNode,
       same(node),
       reason: "'node.nextNode.previousNode' should be same as 'node'",
     );
   }
 
   // Test that children are sane too.
-  Node previousChild;
+  Node? previousChild;
   var nextChild = node.firstChild;
   while (nextChild != null) {
     _expectSaneTree(nextChild,

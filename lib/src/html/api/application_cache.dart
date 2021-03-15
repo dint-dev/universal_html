@@ -46,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
-abstract class ApplicationCache extends EventTarget {
+class ApplicationCache extends EventTarget {
   static const EventStreamProvider<Event> cachedEvent =
       EventStreamProvider<Event>('cached');
 
@@ -85,29 +85,29 @@ abstract class ApplicationCache extends EventTarget {
 
   static bool get supported => false;
 
-  ApplicationCache._() : super._created();
+  ApplicationCache.internal() : super.internal();
 
-  Stream<Event> get onCached;
+  Stream<Event> get onCached => throw UnimplementedError();
 
-  Stream<Event> get onChecking;
+  Stream<Event> get onChecking => throw UnimplementedError();
 
-  Stream<Event> get onDownloading;
+  Stream<Event> get onDownloading => throw UnimplementedError();
 
-  Stream<Event> get onError;
+  Stream<Event> get onError => throw UnimplementedError();
 
-  Stream<Event> get onNoUpdate;
+  Stream<Event> get onNoUpdate => throw UnimplementedError();
 
-  Stream<Event> get onObsolete;
+  Stream<Event> get onObsolete => throw UnimplementedError();
 
-  Stream<Event> get onProgress;
+  Stream<Event> get onProgress => throw UnimplementedError();
 
-  Stream<Event> get onUpdateReady;
+  Stream<Event> get onUpdateReady => throw UnimplementedError();
 
   int get status => UNCACHED;
 
-  void abort();
+  void abort() => throw UnimplementedError();
 
-  void swapCache();
+  void swapCache() => throw UnimplementedError();
 
-  void update();
+  void update() => throw UnimplementedError();
 }

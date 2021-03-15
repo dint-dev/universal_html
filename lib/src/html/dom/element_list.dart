@@ -432,10 +432,10 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   CssRect get contentEdge => _ContentCssListRect(this);
 
   @override
-  E get first => _nodeList.first;
+  E get first => _nodeList.first as E;
 
   @override
-  E get last => _nodeList.last;
+  E get last => _nodeList.last as E;
 
   @override
   int get length => _nodeList.length;
@@ -860,13 +860,13 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   List<Node> get rawList => _nodeList;
 
   @override
-  E get single => _nodeList.single;
+  E get single => _nodeList.single as E;
 
   @override
   CssStyleDeclarationBase get style => _CssStyleDeclarationSet(this);
 
   @override
-  E operator [](int index) => _nodeList[index];
+  E operator [](int index) => _nodeList[index] as E;
 
   @override
   void operator []=(int index, E value) {
@@ -874,12 +874,12 @@ class _FrozenElementList<E extends Element> extends ListBase<E>
   }
 
   @override
-  void shuffle([Random random]) {
+  void shuffle([Random? random]) {
     throw UnsupportedError('Cannot shuffle list');
   }
 
   @override
-  void sort([Comparator<E> compare]) {
+  void sort([Comparator<E>? compare]) {
     throw UnsupportedError('Cannot sort list');
   }
 }

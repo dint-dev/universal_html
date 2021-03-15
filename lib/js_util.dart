@@ -14,4 +14,6 @@
 
 library universal_html.js_util;
 
-export 'prefer_sdk/js_util.dart';
+export 'dart:js_util'
+    if (dart.library.js_util) 'dart:js_util' // Browser, Node.JS
+    if (dart.library.io) 'src/js_util.dart'; // VM

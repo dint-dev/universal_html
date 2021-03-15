@@ -36,10 +36,10 @@ void main() {
   });
 }
 
-final elementsForSdkHtml =
-    (reflectionData['dart.dom.html'] as Map<String, Object>).keys.toSet();
+final Set<String> elementsForSdkHtml =
+    (reflectionData['dart.dom.html'] as Map<String, Object?>).keys.toSet();
 
-final elementsForUniversalHtml =
-    (reflectionData['universal_html.without_internals'] as Map<String, Object>)
+final Set<String> elementsForUniversalHtml =
+    (reflectionData['universal_html.internal'] as Map<String, Object?>)
         .keys
         .toSet();

@@ -43,6 +43,8 @@ The original files in the Dart SDK had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+class Database {}
+
 class IdbFactory {
   static bool get supported => false;
 
@@ -50,5 +52,3 @@ class IdbFactory {
     throw UnimplementedError();
   }
 }
-
-class Database {}

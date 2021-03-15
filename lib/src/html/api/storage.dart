@@ -107,19 +107,22 @@ class Storage extends DelegatingMap<String, String> {
 
   // We need to override this to ensure we dispatch StorageEvent events.
   @override
-  String remove(Object key) {
-    if (containsKey(key)) {
-      final oldValue = super.remove(key);
-      final event = StorageEvent(
-        'StorageEvent',
-        key: key,
-        oldValue: oldValue,
-        newValue: null,
-        storageArea: this,
-      );
-      _window.dispatchEvent(event);
+  String? remove(Object? key) {
+    if (key is String) {
+      if (containsKey(key)) {
+        final oldValue = super.remove(key);
+        final event = StorageEvent(
+          'StorageEvent',
+          key: key,
+          oldValue: oldValue,
+          newValue: null,
+          storageArea: this,
+        );
+        _window.dispatchEvent(event);
+        return oldValue;
+      }
     }
-    return key;
+    return null;
   }
 
   // We need to override this to ensure we dispatch StorageEvent events.
@@ -135,15 +138,19 @@ class Storage extends DelegatingMap<String, String> {
   // We need to override this to ensure we dispatch StorageEvent events.
   @override
   String update(String key, String Function(String value) update,
-      {String Function() ifAbsent}) {
+      {String Function()? ifAbsent}) {
     var value = this[key];
-    if (ifAbsent != null && value == null && !containsKey(key)) {
-      value = ifAbsent();
-    } else {
-      value = update(value);
+    if (value == null) {
+      if (ifAbsent == null) {
+        return '';
+      }
+      final newValue = ifAbsent();
+      this[key] = newValue;
+      return newValue;
     }
-    this[key] = value;
-    return value;
+    final newValue = update(value);
+    this[key] = newValue;
+    return newValue;
   }
 
   // We need to override this to ensure we dispatch StorageEvent events.
@@ -156,11 +163,11 @@ class Storage extends DelegatingMap<String, String> {
 }
 
 class StorageEvent extends Event {
-  final String key;
-  final String newValue;
-  final String oldValue;
-  final Storage storageArea;
-  final String url;
+  final String? key;
+  final String? newValue;
+  final String? oldValue;
+  final Storage? storageArea;
+  final String? url;
 
   StorageEvent(
     String type, {

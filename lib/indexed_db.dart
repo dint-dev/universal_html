@@ -14,4 +14,7 @@
 
 library universal_html.indexed_db;
 
-export 'prefer_sdk/indexed_db.dart';
+export 'dart:indexed_db'
+    if (dart.library.indexed_db) 'dart:indexed_db' // Browser
+    if (dart.library.io) 'src/indexed_db.dart' // VM
+    if (dart.library.js) 'src/indexed_db.dart'; // Node.JS

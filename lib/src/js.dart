@@ -43,140 +43,24 @@ The original files in the Dart SDK had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-library dart.js;
+@visibleForTesting
+library universal_html.js.internal;
 
-bool isBrowserObject(dynamic o) => false;
-
-Object convertFromBrowserObject(dynamic o) => o;
+import 'package:meta/meta.dart';
 
 final JsObject context = JsObject(null);
 
-/// Proxies a JavaScript object to Dart.
-///
-/// The properties of the JavaScript object are accessible via the `[]` and
-/// `[]=` operators. Methods are callable via [callMethod].
-abstract class JsObject {
-  /// Constructs a new JavaScript object from [constructor] and returns a proxy
-  /// to it.
-  factory JsObject(JsFunction constructor, [List arguments]) {
-    throw UnimplementedError();
-  }
-
-  /// Constructs a [JsObject] that proxies a native Dart object; _for expert use
-  /// only_.
-  ///
-  /// Use this constructor only if you wish to get access to JavaScript
-  /// properties attached to a browser host object, such as a Node or Blob, that
-  /// is normally automatically converted into a native Dart object.
-  ///
-  /// An exception will be thrown if [object] either is `null` or has the type
-  /// `bool`, `num`, or `String`.
-  factory JsObject.fromBrowserObject(object) {
-    if (object is num || object is String || object is bool || object == null) {
-      throw ArgumentError('object cannot be a num, string, bool, or null');
-    }
-    throw UnimplementedError();
-  }
-
-  /// Recursively converts a JSON-like collection of Dart objects to a
-  /// collection of JavaScript objects and returns a [JsObject] proxy to it.
-  ///
-  /// [object] must be a [Map] or [Iterable], the contents of which are also
-  /// converted. Maps and Iterables are copied to a new JavaScript object.
-  /// Primitives and other transferrable values are directly converted to their
-  /// JavaScript type, and all other objects are proxied.
-  factory JsObject.jsify(object) {
-    if ((object is! Map) && (object is! Iterable)) {
-      throw ArgumentError('object must be a Map or Iterable');
-    }
-    throw UnimplementedError();
-  }
-
-  /// Returns the value associated with [property] from the proxied JavaScript
-  /// object.
-  ///
-  /// The type of [property] must be either [String] or [num].
-  Object operator [](Object property) {
-    if (property is! String && property is! num) {
-      throw ArgumentError('property is not a String or num');
-    }
-    throw UnimplementedError();
-  }
-
-  /// Sets the value associated with [property] on the proxied JavaScript
-  /// object.
-  ///
-  /// The type of [property] must be either [String] or [num].
-  void operator []=(Object property, Object value) {
-    if (property is! String && property is! num) {
-      throw ArgumentError('property is not a String or num');
-    }
-    throw UnimplementedError();
-  }
-
-  @override
-  int get hashCode => 0;
-
-  /// Returns `true` if the JavaScript object contains the specified property
-  /// either directly or though its prototype chain.
-  ///
-  /// This is the equivalent of the `in` operator in JavaScript.
-  bool hasProperty(property) {
-    if (property is! String && property is! num) {
-      throw ArgumentError('property is not a String or num');
-    }
-    throw UnimplementedError();
-  }
-
-  /// Removes [property] from the JavaScript object.
-  ///
-  /// This is the equivalent of the `delete` operator in JavaScript.
-  void deleteProperty(property) {
-    if (property is! String && property is! num) {
-      throw ArgumentError('property is not a String or num');
-    }
-    throw UnimplementedError();
-  }
-
-  /// Returns `true` if the JavaScript object has [type] in its prototype chain.
-  ///
-  /// This is the equivalent of the `instanceof` operator in JavaScript.
-  bool instanceof(JsFunction type) {
-    throw UnimplementedError();
-  }
-
-  /// Returns the result of the JavaScript objects `toString` method.
-  @override
-  String toString() {
-    throw UnimplementedError();
-  }
-
-  /// Calls [method] on the JavaScript object with the arguments [args] and
-  /// returns the result.
-  ///
-  /// The type of [method] must be either [String] or [num].
-  dynamic callMethod(method, [List args]) {
-    if (method is! String && method is! num) {
-      throw ArgumentError('method is not a String or num');
-    }
-    throw UnimplementedError();
-  }
+F allowInterop<F extends Function>(F f) {
+  throw UnimplementedError();
 }
 
-/// Proxies a JavaScript Function object.
-abstract class JsFunction extends JsObject {
-  /// Returns a [JsFunction] that captures its 'this' binding and calls [f]
-  /// with the value of this passed as the first argument.
-  factory JsFunction.withThis(Function f) {
-    throw UnimplementedError();
-  }
-
-  /// Invokes the JavaScript function with arguments [args]. If [thisArg] is
-  /// supplied it is the value of `this` for the invocation.
-  dynamic apply(List args, {thisArg}) {
-    throw UnimplementedError();
-  }
+Function allowInteropCaptureThis(Function f) {
+  throw UnimplementedError();
 }
+
+Object convertFromBrowserObject(dynamic o) => o;
+
+bool isBrowserObject(dynamic o) => false;
 
 /// A [List] that proxies a JavaScript array.
 abstract class JsArray<E> implements JsObject, List<E> {
@@ -193,15 +77,6 @@ abstract class JsArray<E> implements JsObject, List<E> {
 
   // Methods required by ListMixin
 
-  E operator [](dynamic index) {
-    throw UnimplementedError();
-  }
-
-  @override
-  void operator []=(dynamic index, dynamic value) {
-    throw UnimplementedError();
-  }
-
   @override
   int get length {
     throw UnimplementedError();
@@ -209,6 +84,15 @@ abstract class JsArray<E> implements JsObject, List<E> {
 
   @override
   set length(int length) {
+    throw UnimplementedError();
+  }
+
+  E operator [](dynamic index) {
+    throw UnimplementedError();
+  }
+
+  @override
+  void operator []=(dynamic index, dynamic value) {
     throw UnimplementedError();
   }
 
@@ -248,15 +132,134 @@ abstract class JsArray<E> implements JsObject, List<E> {
   }
 
   @override
-  void sort([int Function(E a, E b) compare]) {
+  void sort([int Function(E a, E b)? compare]) {
     throw UnimplementedError();
   }
 }
 
-F allowInterop<F extends Function>(F f) {
-  throw UnimplementedError();
+/// Proxies a JavaScript Function object.
+abstract class JsFunction extends JsObject {
+  /// Returns a [JsFunction] that captures its 'this' binding and calls [f]
+  /// with the value of this passed as the first argument.
+  factory JsFunction.withThis(Function f) {
+    throw UnimplementedError();
+  }
+
+  /// Invokes the JavaScript function with arguments [args]. If [thisArg] is
+  /// supplied it is the value of `this` for the invocation.
+  dynamic apply(List args, {thisArg}) {
+    throw UnimplementedError();
+  }
 }
 
-Function allowInteropCaptureThis(Function f) {
-  throw UnimplementedError();
+/// Proxies a JavaScript object to Dart.
+///
+/// The properties of the JavaScript object are accessible via the `[]` and
+/// `[]=` operators. Methods are callable via [callMethod].
+abstract class JsObject {
+  /// Constructs a new JavaScript object from [constructor] and returns a proxy
+  /// to it.
+  factory JsObject(JsFunction? constructor, [List? arguments]) {
+    throw UnimplementedError();
+  }
+
+  /// Constructs a [JsObject] that proxies a native Dart object; _for expert use
+  /// only_.
+  ///
+  /// Use this constructor only if you wish to get access to JavaScript
+  /// properties attached to a browser host object, such as a Node or Blob, that
+  /// is normally automatically converted into a native Dart object.
+  ///
+  /// An exception will be thrown if [object] either is `null` or has the type
+  /// `bool`, `num`, or `String`.
+  factory JsObject.fromBrowserObject(object) {
+    if (object is num || object is String || object is bool || object == null) {
+      throw ArgumentError('object cannot be a num, string, bool, or null');
+    }
+    throw UnimplementedError();
+  }
+
+  /// Recursively converts a JSON-like collection of Dart objects to a
+  /// collection of JavaScript objects and returns a [JsObject] proxy to it.
+  ///
+  /// [object] must be a [Map] or [Iterable], the contents of which are also
+  /// converted. Maps and Iterables are copied to a new JavaScript object.
+  /// Primitives and other transferrable values are directly converted to their
+  /// JavaScript type, and all other objects are proxied.
+  factory JsObject.jsify(object) {
+    if ((object is! Map) && (object is! Iterable)) {
+      throw ArgumentError('object must be a Map or Iterable');
+    }
+    throw UnimplementedError();
+  }
+
+  @override
+  int get hashCode => 0;
+
+  /// Returns the value associated with [property] from the proxied JavaScript
+  /// object.
+  ///
+  /// The type of [property] must be either [String] or [num].
+  Object? operator [](Object property) {
+    if (property is! String && property is! num) {
+      throw ArgumentError('property is not a String or num');
+    }
+    throw UnimplementedError();
+  }
+
+  /// Sets the value associated with [property] on the proxied JavaScript
+  /// object.
+  ///
+  /// The type of [property] must be either [String] or [num].
+  void operator []=(Object property, Object value) {
+    if (property is! String && property is! num) {
+      throw ArgumentError('property is not a String or num');
+    }
+    throw UnimplementedError();
+  }
+
+  /// Calls [method] on the JavaScript object with the arguments [args] and
+  /// returns the result.
+  ///
+  /// The type of [method] must be either [String] or [num].
+  dynamic callMethod(method, [List? args]) {
+    if (method is! String && method is! num) {
+      throw ArgumentError('method is not a String or num');
+    }
+    throw UnimplementedError();
+  }
+
+  /// Removes [property] from the JavaScript object.
+  ///
+  /// This is the equivalent of the `delete` operator in JavaScript.
+  void deleteProperty(property) {
+    if (property is! String && property is! num) {
+      throw ArgumentError('property is not a String or num');
+    }
+    throw UnimplementedError();
+  }
+
+  /// Returns `true` if the JavaScript object contains the specified property
+  /// either directly or though its prototype chain.
+  ///
+  /// This is the equivalent of the `in` operator in JavaScript.
+  bool hasProperty(property) {
+    if (property is! String && property is! num) {
+      throw ArgumentError('property is not a String or num');
+    }
+    throw UnimplementedError();
+  }
+
+  /// Returns `true` if the JavaScript object has [type] in its prototype chain.
+  ///
+  /// This is the equivalent of the `instanceof` operator in JavaScript.
+  bool instanceof(JsFunction type) {
+    throw UnimplementedError();
+  }
+
+  /// Returns the result of the JavaScript objects `toString` method.
+  @override
+  String toString() {
+    throw UnimplementedError();
+  }
 }

@@ -19,22 +19,6 @@ void _testElementAttributes() {
     });
   });
   group('setAttribute(...):', () {
-    test('name is null', () {
-      final e = Element.tag('e');
-      expect(
-        () => e.setAttribute(null, 'value'),
-        throwsA(anything),
-      );
-    });
-
-    test('value is null', () {
-      final e = Element.tag('e');
-      e.setAttribute('k0', null);
-      expect(e.getAttribute('other'), isNull);
-      expect(e.getAttribute('k0'), 'null');
-      expect(e.attributes['k0'], 'null');
-    });
-
     test('name is lowercase', () {
       final e = Element.tag('e');
       e.setAttribute('k0', 'v0');
@@ -192,31 +176,8 @@ void _testElementAttributes() {
         e.getNamespacedAttributes(''),
         {'k0': 'v0'},
       );
-      expect(
-        e.getNamespacedAttributes(null),
-        {'k0': 'v0'},
-      );
       expect(e.getAttribute('other'), isNull);
       expect(e.getAttribute('k0'), 'v0');
-    });
-
-    test('null name', () {
-      final e = Element.tag('e');
-      expect(
-        () => e.setAttributeNS('https://ns/', null, 'value'),
-        throwsA(anything),
-      );
-    });
-
-    test('null value', () {
-      final e = Element.tag('e');
-      e.setAttributeNS('https://ns/', 'k0', null);
-      expect(e.getAttributeNS('https://ns/', 'other'), isNull);
-      expect(e.getAttributeNS('https://ns/', 'k0'), 'null');
-      expect(
-        e.getNamespacedAttributes('https://ns/'),
-        {'k0': 'null'},
-      );
     });
 
     test('fails if the name is invalid', () {
@@ -238,33 +199,25 @@ void _testElementAttributes() {
       parent.setAttribute('xmlns:prefix', 'example');
       parent.append(element);
 
-      element.setAttributeNS('example', 'k', 'v');
-      expect(element.outerHtml, '<div k="v"></div>');
+      element.setAttributeNS('example', 'data-k', 'v');
+      expect(element.outerHtml, '<div data-k="v"></div>');
     });
 
     test('xmlns:prefix is defined after element is created', () {
       final element = DivElement();
-      element.setAttributeNS('example', 'k0', 'v0');
-      expect(element.outerHtml, '<div k0="v0"></div>');
+      element.setAttributeNS('example', 'data-k0', 'v0');
+      expect(element.outerHtml, '<div data-k0="v0"></div>');
 
       // Add parent that defines the namespace
       final parent = DivElement();
       parent.setAttribute('xmlns:prefix', 'example');
       parent.append(element);
 
-      expect(element.outerHtml, '<div k0="v0"></div>');
+      expect(element.outerHtml, '<div data-k0="v0"></div>');
     });
   });
 
   group('removeAttribute:', () {
-    test('name is null', () {
-      final e = Element.tag('e');
-      expect(
-        () => e.removeAttribute(null),
-        throwsA(anything),
-      );
-    });
-
     test('name is wrong', () {
       final e = Element.tag('e');
       e.setAttribute('k', 'v0');
@@ -376,22 +329,6 @@ void _testElementAttributes() {
   });
 
   group('removeAttributeNS:', () {
-    test('name is null', () {
-      final e = Element.tag('e');
-      expect(
-        () => e.removeAttributeNS('', null),
-        throwsA(anything),
-      );
-    });
-
-    test('name is wrong', () {
-      final e = Element.tag('e');
-      expect(
-        () => e.removeAttributeNS('', null),
-        throwsA(anything),
-      );
-    });
-
     test('normal', () {
       // Set three attributes
       final e = Element.tag('e');

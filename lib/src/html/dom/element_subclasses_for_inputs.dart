@@ -51,8 +51,8 @@ abstract class ButtonInputElement implements InputElementBase {
 }
 
 abstract class CheckboxInputElement implements InputElementBase {
-  bool checked;
-  bool required;
+  bool? checked = false;
+  bool required = false;
 
   factory CheckboxInputElement() => InputElement(type: 'checkbox');
 }
@@ -60,9 +60,10 @@ abstract class CheckboxInputElement implements InputElementBase {
 abstract class DateInputElement implements RangeInputElementBase {
   static bool get supported => true;
 
-  bool readOnly;
-  bool required;
-  DateTime valueAsDate;
+  bool? readOnly;
+  bool required = false;
+  DateTime get valueAsDate => throw UnimplementedError();
+  set valueAsDate(DateTime value);
 
   factory DateInputElement() => InputElement(type: 'date');
 }
@@ -71,44 +72,44 @@ abstract class EmailInputElement implements TextInputElementBase {
   static bool get supported => true;
 
   @override
-  String autocomplete;
+  String autocomplete = '';
 
   @override
-  bool autofocus;
+  bool autofocus = false;
 
   @override
-  int maxLength;
+  int? maxLength;
 
-  bool multiple;
-
-  @override
-  String pattern;
+  bool? multiple = false;
 
   @override
-  String placeholder;
+  String pattern = '';
 
   @override
-  bool readOnly;
+  String placeholder = '';
 
   @override
-  bool required;
+  bool? readOnly;
 
   @override
-  int size;
+  bool required = false;
+
+  @override
+  int? size;
 
   factory EmailInputElement() => InputElement(type: 'email');
 
-  Element get list;
+  Element? get list;
 }
 
 abstract class FileUploadInputElement implements InputElementBase {
-  String accept;
+  String? accept;
 
-  bool multiple;
+  bool? multiple = false;
 
-  bool required;
+  bool required = true;
 
-  List<File> files;
+  List<File>? files = [];
 
   factory FileUploadInputElement() => InputElement(type: 'file');
 }
@@ -118,46 +119,46 @@ abstract class HiddenInputElement implements InputElementBase {
 }
 
 abstract class ImageButtonInputElement implements InputElementBase {
-  String alt;
-  int height;
-  String src;
-  int width;
+  String? alt;
+  int? height;
+  String? src;
+  int? width;
 
-  String formAction;
+  String? formAction = '';
 
-  String formEnctype;
+  String formEnctype = '';
 
-  String formMethod;
+  String formMethod = '';
 
-  bool formNoValidate;
+  bool formNoValidate = false;
 
-  String formTarget;
+  String? formTarget = '';
 
   factory ImageButtonInputElement() => InputElement(type: 'image');
 }
 
 abstract class InputElementBase implements Element {
-  bool autofocus;
+  bool autofocus = false;
 
-  bool disabled;
+  bool? disabled;
 
-  bool incremental;
+  bool? incremental;
 
-  bool indeterminate;
+  bool? indeterminate;
 
-  String name;
+  String? name = '';
 
-  String value;
+  String? value;
 
   InputElementBase._();
 
-  List<Node> get labels;
+  List<Node>? get labels;
 
-  String get validationMessage;
+  String? get validationMessage;
 
-  ValidityState get validity;
+  ValidityState? get validity;
 
-  bool get willValidate;
+  bool? get willValidate;
 
   bool checkValidity();
 
@@ -167,8 +168,8 @@ abstract class InputElementBase implements Element {
 abstract class LocalDateTimeInputElement implements RangeInputElementBase {
   static bool get supported => true;
 
-  bool readOnly;
-  bool required;
+  bool? readOnly;
+  bool required = false;
 
   factory LocalDateTimeInputElement() => InputElement(type: 'datetime-local');
 }
@@ -176,9 +177,10 @@ abstract class LocalDateTimeInputElement implements RangeInputElementBase {
 abstract class MonthInputElement implements RangeInputElementBase {
   static bool get supported => true;
 
-  bool readOnly;
-  bool required;
-  DateTime valueAsDate;
+  bool? readOnly;
+  bool required = false;
+  DateTime get valueAsDate;
+  set valueAsDate(DateTime value);
 
   factory MonthInputElement() => InputElement(type: 'month');
 }
@@ -186,11 +188,12 @@ abstract class MonthInputElement implements RangeInputElementBase {
 abstract class NumberInputElement implements RangeInputElementBase {
   static bool get supported => true;
 
-  String placeholder;
-  bool readOnly;
-  bool required;
+  String placeholder = '';
+  bool? readOnly;
+  bool required = false;
+
   @override
-  num valueAsNumber;
+  num? get valueAsNumber => throw UnimplementedError();
 
   factory NumberInputElement() => InputElement(type: 'number');
 }
@@ -200,8 +203,8 @@ abstract class PasswordInputElement implements TextInputElementBase {
 }
 
 abstract class RadioButtonInputElement implements InputElementBase {
-  bool checked;
-  bool required;
+  bool? checked = false;
+  bool required = false;
 
   factory RadioButtonInputElement() => InputElement(type: 'radio');
 }
@@ -214,15 +217,15 @@ abstract class RangeInputElement implements RangeInputElementBase {
 
 /// Base interface for all input element types which involve ranges.
 abstract class RangeInputElementBase implements InputElementBase {
-  String max;
+  String? max;
 
-  String min;
+  String? min;
 
-  String step;
+  String? step;
 
-  num valueAsNumber;
+  num? valueAsNumber;
 
-  Element get list;
+  Element? get list;
 
   void stepDown([int n]);
 
@@ -240,15 +243,15 @@ abstract class SearchInputElement implements TextInputElementBase {
 }
 
 abstract class SubmitButtonInputElement implements InputElementBase {
-  String formAction;
+  String? formAction = '';
 
-  String formEnctype;
+  String formEnctype = '';
 
-  String formMethod;
+  String formMethod = '';
 
-  bool formNoValidate;
+  bool formNoValidate = false;
 
-  String formTarget;
+  String? formTarget = '';
 
   factory SubmitButtonInputElement() => InputElement(type: 'submit');
 }
@@ -260,44 +263,44 @@ abstract class TelephoneInputElement implements TextInputElementBase {
 }
 
 abstract class TextInputElement implements TextInputElementBase {
-  String dirName;
+  String? dirName;
 
   factory TextInputElement() => InputElement(type: 'text');
 
-  Element get list;
+  Element? get list;
 }
 
 abstract class TextInputElementBase implements InputElementBase {
-  String autocomplete;
+  String autocomplete = '';
 
-  int maxLength;
+  int? maxLength;
 
-  String pattern;
+  String pattern = '';
 
-  String placeholder;
+  String placeholder = '';
 
-  bool readOnly;
+  bool? readOnly;
 
-  bool required;
+  bool required = false;
 
-  int size;
+  int? size;
 
-  String selectionDirection;
+  String? selectionDirection;
 
-  int selectionEnd;
+  int? selectionEnd;
 
-  int selectionStart;
+  int? selectionStart;
 
   void select();
 
-  void setSelectionRange(int start, int end, [String direction]);
+  void setSelectionRange(int start, int end, [String? direction]);
 }
 
 abstract class TimeInputElement implements RangeInputElementBase {
   static bool get supported => true;
 
-  bool readOnly;
-  bool required;
+  bool? readOnly;
+  bool required = false;
 
   factory TimeInputElement() => InputElement(type: 'time');
 }
@@ -311,9 +314,9 @@ abstract class UrlInputElement implements TextInputElementBase {
 abstract class WeekInputElement implements RangeInputElementBase {
   static bool get supported => true;
 
-  bool readOnly;
-  bool required;
-  DateTime valueAsDate;
+  bool? readOnly;
+  bool required = false;
+  DateTime? get valueAsDate => throw UnimplementedError();
 
   factory WeekInputElement() => InputElement(type: 'week');
 }

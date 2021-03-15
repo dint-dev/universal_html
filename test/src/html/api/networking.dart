@@ -14,35 +14,23 @@
 
 part of main_test;
 
-// Local TCP port that has a HTTP server
-int httpServerPort = 0;
+// Local TCP port that has a HTTP server.
+int _httpServerPort = 8989;
 
-// Local TCP port hat DOES NOT have HTTP server
-const httpServerWrongPort = 314;
+// Local TCP port hat DOES NOT have HTTP server.
+// Used for testing connection failures.
+const _httpServerWrongPort = 314;
 
 void _testNetworking() {
   if (_isFlutter) {
     return;
   }
-  group('Networking:', () {
-    StreamChannel streamChannel;
-    setUpAll(() async {
-      if (httpServerPort == 0) {
-        final streamChannel = spawnHybridUri(
-          Uri.parse('/test/src/html/api/networking_server.dart'),
-        );
-        final streamQueue = StreamQueue(streamChannel.stream);
-        httpServerPort = ((await streamQueue.next) as num).toInt();
-      }
-    });
-
-    tearDownAll(() {
-      if (streamChannel != null) {
-        streamChannel.sink.close();
-      }
-    });
-
-    _testHttpRequest();
-    _testEventSource();
-  }, timeout: Timeout(const Duration(seconds: 30)));
+  group(
+    'Networking:',
+    () {
+      _testHttpRequest();
+      _testEventSource();
+    },
+    timeout: Timeout(const Duration(seconds: 30)),
+  );
 }

@@ -56,12 +56,12 @@ class AbortPaymentEvent extends ExtendableEvent {
   }
 }
 
-class AnimationEvent extends Event {
-  final String animationName;
+abstract class AnimationEvent extends Event {
+  String? get animationName;
 
-  final num elapsedTime;
+  num? get elapsedTime;
 
-  factory AnimationEvent(String type, [Map eventInitDict]) {
+  factory AnimationEvent(String type, [Map? eventInitDict]) {
     throw UnimplementedError();
   }
 }
@@ -83,7 +83,7 @@ class BackgroundFetchFailEvent extends Event {
 }
 
 abstract class BeforeInstallPromptEvent extends Event {
-  BeforeInstallPromptEvent(String type, [Map eventInitDict])
+  BeforeInstallPromptEvent(String type, [Map? eventInitDict])
       : super.internal(type);
 
   List<String> get platforms;
@@ -96,29 +96,27 @@ abstract class BeforeInstallPromptEvent extends Event {
 class BeforeUnloadEvent extends Event {
   BeforeUnloadEvent._(String type) : super.internal(type);
 
-  String get returnValue => null;
-
-  set returnValue(String value) {}
+  String? returnValue;
 }
 
 class BlobEvent extends Event {
-  final Blob data;
-  final num timecode;
+  final Blob? data;
+  final num? timecode;
 
-  BlobEvent(String type, [Map dict])
-      : this._(type, data: dict['data'], timecode: dict['timecode']);
+  BlobEvent(String type, [Map? dict])
+      : this._(type, data: dict?['data'], timecode: dict?['timecode']);
 
   BlobEvent._(String type, {this.data, this.timecode}) : super.internal(type);
 }
 
-class CanMakePaymentEvent extends ExtendableEvent {
-  final List methodData;
+abstract class CanMakePaymentEvent extends ExtendableEvent {
+  List get methodData;
 
-  final List modifiers;
+  List get modifiers;
 
-  final String paymentRequestOrigin;
+  String get paymentRequestOrigin;
 
-  final String topLevelOrigin;
+  String get topLevelOrigin;
 
   factory CanMakePaymentEvent(String type, Map eventInitDict) {
     throw UnimplementedError();
@@ -129,23 +127,27 @@ class CanMakePaymentEvent extends ExtendableEvent {
   }
 }
 
-class ClipboardEvent extends Event {
-  final DataTransfer clipboardData;
+abstract class ClipboardEvent extends Event {
+  DataTransfer? get clipboardData;
 
-  factory ClipboardEvent(String type, [Map eventInitDict]) {
+  factory ClipboardEvent(String type, [Map? eventInitDict]) {
     throw UnimplementedError();
   }
 }
 
 class CloseEvent extends Event {
-  final int code;
+  final int? code;
 
-  final String reason;
+  final String? reason;
 
-  final bool wasClean;
+  final bool? wasClean;
 
-  CloseEvent._(String type, {this.code, this.reason, this.wasClean})
-      : super.internal(type);
+  CloseEvent._(
+    String type, {
+    this.code,
+    this.reason,
+    this.wasClean,
+  }) : super.internal(type);
 }
 
 class CompositionEvent extends Event {
@@ -153,13 +155,13 @@ class CompositionEvent extends Event {
 }
 
 class CustomEvent extends Event {
-  final Object detail;
+  final Object? detail;
 
   factory CustomEvent(
     String type, {
     bool canBubble = true,
     bool cancelable = true,
-    Object detail,
+    Object? detail,
   }) {
     return CustomEvent._(
       type,
@@ -169,42 +171,41 @@ class CustomEvent extends Event {
     );
   }
 
-  CustomEvent._(String type, {bool canBubble, cancelable, this.detail})
-      : super.internal(type, canBubble: canBubble, cancelable: cancelable);
+  CustomEvent._(
+    String type, {
+    bool canBubble = true,
+    bool cancelable = true,
+    this.detail,
+  }) : super.internal(type, canBubble: canBubble, cancelable: cancelable);
 }
 
 class DeviceAcceleration {
   final num x;
-
   final num y;
-
   final num z;
 
   DeviceAcceleration._(this.x, this.y, this.z);
 }
 
-class DeviceMotionEvent extends Event {
-  final DeviceAcceleration acceleration;
+abstract class DeviceMotionEvent extends Event {
+  DeviceAcceleration? get acceleration;
+  DeviceAcceleration? get accelerationIncludingGravity;
+  num? get interval;
+  DeviceRotationRate? get rotationRate;
 
-  final DeviceAcceleration accelerationIncludingGravity;
-
-  final num interval;
-
-  final DeviceRotationRate rotationRate;
-
-  factory DeviceMotionEvent(String type, [Map eventInitDict]) {
+  factory DeviceMotionEvent(String type, [Map? eventInitDict]) {
     throw UnimplementedError();
   }
 }
 
 class DeviceOrientationEvent extends Event {
-  final num absolute;
+  final num? absolute;
 
-  final num alpha;
+  final num? alpha;
 
-  final num beta;
+  final num? beta;
 
-  final num gamma;
+  final num? gamma;
 
   DeviceOrientationEvent._(
     String type, {
@@ -226,15 +227,20 @@ class DeviceRotationRate {
 }
 
 class ErrorEvent extends Event {
-  final int colno;
-  final Object error;
-  final String filename;
-  final int lineno;
-  final String message;
+  final int? colno;
+  final Object? error;
+  final String? filename;
+  final int? lineno;
+  final String? message;
 
-  ErrorEvent._(
-      {this.colno, this.error, this.filename, this.lineno, this.message})
-      : super.internal('error');
+  /// Internal constructor. __Not part of dart:html__.
+  ErrorEvent.internal({
+    this.colno,
+    this.error,
+    this.filename,
+    this.lineno,
+    this.message,
+  }) : super.internal('error');
 
   @override
   String toString() => '[ErrorEvent: $message]';
@@ -249,14 +255,12 @@ class ExtendableEvent extends Event {
   }
 }
 
-class FetchEvent extends ExtendableEvent {
-  final String clientId;
+abstract class FetchEvent extends ExtendableEvent {
+  String get clientId;
 
-  final bool isReload;
+  bool get isReload;
 
-  final Future preloadResponse;
-
-  final _Request request;
+  Future get preloadResponse;
 
   factory FetchEvent(String type, Map eventInitDict) {
     throw UnimplementedError();
@@ -268,18 +272,25 @@ class FetchEvent extends ExtendableEvent {
 }
 
 class FocusEvent extends UIEvent {
-  final EventTarget relatedTarget;
+  final EventTarget? relatedTarget;
 
-  FocusEvent(String type, {this.relatedTarget}) : super(type);
+  FocusEvent(
+    String type, {
+    this.relatedTarget,
+  }) : super(type);
 }
 
 class HashChangeEvent extends Event {
   final String oldUrl;
   final String newUrl;
 
-  HashChangeEvent(String type,
-      {bool canBubble = true, bool cancelable = true, this.oldUrl, this.newUrl})
-      : super.internal(type);
+  HashChangeEvent(
+    String type, {
+    bool canBubble = true,
+    bool cancelable = true,
+    required this.oldUrl,
+    required this.newUrl,
+  }) : super.internal(type);
 
   bool get supported => true;
 }
@@ -299,30 +310,31 @@ class KeyboardEvent extends UIEvent {
   static const int DOM_KEY_LOCATION_STANDARD = 0x00;
 
   final bool altKey;
-  final int charCode;
-  final String code;
+  final int? charCode;
+  final String? code;
   final bool ctrlKey;
   final bool isComposing;
-  final int keyCode;
-  final int location;
+  final int? keyCode;
+  final int? location;
   final bool metaKey;
   final bool repeat;
   final bool shiftKey;
+
   KeyboardEvent(
     String type, {
     this.altKey = false,
     this.charCode,
     this.code,
     this.ctrlKey = false,
-    this.isComposing,
+    this.isComposing = false,
     this.keyCode,
     this.location,
     this.metaKey = false,
-    this.repeat,
+    this.repeat = false,
     this.shiftKey = false,
     bool canBubble = true,
     bool cancelable = true,
-    Object view,
+    Object? view,
   }) : super(
           type,
           canBubble: canBubble,
@@ -357,17 +369,17 @@ class KeyEvent extends KeyboardEvent {
 
   KeyEvent(
     String type, {
+    required this.currentTarget,
     this.charCode = 0,
-    this.currentTarget,
     bool altKey = false,
     bool canBubble = true,
     bool cancelable = true,
     bool ctrlKey = false,
-    int keyCode,
-    int location = 1,
+    int? keyCode,
+    int? location,
     bool metaKey = false,
     bool shiftKey = false,
-    Window view,
+    Window? view,
   }) : super(
           type,
           view: view,
@@ -383,30 +395,30 @@ class KeyEvent extends KeyboardEvent {
 }
 
 class MessageEvent extends Event {
-  final dynamic data;
-  final String lastEventId;
-  final String origin;
-  final EventTarget source;
-  final List<MessagePort> ports;
+  final dynamic? data;
+  final String? lastEventId;
+  final String? origin;
+  final EventTarget? source;
+  final List<MessagePort>? ports;
 
   MessageEvent(
     String type, {
     this.data,
     this.origin,
-    String lastEventId,
+    String? lastEventId,
     this.source,
     this.ports,
   })  : lastEventId = lastEventId ?? '',
         super.internal(type);
 
-  String get suborigin => null;
+  String? get suborigin => null;
 }
 
 abstract class MessagePort extends EventTarget {
   static const EventStreamProvider<MessageEvent> messageEvent =
       EventStreamProvider<MessageEvent>('message');
 
-  MessagePort._() : super._created();
+  MessagePort._() : super.internal();
 
   /// Stream of `message` events handled by this [MessagePort].
   Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
@@ -417,17 +429,17 @@ abstract class MessagePort extends EventTarget {
 }
 
 class MouseEvent extends UIEvent {
-  final bool altKey;
+  final bool? altKey;
 
-  final int button;
+  final int? button;
 
-  final int buttons;
+  final int? buttons;
 
-  final num _clientX;
+  final num? _clientX;
 
-  final num _clientY;
+  final num? _clientY;
 
-  final bool ctrlKey;
+  final bool? ctrlKey;
 
   /// The nonstandard way to access the element that the mouse comes
   /// from in the case of a `mouseover` event.
@@ -435,31 +447,31 @@ class MouseEvent extends UIEvent {
   /// This member is deprecated and not cross-browser compatible; use
   /// relatedTarget to get the same information in the standard way.
   @deprecated
-  final Node fromElement;
+  final Node? fromElement;
 
-  final int _layerX;
+  final int? _layerX;
 
-  final int _layerY;
+  final int? _layerY;
 
-  final bool metaKey;
+  final bool? metaKey;
 
-  final int _movementX;
+  final int? _movementX;
 
-  final int _movementY;
+  final int? _movementY;
 
-  final num _pageX;
+  final num? _pageX;
 
-  final num _pageY;
+  final num? _pageY;
 
-  final String region;
+  final String? region;
 
-  final EventTarget relatedTarget;
+  final EventTarget? relatedTarget;
 
-  final num _screenX;
+  final num? _screenX;
 
-  final num _screenY;
+  final num? _screenY;
 
-  final bool shiftKey;
+  final bool? shiftKey;
 
   /// The nonstandard way to access the element that the mouse goes
   /// to in the case of a `mouseout` event.
@@ -467,11 +479,11 @@ class MouseEvent extends UIEvent {
   /// This member is deprecated and not cross-browser compatible; use
   /// relatedTarget to get the same information in the standard way.
   @deprecated
-  final Node toElement;
+  final Node? toElement;
 
   factory MouseEvent(
     String type, {
-    Window view,
+    Window? view,
     int detail = 0,
     int screenX = 0,
     int screenY = 0,
@@ -484,7 +496,7 @@ class MouseEvent extends UIEvent {
     bool altKey = false,
     bool shiftKey = false,
     bool metaKey = false,
-    EventTarget relatedTarget,
+    EventTarget? relatedTarget,
   }) {
     return MouseEvent._(
       type,
@@ -508,21 +520,21 @@ class MouseEvent extends UIEvent {
     this.fromElement,
     this.toElement,
     this.region,
-    num screenX,
-    num screenY,
-    num clientX,
-    num clientY,
-    num layerX,
-    num layerY,
-    num movementX,
-    num movementY,
-    num pageX,
-    num pageY,
+    int? screenX,
+    int? screenY,
+    int? clientX,
+    int? clientY,
+    int? layerX,
+    int? layerY,
+    int? movementX,
+    int? movementY,
+    int? pageX,
+    int? pageY,
     this.shiftKey = false,
     bool canBubble = true,
     bool cancelable = true,
     int detail = 0,
-    Object view,
+    Object? view,
   })  : buttons = 0,
         _screenX = screenX,
         _screenY = screenY,
@@ -542,13 +554,13 @@ class MouseEvent extends UIEvent {
           view: view,
         );
 
-  Point get client => Point(_clientX, _clientY);
+  Point get client => Point(_clientX!, _clientY!);
 
   DataTransfer get dataTransfer => throw UnimplementedError();
 
-  Point get layer => Point(_layerX, _layerY);
+  Point get layer => Point(_layerX!, _layerY!);
 
-  Point get movement => Point(_movementX, _movementY);
+  Point get movement => Point(_movementX!, _movementY!);
 
   /// The coordinates of the mouse pointer in target node coordinates.
   ///
@@ -556,27 +568,33 @@ class MouseEvent extends UIEvent {
   /// after the event has fired or if the element has CSS transforms affecting
   /// it.
   Point get offset {
-    Element target = this.target;
+    final target = this.target as Element;
     var point = (client - target.getBoundingClientRect().topLeft);
     return Point(point.x.toInt(), point.y.toInt());
   }
 
-  Point get page => Point(_pageX, _pageY);
+  Point get page => Point(_pageX!, _pageY!);
 
-  Point get screen => Point(_screenX, _screenY);
+  Point get screen => Point(_screenX!, _screenY!);
 
   bool getModifierState(String keyArg) => false;
 }
 
 class NotificationEvent extends ExtendableEvent {
-  final String action;
+  final String? action;
 
-  final Notification notification;
-  final String reply;
+  final Notification? notification;
+  final String? reply;
 
   factory NotificationEvent(String type, Map eventInitDict) {
     throw UnimplementedError();
   }
+
+  NotificationEvent.internal({
+    this.action,
+    this.notification,
+    this.reply,
+  }) : super._('Notification');
 }
 
 class PageTransitionEvent extends Event {
@@ -592,21 +610,21 @@ class PaymentRequestUpdateEvent extends Event {
 }
 
 class PointerEvent extends MouseEvent {
-  final num height;
-  final bool isPrimary;
-  final int pointerId;
-  final String pointerType;
-  final num pressure;
-  final num tangentialPressure;
-  final int tiltX;
-  final int tiltY;
-  final int twist;
-  final num width;
+  final num? height;
+  final bool? isPrimary;
+  final int? pointerId;
+  final String? pointerType;
+  final num? pressure;
+  final num? tangentialPressure;
+  final int? tiltX;
+  final int? tiltY;
+  final int? twist;
+  final num? width;
 
-  factory PointerEvent(String type, [Map dict]) => PointerEvent._(type: type);
+  factory PointerEvent(String type, [Map? dict]) => PointerEvent._(type: type);
 
   PointerEvent._({
-    @required String type,
+    required String type,
     this.height,
     this.isPrimary,
     this.pointerId,
@@ -625,8 +643,8 @@ class PointerEvent extends MouseEvent {
     int detail = 0,
     bool metaKey = false,
     bool shiftKey = false,
-    EventTarget relatedTarget,
-    Object view,
+    EventTarget? relatedTarget,
+    Object? view,
   }) : super._(
           type,
           view: view,
@@ -643,54 +661,56 @@ class PointerEvent extends MouseEvent {
 }
 
 class PopStateEvent extends Event {
-  final Object state;
+  final Object? state;
 
   PopStateEvent(String type) : this._(type: type);
 
-  PopStateEvent._({String type = 'popstate', this.state})
-      : super.internal(type);
+  PopStateEvent._({
+    String type = 'popstate',
+    this.state,
+  }) : super.internal(type);
 }
 
 class ProgressEvent extends Event {
-  ProgressEvent(String type, [Map eventInitDict]) : super.internal(type);
+  ProgressEvent(String type, [Map? eventInitDict]) : super.internal(type);
 
-  bool get lengthComputable => null;
+  bool? get lengthComputable => null;
 
-  int get loaded => null;
+  int? get loaded => null;
 
-  int get total => null;
+  int? get total => null;
 }
 
 class PushEvent extends Event {
-  PushEvent(String type, [Map eventInitDict]) : super.internal(type);
+  PushEvent(String type, [Map? eventInitDict]) : super.internal(type);
 
-  PushMessageData get data => null;
+  PushMessageData? get data => null;
 }
 
 class SecurityPolicyViolationEvent extends Event {
-  final String blockedUri;
+  final String? blockedUri;
 
-  final int columnNumber;
+  final int? columnNumber;
 
-  final String disposition;
+  final String? disposition;
 
-  final String documentUri;
+  final String? documentUri;
 
-  final String effectiveDirective;
+  final String? effectiveDirective;
 
-  final int lineNumber;
+  final int? lineNumber;
 
-  final String originalPolicy;
+  final String? originalPolicy;
 
-  final String referrer;
+  final String? referrer;
 
-  final String sample;
+  final String? sample;
 
-  final String sourceFile;
+  final String? sourceFile;
 
-  final int statusCode;
+  final int? statusCode;
 
-  final String violatedDirective;
+  final String? violatedDirective;
 
   SecurityPolicyViolationEvent._(
     String type, {
@@ -716,9 +736,9 @@ class SensorErrorEvent extends Event {
 class SyncEvent extends Event {
   SyncEvent(String type) : super.internal(type);
 
-  bool get lastChance => null;
+  bool? get lastChance => null;
 
-  String get tag => null;
+  String? get tag => null;
 }
 
 class TextEvent extends Event {
@@ -729,7 +749,10 @@ class Touch {
   final int radiusX;
   final int radiusY;
 
-  Touch({this.radiusX, this.radiusY});
+  Touch({
+    this.radiusX = 0,
+    this.radiusY = 0,
+  });
 }
 
 class TouchEvent extends UIEvent {
@@ -737,7 +760,7 @@ class TouchEvent extends UIEvent {
 
   final bool altKey;
 
-  final TouchList changedTouches;
+  final TouchList? changedTouches;
 
   final bool ctrlKey;
 
@@ -745,17 +768,17 @@ class TouchEvent extends UIEvent {
 
   final bool shiftKey;
 
-  final TouchList targetTouches;
+  final TouchList? targetTouches;
 
-  final TouchList touches;
+  final TouchList? touches;
 
   TouchEvent._(
     String type, {
-    this.altKey,
+    this.altKey = false,
     this.changedTouches,
-    this.ctrlKey,
-    this.metaKey,
-    this.shiftKey,
+    this.ctrlKey = false,
+    this.metaKey = false,
+    this.shiftKey = false,
     this.targetTouches,
     this.touches,
   }) : super(type);
@@ -763,13 +786,9 @@ class TouchEvent extends UIEvent {
 
 class TouchList extends DelegatingList<Touch> {
   /// Checks if this type is supported on the current platform.
-  static bool get supported => false; //document._createTouchList();
+  static bool get supported => false;
 
-  /// NB: This constructor likely does not work as you might expect it to! This
-  /// constructor will simply fail (returning null) if you are not on a device
-  /// with touch enabled. See dartbug.com/8314.
-  // TODO(5760): createTouchList now uses varargs.
-  factory TouchList() => null;
+  factory TouchList._() => throw UnimplementedError();
 
   @override
   Touch elementAt(int index) => this[index];
@@ -782,29 +801,37 @@ class TrackEvent extends Event {
 }
 
 class TransitionEvent extends Event {
-  final num elapsedTime;
+  final num? elapsedTime;
 
-  final String propertyName;
+  final String? propertyName;
 
-  final String pseudoElement;
+  final String? pseudoElement;
 
-  factory TransitionEvent(String type, [Map eventInitDict]) {
+  factory TransitionEvent(String type, [Map? eventInitDict]) {
     return TransitionEvent._(type);
   }
 
-  TransitionEvent._(String type,
-      {this.elapsedTime, this.propertyName, this.pseudoElement})
-      : super.internal(type);
+  TransitionEvent._(
+    String type, {
+    this.elapsedTime,
+    this.propertyName,
+    this.pseudoElement,
+  }) : super.internal(type);
 }
 
 abstract class UIEvent extends Event {
-  final int detail;
-  final InputDeviceCapabilities sourceCapabilities = null;
-  final Object view;
+  final int? detail;
+  final InputDeviceCapabilities? sourceCapabilities;
+  final Object? view;
 
-  UIEvent(String type,
-      {this.view, this.detail, bool canBubble = true, bool cancelable = true})
-      : super.internal(
+  UIEvent(
+    String type, {
+    this.detail,
+    this.sourceCapabilities,
+    this.view,
+    bool canBubble = true,
+    bool cancelable = true,
+  }) : super.internal(
           type,
           canBubble: canBubble,
           cancelable: cancelable,
@@ -818,27 +845,29 @@ class WheelEvent extends MouseEvent {
 
   static const int DOM_DELTA_PIXEL = 0x00;
 
-  final num deltaZ;
+  final num? deltaZ;
 
-  factory WheelEvent(String type,
-      {Window view,
-      num deltaX = 0,
-      num deltaY = 0,
-      num deltaZ = 0,
-      int deltaMode = 0,
-      int detail = 0,
-      int screenX = 0,
-      int screenY = 0,
-      int clientX = 0,
-      int clientY = 0,
-      int button = 0,
-      bool canBubble = true,
-      bool cancelable = true,
-      bool ctrlKey = false,
-      bool altKey = false,
-      bool shiftKey = false,
-      bool metaKey = false,
-      EventTarget relatedTarget}) {
+  factory WheelEvent(
+    String type, {
+    Window? view,
+    num deltaX = 0,
+    num deltaY = 0,
+    num deltaZ = 0,
+    int deltaMode = 0,
+    int detail = 0,
+    int screenX = 0,
+    int screenY = 0,
+    int clientX = 0,
+    int clientY = 0,
+    int button = 0,
+    bool canBubble = true,
+    bool cancelable = true,
+    bool ctrlKey = false,
+    bool altKey = false,
+    bool shiftKey = false,
+    bool metaKey = false,
+    EventTarget? relatedTarget,
+  }) {
     return WheelEvent._(type, deltaZ: deltaZ);
   }
 

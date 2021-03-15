@@ -15,10 +15,17 @@
 import 'package:universal_html/html.dart';
 import 'dart:html';
 
-HtmlDocument parseHtmlDocument(String content) {
+HtmlDocument parseHtmlDocument({
+  required Window window,
+  required String content,
+}) {
   return DomParser().parseFromString(content, 'text/html') as HtmlDocument;
 }
 
-XmlDocument parseXmlDocument(String content, {String mime = 'text/xml'}) {
+XmlDocument parseXmlDocument({
+  required Window window,
+  required String content,
+  String mime = 'text/xml',
+}) {
   return DomParser().parseFromString(content, mime) as XmlDocument;
 }

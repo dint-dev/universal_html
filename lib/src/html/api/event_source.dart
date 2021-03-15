@@ -81,15 +81,15 @@ class EventSource extends EventTarget {
   final bool withCredentials;
 
   /// Parsed [url].
-  Uri _parsedUri;
+  Uri? _parsedUri;
 
   /// HTTP response stream subscription.
-  StreamSubscription _eventSubscription;
+  StreamSubscription? _eventSubscription;
 
   /// Used by [readyState].
   int _readyState = CONNECTING;
 
-  EventSource(this.url, {this.withCredentials = false}) : super._created() {
+  EventSource(this.url, {this.withCredentials = false}) : super.internal() {
     // Parse URI
     var parsedUri = Uri.tryParse(url);
     if (parsedUri == null) {
@@ -98,7 +98,7 @@ class EventSource extends EventTarget {
 
     // Resolve relative URLs
     if (!parsedUri.isAbsolute) {
-      parsedUri = Uri.parse(window.location.origin).resolveUri(parsedUri);
+      parsedUri = Uri.parse(window.location.origin!).resolveUri(parsedUri);
     }
 
     // Check the scheme
@@ -132,34 +132,32 @@ class EventSource extends EventTarget {
   /// Closes the event stream.
   void close() {
     _readyState = CLOSED;
-    if (_eventSubscription != null) {
-      _eventSubscription.cancel();
+    final eventSubscription = _eventSubscription;
+    if (eventSubscription != null) {
+      eventSubscription.cancel();
       _eventSubscription = null;
     }
   }
 
   Future<void> _connect() async {
     try {
-      String lastEventId;
+      String? lastEventId;
       while (_readyState != CLOSED) {
         // Create a HTTP request
-        final httpClient =
-            HtmlDriver.current.browserImplementation.newHttpClient();
-        final httpRequest = await httpClient.getUrl(_parsedUri);
+        final httpClient = io.HttpClient();
+        final httpRequest = await httpClient.getUrl(_parsedUri!);
 
         // Add HTTP header 'Accept'
         httpRequest.headers.set('Accept', _mediaType);
 
         // Add HTTP header 'Last-Event-ID'
-        if (lastEventId != null) {
-          httpRequest.headers.set('Last-Event-ID', lastEventId);
+        final currentLastEventId = lastEventId;
+        if (currentLastEventId != null) {
+          httpRequest.headers.set('Last-Event-ID', currentLastEventId);
         }
 
         // Send the HTTP request
         final httpResponse = await httpRequest.close();
-        if (httpResponse == null) {
-          return;
-        }
 
         // Validate and parse HTTP response
         var timeout = Duration(seconds: 5);
@@ -171,13 +169,14 @@ class EventSource extends EventTarget {
         );
 
         // Listen the event stream
-        _eventSubscription = eventStream.listen((event) {
+        final eventSubscription = eventStream.listen((event) {
           lastEventId = event.lastEventId;
           dispatchEvent(event);
         });
+        _eventSubscription = eventSubscription;
 
         // Wait for
-        await _eventSubscription.asFuture();
+        await eventSubscription.asFuture();
 
         if (_readyState == CLOSED) {
           return;
@@ -201,7 +200,7 @@ class EventSource extends EventTarget {
 
       // Add error
       dispatchEvent(
-        ErrorEvent._(
+        ErrorEvent.internal(
           error: error,
           message: 'Error:\n  $error\n\nStack trace:\n  $stackTrace',
         ),
@@ -212,10 +211,10 @@ class EventSource extends EventTarget {
     }
   }
 
-  Stream<MessageEvent> _readHttpResponse(
-      io.HttpClientResponse httpResponse, void Function(Duration d) onTimeout) {
+  Stream<MessageEvent> _readHttpResponse(io.HttpClientResponse httpResponse,
+      void Function(Duration d) onTimeout) async* {
     var close = false;
-    EventStreamDecoder transformer;
+    EventStreamDecoder? transformer;
     try {
       // Check HTTP status
       final statusCode = httpResponse.statusCode;
@@ -226,7 +225,7 @@ class EventSource extends EventTarget {
       }
 
       // Check HTTP header 'Content-Type'
-      final mimeType = httpResponse.headers.contentType.mimeType;
+      final mimeType = httpResponse.headers.contentType?.mimeType;
       switch (mimeType) {
         case _mediaType:
           break;
@@ -239,7 +238,7 @@ class EventSource extends EventTarget {
 
       // Did we close the stream already?
       if (_readyState == CLOSED) {
-        return null;
+        return;
       }
 
       // The connection is open
@@ -247,10 +246,7 @@ class EventSource extends EventTarget {
       dispatchEvent(Event.internal('open'));
 
       // Transform to event stream
-      final origin = _parsedUri.origin;
-      if (origin == null) {
-        throw StateError('Origin is null for URI: $_parsedUri');
-      }
+      final origin = _parsedUri!.origin;
       transformer = EventStreamDecoder(
         origin: origin,
         onReceivedTimeout: onTimeout,
@@ -262,9 +258,8 @@ class EventSource extends EventTarget {
         httpResponse.listen((_) {}).cancel();
       }
     }
-    return httpResponse.map((data) {
-      // TODO: Remove this when Dart SDK 2.5 becomes stable
-      return data is Uint8List ? data : Uint8List.fromList(data);
-    }).transform(transformer);
+    yield* (httpResponse.map((data) {
+      return data;
+    }).transform(transformer));
   }
 }

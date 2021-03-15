@@ -1,3 +1,7 @@
+## 2.0.3
+* Fixes [issue #29](https://github.com/dint-dev/universal_html/issues/29).
+* Fixes issues with window.history.
+
 ## 2.0.2
 * Fixes [issue #28](https://github.com/dint-dev/universal_html/issues/28).
 * Fixes a few other smaller issues.

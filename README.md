@@ -34,7 +34,7 @@ documented in the relevant files.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^2.0.1
+  universal_html: ^2.0.3
 ```
 
 ## 2. Use
@@ -96,7 +96,7 @@ void main() {
 ```
 
 ## Scraping a website
-Load a _Window_ with [WindowClient](https://pub.dev/documentation/universal_html/latest/universal_html.controller/WindowClient-class.html):
+Load a _Window_ with [WindowController](https://pub.dev/documentation/universal_html/latest/universal_html.controller/WindowController-class.html):
 
 ```dart
 import 'package:universal_html/controller.dart';

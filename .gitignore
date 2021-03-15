@@ -3,6 +3,7 @@
 *.log
 *.pyc
 *.swp
+*.icloud
 .DS_Store
 .atom/
 .buildlog/

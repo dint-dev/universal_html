@@ -35,7 +35,7 @@ void _testController() {
         () => windowController.openHttp(uri: uri),
         throwsUnsupportedError,
       );
-    }, testOn: 'browser');
+    }, tags: 'networking', testOn: 'browser');
 
     test('openContent(_), sniffing <!DOCTYPE html>', () async {
       const content =

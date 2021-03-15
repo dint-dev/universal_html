@@ -1,3 +1,7 @@
+## 2.0.2
+* Fixes [issue #28](https://github.com/dint-dev/universal_html/issues/28).
+* Fixes a few other smaller issues.
+
 ## 2.0.1
 * Small bug fixes.
 

@@ -408,30 +408,8 @@ class _ElementCssClassSet extends _CssClassSetImpl {
   _ElementCssClassSet(this._element);
 
   @override
-  bool get isEmpty => length == 0;
-
-  @override
-  bool get isNotEmpty => length != 0;
-
-  @override
-  int get length => throw UnimplementedError();
-
-  @override
-  bool add(String value) {
-    throw UnimplementedError();
-  }
-
-  @override
-  void addAll(Iterable<String> iterable) {}
-
-  @override
   void clear() {
     _element.className = '';
-  }
-
-  @override
-  bool contains(Object? value) {
-    throw UnimplementedError();
   }
 
   @override
@@ -449,30 +427,8 @@ class _ElementCssClassSet extends _CssClassSetImpl {
   }
 
   @override
-  bool remove(Object? value) {
-    throw UnimplementedError();
-  }
-
-  @override
-  void removeAll(Iterable<Object?> iterable) {}
-
-  @override
-  void removeWhere(bool Function(String name) test) {}
-
-  @override
-  void retainAll(Iterable<Object?> iterable) {}
-
-  @override
-  void retainWhere(bool Function(String name) test) {}
-
-  @override
-  bool toggle(String value, [bool? shouldAdd]) {
-    throw UnimplementedError();
-  }
-
-  @override
-  void writeClasses(Set<String> s) {
-    _element.className = s.join(' ');
+  void writeClasses(Set<String> classNames) {
+    _element.className = classNames.join(' ');
   }
 }
 

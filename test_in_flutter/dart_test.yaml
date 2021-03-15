@@ -1,0 +1,3 @@
+tags:
+  networking:
+    test_on: (browser && !browser) # Never

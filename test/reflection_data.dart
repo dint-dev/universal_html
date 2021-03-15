@@ -1,7 +1,7 @@
 // IMPORTANT: DO NOT MODIFY
 // This file has been generated with 'tool/generate_test_data.sh'.
-const Map<String, Object?> reflectionData = <String, Object?>{
-  'dart.dom.html': <String, Object?>{
+const Map<String,Object?> reflectionData = <String,Object?>{
+  'dart.dom.html': <String,Object?>{
     'window': null,
     'document': null,
     'promiseToFutureAsMap': null,
@@ -23956,8 +23956,7 @@ const Map<String, Object?> reflectionData = <String, Object?>{
     'PresentationConnection.removeEventListener(...)': null,
     'PresentationConnection.dispatchEvent(...)': null,
     'PresentationConnectionAvailableEvent (class)': null,
-    'PresentationConnectionAvailableEvent.PresentationConnectionAvailableEvent':
-        null,
+    'PresentationConnectionAvailableEvent.PresentationConnectionAvailableEvent': null,
     'PresentationConnectionAvailableEvent.connection': null,
     'PresentationConnectionAvailableEvent.matchingTarget': null,
     'PresentationConnectionAvailableEvent.path': null,
@@ -32714,7 +32713,7 @@ const Map<String, Object?> reflectionData = <String, Object?>{
     'HttpStatus.NETWORK_CONNECT_TIMEOUT_ERROR': null,
     'promiseToFuture': null,
   },
-  'universal_html.internal': <String, Object?>{
+  'universal_html.internal': <String,Object?>{
     'AccessibleNode (class)': null,
     'AccessibleNode.AccessibleNode': null,
     'AccessibleNode.accessibleClickEvent': null,
@@ -35324,8 +35323,7 @@ const Map<String, Object?> reflectionData = <String, Object?>{
     'PresentationConnection.dispatchEvent(...)': null,
     'PresentationConnection.removeEventListener(...)': null,
     'PresentationConnectionAvailableEvent (class)': null,
-    'PresentationConnectionAvailableEvent.PresentationConnectionAvailableEvent':
-        null,
+    'PresentationConnectionAvailableEvent.PresentationConnectionAvailableEvent': null,
     'PresentationConnectionAvailableEvent.connection': null,
     'PresentationConnectionAvailableEvent.type': null,
     'PresentationConnectionAvailableEvent.bubbles': null,
@@ -61227,10 +61225,12 @@ const Map<String, Object?> reflectionData = <String, Object?>{
     'WeekInputElement.querySelector(...)': null,
     'WeekInputElement.querySelectorAll(...)': null,
     'HtmlDocument (class)': null,
+    'HtmlDocument.visibilityChangeEvent': null,
     'HtmlDocument.baseUri': null,
     'HtmlDocument.body': null,
     'HtmlDocument.body=': null,
     'HtmlDocument.head': null,
+    'HtmlDocument.onVisibilityChange': null,
     'HtmlDocument.referrer': null,
     'HtmlDocument.styleSheets': null,
     'HtmlDocument.title': null,

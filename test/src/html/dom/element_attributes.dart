@@ -1,7 +1,7 @@
 part of main_test;
 
 void _testElementAttributes() {
-  group('hasAttribute', () {
+  group('element.hasAttribute', () {
     test('existing attribute is lowercase', () {
       final e = Element.tag('e');
       expect(e.hasAttribute('k'), isFalse);
@@ -18,7 +18,7 @@ void _testElementAttributes() {
       expect(e.hasAttribute('K'), isTrue);
     });
   });
-  group('setAttribute(...):', () {
+  group('element.setAttribute(...):', () {
     test('name is lowercase', () {
       final e = Element.tag('e');
       e.setAttribute('k0', 'v0');
@@ -156,7 +156,7 @@ void _testElementAttributes() {
     });
   });
 
-  group('setAttributeNS', () {
+  group('element.setAttributeNS(...)', () {
     test('normal', () {
       final e = Element.tag('e');
       e.setAttributeNS('https://ns/', 'k0', 'v0');
@@ -217,7 +217,7 @@ void _testElementAttributes() {
     });
   });
 
-  group('removeAttribute:', () {
+  group('element.removeAttribute(...):', () {
     test('name is wrong', () {
       final e = Element.tag('e');
       e.setAttribute('k', 'v0');
@@ -328,7 +328,7 @@ void _testElementAttributes() {
     });
   });
 
-  group('removeAttributeNS:', () {
+  group('element.removeAttributeNS(...):', () {
     test('normal', () {
       // Set three attributes
       final e = Element.tag('e');
@@ -424,8 +424,48 @@ void _testElementAttributes() {
     });
   });
 
-  group('style:', () {
-    group('setProperty(name, value):', () {
+  group('element.classes', () {
+    test('add(...), contains(...), toList(...)', () {
+      final element = DivElement();
+      element.classes.add('c0');
+      expect(element.classes, contains('c0'));
+      expect(element.classes.toList(), ['c0']);
+      expect(element.outerHtml, '<div class="c0"></div>');
+
+      element.classes.add('c1');
+      expect(element.classes, contains('c0'));
+      expect(element.classes, contains('c1'));
+      expect(element.classes.toList(), ['c0', 'c1']);
+      expect(element.outerHtml, '<div class="c0 c1"></div>');
+    });
+
+    test('remove(...)', () {
+      final element = DivElement();
+      element.classes.add('c0');
+      element.classes.add('c1');
+      expect(element.outerHtml, '<div class="c0 c1"></div>');
+
+      element.classes.remove('c0');
+      expect(element.classes, isNot(contains('c0')));
+      expect(element.classes, contains('c1'));
+      expect(element.classes.toList(), ['c1']);
+      expect(element.outerHtml, '<div class="c1"></div>');
+
+      element.classes.remove('c1');
+      expect(element.outerHtml, '<div class=""></div>');
+    });
+
+    test('clear(...)', () {
+      final element = DivElement();
+      element.classes.add('c0');
+      element.classes.add('c1');
+      element.classes.clear();
+      expect(element.outerHtml, '<div class=""></div>');
+    });
+  });
+
+  group('element.style:', () {
+    group('element.style.setProperty(name, value):', () {
       test('null value removes the property', () {
         final e = Element.tag('a');
         final name = 'color';
@@ -469,7 +509,7 @@ void _testElementAttributes() {
       });
     });
 
-    test('style.removeProperty(...)', () {
+    test('element.style.removeProperty(...)', () {
       final e = Element.tag('a');
       final k = 'color';
       final v = 'blue';
@@ -483,7 +523,7 @@ void _testElementAttributes() {
     });
 
     test(
-        'style.getProperty("font-size") returns non-quoted value when value is "90px"',
+        'element.style.getProperty("font-size") returns non-quoted value when value is "90px"',
         () {
       final e = Element.tag('a');
       e.style.setProperty('font-size', '90px');

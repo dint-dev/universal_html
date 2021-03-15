@@ -49,7 +49,7 @@ class InfoBuilder implements Builder {
           'Available libraries:\n  ${names.join('\n  ')}',
         );
       }
-      final libraryInfo = <String, Object>{};
+      final libraryInfo = <String, Object?>{};
       for (var member in library.exportNamespace.definedNames.values) {
         if (member.isPrivate ||
             member.hasDeprecated ||
@@ -62,9 +62,14 @@ class InfoBuilder implements Builder {
             continue;
           }
           libraryInfo['${member.name} (class)'] = null;
-          _addClassMembers(libraryInfo, member.name, member, false);
+          _addClassMembers(
+            libraryInfo,
+            member.name,
+            classElement: member,
+            isInherited: false,
+          );
         } else {
-          libraryInfo[member.name] = '';
+          libraryInfo[member.name!] = '';
         }
       }
       result[libraryName] = libraryInfo;
@@ -72,11 +77,8 @@ class InfoBuilder implements Builder {
     return result;
   }
 
-  static void _addClassMembers(Map<String, Object> result, String className,
-      ClassElement classElement, bool isInherited) {
-    if (classElement == null) {
-      return;
-    }
+  static void _addClassMembers(Map<String, Object?> result, String className,
+      {required ClassElement classElement, required bool isInherited}) {
     if (className != classElement.name) {
       result['$className implements ${classElement.name}'];
     }
@@ -150,12 +152,30 @@ class InfoBuilder implements Builder {
     // -----------------
     // Inherited members
     // -----------------
-    _addClassMembers(result, className, classElement.supertype?.element, true);
+    final superType = classElement.supertype;
+    if (superType != null) {
+      _addClassMembers(
+        result,
+        className,
+        classElement: superType.element,
+        isInherited: true,
+      );
+    }
     for (var type in classElement.mixins) {
-      _addClassMembers(result, className, type.element, true);
+      _addClassMembers(
+        result,
+        className,
+        classElement: type.element,
+        isInherited: true,
+      );
     }
     for (var type in classElement.interfaces) {
-      _addClassMembers(result, className, type.element, true);
+      _addClassMembers(
+        result,
+        className,
+        classElement: type.element,
+        isInherited: true,
+      );
     }
   }
 
@@ -167,7 +187,7 @@ class InfoBuilder implements Builder {
         member.hasVisibleForTesting ||
         member.hasVisibleForTemplate ||
         _ignoredMembers.contains(member.name) ||
-        member.name.startsWith('internal');
+        member.name!.startsWith('internal');
   }
 
   static final _ignoredMembers = {

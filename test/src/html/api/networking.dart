@@ -22,9 +22,6 @@ int _httpServerPort = 8989;
 const _httpServerWrongPort = 314;
 
 void _testNetworking() {
-  if (_isFlutter) {
-    return;
-  }
   group(
     'Networking:',
     () {

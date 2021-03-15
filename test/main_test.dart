@@ -49,9 +49,8 @@ part 'src/html/dom/helpers.dart';
 part 'src/html/dom/node.dart';
 part 'src/html/dom/parsing.dart';
 
-void main({bool isFlutter = false}) {
-  _isFlutter = isFlutter;
-
+void main() {
+  // Use groups for producing better error messages in IDEs
   group('In VM: ', () {
     _sharedTests();
   }, testOn: 'vm');
@@ -59,9 +58,11 @@ void main({bool isFlutter = false}) {
   group('In Chrome: ', () {
     _sharedTests();
   }, testOn: 'chrome');
-}
 
-var _isFlutter = false;
+  group('In Node.JS: ', () {
+    _sharedTests();
+  }, testOn: 'node');
+}
 
 void _sharedTests() {
   // DOM

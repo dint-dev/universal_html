@@ -2386,16 +2386,27 @@ abstract class Element extends Node
 
   @override
   String toString() {
-    final outerHtml = this.outerHtml ?? '';
-    if (outerHtml.length < 256) {
-      return outerHtml;
-    }
-    final id = this.id;
-    final tagName = this.tagName.toLowerCase();
-    if (id == '') {
-      return '<$tagName ...>...</$tagName>';
-    }
-    return '<$tagName id="$id" ...>...</$tagName>';
+    // dart:html returns localName.
+    var result = localName;
+
+    // In development mode, we print a debugging-friendly string.
+    assert(() {
+      final outerHtml = this.outerHtml ?? '';
+      if (outerHtml.length < 256) {
+        result = outerHtml;
+      } else {
+        final id = this.id;
+        final tagName = this.tagName.toLowerCase();
+        if (id == '') {
+          result = '<$tagName ...>...</$tagName>';
+        } else {
+          result = '<$tagName id="$id" ...>...</$tagName>';
+        }
+      }
+      return true;
+    }());
+
+    return result;
   }
 
   /// Returns value of the attribute. The name MUST be lowercase.

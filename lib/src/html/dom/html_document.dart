@@ -145,7 +145,7 @@ class HtmlDocument extends Document
   String? get referrer => null;
 
   @override
-  List<StyleSheet> get styleSheets {
+  List<StyleSheet>? get styleSheets {
     final list = <StyleSheet>[];
     _forEachElementInTree((element) {
       if (element is StyleElement) {

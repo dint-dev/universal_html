@@ -555,7 +555,7 @@ abstract class DocumentOrShadowRoot {
 
   Element? get pointerLockElement;
 
-  List<StyleSheet> get styleSheets;
+  List<StyleSheet>? get styleSheets;
 
   Element? elementFromPoint(int x, int y);
 
@@ -623,7 +623,7 @@ mixin _DocumentOrShadowRoot implements DocumentOrShadowRoot {
   Element? get pointerLockElement => null;
 
   @override
-  List<StyleSheet> get styleSheets => <StyleSheet>[];
+  List<StyleSheet>? get styleSheets => <StyleSheet>[];
 
   @override
   Element? elementFromPoint(int x, int y) => null;

@@ -49,7 +49,14 @@ part of universal_html.internal;
 class AnchorElement extends HtmlElement
     with _HtmlHyperlinkElementUtils, _UrlBase, _HrefAttributeElement
     implements HtmlHyperlinkElementUtils {
-  factory AnchorElement() => AnchorElement._(window.document);
+  factory AnchorElement({String? href}) {
+    final element = AnchorElement._(window.document);
+    ;
+    if (href != null) {
+      element.href = href;
+    }
+    return element;
+  }
 
   AnchorElement._(Document ownerDocument) : super._(ownerDocument, 'A');
 

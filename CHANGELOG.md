@@ -1,3 +1,6 @@
+## 2.0.4
+* Fixes null safety migration errors.
+
 ## 2.0.3
 * Fixes [issue #29](https://github.com/dint-dev/universal_html/issues/29).
 * Fixes issues with window.history.

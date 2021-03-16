@@ -1103,9 +1103,9 @@ abstract class Element extends Node
     _setAttribute('id', value);
   }
 
-  bool get inert => _getAttributeBool('inert');
+  bool? get inert => _getAttributeBool('inert');
 
-  set inert(bool value) {
+  set inert(bool? value) {
     _setAttributeBool('inert', value);
   }
 
@@ -1140,7 +1140,7 @@ abstract class Element extends Node
     _setAttribute('inputmode', value);
   }
 
-  bool get isContentEditable => false;
+  bool? get isContentEditable => false;
 
   String? get lang => getAttribute('lang');
 
@@ -1662,7 +1662,7 @@ abstract class Element extends Node
 
   CssStyleDeclaration get style => _getOrCreateStyle();
 
-  StylePropertyMap get styleMap => StylePropertyMap._();
+  StylePropertyMap? get styleMap => StylePropertyMap._();
 
   int? get tabIndex => _getAttributeInt('tabindex') ?? -1;
 

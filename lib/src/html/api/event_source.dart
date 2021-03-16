@@ -75,10 +75,10 @@ class EventSource extends EventTarget {
   static const String _mediaType = 'text/event-stream';
 
   /// URL of this event source.
-  final String url;
+  final String? url;
 
   /// Value of `withCredentials` given in the constructor.
-  final bool withCredentials;
+  final bool? withCredentials;
 
   /// Parsed [url].
   Uri? _parsedUri;
@@ -89,7 +89,9 @@ class EventSource extends EventTarget {
   /// Used by [readyState].
   int _readyState = CONNECTING;
 
-  EventSource(this.url, {this.withCredentials = false}) : super.internal() {
+  EventSource(String url, {this.withCredentials = false})
+      : url = url,
+        super.internal() {
     // Parse URI
     var parsedUri = Uri.tryParse(url);
     if (parsedUri == null) {

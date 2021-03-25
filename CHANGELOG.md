@@ -1,3 +1,6 @@
+## 2.0.5
+* Fixes [issue #34](https://github.com/dint-dev/universal_html/issues/34).
+
 ## 2.0.4
 * Fixes null safety migration errors.
 

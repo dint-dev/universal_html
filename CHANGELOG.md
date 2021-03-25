@@ -1,3 +1,6 @@
+## 2.0.6
+* Fixes a dependency constraint.
+
 ## 2.0.5
 * Fixes [issue #34](https://github.com/dint-dev/universal_html/issues/34).
 

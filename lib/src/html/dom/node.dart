@@ -767,32 +767,59 @@ mixin _ElementOrDocument implements Node, ParentNode {
     return _FrozenElementList<T>._wrap(result);
   }
 
+  /// Visits all nodes in the subtree (excludes this node).
   void _forEachElementInTree(void Function(Element element) f) {
-    final root = firstChild;
-    if (root == null) {
+    final firstChildOfRoot = firstChild;
+    if (firstChildOfRoot == null) {
       return;
     }
-    var node = root;
+
+    // A sanity check
+    assert(identical(firstChildOfRoot.parentNode, this));
+    assert(identical(firstChildOfRoot.parent, this) || firstChildOfRoot.parent == null);
+
+    var node = firstChildOfRoot;
     loop:
     while (true) {
+      // Emit this element.
       if (node is Element) {
         f(node);
       }
+
+      // Does this node have children?
       final firstChild = node.firstChild;
       if (firstChild != null) {
+        // A sanity check
+        assert(identical(firstChild.parentNode, node));
+
+        // Go the first child.
         node = firstChild;
         continue loop;
       }
+
       while (true) {
+        // Go to the next child.
         final nextNode = node.nextNode;
         if (nextNode != null) {
+          // A sanity check
+          assert(identical(nextNode.parentNode, node.parentNode));
+
+          // Go to the next sibling.
           node = nextNode;
-          continue loop;
+          break;
         }
+
         final parent = node.parentNode;
-        if (parent == null || identical(node, this)) {
+        if (parent == null) {
+          throw StateError('DOM tree failed a sanity check.');
+        }
+
+        if (identical(parent, this)) {
+          // No more nodes.
           return;
         }
+
+        // Try next sibling of the parent.
         node = parent;
       }
     }

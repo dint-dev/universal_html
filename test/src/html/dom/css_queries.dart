@@ -16,29 +16,6 @@ part of main_test;
 
 void _testCss() {
   group('CSS-related tests for Element:', () {
-    final document = universal_html.document;
-
-    test('computedStyle', () {
-      _temporarilyRemoveChildrenFromDocument(root: document.body!);
-
-      final styleElement = StyleElement()..appendText('''
-.exampleClass {
-  font-family: exampleFont
-}''');
-      addTearDown(() {
-        styleElement.remove();
-      });
-      document.head!.insertBefore(styleElement, null);
-
-      final element = DivElement()..className = 'exampleClass';
-      document.body!.insertBefore(element, null);
-      addTearDown(() {
-        element.remove();
-      });
-
-      expect(element.getComputedStyle().fontFamily, 'exampleFont');
-    });
-
     group('matches:', () {
       void expectMatches(Element element, String selector, Matcher matcher) {
         final root = element.getRootNode() as Element;
@@ -290,23 +267,9 @@ void _testCss() {
     });
 
     group('querySelectorAll:', () {
-      void expectQuery(
-          Element root, String selector, List<Element> expectedElements) {
-        final actualIds = root
-            .querySelectorAll(selector)
-            .map((item) => '#${item.id}')
-            .join(', ');
-        final expectedIds =
-            expectedElements.map((item) => '#${item.id}').join(', ');
-        expect(
-          actualIds,
-          expectedIds,
-          reason:
-              'Root: "#${root.id}"\nSelector: "$selector"\nTree: ${root.outerHtml}',
-        );
-      }
-
       test('Complex example #1', () {
+        final root = DivElement();
+
         final e0 = DivElement()
           ..id = 'e0'
           ..className = 'all';
@@ -319,7 +282,7 @@ void _testCss() {
           ..id = 'e0-1'
           ..className = 'all';
 
-        final e0_2 = DivElement()
+        final e0_2 = Element.nav()
           ..id = 'e0-2'
           ..className = 'all';
 
@@ -327,42 +290,41 @@ void _testCss() {
           ..id = 'e0-2-0'
           ..className = 'all';
 
+        final e1 = DivElement()
+          ..id = 'e1'
+          ..className = 'all last';
+
+        root.append(e0);
         e0.append((e0_0));
         e0.append(e0_1);
         e0.append(e0_2);
         e0_2.append(e0_2_0);
+        root.append(e1);
 
         expect(e0.childNodes, hasLength(equals(3)));
         expect(e0.childNodes[2].childNodes, hasLength(1));
 
-        expectQuery(e0, '.all', [e0_0, e0_1, e0_2, e0_2_0]);
-        expectQuery(e0, '#e0 *', [e0_0, e0_1, e0_2, e0_2_0]);
-      });
-    });
+        expect(root.querySelector('nav'), same(e0_2));
+        expect(root.querySelectorAll('nav'), [e0_2]);
+        expect(
+            root.querySelectorAll('.all'), [e0, e0_0, e0_1, e0_2, e0_2_0, e1]);
+        expect(root.querySelectorAll('.last'), [e1]);
 
-    group('CssStyleDeclaration', () {
-      test('style.color = "red', () {
-        final element = DivElement();
-        element.style.color = 'red';
-        expect(element.style.color, 'red');
-      });
+        // e0
+        expect(e0.querySelectorAll('.all'), [e0_0, e0_1, e0_2, e0_2_0]);
+        expect(e0.querySelectorAll('#e0 *'), [e0_0, e0_1, e0_2, e0_2_0]);
+        expect(e0.querySelectorAll('#e0-2 *'), [e0_2_0]);
+        expect(e0.querySelectorAll('.last'), []);
 
-      test('style.color = null', () {
-        final element = DivElement();
-        element.style.color = null;
-        expect(element.style.color, '');
-      });
+        // e0_2
+        expect(e0_2.querySelectorAll('div'), [e0_2_0]);
+        expect(e0_2.querySelectorAll('.all'), [e0_2_0]);
+        expect(e0_2.querySelectorAll('.last'), []);
 
-      test('style.setProperty("color", "red)', () {
-        final element = DivElement();
-        element.style.setProperty('color', 'red');
-        expect(element.style.color, 'red');
-      });
-
-      test('style.setProperty("color", null)', () {
-        final element = DivElement();
-        element.style.setProperty('color', null);
-        expect(element.style.color, '');
+        // e0_2_0
+        expect(e0_2_0.querySelectorAll('div'), []);
+        expect(e0_2_0.querySelectorAll('.all'), []);
+        expect(e0_2_0.querySelectorAll('.last'), []);
       });
     });
   });

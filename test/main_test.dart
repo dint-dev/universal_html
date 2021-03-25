@@ -40,17 +40,16 @@ part 'src/html/api/networking_event_source.dart';
 part 'src/html/api/networking_http_request.dart';
 part 'src/html/api/window.dart';
 part 'src/html/dom/cloning.dart';
-part 'src/html/dom/css.dart';
+part 'src/html/dom/css_style_declaration.dart';
 part 'src/html/dom/document.dart';
 part 'src/html/dom/element.dart';
 part 'src/html/dom/element_attributes.dart';
+part 'src/html/dom/element_computed_style.dart';
 part 'src/html/dom/element_subclasses.dart';
 part 'src/html/dom/helpers.dart';
 part 'src/html/dom/node.dart';
+part 'src/html/dom/css_queries.dart';
 part 'src/html/dom/parsing.dart';
-
-var _isVM = false;
-var _isBrowser = false;
 
 void main() {
   // Use groups for producing better error messages in IDEs
@@ -68,6 +67,9 @@ void main() {
     _sharedTests();
   }, testOn: 'node');
 }
+var _isBrowser = false;
+
+var _isVM = false;
 
 void _sharedTests() {
   setUpAll(() async {
@@ -86,9 +88,11 @@ void _sharedTests() {
   });
   // DOM
   _testCloning();
+  _testCssStyleDeclaration();
   _testNode();
   _testDocument();
   _testElement();
+  _testElementComputedStyle();
   _testElementSubclasses();
   _testParsing();
   _testCss();

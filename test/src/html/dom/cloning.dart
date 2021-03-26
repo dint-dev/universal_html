@@ -14,39 +14,6 @@
 
 part of main_test;
 
-void _testCloning() {
-  test('node.clone(true)', () {
-    // Create an element with many children
-    final original = DivElement();
-    for (var tagName in tagNames) {
-      original.append(Element.tag(tagName));
-    }
-    final originalOuterHtml = original.outerHtml;
-
-    // Clone the element
-    final clone = original.clone(true) as Element;
-    expect(clone.outerHtml, originalOuterHtml);
-    _expectSaneTree(clone);
-  });
-
-  test('document.adoptNode', () {
-    // Create an element with many children
-    final original = DivElement();
-    for (var tagName in tagNames) {
-      original.append(Element.tag(tagName));
-    }
-    final originalOuterHtml = original.outerHtml;
-
-    // Create a new document
-    final document = DomParser().parseFromString('', 'text/html');
-
-    // Adopt children from the original element
-    final clone = document.adoptNode(original) as Element;
-    expect(clone.outerHtml, originalOuterHtml);
-    _expectSaneTree(clone);
-  });
-}
-
 const tagNames = [
   'A',
   'ABBR',
@@ -149,3 +116,36 @@ const tagNames = [
   'VIDEO',
   'WBR',
 ];
+
+void _testCloning() {
+  test('node.clone(true)', () {
+    // Create an element with many children
+    final original = DivElement();
+    for (var tagName in tagNames) {
+      original.append(Element.tag(tagName));
+    }
+    final originalOuterHtml = original.outerHtml;
+
+    // Clone the element
+    final clone = original.clone(true) as Element;
+    expect(clone.outerHtml, originalOuterHtml);
+    _expectSaneTree(clone);
+  });
+
+  test('document.adoptNode', () {
+    // Create an element with many children
+    final original = DivElement();
+    for (var tagName in tagNames) {
+      original.append(Element.tag(tagName));
+    }
+    final originalOuterHtml = original.outerHtml;
+
+    // Create a new document
+    final document = DomParser().parseFromString('', 'text/html');
+
+    // Adopt children from the original element
+    final clone = document.adoptNode(original) as Element;
+    expect(clone.outerHtml, originalOuterHtml);
+    _expectSaneTree(clone);
+  });
+}

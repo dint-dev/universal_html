@@ -14,29 +14,6 @@
 
 part of main_test;
 
-void _temporarilyRemoveChildrenFromDocument({Node? root}) {
-  // Save nodes
-  root ??= universal_html.document;
-
-  // Remove nodes
-  final nodes = List<Node>.from(root.childNodes);
-  for (var node in nodes) {
-    node.remove();
-  }
-
-  final finalRoot = root;
-  addTearDown(() {
-    // Removes
-    while (finalRoot.firstChild != null) {
-      finalRoot.firstChild!.remove();
-    }
-    // Restore old nodes
-    for (var node in nodes) {
-      finalRoot.append(node);
-    }
-  });
-}
-
 void _expectSaneDocument(Document document) {
   _expectSaneTree(document, expectedOwnerDocument: document);
 }
@@ -103,4 +80,27 @@ void _expectSaneTree(
     nextChild = nextChild.nextNode;
   }
   expect(node.lastChild, same(previousChild));
+}
+
+void _temporarilyRemoveChildrenFromDocument({Node? root}) {
+  // Save nodes
+  root ??= universal_html.document;
+
+  // Remove nodes
+  final nodes = List<Node>.from(root.childNodes);
+  for (var node in nodes) {
+    node.remove();
+  }
+
+  final finalRoot = root;
+  addTearDown(() {
+    // Removes
+    while (finalRoot.firstChild != null) {
+      finalRoot.firstChild!.remove();
+    }
+    // Restore old nodes
+    for (var node in nodes) {
+      finalRoot.append(node);
+    }
+  });
 }

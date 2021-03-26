@@ -66,6 +66,9 @@ class DocumentFragment extends Node
     );
   }
 
+  /// Internal constructor. __Not part of dart:html__.
+  DocumentFragment.internal(Document ownerDocument) : super._(ownerDocument);
+
   factory DocumentFragment.svg(
     String input, {
     NodeValidator? validator,
@@ -78,9 +81,6 @@ class DocumentFragment extends Node
       treeSanitizer: treeSanitizer,
     );
   }
-
-  /// Internal constructor. __Not part of dart:html__.
-  DocumentFragment.internal(Document ownerDocument) : super._(ownerDocument);
 
   List<Element> get children {
     return _ElementChildren(this);
@@ -159,27 +159,11 @@ class DocumentFragment extends Node
 abstract class ShadowRoot extends DocumentFragment {
   static bool get supported => false;
 
-  bool? get delegatesFocus;
-
-  Element? get host;
-
-  String? get mode;
-
-  ShadowRoot? get olderShadowRoot;
-
-  Element? get activeElement;
-
-  // From DocumentOrShadowRoot
-
-  Element? get fullscreenElement;
-
-  Element? get pointerLockElement;
-
-  List<StyleSheet>? get styleSheets;
-
   factory ShadowRoot._() {
     throw UnimplementedError();
   }
+
+  Element? get activeElement;
 
   @deprecated
   bool get applyAuthorStyles {
@@ -191,6 +175,20 @@ abstract class ShadowRoot extends DocumentFragment {
     throw UnimplementedError();
   }
 
+  bool? get delegatesFocus;
+
+  // From DocumentOrShadowRoot
+
+  Element? get fullscreenElement;
+
+  Element? get host;
+
+  String? get mode;
+
+  ShadowRoot? get olderShadowRoot;
+
+  Element? get pointerLockElement;
+
   @deprecated
   bool get resetStyleInheritance {
     throw UnimplementedError();
@@ -200,6 +198,8 @@ abstract class ShadowRoot extends DocumentFragment {
   set resetStyleInheritance(bool value) {
     throw UnimplementedError();
   }
+
+  List<StyleSheet>? get styleSheets;
 
   Element elementFromPoint(int x, int y) {
     throw UnimplementedError();

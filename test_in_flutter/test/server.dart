@@ -12,21 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:html';
+import 'package:stream_channel/stream_channel.dart';
+import '../../test/server.dart' as impl;
 
-import 'package:universal_html/html.dart';
-
-HtmlDocument parseHtmlDocument({
-  required Window window,
-  required String content,
-}) {
-  return DomParser().parseFromString(content, 'text/html') as HtmlDocument;
-}
-
-XmlDocument parseXmlDocument({
-  required Window window,
-  required String content,
-  String mime = 'text/xml',
-}) {
-  return DomParser().parseFromString(content, mime) as XmlDocument;
+void hybridMain(StreamChannel streamChannel, Object message) async {
+  impl.hybridMain(streamChannel, message);
 }

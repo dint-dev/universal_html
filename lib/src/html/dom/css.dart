@@ -142,9 +142,6 @@ class Dimension {
 
   final String _unit;
 
-  /// NOT part of 'dart:html'.
-  String get internalUnit => _unit;
-
   /// Set this CSS Dimension to a centimeter `value`.
   Dimension.cm(this.value) : _unit = 'cm';
 
@@ -174,7 +171,6 @@ class Dimension {
     }
     return Dimension._(value, unit);
   }
-  Dimension._(this.value, this._unit);
 
   /// Set this CSS Dimension to the specified number of ems.
   ///
@@ -182,7 +178,6 @@ class Dimension {
   /// size). This is useful for producing website layouts that scale nicely with
   /// the user's desired font size.
   Dimension.em(this.value) : _unit = 'em';
-
   /// Set this CSS Dimension to the specified number of x-heights.
   ///
   /// One ex is equal to the x-height of a font's baseline to its mean line,
@@ -207,6 +202,11 @@ class Dimension {
 
   /// Set this CSS Dimension to a pixel `value`.
   Dimension.px(this.value) : _unit = 'px';
+
+  Dimension._(this.value, this._unit);
+
+  /// NOT part of 'dart:html'.
+  String get internalUnit => _unit;
 
   /// Print out the CSS String representation of this value.
   @override

@@ -55,11 +55,11 @@ typedef StorageUsageCallback = void Function(
     int currentUsageInBytes, int currentQuotaInBytes);
 
 abstract class Credential {
+  Credential._();
+
   String get id;
 
   String get type;
-
-  Credential._();
 }
 
 abstract class CredentialsContainer {
@@ -89,6 +89,8 @@ abstract class DeprecatedStorageQuota {
 }
 
 abstract class Gamepad {
+  Gamepad._();
+
   List<num>? get axes;
 
   List<GamepadButton>? get buttons;
@@ -108,21 +110,21 @@ abstract class Gamepad {
   GamepadPose? get pose;
 
   int? get timestamp;
-
-  Gamepad._();
 }
 
 abstract class GamepadButton {
+  GamepadButton._();
+
   bool? get pressed;
 
   bool? get touched;
 
   num? get value;
-
-  GamepadButton._();
 }
 
 abstract class GamepadPose {
+  GamepadPose._();
+
   Float32List? get angularAcceleration;
 
   Float32List? get angularVelocity;
@@ -138,8 +140,6 @@ abstract class GamepadPose {
   Float32List? get orientation;
 
   Float32List? get position;
-
-  GamepadPose._();
 }
 
 abstract class MediaCapabilities {
@@ -151,13 +151,13 @@ abstract class MediaCapabilities {
 }
 
 abstract class MediaCapabilitiesInfo {
+  MediaCapabilitiesInfo._();
+
   bool get powerEfficient;
 
   bool get smooth;
 
   bool get supported;
-
-  MediaCapabilitiesInfo._();
 }
 
 abstract class MediaMetadata {
@@ -189,6 +189,8 @@ abstract class MediaSession {
 }
 
 abstract class MimeType {
+  MimeType._();
+
   String? get description;
 
   Plugin? get enabledPlugin;
@@ -196,14 +198,12 @@ abstract class MimeType {
   String? get suffixes;
 
   String? get type;
-
-  MimeType._();
 }
 
 abstract class NavigatorAutomationInformation {
-  bool? get webdriver;
-
   NavigatorAutomationInformation._();
+
+  bool? get webdriver;
 }
 
 abstract class NavigatorConcurrentHardware {
@@ -213,12 +213,14 @@ abstract class NavigatorConcurrentHardware {
 }
 
 abstract class NavigatorCookies {
-  bool? get cookieEnabled;
-
   NavigatorCookies._();
+
+  bool? get cookieEnabled;
 }
 
 abstract class NavigatorID {
+  NavigatorID._();
+
   String? get appCodeName;
 
   String? get appName;
@@ -232,27 +234,27 @@ abstract class NavigatorID {
   String? get product;
 
   String? get userAgent;
-
-  NavigatorID._();
 }
 
 abstract class NavigatorLanguage {
+  NavigatorLanguage._();
+
   String? get language;
 
   List<String>? get languages;
-
-  NavigatorLanguage._();
 }
 
 abstract class NavigatorOnLine {
-  bool? get onLine;
-
   NavigatorOnLine._();
+
+  bool? get onLine;
 }
 
 abstract class NetworkInformation implements EventTarget {
   static const EventStreamProvider<Event> changeEvent =
       EventStreamProvider<Event>('change');
+
+  NetworkInformation._();
 
   num? get downlink;
 
@@ -260,16 +262,16 @@ abstract class NetworkInformation implements EventTarget {
 
   String? get effectiveType;
 
+  Stream<Event> get onChange => changeEvent.forTarget(this);
+
   int? get rtt;
 
   String? get type;
-
-  NetworkInformation._();
-
-  Stream<Event> get onChange => changeEvent.forTarget(this);
 }
 
 abstract class Plugin {
+  Plugin._();
+
   String? get description;
 
   String? get filename;
@@ -277,8 +279,6 @@ abstract class Plugin {
   int? get length;
 
   String? get name;
-
-  Plugin._();
 
   MimeType item(int index);
 
@@ -297,11 +297,11 @@ abstract class PresentationAvailability implements EventTarget {
   static const EventStreamProvider<Event> changeEvent =
       EventStreamProvider<Event>('change');
 
-  bool? get value;
-
   PresentationAvailability._();
 
   Stream<Event> get onChange;
+
+  bool? get value;
 }
 
 abstract class PresentationConnection extends EventTarget {
@@ -310,17 +310,17 @@ abstract class PresentationConnection extends EventTarget {
 
   String? binaryType;
 
-  String? get id;
-
-  String? get state;
-
-  String? get url;
-
   factory PresentationConnection._() {
     throw UnimplementedError();
   }
 
+  String? get id;
+
   Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
+
+  String? get state;
+
+  String? get url;
 
   void close() {
     throw UnimplementedError();
@@ -336,29 +336,29 @@ abstract class PresentationConnection extends EventTarget {
 }
 
 abstract class PresentationConnectionAvailableEvent extends Event {
-  PresentationConnection get connection;
-
   factory PresentationConnectionAvailableEvent(String type, Map eventInitDict) {
     throw UnimplementedError();
   }
+
+  PresentationConnection get connection;
 }
 
 abstract class PresentationConnectionCloseEvent extends Event {
-  String? get message;
-
-  String? get reason;
-
   factory PresentationConnectionCloseEvent(String type, Map eventInitDict) {
     throw UnimplementedError();
   }
+
+  String? get message;
+
+  String? get reason;
 }
 
 abstract class PresentationConnectionList extends EventTarget {
-  List<PresentationConnection> get connections;
-
   factory PresentationConnectionList._() {
     throw UnimplementedError();
   }
+
+  List<PresentationConnection> get connections;
 }
 
 class PresentationReceiver {
@@ -385,11 +385,11 @@ class PresentationRequest extends EventTarget {
 }
 
 abstract class RelatedApplication {
+  RelatedApplication._();
   String? get id;
   String? get platform;
-  String? get url;
 
-  RelatedApplication._();
+  String? get url;
 }
 
 abstract class StorageManager {

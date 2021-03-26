@@ -21,8 +21,7 @@ void _testElementComputedStyle() {
     test('Case #1', () {
       _temporarilyRemoveChildrenFromDocument(root: document.body!);
 
-      final styleElement = StyleElement()
-        ..appendText('''
+      final styleElement = StyleElement()..appendText('''
 .exampleClass {
   font-family: exampleFont
 }''');
@@ -31,16 +30,13 @@ void _testElementComputedStyle() {
       });
       document.head!.insertBefore(styleElement, null);
 
-      final element = DivElement()
-        ..className = 'exampleClass';
+      final element = DivElement()..className = 'exampleClass';
       document.body!.insertBefore(element, null);
       addTearDown(() {
         element.remove();
       });
 
-      expect(element
-          .getComputedStyle()
-          .fontFamily, 'exampleFont');
+      expect(element.getComputedStyle().fontFamily, 'exampleFont');
     });
   });
 }

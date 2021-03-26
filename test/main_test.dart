@@ -35,11 +35,12 @@ part 'src/html/api/event_target.dart';
 part 'src/html/api/file.dart';
 part 'src/html/api/history.dart';
 part 'src/html/api/navigator.dart';
-part 'src/html/api/networking.dart';
+part 'src/controller/window_controller_networking.dart';
 part 'src/html/api/networking_event_source.dart';
 part 'src/html/api/networking_http_request.dart';
 part 'src/html/api/window.dart';
 part 'src/html/dom/cloning.dart';
+part 'src/html/dom/css_queries.dart';
 part 'src/html/dom/css_style_declaration.dart';
 part 'src/html/dom/document.dart';
 part 'src/html/dom/element.dart';
@@ -48,7 +49,6 @@ part 'src/html/dom/element_computed_style.dart';
 part 'src/html/dom/element_subclasses.dart';
 part 'src/html/dom/helpers.dart';
 part 'src/html/dom/node.dart';
-part 'src/html/dom/css_queries.dart';
 part 'src/html/dom/parsing.dart';
 
 void main() {
@@ -67,25 +67,12 @@ void main() {
     _sharedTests();
   }, testOn: 'node');
 }
+
 var _isBrowser = false;
 
 var _isVM = false;
 
 void _sharedTests() {
-  setUpAll(() async {
-    // Do not run in Flutter or Node.JS
-    if (!(_isVM || _isBrowser)) {
-      return;
-    }
-
-    final channel = spawnHybridUri('networking_test_server.dart', message: {});
-    final streamQueue = StreamQueue(channel.stream);
-    addTearDown(() {
-      channel.sink.close();
-    });
-    final port = await streamQueue.next;
-    _httpServerPort = port;
-  });
   // DOM
   _testCloning();
   _testCssStyleDeclaration();
@@ -118,4 +105,39 @@ void _sharedTests() {
   // Mocked libraries
   //
   testLibraries();
+}
+
+// Local TCP port that has a HTTP server.
+const _httpServerWrongPort = 314;
+
+// Local TCP port hat DOES NOT have HTTP server.
+// Used for testing connection failures.
+late int _httpServerPort;
+
+void _testNetworking() {
+  group(
+    'Networking-requiring tests:',
+    () {
+      setUpAll(() async {
+        // Do not run in Flutter or Node.JS
+        if (!(_isVM || _isBrowser)) {
+          return;
+        }
+
+        final channel = spawnHybridUri('server.dart', message: {});
+        final streamQueue = StreamQueue<Object?>(channel.stream);
+        addTearDown(() {
+          channel.sink.close();
+        });
+        final port = ((await streamQueue.next) as num).toInt();
+        _httpServerPort = port;
+      });
+
+      _testHttpRequest();
+      _testEventSource();
+      _testWindowControllerNetworking();
+    },
+    tags: 'networking',
+    timeout: Timeout(const Duration(seconds: 30)),
+  );
 }

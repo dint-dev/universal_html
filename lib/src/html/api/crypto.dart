@@ -59,6 +59,10 @@ abstract class Crypto {
 }
 
 abstract class CryptoKey {
+  factory CryptoKey._() {
+    throw UnimplementedError();
+  }
+
   Object get algorithm;
 
   bool get extractable;
@@ -66,8 +70,4 @@ abstract class CryptoKey {
   String get type;
 
   Object get usages;
-
-  factory CryptoKey._() {
-    throw UnimplementedError();
-  }
 }

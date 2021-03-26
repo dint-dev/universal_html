@@ -87,6 +87,8 @@ abstract class Document extends Node
 
   Element? rootScroller;
 
+  final Window window;
+
   factory Document() {
     return XmlDocument.internal(
       window: universal_html.window,
@@ -362,8 +364,6 @@ abstract class Document extends Node
   DocumentTimeline get timeline => throw UnimplementedError();
 
   String? get visibilityState => null;
-
-  final Window window;
 
   bool get _isXml => false;
 

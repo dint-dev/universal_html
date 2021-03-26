@@ -64,8 +64,6 @@ class AccessibleNode extends EventTarget {
   static const EventStreamProvider<Event> accessibleScrollIntoViewEvent =
       EventStreamProvider<Event>('accessiblescrollintoview');
 
-  AccessibleNode() : super.internal();
-
   AccessibleNode? activeDescendant;
 
   bool? atomic;
@@ -160,6 +158,8 @@ class AccessibleNode extends EventTarget {
 
   String? valueText;
 
+  AccessibleNode() : super.internal();
+
   Stream<Event> get onAccessibleClick => accessibleClickEvent.forTarget(this);
 
   Stream<Event> get onAccessibleContextMenu =>
@@ -180,11 +180,11 @@ class AccessibleNode extends EventTarget {
 }
 
 abstract class AccessibleNodeList {
-  int get length;
-
   factory AccessibleNodeList([List<AccessibleNode>? nodes]) {
     throw UnimplementedError();
   }
+
+  int get length;
 
   void add(AccessibleNode node, AccessibleNode before) {
     throw UnimplementedError();

@@ -16,27 +16,6 @@ part of main_test;
 
 void _testController() {
   group('WindowController:', () {
-    test('openContent(_) throws UnsupportedError in browser', () async {
-      const content =
-          '<!DOCTYPE html><html><body><h1>Hello world!</h1></body></html>';
-      final windowController = WindowController();
-      expect(
-        () => windowController.openContent(content),
-        throwsUnsupportedError,
-      );
-    }, testOn: 'browser');
-
-    test('openHttp(_) throws UnsupportedError in browser', () async {
-      final uri = Uri.parse(
-        'http://localhost:$_httpServerPort/hello_world.html',
-      );
-      final windowController = WindowController();
-      expect(
-        () => windowController.openHttp(uri: uri),
-        throwsUnsupportedError,
-      );
-    }, tags: 'networking', testOn: 'browser');
-
     test('openContent(_), sniffing <!DOCTYPE html>', () async {
       const content =
           '<!DOCTYPE html><html><body><h1>Hello world!</h1></body></html>';
@@ -45,7 +24,7 @@ void _testController() {
       final document = windowController.window!.document as HtmlDocument;
       final body = document.body!;
       expect(body.text, 'Hello world!');
-    }, testOn: '!browser');
+    });
 
     test('openContent(_, contentType: _)', () async {
       final windowController = WindowController();
@@ -56,17 +35,6 @@ void _testController() {
       final document = windowController.window!.document as HtmlDocument;
       final body = document.body!;
       expect(body.text, 'Hello world!');
-    }, testOn: '!browser');
-
-    test('openHttp', () async {
-      final uri = Uri.parse(
-        'http://localhost:$_httpServerPort/hello_world.html',
-      );
-      final windowController = WindowController();
-      await windowController.openHttp(uri: uri);
-      final document = windowController.window!.document as HtmlDocument;
-      final body = document.body!;
-      expect(body.text, 'Hello world!');
-    }, tags: 'networking', testOn: '!browser');
+    });
   });
 }

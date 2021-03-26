@@ -47,6 +47,8 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 abstract class PaymentAddress {
+  PaymentAddress._();
+
   List<String>? get addressLine;
 
   String? get city;
@@ -68,8 +70,6 @@ abstract class PaymentAddress {
   String? get region;
 
   String? get sortingCode;
-
-  PaymentAddress._();
 }
 
 abstract class PaymentInstruments {
@@ -89,11 +89,11 @@ abstract class PaymentInstruments {
 }
 
 abstract class PaymentManager {
-  PaymentInstruments get instruments;
-
   String? userHint;
 
   PaymentManager._();
+
+  PaymentInstruments get instruments;
 }
 
 abstract class PaymentRequest extends EventTarget {
@@ -101,39 +101,39 @@ abstract class PaymentRequest extends EventTarget {
     throw UnimplementedError();
   }
 
-  String get id;
+  PaymentAddress? get shippingAddress;
 
-  PaymentAddress get shippingAddress;
+  String? get shippingOption;
 
-  String get shippingOption;
+  String? get shippingType;
 
-  String get shippingType;
+  Future abort() => throw UnimplementedError();
 
-  Future abort();
+  Future<bool> canMakePayment() => throw UnimplementedError();
 
-  Future<bool> canMakePayment();
-
-  Future<PaymentResponse> show();
+  Future<PaymentResponse> show() => throw UnimplementedError();
 }
 
 abstract class PaymentResponse {
-  Object get details;
-
-  String get methodName;
-
-  String get payerEmail;
-
-  String get payerName;
-
-  String get payerPhone;
-
-  String get requestId;
-
-  PaymentAddress get shippingAddress;
-
-  String get shippingOption;
-
   PaymentResponse._();
 
-  Future complete([String paymentResult]);
+  Object? get details;
+
+  String? get methodName;
+
+  String? get payerEmail;
+
+  String? get payerName;
+
+  String? get payerPhone;
+
+  String? get requestId;
+
+  PaymentAddress? get shippingAddress;
+
+  String? get shippingOption;
+
+  Future complete([String? paymentResult]) {
+    throw UnimplementedError();
+  }
 }

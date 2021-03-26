@@ -38,10 +38,12 @@ import 'package:universal_io/io.dart' as io;
 /// }
 /// ```
 class WindowController {
+  /// Instance returned by top-level `window` variable.
   static final WindowController topLevel = WindowController();
 
   late Window? _window = windowBehavior.newWindow(windowController: this);
 
+  /// Behavior of the window.
   final WindowBehavior windowBehavior = WindowBehavior();
 
   /// Returns true if this controller for the top-level window inside a browser.
@@ -125,7 +127,7 @@ class WindowController {
     return openContent(content);
   }
 
-  /// Opens the HTTP endpoint.
+  /// Loads content using HTTP client.
   ///
   /// # Example
   /// ```
@@ -164,6 +166,7 @@ class WindowController {
     return openContent(content);
   }
 
+  /// Loads content from "file", "http", or "https" URI.
   Future<void> openUri(Uri uri) {
     if (!uri.isAbsolute) {
       uri = Uri.parse(window!.location.href).resolveUri(uri);

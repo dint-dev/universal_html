@@ -93,6 +93,39 @@ class _HtmlParser {
     required this.mime,
   });
 
+  DocumentFragment parseDocumentFragment({
+    required int type,
+    required Document ownerDocument,
+    required String html,
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
+    String container = 'div',
+  }) {
+    if (treeSanitizer == null) {
+      if (validator == null) {
+        validator = _defaultValidator;
+        treeSanitizer = _defaultSanitizer;
+      } else {
+        treeSanitizer = NodeTreeSanitizer(validator);
+      }
+    } else if (validator != null) {
+      throw ArgumentError(
+        'validator can only be passed if treeSanitizer is null',
+      );
+    }
+    final node = _newNodeFrom(
+      ownerDocument,
+      html_parsing.parseFragment(html, container: container),
+    );
+    final fragment = node as DocumentFragment;
+    var child = fragment.firstChild;
+    while (child != null) {
+      treeSanitizer.sanitizeTree(child);
+      child = child.nextNode;
+    }
+    return fragment;
+  }
+
   Element _newElementWithoutChildrenFrom(
     Document ownerDocument,
     html_parsing.Element input,
@@ -228,38 +261,5 @@ class _HtmlParser {
     } else {
       throw UnimplementedError();
     }
-  }
-
-  DocumentFragment parseDocumentFragment({
-    required int type,
-    required Document ownerDocument,
-    required String html,
-    NodeValidator? validator,
-    NodeTreeSanitizer? treeSanitizer,
-    String container = 'div',
-  }) {
-    if (treeSanitizer == null) {
-      if (validator == null) {
-        validator = _defaultValidator;
-        treeSanitizer = _defaultSanitizer;
-      } else {
-        treeSanitizer = NodeTreeSanitizer(validator);
-      }
-    } else if (validator != null) {
-      throw ArgumentError(
-        'validator can only be passed if treeSanitizer is null',
-      );
-    }
-    final node = _newNodeFrom(
-      ownerDocument,
-      html_parsing.parseFragment(html, container: container),
-    );
-    final fragment = node as DocumentFragment;
-    var child = fragment.firstChild;
-    while (child != null) {
-      treeSanitizer.sanitizeTree(child);
-      child = child.nextNode;
-    }
-    return fragment;
   }
 }

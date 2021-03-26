@@ -47,6 +47,10 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 abstract class ScrollState {
+  factory ScrollState([Map? scrollStateInit]) {
+    throw UnimplementedError();
+  }
+
   num get deltaGranularity;
 
   num get deltaX;
@@ -70,10 +74,6 @@ abstract class ScrollState {
   num get velocityX;
 
   num get velocityY;
-
-  factory ScrollState([Map? scrollStateInit]) {
-    throw UnimplementedError();
-  }
 
   void consumeDelta(num x, num y);
 

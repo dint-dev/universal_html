@@ -134,7 +134,7 @@ class _CssStyleDeclaration extends CssStyleDeclaration {
 
   @override
   String getPropertyPriority(String property) {
-    throw UnimplementedError();
+    return '';
   }
 
   @override

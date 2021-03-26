@@ -57,13 +57,13 @@ class AbortPaymentEvent extends ExtendableEvent {
 }
 
 abstract class AnimationEvent extends Event {
-  String? get animationName;
-
-  num? get elapsedTime;
-
   factory AnimationEvent(String type, [Map? eventInitDict]) {
     throw UnimplementedError();
   }
+
+  String? get animationName;
+
+  num? get elapsedTime;
 }
 
 class AnimationPlaybackEvent extends Event {
@@ -94,9 +94,9 @@ abstract class BeforeInstallPromptEvent extends Event {
 }
 
 class BeforeUnloadEvent extends Event {
-  BeforeUnloadEvent._(String type) : super.internal(type);
-
   String? returnValue;
+
+  BeforeUnloadEvent._(String type) : super.internal(type);
 }
 
 class BlobEvent extends Event {
@@ -110,6 +110,10 @@ class BlobEvent extends Event {
 }
 
 abstract class CanMakePaymentEvent extends ExtendableEvent {
+  factory CanMakePaymentEvent(String type, Map eventInitDict) {
+    throw UnimplementedError();
+  }
+
   List get methodData;
 
   List get modifiers;
@@ -118,21 +122,17 @@ abstract class CanMakePaymentEvent extends ExtendableEvent {
 
   String get topLevelOrigin;
 
-  factory CanMakePaymentEvent(String type, Map eventInitDict) {
-    throw UnimplementedError();
-  }
-
   void respondWith(Future canMakePaymentResponse) {
     throw UnimplementedError();
   }
 }
 
 abstract class ClipboardEvent extends Event {
-  DataTransfer? get clipboardData;
-
   factory ClipboardEvent(String type, [Map? eventInitDict]) {
     throw UnimplementedError();
   }
+
+  DataTransfer? get clipboardData;
 }
 
 class CloseEvent extends Event {
@@ -188,14 +188,14 @@ class DeviceAcceleration {
 }
 
 abstract class DeviceMotionEvent extends Event {
-  DeviceAcceleration? get acceleration;
-  DeviceAcceleration? get accelerationIncludingGravity;
-  num? get interval;
-  DeviceRotationRate? get rotationRate;
-
   factory DeviceMotionEvent(String type, [Map? eventInitDict]) {
     throw UnimplementedError();
   }
+  DeviceAcceleration? get acceleration;
+  DeviceAcceleration? get accelerationIncludingGravity;
+  num? get interval;
+
+  DeviceRotationRate? get rotationRate;
 }
 
 class DeviceOrientationEvent extends Event {
@@ -256,15 +256,15 @@ class ExtendableEvent extends Event {
 }
 
 abstract class FetchEvent extends ExtendableEvent {
+  factory FetchEvent(String type, Map eventInitDict) {
+    throw UnimplementedError();
+  }
+
   String get clientId;
 
   bool get isReload;
 
   Future get preloadResponse;
-
-  factory FetchEvent(String type, Map eventInitDict) {
-    throw UnimplementedError();
-  }
 
   void respondWith(Future r) {
     throw UnimplementedError();

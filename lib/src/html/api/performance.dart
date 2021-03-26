@@ -63,9 +63,9 @@ class Performance extends EventTarget {
 
   final num timeOrigin = DateTime.now().microsecondsSinceEpoch / 10e6;
 
-  Performance._() : super.internal();
-
   final MemoryInfo memory = MemoryInfo._();
+
+  Performance._() : super.internal();
 
   void clearMarks(String markName) {
     throw UnimplementedError();

@@ -88,19 +88,13 @@ abstract class WebSocket extends EventTarget {
 
   String? binaryType;
 
-  int? get bufferedAmount;
-
-  String? get extensions;
-
-  String? get protocol;
-
-  int get readyState;
-
-  String get url;
-
   factory WebSocket(String url, [Object? protocols]) {
     throw UnimplementedError();
   }
+
+  int? get bufferedAmount;
+
+  String? get extensions;
 
   /// Stream of `close` events handled by this [WebSocket].
   Stream<CloseEvent> get onClose => closeEvent.forTarget(this);
@@ -113,6 +107,12 @@ abstract class WebSocket extends EventTarget {
 
   /// Stream of `open` events handled by this [WebSocket].
   Stream<Event> get onOpen => openEvent.forTarget(this);
+
+  String? get protocol;
+
+  int get readyState;
+
+  String get url;
 
   void close([int? code, String? reason]) {
     throw UnimplementedError();

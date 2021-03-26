@@ -69,6 +69,10 @@ abstract class SpeechSynthesis extends EventTarget {
 }
 
 abstract class SpeechSynthesisEvent extends Event {
+  factory SpeechSynthesisEvent._() {
+    throw UnimplementedError();
+  }
+
   int? get charIndex;
 
   num? get elapsedTime;
@@ -76,10 +80,6 @@ abstract class SpeechSynthesisEvent extends Event {
   String? get name;
 
   SpeechSynthesisUtterance? get utterance;
-
-  factory SpeechSynthesisEvent._() {
-    throw UnimplementedError();
-  }
 }
 
 abstract class SpeechSynthesisUtterance extends EventTarget {
@@ -132,21 +132,11 @@ abstract class SpeechSynthesisUtterance extends EventTarget {
   static const EventStreamProvider<SpeechSynthesisEvent> startEvent =
       EventStreamProvider<SpeechSynthesisEvent>('start');
 
-  String? get lang;
-
-  num? get pitch;
-
-  num? get rate;
-
-  String? get text;
-
-  SpeechSynthesisVoice? get voice;
-
-  num? get volume;
-
   factory SpeechSynthesisUtterance([String? text]) {
     throw UnimplementedError();
   }
+
+  String? get lang;
 
   /// Stream of `boundary` events handled by this [SpeechSynthesisUtterance].
   Stream<SpeechSynthesisEvent> get onBoundary => boundaryEvent.forTarget(this);
@@ -168,9 +158,23 @@ abstract class SpeechSynthesisUtterance extends EventTarget {
 
   /// Stream of `start` events handled by this [SpeechSynthesisUtterance].
   Stream<SpeechSynthesisEvent> get onStart => startEvent.forTarget(this);
+
+  num? get pitch;
+
+  num? get rate;
+
+  String? get text;
+
+  SpeechSynthesisVoice? get voice;
+
+  num? get volume;
 }
 
 abstract class SpeechSynthesisVoice {
+  factory SpeechSynthesisVoice._() {
+    throw UnimplementedError();
+  }
+
   bool? get defaultValue;
 
   String? get lang;
@@ -180,8 +184,4 @@ abstract class SpeechSynthesisVoice {
   String? get name;
 
   String? get voiceUri;
-
-  factory SpeechSynthesisVoice._() {
-    throw UnimplementedError();
-  }
 }

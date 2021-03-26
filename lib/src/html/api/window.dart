@@ -230,6 +230,106 @@ class Window extends EventTarget
 
   final WindowController internalWindowController;
 
+  final String _initialHref;
+
+  /// The application cache for this window.
+  ///
+  /// ## Other resources
+  ///
+  /// * [A beginner's guide to using the application
+  ///   cache](http://www.html5rocks.com/en/tutorials/appcache/beginner)
+  ///   from HTML5Rocks.
+  /// * [Application cache
+  ///   API](https://html.spec.whatwg.org/multipage/browsers.html#application-cache-api)
+  ///   from WHATWG.
+  late final ApplicationCache applicationCache = ApplicationCache.internal();
+
+  /// The debugging console for this window.
+  late final Console console = Console.internal();
+
+  /// The newest document in this window.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Loading web
+  ///   pages](https://html.spec.whatwg.org/multipage/browsers.html)
+  ///   from WHATWG.
+  late final Document document = () {
+    // Note that `as` expressions are required because of
+    // "dart:html OR universal_html" confusion by the analyzer.
+    final window = this as universal_html_in_browser_or_vm.Window;
+    final document =
+        internalWindowController.windowBehavior.newDocument(window: window);
+    return document as Document;
+  }();
+
+  late final External external = External.internal();
+
+  @override
+  late final History history = History.internal();
+
+  /// Storage for this window that persists across sessions.
+  ///
+  /// ## Other resources
+  ///
+  /// * [DOM storage guide](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage)
+  ///   from MDN.
+  /// * [The past, present & future of local storage for web
+  ///   applications](http://diveintohtml5.info/storage.html) from Dive Into HTML5.
+  /// * [Local storage specification](http://www.w3.org/TR/webstorage/#the-localstorage-attribute)
+  ///   from W3C.
+  late final Storage localStorage = Storage._(this);
+
+  /// The current location of this window.
+  ///
+  ///     Location currentLocation = window.location;
+  ///     print(currentLocation.href); // 'http://www.example.com:80/'
+  @override
+  late Location location = Location.internal(href: _initialHref);
+
+  /// The user agent accessing this window.
+  ///
+  /// ## Other resources
+  ///
+  /// * [The navigator
+  ///   object](https://html.spec.whatwg.org/multipage/webappapis.html#the-navigator-object)
+  ///   from WHATWG.
+  late final Navigator navigator = () {
+    // Note that `as` expressions are required because of
+    // "dart:html OR universal_html" confusion by the analyzer.
+    final window = this as universal_html_in_browser_or_vm.Window;
+    final navigator =
+        internalWindowController.windowBehavior.newNavigator(window: window);
+    return navigator as Navigator;
+  }();
+
+  /// Timing and navigation data for this window.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Measuring page load speed with navigation
+  ///   timeing](http://www.html5rocks.com/en/tutorials/webperformance/basics/)
+  ///   from HTML5Rocks.
+  /// * [Navigation timing
+  ///   specification](http://www.w3.org/TR/navigation-timing/) from W3C.
+  late final Performance performance = Performance._();
+
+  /// Storage for this window that is cleared when this session ends.
+  ///
+  /// ## Other resources
+  ///
+  /// * [DOM storage
+  ///   guide](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage)
+  ///   from MDN.
+  /// * [The past, present & future of local storage for web
+  ///   applications](http://diveintohtml5.info/storage.html) from Dive Into HTML5.
+  /// * [Local storage
+  ///   specification](http://www.w3.org/TR/webstorage/#dom-sessionstorage) from W3C.
+  late final Storage sessionStorage = Storage._(this);
+
+  @protected
+  Selection? internalSelection;
+
   /// An internal constructor that's NOT part of "dart:html".
   ///
   /// This API is not for public use.
@@ -241,8 +341,6 @@ class Window extends EventTarget
     this.outerHeight = 0,
   })  : _initialHref = href,
         super.internal();
-
-  final String _initialHref;
 
   /// Returns a Future that completes just before the window is about to
   /// repaint so the user can draw an animation frame.
@@ -267,27 +365,12 @@ class Window extends EventTarget
 
   _Worklet get animationWorklet => throw UnimplementedError();
 
-  /// The application cache for this window.
-  ///
-  /// ## Other resources
-  ///
-  /// * [A beginner's guide to using the application
-  ///   cache](http://www.html5rocks.com/en/tutorials/appcache/beginner)
-  ///   from HTML5Rocks.
-  /// * [Application cache
-  ///   API](https://html.spec.whatwg.org/multipage/browsers.html#application-cache-api)
-  ///   from WHATWG.
-  late final ApplicationCache applicationCache = ApplicationCache.internal();
-
   _Worklet get audioWorklet => throw UnimplementedError();
 
   CacheStorage get caches => CacheStorage._();
 
   @override
   bool get closed => _closed;
-
-  /// The debugging console for this window.
-  late final Console console = Console.internal();
 
   CookieStore get cookieStore => CookieStore._();
 
@@ -301,10 +384,10 @@ class Window extends EventTarget
   CustomElementRegistry? get customElements => null;
 
   /// *Deprecated*.
-  String? get defaultstatus => throw UnimplementedError();
+  String? get defaultStatus => throw UnimplementedError();
 
   /// *Deprecated*.
-  String? get defaultStatus => throw UnimplementedError();
+  String? get defaultstatus => throw UnimplementedError();
 
   /// The ratio between physical pixels and logical CSS pixels.
   ///
@@ -315,27 +398,6 @@ class Window extends EventTarget
   /// * [More about devicePixelRatio](http://www.quirksmode.org/blog/archives/2012/07/more_about_devi.html)
   ///   from quirksmode.
   num get devicePixelRatio => 1;
-
-  /// The newest document in this window.
-  ///
-  /// ## Other resources
-  ///
-  /// * [Loading web
-  ///   pages](https://html.spec.whatwg.org/multipage/browsers.html)
-  ///   from WHATWG.
-  late final Document document = () {
-    // Note that `as` expressions are required because of
-    // "dart:html OR universal_html" confusion by the analyzer.
-    final window = this as universal_html_in_browser_or_vm.Window;
-    final document =
-        internalWindowController.windowBehavior.newDocument(window: window);
-    return document as Document;
-  }();
-
-  late final External external = External.internal();
-
-  @override
-  late final History history = History.internal();
 
   /// Gets an instance of the Indexed DB factory to being using Indexed DB.
   ///
@@ -361,25 +423,6 @@ class Window extends EventTarget
 
   bool get isSecureContext => throw UnimplementedError();
 
-  /// Storage for this window that persists across sessions.
-  ///
-  /// ## Other resources
-  ///
-  /// * [DOM storage guide](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage)
-  ///   from MDN.
-  /// * [The past, present & future of local storage for web
-  ///   applications](http://diveintohtml5.info/storage.html) from Dive Into HTML5.
-  /// * [Local storage specification](http://www.w3.org/TR/webstorage/#the-localstorage-attribute)
-  ///   from W3C.
-  late final Storage localStorage = Storage._(this);
-
-  /// The current location of this window.
-  ///
-  ///     Location currentLocation = window.location;
-  ///     print(currentLocation.href); // 'http://www.example.com:80/'
-  @override
-  late Location location = Location.internal(href: _initialHref);
-
   /// This window's location bar, which displays the URL.
   ///
   /// ## Other resources
@@ -397,22 +440,6 @@ class Window extends EventTarget
   ///   elements](https://html.spec.whatwg.org/multipage/browsers.html#browser-interface-elements)
   ///   from WHATWG.
   _BarProp get menubar => throw UnimplementedError();
-
-  /// The user agent accessing this window.
-  ///
-  /// ## Other resources
-  ///
-  /// * [The navigator
-  ///   object](https://html.spec.whatwg.org/multipage/webappapis.html#the-navigator-object)
-  ///   from WHATWG.
-  late final Navigator navigator = () {
-    // Note that `as` expressions are required because of
-    // "dart:html OR universal_html" confusion by the analyzer.
-    final window = this as universal_html_in_browser_or_vm.Window;
-    final navigator =
-        internalWindowController.windowBehavior.newNavigator(window: window);
-    return navigator as Navigator;
-  }();
 
   /// Whether objects are drawn offscreen before being displayed.
   ///
@@ -551,6 +578,8 @@ class Window extends EventTarget
   Stream<MouseEvent> get onMouseLeave =>
       Element.mouseLeaveEvent.forTarget(this);
 
+  // From WindowBase64
+
   /// Stream of `mousemove` events handled by this [Window].
   Stream<MouseEvent> get onMouseMove => Element.mouseMoveEvent.forTarget(this);
 
@@ -559,8 +588,6 @@ class Window extends EventTarget
 
   /// Stream of `mouseover` events handled by this [Window].
   Stream<MouseEvent> get onMouseOver => Element.mouseOverEvent.forTarget(this);
-
-  // From WindowBase64
 
   /// Stream of `mouseup` events handled by this [Window].
   Stream<MouseEvent> get onMouseUp => Element.mouseUpEvent.forTarget(this);
@@ -676,17 +703,6 @@ class Window extends EventTarget
   @override
   WindowBase? get parent => null;
 
-  /// Timing and navigation data for this window.
-  ///
-  /// ## Other resources
-  ///
-  /// * [Measuring page load speed with navigation
-  ///   timeing](http://www.html5rocks.com/en/tutorials/webperformance/basics/)
-  ///   from HTML5Rocks.
-  /// * [Navigation timing
-  ///   specification](http://www.w3.org/TR/navigation-timing/) from W3C.
-  late final Performance performance = Performance._();
-
   /// Information about the screen displaying this window.
   ///
   /// ## Other resources
@@ -764,19 +780,6 @@ class Window extends EventTarget
   /// * [Window.self](https://developer.mozilla.org/en-US/docs/Web/API/Window.self)
   ///   from MDN.
   WindowBase get self => this;
-
-  /// Storage for this window that is cleared when this session ends.
-  ///
-  /// ## Other resources
-  ///
-  /// * [DOM storage
-  ///   guide](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage)
-  ///   from MDN.
-  /// * [The past, present & future of local storage for web
-  ///   applications](http://diveintohtml5.info/storage.html) from Dive Into HTML5.
-  /// * [Local storage
-  ///   specification](http://www.w3.org/TR/webstorage/#dom-sessionstorage) from W3C.
-  late final Storage sessionStorage = Storage._(this);
 
   /// Access to speech synthesis in the browser.
   ///
@@ -891,9 +894,6 @@ class Window extends EventTarget
   /// * [Window.getSelection](https://developer.mozilla.org/en-US/docs/Web/API/Window.getSelection)
   ///   from MDN.
   Selection? getSelection() => internalSelection;
-
-  @protected
-  Selection? internalSelection;
 
   /// Returns a list of media queries for the given query string.
   ///

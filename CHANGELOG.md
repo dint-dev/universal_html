@@ -1,3 +1,7 @@
+## 2.0.7
+* Fixes documentation issues and other small issues.
+* WindowController can now load (fake) `Window` instances in browser just like in VM.
+
 ## 2.0.6
 * Fixes a dependency constraint.
 

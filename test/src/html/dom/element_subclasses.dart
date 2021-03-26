@@ -75,67 +75,6 @@ void _testAttribute<T extends Element>({
   );
 }
 
-void _testNonNullableAttribute<T extends Element>(
-  String name,
-  T element,
-  String Function(T e) getter,
-  void Function(T element, String value) setter, {
-  String defaultValue = '',
-  String value = 'x',
-}) {
-  // Test expectations
-  expect(
-    getter(element),
-    defaultValue,
-    reason: 'Default value is incorrect',
-  );
-
-  // Use element.setAttribute
-  element.setAttribute(name, value);
-
-  // Test expectations
-  expect(
-    element.getAttribute(name),
-    value,
-    reason: 'Setting with setAttribute fails (getAttribute)',
-  );
-  expect(
-    getter(element),
-    value,
-    reason: 'Setting with setAttribute fails (getter)',
-  );
-
-  // Reset
-  element.removeAttribute(name);
-
-  // Test expectations
-  expect(
-    element.getAttribute(name),
-    null,
-    reason: 'Removing fails (getAttribute)',
-  );
-  expect(
-    getter(element),
-    defaultValue,
-    reason: 'Removing fails (getter)',
-  );
-
-  // Use element.propertyName=
-  setter(element, value);
-
-  // Test expectations
-  expect(
-    getter(element),
-    value,
-    reason: 'Setting with setter fails (getter',
-  );
-  expect(
-    element.getAttribute(name),
-    value,
-    reason: 'Setting with setter fails (getAttribute)',
-  );
-}
-
 void _testAttributeBool<T extends Element>(String name, T element,
     bool? Function(T e) getter, void Function(T element, bool value) setter) {
   // Test expectations
@@ -1061,4 +1000,65 @@ void _testElementSubclasses() {
       );
     });
   });
+}
+
+void _testNonNullableAttribute<T extends Element>(
+  String name,
+  T element,
+  String Function(T e) getter,
+  void Function(T element, String value) setter, {
+  String defaultValue = '',
+  String value = 'x',
+}) {
+  // Test expectations
+  expect(
+    getter(element),
+    defaultValue,
+    reason: 'Default value is incorrect',
+  );
+
+  // Use element.setAttribute
+  element.setAttribute(name, value);
+
+  // Test expectations
+  expect(
+    element.getAttribute(name),
+    value,
+    reason: 'Setting with setAttribute fails (getAttribute)',
+  );
+  expect(
+    getter(element),
+    value,
+    reason: 'Setting with setAttribute fails (getter)',
+  );
+
+  // Reset
+  element.removeAttribute(name);
+
+  // Test expectations
+  expect(
+    element.getAttribute(name),
+    null,
+    reason: 'Removing fails (getAttribute)',
+  );
+  expect(
+    getter(element),
+    defaultValue,
+    reason: 'Removing fails (getter)',
+  );
+
+  // Use element.propertyName=
+  setter(element, value);
+
+  // Test expectations
+  expect(
+    getter(element),
+    value,
+    reason: 'Setting with setter fails (getter',
+  );
+  expect(
+    element.getAttribute(name),
+    value,
+    reason: 'Setting with setter fails (getAttribute)',
+  );
 }

@@ -241,6 +241,10 @@ abstract class Path2D {
 }
 
 abstract class TextMetrics {
+  factory TextMetrics._() {
+    throw UnimplementedError();
+  }
+
   num? get actualBoundingBoxAscent;
 
   num? get actualBoundingBoxDescent;
@@ -264,10 +268,6 @@ abstract class TextMetrics {
   num? get ideographicBaseline;
 
   num? get width;
-
-  factory TextMetrics._() {
-    throw UnimplementedError();
-  }
 }
 
 abstract class _CanvasRenderingContext2DBase implements CanvasRenderingContext {

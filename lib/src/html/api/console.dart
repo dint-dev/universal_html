@@ -50,13 +50,13 @@ class Console {
   /// Internal constructor. __Not part of dart:html__.
   Console.internal();
 
+  MemoryInfo? get memory => null;
+
   void assertCondition(bool condition, Object arg) {
     if (!condition) {
       log(arg);
     }
   }
-
-  MemoryInfo? get memory => null;
 
   void clear(Object arg) {}
 

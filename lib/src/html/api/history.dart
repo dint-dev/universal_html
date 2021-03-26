@@ -127,11 +127,11 @@ class History {
 }
 
 class Location extends Object with _UrlBase {
-  List<String> get ancestorOrigins => <String>[];
-
   String href;
 
   Location.internal({required this.href});
+
+  List<String> get ancestorOrigins => <String>[];
 
   @override
   Uri get _uri => Uri.parse(href);

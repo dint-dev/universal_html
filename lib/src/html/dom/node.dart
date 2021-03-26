@@ -776,7 +776,8 @@ mixin _ElementOrDocument implements Node, ParentNode {
 
     // A sanity check
     assert(identical(firstChildOfRoot.parentNode, this));
-    assert(identical(firstChildOfRoot.parent, this) || firstChildOfRoot.parent == null);
+    assert(identical(firstChildOfRoot.parent, this) ||
+        firstChildOfRoot.parent == null);
 
     var node = firstChildOfRoot;
     loop:

@@ -62,10 +62,10 @@ abstract class DateInputElement implements RangeInputElementBase {
 
   bool? readOnly;
   bool required = false;
-  DateTime get valueAsDate => throw UnimplementedError();
-  set valueAsDate(DateTime value);
-
   factory DateInputElement() => InputElement(type: 'date');
+  DateTime get valueAsDate => throw UnimplementedError();
+
+  set valueAsDate(DateTime value);
 }
 
 abstract class EmailInputElement implements TextInputElementBase {
@@ -179,10 +179,10 @@ abstract class MonthInputElement implements RangeInputElementBase {
 
   bool? readOnly;
   bool required = false;
-  DateTime get valueAsDate;
-  set valueAsDate(DateTime value);
-
   factory MonthInputElement() => InputElement(type: 'month');
+  DateTime get valueAsDate;
+
+  set valueAsDate(DateTime value);
 }
 
 abstract class NumberInputElement implements RangeInputElementBase {
@@ -192,10 +192,10 @@ abstract class NumberInputElement implements RangeInputElementBase {
   bool? readOnly;
   bool required = false;
 
+  factory NumberInputElement() => InputElement(type: 'number');
+
   @override
   num? get valueAsNumber => throw UnimplementedError();
-
-  factory NumberInputElement() => InputElement(type: 'number');
 }
 
 abstract class PasswordInputElement implements TextInputElementBase {
@@ -316,7 +316,7 @@ abstract class WeekInputElement implements RangeInputElementBase {
 
   bool? readOnly;
   bool required = false;
-  DateTime? get valueAsDate => throw UnimplementedError();
-
   factory WeekInputElement() => InputElement(type: 'week');
+
+  DateTime? get valueAsDate => throw UnimplementedError();
 }

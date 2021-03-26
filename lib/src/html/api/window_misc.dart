@@ -123,13 +123,13 @@ abstract class MediaQueryList extends EventTarget {
   static const EventStreamProvider<Event> changeEvent =
       EventStreamProvider<Event>('change');
 
-  bool get matches;
-
-  String get media;
-
   factory MediaQueryList._() {
     throw UnimplementedError();
   }
+
+  bool get matches;
+
+  String get media;
 
   Stream<Event> get onChange => changeEvent.forTarget(this);
 
@@ -303,11 +303,17 @@ abstract class VisualViewport implements EventTarget {
   static const EventStreamProvider<Event> scrollEvent =
       EventStreamProvider<Event>('scroll');
 
+  VisualViewport._();
+
   num get height;
 
   num get offsetLeft;
 
   num get offsetTop;
+
+  Stream<Event> get onResize => resizeEvent.forTarget(this);
+
+  Stream<Event> get onScroll => scrollEvent.forTarget(this);
 
   num get pageLeft;
 
@@ -316,12 +322,6 @@ abstract class VisualViewport implements EventTarget {
   num get scale;
 
   num get width;
-
-  VisualViewport._();
-
-  Stream<Event> get onResize => resizeEvent.forTarget(this);
-
-  Stream<Event> get onScroll => scrollEvent.forTarget(this);
 }
 
 class _BarProp {

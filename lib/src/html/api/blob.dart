@@ -95,21 +95,15 @@ abstract class Blob {
 
   String get type;
 
-  Blob slice([int start = 0, int? end, String? contentType]);
-
   /// Internal method. __Not part of "dart:html".__
   @protected
   Future<List<int>> internalBytes();
+
+  Blob slice([int start = 0, int? end, String? contentType]);
 }
 
 class _Blob implements Blob {
   final List<int> _data;
-
-  @override
-  Blob slice([int start = 0, int? end, String? contentType]) {
-    end ??= _data.length;
-    return _Blob(_data.sublist(start, end), type: contentType ?? type);
-  }
 
   @override
   final String type;
@@ -122,5 +116,11 @@ class _Blob implements Blob {
   @override
   Future<List<int>> internalBytes() {
     return Future<List<int>>.value(_data);
+  }
+
+  @override
+  Blob slice([int start = 0, int? end, String? contentType]) {
+    end ??= _data.length;
+    return _Blob(_data.sublist(start, end), type: contentType ?? type);
   }
 }

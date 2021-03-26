@@ -14,21 +14,15 @@
 
 part of main_test;
 
-// Local TCP port that has a HTTP server.
-late int _httpServerPort;
-
-// Local TCP port hat DOES NOT have HTTP server.
-// Used for testing connection failures.
-const _httpServerWrongPort = 314;
-
-void _testNetworking() {
-  group(
-    'Networking:',
-    () {
-      _testHttpRequest();
-      _testEventSource();
-    },
-    tags: 'networking',
-    timeout: Timeout(const Duration(seconds: 30)),
-  );
+void _testWindowControllerNetworking() {
+  test('In VM, openHttp(_) returns the content', () async {
+    final uri = Uri.parse(
+      'http://localhost:$_httpServerPort/hello_world.html',
+    );
+    final windowController = WindowController();
+    await windowController.openHttp(uri: uri);
+    final document = windowController.window!.document as HtmlDocument;
+    final body = document.body!;
+    expect(body.text, 'Hello world!');
+  }, tags: 'networking');
 }

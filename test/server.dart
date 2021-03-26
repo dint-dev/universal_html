@@ -18,25 +18,6 @@ import 'dart:io';
 import 'package:stream_channel/stream_channel.dart';
 
 // Called by package:test
-void hybridMain(StreamChannel streamChannel, Object message) async {
-  final httpServer = await HttpServer.bind('localhost', 0);
-
-  print('Listening at: http://localhost:${httpServer.port}/');
-
-  final subscription = httpServer.listen(handleHttpRequest);
-  streamChannel.sink.add(httpServer.port);
-
-  Timer(const Duration(minutes: 5), () {
-    httpServer.close();
-  });
-  streamChannel.stream.listen((event) {}, onDone: () {
-    httpServer.close();
-  });
-  subscription.onDone(() {
-    streamChannel.sink.close();
-  });
-}
-
 Future<void> handleHttpRequest(HttpRequest request) async {
   print('${request.method} ${request.uri.path}');
   final response = request.response;
@@ -154,4 +135,22 @@ data: abc
     // Close HTTP response
     await response.close();
   }
+}
+
+void hybridMain(StreamChannel streamChannel, Object message) async {
+  final httpServer = await HttpServer.bind('localhost', 0);
+  print('Listening at: http://localhost:${httpServer.port}/');
+  final subscription = httpServer.listen(handleHttpRequest);
+
+  streamChannel.sink.add(httpServer.port);
+
+  Timer(const Duration(minutes: 5), () {
+    httpServer.close();
+  });
+  streamChannel.stream.listen((event) {}, onDone: () {
+    httpServer.close();
+  });
+  subscription.onDone(() {
+    streamChannel.sink.close();
+  });
 }

@@ -46,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
-class History {
+class History extends HistoryBase {
   /// Checks if the State APIs are supported on the current platform.
   ///
   /// See also:
@@ -72,14 +72,17 @@ class History {
 
   Object? get state => _state;
 
+  @override
   void back() {
     go(-1);
   }
 
+  @override
   void forward() {
     go(1);
   }
 
+  @override
   void go([int? delta]) {
     // The effect is is asynchronous
     scheduleMicrotask(() {
@@ -126,7 +129,13 @@ class History {
   }
 }
 
-class Location extends Object with _UrlBase {
+abstract class HistoryBase {
+  void back();
+  void forward();
+  void go(int distance);
+}
+
+class Location extends LocationBase with _UrlBase {
   String href;
 
   Location.internal({required this.href});

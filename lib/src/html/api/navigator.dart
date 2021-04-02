@@ -52,46 +52,59 @@ class Navigator extends NavigatorConcurrentHardware
         NavigatorOnLine,
         NavigatorAutomationInformation,
         NavigatorID {
-  final Permissions permissions = Permissions._();
+  final num? deviceMemory;
 
-  /// Amount of memory in the device.
-  final int? deviceMemory;
+  @Unstable()
+  late Geolocation geolocation = Geolocation.internal();
+
+  @Unstable()
+  final String? productSub;
 
   final Window internalWindow;
 
   @override
-  final String? appName;
+  final String appName;
 
   @override
-  final String? appVersion;
+  final String appVersion;
 
-  late final Geolocation geolocation = Geolocation.internal();
+  @override
+  final String appCodeName;
+
+  @override
+  final String platform;
+
+  @override
+  final String product;
 
   /// Internal constructor. NOT part of "dart:html".
   Navigator.internal({
     required this.internalWindow,
     this.deviceMemory,
+    this.appCodeName = '',
     this.appName = 'Netscape',
     this.appVersion = '5.0',
+    this.platform = 'Win32',
+    this.product = 'Gecko',
+    this.productSub = '20030107',
   }) : super._();
 
-  @override
-  String? get appCodeName => null;
+  _BudgetService? get budget => null;
 
-  _Clipboard? get clipboard => throw UnimplementedError();
+  _Clipboard? get clipboard => null;
 
-  NetworkInformation get connection => throw UnimplementedError();
+  NetworkInformation? get connection => null;
 
   @Unstable()
   @override
   bool? get cookieEnabled => false;
 
-  CredentialsContainer get credentials => throw UnimplementedError();
+  CredentialsContainer? get credentials => null;
 
   @override
   bool get dartEnabled => false;
 
-  String get doNotTrack => throw UnimplementedError();
+  String? get doNotTrack => null;
 
   @override
   String? get language {
@@ -102,37 +115,29 @@ class Navigator extends NavigatorConcurrentHardware
   @override
   List<String> get languages => throw UnimplementedError();
 
-  int get maxTouchPoints => throw UnimplementedError();
+  int? get maxTouchPoints => null;
 
-  MediaCapabilities get mediaCapabilities => throw UnimplementedError();
+  MediaCapabilities? get mediaCapabilities => null;
 
-  MediaDevices get mediaDevices => MediaDevices._();
+  MediaDevices? get mediaDevices => null;
 
-  MediaSession get mediaSession => throw UnimplementedError();
+  MediaSession? get mediaSession => null;
 
-  List<MimeType> get mimeTypes => throw UnimplementedError();
+  List<MimeType>? get mimeTypes => null;
 
-  Object? get nfc => null;
+  _NFC? get nfc => null;
 
   @override
   bool get onLine => false;
 
+  Permissions? get permissions => null;
+
   @deprecated
   DeprecatedStorageQuota? get persistentStorage => null;
 
-  @override
-  String get platform => 'Win32';
-
   Presentation? get presentation => null;
 
-  @override
-  String get product => 'Gecko';
-
-  String get productSub => '20030107';
-
-  ServiceWorkerContainer get serviceWorker {
-    throw UnimplementedError();
-  }
+  ServiceWorkerContainer? get serviceWorker => null;
 
   StorageManager? get storage => null;
 
@@ -142,8 +147,10 @@ class Navigator extends NavigatorConcurrentHardware
   @override
   String get userAgent => '-';
 
+  @Unstable()
   String get vendor => '-';
 
+  @Unstable()
   String get vendorSub => '';
 
   VR? get vr => null;

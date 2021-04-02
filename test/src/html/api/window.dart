@@ -17,7 +17,9 @@ part of main_test;
 void _testWindow() {
   group('Window', () {
     test('console', () {
-      expect(window.console, isNotNull);
+      final console = window.console;
+      expect(console, isNotNull);
+      console.info('Hello');
     });
 
     test('localStorage / sessionStorage', () {
@@ -45,6 +47,21 @@ void _testWindow() {
         storage.clear();
         expect(storage.length, 0);
       }
+    });
+
+    test('screen', () {
+      final screen = window.screen!;
+      expect(screen, isNotNull);
+      expect(screen.height, greaterThan(0));
+      expect(screen.width, greaterThan(0));
+    });
+
+    test('scrollX', () {
+      expect(window.scrollX, greaterThanOrEqualTo(0));
+    });
+
+    test('scrollY', () {
+      expect(window.scrollY, greaterThanOrEqualTo(0));
     });
   });
 }

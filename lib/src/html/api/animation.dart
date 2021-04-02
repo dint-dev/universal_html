@@ -81,6 +81,19 @@ abstract class Animation extends EventTarget {
   void reverse();
 }
 
+@Native('AnimationEffectReadOnly')
+class AnimationEffectReadOnly {
+  AnimationEffectReadOnly._();
+
+  AnimationEffectTimingReadOnly? get timing {
+    throw UnimplementedError();
+  }
+
+  Map getComputedTiming() {
+    throw UnimplementedError();
+  }
+}
+
 abstract class AnimationEffectTiming extends AnimationEffectTimingReadOnly {
   num? delay;
   String? direction;
@@ -109,6 +122,14 @@ abstract class DocumentTimeline extends AnimationTimeline {
 
   @override
   num get currentTime;
+}
+
+@Native('KeyframeEffectReadOnly')
+class KeyframeEffectReadOnly extends AnimationEffectReadOnly {
+  factory KeyframeEffectReadOnly(Element? target, Object? effect,
+      [Object? options]) {
+    throw UnimplementedError();
+  }
 }
 
 abstract class ScrollTimeline extends AnimationTimeline {

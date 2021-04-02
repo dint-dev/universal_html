@@ -48,33 +48,46 @@ part of universal_html.internal;
 
 abstract class DataTransfer {
   String? dropEffect;
+
   String? effectAllowed;
 
-  List<File> get files;
+  final List<File>? files = [];
 
-  DataTransferItemList get items;
+  List<DataTransferItem>? items = [];
 
-  List<String> get types;
+  final List<String>? types = [];
 
-  void clearData([String format]);
+  void clearData([String? format]) {
+    throw UnimplementedError();
+  }
 
-  String getData(String format);
+  String getData(String format) {
+    throw UnimplementedError();
+  }
 
-  void setData(String format, String data);
+  void setData(String format, String data) {
+    throw UnimplementedError();
+  }
 
-  void setDragImage(Element image, int x, int y);
+  void setDragImage(Element image, int x, int y) {}
 }
 
 abstract class DataTransferItem {
   DataTransferItem._();
 
-  String get kind;
+  String? get kind {
+    throw UnimplementedError();
+  }
 
-  String get type;
+  String? get type {
+    throw UnimplementedError();
+  }
 
   Entry getAsEntry();
 
-  File getAsFile();
+  File? getAsFile() {
+    throw UnimplementedError();
+  }
 }
 
 abstract class DataTransferItemList {

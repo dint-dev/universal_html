@@ -46,7 +46,45 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
-abstract class WebSocket extends EventTarget {
+/// Use the WebSocket interface to connect to a WebSocket,
+/// and to send and receive data on that WebSocket.
+///
+/// To use a WebSocket in your web app, first create a WebSocket object,
+/// passing the WebSocket URL as an argument to the constructor.
+///
+///     var webSocket = new WebSocket('ws://127.0.0.1:1337/ws');
+///
+/// To send data on the WebSocket, use the [send] method.
+///
+///     if (webSocket != null && webSocket.readyState == WebSocket.OPEN) {
+///       webSocket.send(data);
+///     } else {
+///       print('WebSocket not connected, message $data not sent');
+///     }
+///
+/// To receive data on the WebSocket, register a listener for message events.
+///
+///     webSocket.onMessage.listen((MessageEvent e) {
+///       receivedData(e.data);
+///     });
+///
+/// The message event handler receives a [MessageEvent] object
+/// as its sole argument.
+/// You can also define open, close, and error handlers,
+/// as specified by [WebSocketEvents].
+///
+/// For more information, see the
+/// [WebSockets](http://www.dartlang.org/docs/library-tour/#html-websockets)
+/// section of the library tour and
+/// [Introducing WebSockets](http://www.html5rocks.com/en/tutorials/websockets/basics/),
+/// an HTML5Rocks.com tutorial.
+@SupportedBrowser(SupportedBrowser.CHROME)
+@SupportedBrowser(SupportedBrowser.FIREFOX)
+@SupportedBrowser(SupportedBrowser.IE, '10')
+@SupportedBrowser(SupportedBrowser.SAFARI)
+@Unstable()
+@Native('WebSocket')
+class WebSocket extends EventTarget {
   /// Static factory designed to expose `close` events to event
   /// handlers that are not necessarily instances of [WebSocket].
   ///
@@ -75,6 +113,13 @@ abstract class WebSocket extends EventTarget {
   static const EventStreamProvider<Event> openEvent =
       EventStreamProvider<Event>('open');
 
+  factory WebSocket(String url, [Object? protocols]) {
+    throw UnimplementedError();
+  }
+
+  /// Checks if this type is supported on the current platform.
+  static bool get supported => false;
+
   static const int CLOSED = 3;
 
   static const int CLOSING = 2;
@@ -83,36 +128,33 @@ abstract class WebSocket extends EventTarget {
 
   static const int OPEN = 1;
 
-  /// Checks if this type is supported on the current platform.
-  static bool get supported => false;
-
-  String? binaryType;
-
-  factory WebSocket(String url, [Object? protocols]) {
+  String? get binaryType {
     throw UnimplementedError();
   }
 
-  int? get bufferedAmount;
+  set binaryType(String? value) {
+    throw UnimplementedError();
+  }
 
-  String? get extensions;
+  int? get bufferedAmount {
+    throw UnimplementedError();
+  }
 
-  /// Stream of `close` events handled by this [WebSocket].
-  Stream<CloseEvent> get onClose => closeEvent.forTarget(this);
+  String? get extensions {
+    throw UnimplementedError();
+  }
 
-  /// Stream of `error` events handled by this [WebSocket].
-  Stream<Event> get onError => errorEvent.forTarget(this);
+  String? get protocol {
+    throw UnimplementedError();
+  }
 
-  /// Stream of `message` events handled by this [WebSocket].
-  Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
+  int get readyState {
+    throw UnimplementedError();
+  }
 
-  /// Stream of `open` events handled by this [WebSocket].
-  Stream<Event> get onOpen => openEvent.forTarget(this);
-
-  String? get protocol;
-
-  int get readyState;
-
-  String get url;
+  String? get url {
+    throw UnimplementedError();
+  }
 
   void close([int? code, String? reason]) {
     throw UnimplementedError();
@@ -127,6 +169,8 @@ abstract class WebSocket extends EventTarget {
     throw UnimplementedError();
   }
 
+  @JSName('send')
+
   /// Transmit data to the server over this connection.
   ///
   /// This method accepts data of type [Blob], [ByteBuffer], [String], or
@@ -135,6 +179,8 @@ abstract class WebSocket extends EventTarget {
   void sendBlob(Blob data) {
     throw UnimplementedError();
   }
+
+  @JSName('send')
 
   /// Transmit data to the server over this connection.
   ///
@@ -145,6 +191,8 @@ abstract class WebSocket extends EventTarget {
     throw UnimplementedError();
   }
 
+  @JSName('send')
+
   /// Transmit data to the server over this connection.
   ///
   /// This method accepts data of type [Blob], [ByteBuffer], [String], or
@@ -154,6 +202,8 @@ abstract class WebSocket extends EventTarget {
     throw UnimplementedError();
   }
 
+  @JSName('send')
+
   /// Transmit data to the server over this connection.
   ///
   /// This method accepts data of type [Blob], [ByteBuffer], [String], or
@@ -162,4 +212,16 @@ abstract class WebSocket extends EventTarget {
   void sendTypedData(TypedData data) {
     throw UnimplementedError();
   }
+
+  /// Stream of `close` events handled by this [WebSocket].
+  Stream<CloseEvent> get onClose => closeEvent.forTarget(this);
+
+  /// Stream of `error` events handled by this [WebSocket].
+  Stream<Event> get onError => errorEvent.forTarget(this);
+
+  /// Stream of `message` events handled by this [WebSocket].
+  Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
+
+  /// Stream of `open` events handled by this [WebSocket].
+  Stream<Event> get onOpen => openEvent.forTarget(this);
 }

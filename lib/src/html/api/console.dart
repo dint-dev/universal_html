@@ -47,64 +47,70 @@ The source code adopted from 'dart:html' had the following license:
 part of universal_html.internal;
 
 class Console {
-  /// Internal constructor. __Not part of dart:html__.
   Console.internal();
 
   MemoryInfo? get memory => null;
 
-  void assertCondition(bool condition, Object arg) {
-    if (!condition) {
-      log(arg);
+  // Even though many of the following JS methods can take in multiple
+  // arguments, we historically and currently limit the number of variable
+  // arguments to 1. Depending on the need, these methods may be updated to
+  // allow for more.
+
+  // We rename assert to assertCondition here.
+  void assertCondition([bool? condition, Object? arg]) {
+    if (condition != true) {
+      debug(arg);
     }
   }
 
-  void clear(Object arg) {}
+  // clear no longer takes in an argument, but we keep this as optional to
+  // maintain backwards compatibility.
+  void clear([Object? arg]) {}
 
-  void count(Object arg) {}
+  // count takes in a String instead, but we keep this as an Object for
+  // backwards compatibility.
+  void count([Object? arg]) {}
 
-  void debug(Object arg) {
-    log(arg);
-  }
+  void countReset([String? arg]) {}
 
-  void dir(Object arg) {}
+  void debug(Object? arg) {}
 
-  void dirxml(Object arg) {}
+  void dir([Object? item, Object? options]) {}
 
-  void error(Object arg) {
-    log(arg);
-  }
+  void dirxml(Object? arg) {}
 
-  void group(Object arg) {}
+  void error(Object? arg) {}
 
-  void groupCollapsed(Object arg) {}
+  void group(Object? arg) {}
+
+  void groupCollapsed(Object? arg) {}
 
   void groupEnd() {}
 
-  void info(Object arg) {
-    log(arg);
-  }
+  void info(Object? arg) {}
 
-  void log(Object arg) {
-    print(arg);
-  }
+  void log(Object? arg) {}
 
-  void markTimeline(Object arg) {}
+  void table([Object? tabularData, List<String>? properties]) {}
 
-  void profile(String title) {}
+  void time([String? label]) {}
 
-  void profileEnd(String title) {}
+  void timeEnd([String? label]) {}
 
-  void table(Object arg) {}
+  void timeLog([String? label, Object? arg]) {}
 
-  void time(String title) {}
+  void trace(Object? arg) {}
 
-  void timeEnd(String title) {}
+  void warn(Object? arg) {}
 
-  void timeStamp(Object arg) {}
+  // The following are non-standard methods.
+  void profile([String? title]) {}
 
-  void trace(Object arg) {}
+  void profileEnd([String? title]) {}
 
-  void warn(Object arg) {
-    log(arg);
-  }
+  void timeStamp([Object? arg]) {}
+
+  // The following is deprecated and should be removed once we drop support for
+  // older Safari browsers.
+  void markTimeline(Object? arg) {}
 }

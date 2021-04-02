@@ -54,6 +54,17 @@ typedef StorageQuotaCallback = void Function(int grantedQuotaInBytes);
 typedef StorageUsageCallback = void Function(
     int currentUsageInBytes, int currentQuotaInBytes);
 
+@Native('BudgetState')
+class BudgetState {
+  factory BudgetState._() {
+    throw UnimplementedError();
+  }
+
+  num? get budgetAt => throw UnimplementedError();
+
+  int? get time => throw UnimplementedError();
+}
+
 abstract class Credential {
   Credential._();
 
@@ -174,20 +185,6 @@ abstract class MediaMetadata {
   }
 }
 
-abstract class MediaSession {
-  MediaMetadata? metadata;
-
-  String? playbackState;
-
-  factory MediaSession._() {
-    throw UnimplementedError();
-  }
-
-  void setActionHandler(String action, MediaSessionActionHandler handler) {
-    throw UnimplementedError();
-  }
-}
-
 abstract class MimeType {
   MimeType._();
 
@@ -221,19 +218,19 @@ abstract class NavigatorCookies {
 abstract class NavigatorID {
   NavigatorID._();
 
-  String? get appCodeName;
+  String get appCodeName;
 
-  String? get appName;
+  String get appName;
 
-  String? get appVersion;
+  String get appVersion;
 
   bool? get dartEnabled;
 
   String? get platform;
 
-  String? get product;
+  String get product;
 
-  String? get userAgent;
+  String get userAgent;
 }
 
 abstract class NavigatorLanguage {
@@ -408,6 +405,18 @@ abstract class VR implements EventTarget {
   Future getDevices();
 }
 
+class _BudgetService {
+  factory _BudgetService._() {
+    throw UnimplementedError();
+  }
+
+  Future<BudgetState> getBudget() => throw UnimplementedError();
+
+  Future<double> getCost(String operation) => throw UnimplementedError();
+
+  Future<bool> reserve(String operation) => throw UnimplementedError();
+}
+
 abstract class _Clipboard implements EventTarget {
   _Clipboard._();
 
@@ -418,4 +427,11 @@ abstract class _Clipboard implements EventTarget {
   Future write(DataTransfer data) => throw UnimplementedError();
 
   Future writeText(String data) => throw UnimplementedError();
+}
+
+@Native('NFC')
+abstract class _NFC {
+  factory _NFC._() {
+    throw UnimplementedError();
+  }
 }

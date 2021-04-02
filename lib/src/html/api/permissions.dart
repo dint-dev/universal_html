@@ -66,6 +66,15 @@ class Permissions {
   }
 }
 
-class PermissionStatus {
-  PermissionStatus._();
+class PermissionStatus extends EventTarget {
+  static const EventStreamProvider<Event> changeEvent =
+      EventStreamProvider<Event>('change');
+
+  PermissionStatus() : super.internal();
+
+  Stream<Event> get onChange => changeEvent.forTarget(this);
+
+  String? get state {
+    throw UnimplementedError();
+  }
 }

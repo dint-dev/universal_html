@@ -58,6 +58,15 @@ abstract class AbstractWorker implements EventTarget {
   Stream<Event> get onError => errorEvent.forTarget(this);
 }
 
+@Native('BackgroundFetchFetch')
+class BackgroundFetchFetch {
+  factory BackgroundFetchFetch._() {
+    throw UnimplementedError();
+  }
+
+  _Request? get request => null;
+}
+
 class BackgroundFetchManager {
   factory BackgroundFetchManager._() {
     throw UnimplementedError();
@@ -74,26 +83,35 @@ class BackgroundFetchManager {
   Future<List<String>> getIds() => throw UnimplementedError();
 }
 
-abstract class BackgroundFetchRegistration extends EventTarget {
+@Native('BackgroundFetchRegistration')
+class BackgroundFetchRegistration extends EventTarget {
   factory BackgroundFetchRegistration._() {
     throw UnimplementedError();
   }
 
-  int get downloaded;
+  int? get downloaded => throw UnimplementedError();
 
-  int get downloadTotal;
+  int? get downloadTotal => throw UnimplementedError();
 
-  String get id;
+  String? get id => throw UnimplementedError();
 
-  String get title;
+  String? get title => throw UnimplementedError();
 
-  int get totalDownloadSize;
+  int? get totalDownloadSize => throw UnimplementedError();
 
-  int get uploaded;
+  int? get uploaded => throw UnimplementedError();
 
-  int get uploadTotal;
+  int? get uploadTotal => throw UnimplementedError();
 
   Future<bool> abort() => throw UnimplementedError();
+}
+
+class BackgroundFetchSettledFetch extends BackgroundFetchFetch {
+  factory BackgroundFetchSettledFetch(_Request request, _Response response) {
+    throw UnimplementedError();
+  }
+
+  _Response? get response => null;
 }
 
 abstract class Body {
@@ -101,17 +119,17 @@ abstract class Body {
     throw UnimplementedError();
   }
 
-  bool? get bodyUsed;
+  bool? get bodyUsed => throw UnimplementedError();
 
-  Future arrayBuffer();
+  Future arrayBuffer() => throw UnimplementedError();
 
-  Future<Blob> blob();
+  Future<Blob> blob() => throw UnimplementedError();
 
-  Future<FormData> formData();
+  Future<FormData> formData() => throw UnimplementedError();
 
-  Future json();
+  Future json() => throw UnimplementedError();
 
-  Future<String> text();
+  Future<String> text() => throw UnimplementedError();
 }
 
 abstract class Client {
@@ -283,35 +301,46 @@ abstract class PushSubscriptionOptions {
   bool get userVisibleOnly;
 }
 
-abstract class ServiceWorker extends EventTarget implements AbstractWorker {
+@Native('ServiceWorker')
+class ServiceWorker extends EventTarget implements AbstractWorker {
+  // To suppress missing implicit constructor warnings.
   static const EventStreamProvider<Event> errorEvent =
       EventStreamProvider<Event>('error');
 
   factory ServiceWorker._() {
-    throw UnsupportedError('Not supported');
+    throw UnimplementedError();
   }
 
   @override
   Stream<Event> get onError => errorEvent.forTarget(this);
 
-  String get scriptUrl;
+  @JSName('scriptURL')
+  String? get scriptUrl {
+    throw UnimplementedError();
+  }
 
-  String get state;
+  String? get state {
+    throw UnimplementedError();
+  }
 
   void postMessage(/*any*/ message, [List<Object>? transfer]) {
     throw UnimplementedError();
   }
 }
 
-abstract class ServiceWorkerContainer extends EventTarget {
+@Native('ServiceWorkerContainer')
+class ServiceWorkerContainer extends EventTarget {
+  // To suppress missing implicit constructor warnings.
   static const EventStreamProvider<MessageEvent> messageEvent =
       EventStreamProvider<MessageEvent>('message');
 
   factory ServiceWorkerContainer._() {
-    throw UnsupportedError('Not supported');
+    throw UnimplementedError();
   }
 
-  ServiceWorker get controller;
+  ServiceWorker? get controller {
+    throw UnimplementedError();
+  }
 
   Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
 
@@ -323,7 +352,7 @@ abstract class ServiceWorkerContainer extends EventTarget {
     throw UnimplementedError();
   }
 
-  Future<List<ServiceWorkerRegistration>> getRegistrations() {
+  Future<List<dynamic>> getRegistrations() {
     throw UnimplementedError();
   }
 
@@ -332,7 +361,9 @@ abstract class ServiceWorkerContainer extends EventTarget {
   }
 }
 
-abstract class ServiceWorkerGlobalScope extends WorkerGlobalScope {
+@Native('ServiceWorkerGlobalScope')
+class ServiceWorkerGlobalScope extends WorkerGlobalScope {
+  // To suppress missing implicit constructor warnings.
   static const EventStreamProvider<Event> activateEvent =
       EventStreamProvider<Event>('activate');
 
@@ -356,15 +387,9 @@ abstract class ServiceWorkerGlobalScope extends WorkerGlobalScope {
     throw UnimplementedError();
   }
 
-  ApplicationCache get caches => throw UnimplementedError();
-
-  Clients get clients;
-
-  Crypto get crypto => throw UnimplementedError();
-
-  Location get location => throw UnimplementedError();
-
-  Navigator get navigator => throw UnimplementedError();
+  Clients? get clients {
+    throw UnimplementedError();
+  }
 
   Stream<Event> get onActivate => activateEvent.forTarget(this);
 
@@ -377,39 +402,59 @@ abstract class ServiceWorkerGlobalScope extends WorkerGlobalScope {
 
   Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
 
-  Performance get performance => throw UnimplementedError();
-
-  ServiceWorkerRegistration get registration;
+  ServiceWorkerRegistration? get registration {
+    throw UnimplementedError();
+  }
 
   Future skipWaiting() {
     throw UnimplementedError();
   }
 }
 
-abstract class ServiceWorkerRegistration extends EventTarget {
+@Native('ServiceWorkerRegistration')
+class ServiceWorkerRegistration extends EventTarget {
+  // To suppress missing implicit constructor warnings.
   factory ServiceWorkerRegistration._() {
-    throw UnsupportedError('Not supported');
+    throw UnimplementedError();
   }
 
-  ServiceWorker get active;
+  ServiceWorker? get active {
+    throw UnimplementedError();
+  }
 
-  BackgroundFetchManager get backgroundFetch;
+  BackgroundFetchManager? get backgroundFetch {
+    throw UnimplementedError();
+  }
 
-  ServiceWorker get installing;
+  ServiceWorker? get installing {
+    throw UnimplementedError();
+  }
 
-  NavigationPreloadManager get navigationPreload;
+  NavigationPreloadManager? get navigationPreload {
+    throw UnimplementedError();
+  }
 
-  PaymentManager get paymentManager;
+  PaymentManager? get paymentManager {
+    throw UnimplementedError();
+  }
 
-  PushManager get pushManager;
+  PushManager? get pushManager {
+    throw UnimplementedError();
+  }
 
-  String get scope;
+  String? get scope {
+    throw UnimplementedError();
+  }
 
-  SyncManager get sync;
+  SyncManager? get sync {
+    throw UnimplementedError();
+  }
 
-  ServiceWorker get waiting;
+  ServiceWorker? get waiting {
+    throw UnimplementedError();
+  }
 
-  Future<List<Notification>> getNotifications([Map? filter]) {
+  Future<List<dynamic>> getNotifications([Map? filter]) {
     throw UnimplementedError();
   }
 
@@ -454,7 +499,53 @@ abstract class WindowClient extends Client {
   }
 }
 
-abstract class WorkerGlobalScope extends EventTarget {
+@SupportedBrowser(SupportedBrowser.CHROME)
+@SupportedBrowser(SupportedBrowser.FIREFOX)
+@SupportedBrowser(SupportedBrowser.IE, '10')
+@SupportedBrowser(SupportedBrowser.SAFARI)
+@Native('Worker')
+class Worker extends EventTarget implements AbstractWorker {
+  // To suppress missing implicit constructor warnings.
+  /// Static factory designed to expose `error` events to event
+  /// handlers that are not necessarily instances of [Worker].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<Event> errorEvent =
+      EventStreamProvider<Event>('error');
+
+  /// Static factory designed to expose `message` events to event
+  /// handlers that are not necessarily instances of [Worker].
+  ///
+  /// See [EventStreamProvider] for usage information.
+  static const EventStreamProvider<MessageEvent> messageEvent =
+      EventStreamProvider<MessageEvent>('message');
+
+  /// Checks if this type is supported on the current platform.
+  static bool get supported => false;
+
+  factory Worker(String scriptUrl) {
+    throw UnimplementedError();
+  }
+
+  /// Stream of `error` events handled by this [Worker].
+  @override
+  Stream<Event> get onError => errorEvent.forTarget(this);
+
+  /// Stream of `message` events handled by this [Worker].
+  Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
+
+  void postMessage(/*any*/ message, [List<Object>? transfer]) {
+    throw UnimplementedError();
+  }
+
+  void terminate() {
+    throw UnimplementedError();
+  }
+}
+
+@Native('WorkerGlobalScope')
+class WorkerGlobalScope extends EventTarget {
+  // To suppress missing implicit constructor warnings.
   /// Static factory designed to expose `error` events to event
   /// handlers that are not necessarily instances of [WorkerGlobalScope].
   ///
@@ -466,32 +557,32 @@ abstract class WorkerGlobalScope extends EventTarget {
     throw UnimplementedError();
   }
 
-  factory WorkerGlobalScope._() {
-    throw UnsupportedError('Not supported');
-  }
+  WorkerGlobalScope._() : super.internal();
 
-  // final CacheStorage caches;
+  String? get addressSpace => throw UnimplementedError();
 
-  // final Crypto crypto;
+  CacheStorage? get caches => throw UnimplementedError();
 
-  String get addressSpace;
+  Crypto? get crypto => throw UnimplementedError();
 
-  IdbFactory get indexedDB;
+  IdbFactory? get indexedDB => throw UnimplementedError();
 
-  // final _WorkerLocation location;
+  bool? get isSecureContext => throw UnimplementedError();
 
-  // final _WorkerNavigator navigator;
+  Location get location => throw UnimplementedError();
 
-  bool get isSecureContext;
-
-  // final WorkerPerformance performance;
+  _WorkerNavigator get navigator => throw UnimplementedError();
 
   /// Stream of `error` events handled by this [WorkerGlobalScope].
   Stream<Event> get onError => errorEvent.forTarget(this);
 
-  String get origin;
+  String? get origin => throw UnimplementedError();
 
-  WorkerGlobalScope? get self;
+  WorkerPerformance? get performance => throw UnimplementedError();
+
+  WorkerGlobalScope get self => throw UnimplementedError();
+
+  // From WindowBase64
 
   String atob(String atob) {
     throw UnimplementedError();
@@ -506,6 +597,136 @@ abstract class WorkerGlobalScope extends EventTarget {
   }
 
   void importScripts(String urls) {
+    throw UnimplementedError();
+  }
+}
+
+@Native('WorkerPerformance')
+class WorkerPerformance extends EventTarget {
+  // To suppress missing implicit constructor warnings.
+  factory WorkerPerformance._() {
+    throw UnimplementedError();
+  }
+
+  MemoryInfo? get memory {
+    throw UnimplementedError();
+  }
+
+  num? get timeOrigin {
+    throw UnimplementedError();
+  }
+
+  void clearMarks(String? markName) {
+    throw UnimplementedError();
+  }
+
+  void clearMeasures(String? measureName) {
+    throw UnimplementedError();
+  }
+
+  void clearResourceTimings() {
+    throw UnimplementedError();
+  }
+
+  List<PerformanceEntry> getEntries() {
+    throw UnimplementedError();
+  }
+
+  List<PerformanceEntry> getEntriesByName(String name, String? entryType) {
+    throw UnimplementedError();
+  }
+
+  List<PerformanceEntry> getEntriesByType(String entryType) {
+    throw UnimplementedError();
+  }
+
+  void mark(String markName) {
+    throw UnimplementedError();
+  }
+
+  void measure(String measureName, String? startMark, String? endMark) {
+    throw UnimplementedError();
+  }
+
+  double now() {
+    throw UnimplementedError();
+  }
+
+  void setResourceTimingBufferSize(int maxSize) {
+    throw UnimplementedError();
+  }
+}
+
+@Native('WorkletAnimation')
+class WorkletAnimation {
+  factory WorkletAnimation(
+      String animatorName,
+      List<KeyframeEffectReadOnly> effects,
+      List<Object> timelines,
+      /*SerializedScriptValue*/ options) {
+    throw UnimplementedError();
+  }
+
+  String? get playState {
+    throw UnimplementedError();
+  }
+
+  void cancel() {
+    throw UnimplementedError();
+  }
+
+  void play() {
+    throw UnimplementedError();
+  }
+}
+
+@Native('WorkletGlobalScope')
+class WorkletGlobalScope {
+  // To suppress missing implicit constructor warnings.
+  factory WorkletGlobalScope._() {
+    throw UnimplementedError();
+  }
+}
+
+@Native('Request')
+class _Request extends Body {
+  factory _Request() {
+    throw UnimplementedError();
+  }
+
+  String? get cache => null;
+
+  String? get credentials => null;
+
+  Headers? get headers => null;
+
+  String? get integrity => null;
+
+  String? get mode => null;
+
+  String? get redirect => null;
+
+  String? get referrer => null;
+
+  String? get referrerPolicy => null;
+
+  String? get url => null;
+
+  _Request clone() => throw UnimplementedError();
+}
+
+@Native('Response')
+abstract class _Response extends Body {
+  factory _Response() {
+    throw UnimplementedError();
+  }
+}
+
+@Native('WorkerNavigator')
+abstract class _WorkerNavigator extends NavigatorConcurrentHardware
+    implements NavigatorOnLine, NavigatorID {
+  // To suppress missing implicit constructor warnings.
+  factory _WorkerNavigator._() {
     throw UnimplementedError();
   }
 }

@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:stream_channel/stream_channel.dart';
-import '../../test/server.dart' as impl;
+library universal_html.web_audio;
 
-void hybridMain(StreamChannel streamChannel, Object message) async {
-  impl.hybridMain(streamChannel, message);
-}
+export 'dart:web_audio'
+    if (dart.library.web_audio) 'dart:web_audio' // Browser
+    if (dart.library.io) 'src/web_audio.dart' // VM
+    if (dart.library.js) 'src/web_audio.dart'; // Node.JS

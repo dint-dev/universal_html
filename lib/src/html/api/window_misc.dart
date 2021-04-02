@@ -49,6 +49,10 @@ typedef FrameRequestCallback = void Function(num highResTime);
 
 typedef IdleRequestCallback = void Function(IdleDeadline deadline);
 
+class BarProp {
+  BarProp._();
+}
+
 class CacheStorage {
   factory CacheStorage._() {
     throw UnimplementedError();
@@ -322,10 +326,6 @@ abstract class VisualViewport implements EventTarget {
   num get scale;
 
   num get width;
-}
-
-class _BarProp {
-  _BarProp._();
 }
 
 abstract class _Worklet {}

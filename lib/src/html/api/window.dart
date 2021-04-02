@@ -49,6 +49,10 @@ part of universal_html.internal;
 /// Global window.
 Window get window => WindowController.topLevel.window as Window;
 
+abstract class LocationBase {
+  set href(String val);
+}
+
 class Window extends EventTarget
     with WindowBase
     implements WindowEventHandlers {
@@ -199,7 +203,53 @@ class Window extends EventTarget
   /// see http://dev.w3.org/csswg/cssom-view/#geometry
   static bool get supportsPointConversions => false;
 
-  bool _closed = false;
+  /// The application cache for this window.
+  ///
+  /// ## Other resources
+  ///
+  /// * [A beginner's guide to using the application
+  ///   cache](http://www.html5rocks.com/en/tutorials/appcache/beginner)
+  ///   from HTML5Rocks.
+  /// * [Application cache
+  ///   API](https://html.spec.whatwg.org/multipage/browsers.html#application-cache-api)
+  ///   from WHATWG.
+
+  late final ApplicationCache? applicationCache = ApplicationCache.internal();
+
+  late final CacheStorage? caches = CacheStorage._();
+
+  late final CookieStore? cookieStore = CookieStore._();
+
+  /// *Deprecated*.
+
+  String? defaultStatus;
+
+  /// *Deprecated*.
+
+  String? defaultstatus;
+
+  late final External? external = External.internal();
+
+  /// The current session history for this window's newest document.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Loading web pages](https://html.spec.whatwg.org/multipage/browsers.html)
+  ///   from WHATWG.
+  @override
+  late final History history = History.internal();
+
+  /// Storage for this window that persists across sessions.
+  ///
+  /// ## Other resources
+  ///
+  /// * [DOM storage guide](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage)
+  ///   from MDN.
+  /// * [The past, present & future of local storage for web
+  ///   applications](http://diveintohtml5.info/storage.html) from Dive Into HTML5.
+  /// * [Local storage specification](http://www.w3.org/TR/webstorage/#the-localstorage-attribute)
+  ///   from W3C.
+  late final Storage localStorage = Storage._(this);
 
   /// The name of this window.
   ///
@@ -207,7 +257,28 @@ class Window extends EventTarget
   ///
   /// * [Window.name](https://developer.mozilla.org/en-US/docs/Web/API/Window/name)
   ///   from MDN.
-  String name = '';
+
+  String? name;
+
+  /// The user agent accessing this window.
+  ///
+  /// ## Other resources
+  ///
+  /// * [The navigator
+  ///   object](https://html.spec.whatwg.org/multipage/webappapis.html#the-navigator-object)
+  ///   from WHATWG.
+
+  late final Navigator navigator = () {
+    // Note that `as` expressions are required because of
+    // "dart:html OR universal_html" confusion by the analyzer.
+    final window = this as universal_html_in_browser_or_vm.Window;
+    final navigator =
+        internalWindowController.windowBehavior.newNavigator(window: window);
+    return navigator as Navigator;
+  }();
+
+  @override
+  WindowBase? opener;
 
   /// The height of this window including all user interface elements.
   ///
@@ -225,24 +296,40 @@ class Window extends EventTarget
   ///   from MDN.
   final int outerWidth;
 
+  /// Timing and navigation data for this window.
+  ///
+  /// ## Other resources
+  ///
+  /// * [Measuring page load speed with navigation
+  ///   timeing](http://www.html5rocks.com/en/tutorials/webperformance/basics/)
+  ///   from HTML5Rocks.
+  /// * [Navigation timing
+  ///   specification](http://www.w3.org/TR/navigation-timing/) from W3C.
+  @SupportedBrowser(SupportedBrowser.CHROME)
+  @SupportedBrowser(SupportedBrowser.FIREFOX)
+  @SupportedBrowser(SupportedBrowser.IE)
+  late final Performance performance = Performance._();
+
+  /// Storage for this window that is cleared when this session ends.
+  ///
+  /// ## Other resources
+  ///
+  /// * [DOM storage
+  ///   guide](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage)
+  ///   from MDN.
+  /// * [The past, present & future of local storage for web
+  ///   applications](http://diveintohtml5.info/storage.html) from Dive Into HTML5.
+  /// * [Local storage
+  ///   specification](http://www.w3.org/TR/webstorage/#dom-sessionstorage) from W3C.
+
+  late final Storage sessionStorage = Storage._(this);
+
   /// *Deprecated*.
-  String status = '';
+  String? status;
 
   final WindowController internalWindowController;
 
   final String _initialHref;
-
-  /// The application cache for this window.
-  ///
-  /// ## Other resources
-  ///
-  /// * [A beginner's guide to using the application
-  ///   cache](http://www.html5rocks.com/en/tutorials/appcache/beginner)
-  ///   from HTML5Rocks.
-  /// * [Application cache
-  ///   API](https://html.spec.whatwg.org/multipage/browsers.html#application-cache-api)
-  ///   from WHATWG.
-  late final ApplicationCache applicationCache = ApplicationCache.internal();
 
   /// The debugging console for this window.
   late final Console console = Console.internal();
@@ -263,69 +350,12 @@ class Window extends EventTarget
     return document as Document;
   }();
 
-  late final External external = External.internal();
-
-  @override
-  late final History history = History.internal();
-
-  /// Storage for this window that persists across sessions.
-  ///
-  /// ## Other resources
-  ///
-  /// * [DOM storage guide](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage)
-  ///   from MDN.
-  /// * [The past, present & future of local storage for web
-  ///   applications](http://diveintohtml5.info/storage.html) from Dive Into HTML5.
-  /// * [Local storage specification](http://www.w3.org/TR/webstorage/#the-localstorage-attribute)
-  ///   from W3C.
-  late final Storage localStorage = Storage._(this);
-
   /// The current location of this window.
   ///
   ///     Location currentLocation = window.location;
   ///     print(currentLocation.href); // 'http://www.example.com:80/'
   @override
   late Location location = Location.internal(href: _initialHref);
-
-  /// The user agent accessing this window.
-  ///
-  /// ## Other resources
-  ///
-  /// * [The navigator
-  ///   object](https://html.spec.whatwg.org/multipage/webappapis.html#the-navigator-object)
-  ///   from WHATWG.
-  late final Navigator navigator = () {
-    // Note that `as` expressions are required because of
-    // "dart:html OR universal_html" confusion by the analyzer.
-    final window = this as universal_html_in_browser_or_vm.Window;
-    final navigator =
-        internalWindowController.windowBehavior.newNavigator(window: window);
-    return navigator as Navigator;
-  }();
-
-  /// Timing and navigation data for this window.
-  ///
-  /// ## Other resources
-  ///
-  /// * [Measuring page load speed with navigation
-  ///   timeing](http://www.html5rocks.com/en/tutorials/webperformance/basics/)
-  ///   from HTML5Rocks.
-  /// * [Navigation timing
-  ///   specification](http://www.w3.org/TR/navigation-timing/) from W3C.
-  late final Performance performance = Performance._();
-
-  /// Storage for this window that is cleared when this session ends.
-  ///
-  /// ## Other resources
-  ///
-  /// * [DOM storage
-  ///   guide](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage)
-  ///   from MDN.
-  /// * [The past, present & future of local storage for web
-  ///   applications](http://diveintohtml5.info/storage.html) from Dive Into HTML5.
-  /// * [Local storage
-  ///   specification](http://www.w3.org/TR/webstorage/#dom-sessionstorage) from W3C.
-  late final Storage sessionStorage = Storage._(this);
 
   @protected
   Selection? internalSelection;
@@ -363,31 +393,22 @@ class Window extends EventTarget
     return completer.future;
   }
 
-  _Worklet get animationWorklet => throw UnimplementedError();
+  _Worklet? get animationWorklet => null;
 
-  _Worklet get audioWorklet => throw UnimplementedError();
-
-  CacheStorage get caches => CacheStorage._();
+  _Worklet? get audioWorklet => null;
 
   @override
-  bool get closed => _closed;
-
-  CookieStore get cookieStore => CookieStore._();
+  bool? get closed => null;
 
   /// Entrypoint for the browser's cryptographic functions.
   ///
   /// ## Other resources
   ///
   /// * [Web cryptography API](http://www.w3.org/TR/WebCryptoAPI/) from W3C.
+
   Crypto? get crypto => null;
 
   CustomElementRegistry? get customElements => null;
-
-  /// *Deprecated*.
-  String? get defaultStatus => throw UnimplementedError();
-
-  /// *Deprecated*.
-  String? get defaultstatus => throw UnimplementedError();
 
   /// The ratio between physical pixels and logical CSS pixels.
   ///
@@ -397,6 +418,7 @@ class Window extends EventTarget
   ///   from quirksmode.
   /// * [More about devicePixelRatio](http://www.quirksmode.org/blog/archives/2012/07/more_about_devi.html)
   ///   from quirksmode.
+
   num get devicePixelRatio => 1;
 
   /// Gets an instance of the Indexed DB factory to being using Indexed DB.
@@ -411,7 +433,8 @@ class Window extends EventTarget
   ///
   /// * [Window.innerHeight](https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight)
   ///   from MDN.
-  int get innerHeight => outerHeight;
+
+  int? get innerHeight => null;
 
   /// The width of the viewport including scrollbars.
   ///
@@ -419,9 +442,10 @@ class Window extends EventTarget
   ///
   /// * [Window.innerWidth](https://developer.mozilla.org/en-US/docs/Web/API/Window/innerWidth)
   ///   from MDN.
-  int get innerWidth => outerWidth;
 
-  bool get isSecureContext => throw UnimplementedError();
+  int? get innerWidth => null;
+
+  bool? get isSecureContext => false;
 
   /// This window's location bar, which displays the URL.
   ///
@@ -430,7 +454,8 @@ class Window extends EventTarget
   /// * [Browser interface
   ///   elements](https://html.spec.whatwg.org/multipage/browsers.html#browser-interface-elements)
   ///   from WHATWG.
-  _BarProp get locationbar => throw UnimplementedError();
+
+  BarProp? get locationbar => null;
 
   /// This window's menu bar, which displays menu commands.
   ///
@@ -439,7 +464,8 @@ class Window extends EventTarget
   /// * [Browser interface
   ///   elements](https://html.spec.whatwg.org/multipage/browsers.html#browser-interface-elements)
   ///   from WHATWG.
-  _BarProp get menubar => throw UnimplementedError();
+
+  BarProp? get menubar => null;
 
   /// Whether objects are drawn offscreen before being displayed.
   ///
@@ -447,7 +473,8 @@ class Window extends EventTarget
   ///
   /// * [offscreenBuffering](https://webplatform.github.io/docs/dom/HTMLElement/offscreenBuffering/)
   ///   from WebPlatform.org.
-  bool get offscreenBuffering => false;
+
+  bool? get offscreenBuffering => false;
 
   /// Stream of `abort` events handled by this [Window].
   Stream<Event> get onAbort => Element.abortEvent.forTarget(this);
@@ -541,6 +568,8 @@ class Window extends EventTarget
   /// Stream of `input` events handled by this [Window].
   Stream<Event> get onInput => Element.inputEvent.forTarget(this);
 
+  // From WindowBase64
+
   /// Stream of `invalid` events handled by this [Window].
   Stream<Event> get onInvalid => Element.invalidEvent.forTarget(this);
 
@@ -577,8 +606,6 @@ class Window extends EventTarget
   /// Stream of `mouseleave` events handled by this [Window].
   Stream<MouseEvent> get onMouseLeave =>
       Element.mouseLeaveEvent.forTarget(this);
-
-  // From WindowBase64
 
   /// Stream of `mousemove` events handled by this [Window].
   Stream<MouseEvent> get onMouseMove => Element.mouseMoveEvent.forTarget(this);
@@ -685,20 +712,15 @@ class Window extends EventTarget
   /// Stream of `wheel` events handled by this [Window].
   Stream<WheelEvent> get onWheel => Element.wheelEvent.forTarget(this);
 
-  @override
-  WindowBase? get opener => null;
-
-  set opener(WindowBase? value) {
-    throw UnimplementedError();
-  }
-
   int? get orientation => 0;
 
-  String? get origin => location.origin;
+  String? get origin => null;
 
   int get pageXOffset => 0;
 
   int get pageYOffset => 0;
+
+  // From WindowBase64
 
   @override
   WindowBase? get parent => null;
@@ -709,7 +731,7 @@ class Window extends EventTarget
   ///
   /// * [The Screen interface specification](http://www.w3.org/TR/cssom-view/#screen)
   ///   from W3C.
-  Screen get screen => Screen._();
+  late final Screen? screen = Screen._();
 
   /// The distance from the left side of the screen to the left side of this
   /// window.
@@ -718,7 +740,8 @@ class Window extends EventTarget
   ///
   /// * [The Screen interface specification](http://www.w3.org/TR/cssom-view/#screen)
   ///   from W3C.
-  int get screenLeft => 0;
+
+  int? get screenLeft => null;
 
   /// The distance from the top of the screen to the top of this window.
   ///
@@ -726,7 +749,8 @@ class Window extends EventTarget
   ///
   /// * [The Screen interface specification](http://www.w3.org/TR/cssom-view/#screen)
   ///   from W3C.
-  int get screenTop => 0;
+
+  int? get screenTop => null;
 
   /// The distance from the left side of the screen to the mouse pointer.
   ///
@@ -734,7 +758,8 @@ class Window extends EventTarget
   ///
   /// * [The Screen interface specification](http://www.w3.org/TR/cssom-view/#screen)
   ///   from W3C.
-  int get screenX => screenLeft;
+
+  int? get screenX => null;
 
   /// The distance from the top of the screen to the mouse pointer.
   ///
@@ -742,7 +767,8 @@ class Window extends EventTarget
   ///
   /// * [The Screen interface specification](http://www.w3.org/TR/cssom-view/#screen)
   ///   from W3C.
-  int get screenY => screenTop;
+
+  int? get screenY => null;
 
   /// This window's scroll bars.
   ///
@@ -751,7 +777,7 @@ class Window extends EventTarget
   /// * [Browser interface
   ///   elements](https://html.spec.whatwg.org/multipage/browsers.html#browser-interface-elements)
   ///   from WHATWG.
-  _BarProp get scrollbars => throw UnimplementedError();
+  BarProp? get scrollbars => null;
 
   /// The distance this window has been scrolled horizontally.
   ///
@@ -779,7 +805,9 @@ class Window extends EventTarget
   ///
   /// * [Window.self](https://developer.mozilla.org/en-US/docs/Web/API/Window.self)
   ///   from MDN.
-  WindowBase get self => this;
+  WindowBase? get self {
+    throw UnimplementedError();
+  }
 
   /// Access to speech synthesis in the browser.
   ///
@@ -788,7 +816,8 @@ class Window extends EventTarget
   /// * [Web speech
   ///   specification](https://dvcs.w3.org/hg/speech-api/raw-file/tip/speechapi.html#tts-section)
   ///   from W3C.
-  SpeechSynthesis get speechSynthesis => throw UnimplementedError();
+
+  SpeechSynthesis? get speechSynthesis => null;
 
   /// This window's status bar.
   ///
@@ -797,7 +826,8 @@ class Window extends EventTarget
   /// * [Browser interface
   ///   elements](https://html.spec.whatwg.org/multipage/browsers.html#browser-interface-elements)
   ///   from WHATWG.
-  _BarProp get statusbar => throw UnimplementedError();
+
+  BarProp? get statusbar => null;
 
   /// Access to CSS media queries.
   ///
@@ -806,7 +836,8 @@ class Window extends EventTarget
   /// * [StyleMedia class
   ///   reference](https://developer.apple.com/library/safari/documentation/SafariDOMAdditions/Reference/StyleMedia/)
   ///   from Safari Developer Library.
-  StyleMedia get styleMedia => throw UnimplementedError();
+
+  StyleMedia? get styleMedia => null;
 
   /// This window's tool bar.
   ///
@@ -815,12 +846,13 @@ class Window extends EventTarget
   /// * [Browser interface
   ///   elements](https://html.spec.whatwg.org/multipage/browsers.html#browser-interface-elements)
   ///   from WHATWG.
-  _BarProp get toolbar => throw UnimplementedError();
+
+  BarProp? get toolbar => null;
 
   @override
   WindowBase? get top => null;
 
-  VisualViewport get visualViewport => throw UnimplementedError();
+  VisualViewport? get visualViewport => null;
 
   /// The current window.
   ///
@@ -828,7 +860,7 @@ class Window extends EventTarget
   ///
   /// * [Window.window](https://developer.mozilla.org/en-US/docs/Web/API/Window.window)
   ///   from MDN.
-  WindowBase get window => this;
+  WindowBase? get window => null;
 
   /// Displays a modal alert to the user.
   ///
@@ -836,21 +868,21 @@ class Window extends EventTarget
   ///
   /// * [User prompts](https://html.spec.whatwg.org/multipage/webappapis.html#user-prompts)
   ///   from WHATWG.
-  void alert([String? message]) {}
-
-  String atob(String atob) {
+  void alert([String? message]) {
     throw UnimplementedError();
   }
 
-  String btoa(String btoa) {
+  String atob(String atob) => throw UnimplementedError();
+
+  String btoa(String btoa) => throw UnimplementedError();
+
+  void cancelIdleCallback(int handle) {
     throw UnimplementedError();
   }
-
-  void cancelIdleCallback(int handle) {}
 
   @override
   void close() {
-    _closed = true;
+    throw UnimplementedError();
   }
 
   /// Displays a modal OK/Cancel prompt to the user.
@@ -873,17 +905,20 @@ class Window extends EventTarget
   ///
   /// * [Window.find](https://developer.mozilla.org/en-US/docs/Web/API/Window.find)
   ///   from MDN.
-  bool find(String string, bool caseSensitive, bool backwards, bool wrap,
-      bool wholeWord, bool searchInFrames, bool showDialog) {
-    return false;
-  }
-
-  StylePropertyMapReadonly getComputedStyleMap(
-      Element element, String pseudoElement) {
+  bool find(String? string, bool? caseSensitive, bool? backwards, bool? wrap,
+      bool? wholeWord, bool? searchInFrames, bool? showDialog) {
     throw UnimplementedError();
   }
 
-  List<CssRule> getMatchedCssRules(Element element, String pseudoElement) {
+  StylePropertyMapReadonly getComputedStyleMap(
+      Element element, String? pseudoElement) {
+    throw UnimplementedError();
+  }
+
+  @JSName('getMatchedCSSRules')
+
+  /// Returns all CSS rules that apply to the element's pseudo-element.
+  List<CssRule> getMatchedCssRules(Element? element, String? pseudoElement) {
     throw UnimplementedError();
   }
 
@@ -942,7 +977,7 @@ class Window extends EventTarget
   }
 
   @override
-  void postMessage(dynamic message, String targetOrigin,
+  void postMessage(/*any*/ message, String targetOrigin,
       [List<Object>? transfer]) {
     throw UnimplementedError();
   }
@@ -1009,6 +1044,8 @@ class Window extends EventTarget
   ///   from MDN.
   void resizeTo(int x, int y) {}
 
+  @JSName('webkitResolveLocalFileSystemURL')
+
   /// Asynchronously retrieves a local filesystem entry.
   ///
   /// ## Other resources
@@ -1016,6 +1053,7 @@ class Window extends EventTarget
   /// * [Obtaining access to file system entry
   ///   points](http://www.w3.org/TR/file-system-api/#obtaining-access-to-file-system-entry-points)
   /// from W3C.
+  @SupportedBrowser(SupportedBrowser.CHROME)
   Future<Entry> resolveLocalFileSystemUrl(String url) {
     throw UnimplementedError();
   }
@@ -1059,28 +1097,112 @@ class Window extends EventTarget
 }
 
 mixin WindowBase implements EventTarget {
-  bool get closed;
+  // Fields.
 
-  /// The current session history for this window's newest document.
+  /// Indicates whether this window has been closed.
+  ///
+  ///     print(window.closed); // 'false'
+  ///     window.close();
+  ///     print(window.closed); // 'true'
+  ///
+  /// MDN does not have compatibility info on this attribute, and therefore is
+  /// marked nullable.
+  bool? get closed;
+
+  /// The current session history for this window.
   ///
   /// ## Other resources
   ///
-  /// * [Loading web pages](https://html.spec.whatwg.org/multipage/browsers.html)
+  /// * [Session history and navigation
+  ///   specification](https://html.spec.whatwg.org/multipage/browsers.html#history)
   ///   from WHATWG.
-  History get history;
+  HistoryBase get history;
 
-  Location get location;
+  /// The current location of this window.
+  ///
+  ///     Location currentLocation = window.location;
+  ///     print(currentLocation.href); // 'http://www.example.com:80/'
+  LocationBase get location;
 
-  WindowBase? get opener => null;
+  /// A reference to the window that opened this one.
+  ///
+  ///     Window thisWindow = window;
+  ///     WindowBase otherWindow = thisWindow.open('http://www.example.com/', 'foo');
+  ///     print(otherWindow.opener == thisWindow); // 'true'
+  WindowBase? get opener;
 
-  WindowBase? get parent => null;
+  /// A reference to the parent of this window.
+  ///
+  /// If this [WindowBase] has no parent, [parent] will return a reference to
+  /// the [WindowBase] itself.
+  ///
+  ///     IFrameElement myIFrame = new IFrameElement();
+  ///     window.document.body.elements.add(myIFrame);
+  ///     print(myIframe.contentWindow.parent == window) // 'true'
+  ///
+  ///     print(window.parent == window) // 'true'
+  WindowBase? get parent;
 
-  WindowBase? get top => null;
+  /// A reference to the topmost window in the window hierarchy.
+  ///
+  /// If this [WindowBase] is the topmost [WindowBase], [top] will return a
+  /// reference to the [WindowBase] itself.
+  ///
+  ///     // Add an IFrame to the current window.
+  ///     IFrameElement myIFrame = new IFrameElement();
+  ///     window.document.body.elements.add(myIFrame);
+  ///
+  ///     // Add an IFrame inside of the other IFrame.
+  ///     IFrameElement innerIFrame = new IFrameElement();
+  ///     myIFrame.elements.add(innerIFrame);
+  ///
+  ///     print(myIframe.contentWindow.top == window) // 'true'
+  ///     print(innerIFrame.contentWindow.top == window) // 'true'
+  ///
+  ///     print(window.top == window) // 'true'
+  WindowBase? get top;
 
+  // Methods.
+  /// Closes the window.
+  ///
+  /// This method should only succeed if the [WindowBase] object is
+  /// **script-closeable** and the window calling [close] is allowed to navigate
+  /// the window.
+  ///
+  /// A window is script-closeable if it is either a window
+  /// that was opened by another window, or if it is a window with only one
+  /// document in its history.
+  ///
+  /// A window might not be allowed to navigate, and therefore close, another
+  /// window due to browser security features.
+  ///
+  ///     var other = window.open('http://www.example.com', 'foo');
+  ///     // Closes other window, as it is script-closeable.
+  ///     other.close();
+  ///     print(other.closed); // 'true'
+  ///
+  ///     var newLocation = window.location
+  ///         ..href = 'http://www.mysite.com';
+  ///     window.location = newLocation;
+  ///     // Does not close this window, as the history has changed.
+  ///     window.close();
+  ///     print(window.closed); // 'false'
+  ///
+  /// See also:
+  ///
+  /// * [Window close discussion](http://www.w3.org/TR/html5/browsers.html#dom-window-close) from the W3C
   void close();
 
-  void postMessage(dynamic message, String targetOrigin,
-      [List<Object> transfer]);
+  /// Sends a cross-origin message.
+  ///
+  /// ## Other resources
+  ///
+  /// * [window.postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage)
+  ///   from MDN.
+  /// * [Cross-document messaging](https://html.spec.whatwg.org/multipage/comms.html#web-messaging)
+  ///   from WHATWG.
+  void postMessage(var message, String targetOrigin,
+      [List<MessagePort>? messagePorts]);
 }
 
 abstract class WindowEventHandlers extends EventTarget {

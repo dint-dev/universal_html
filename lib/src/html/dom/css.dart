@@ -178,6 +178,7 @@ class Dimension {
   /// size). This is useful for producing website layouts that scale nicely with
   /// the user's desired font size.
   Dimension.em(this.value) : _unit = 'em';
+
   /// Set this CSS Dimension to the specified number of x-heights.
   ///
   /// One ex is equal to the x-height of a font's baseline to its mean line,

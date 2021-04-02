@@ -85,17 +85,26 @@ abstract class MediaDeviceInfo {
   String? get label;
 }
 
+@Native('MediaDevices')
 class MediaDevices extends EventTarget {
-  MediaDevices._() : super.internal();
-
-  Future<List<MediaDeviceInfo>> enumerateDevices() async {
-    return const <MediaDeviceInfo>[];
+  factory MediaDevices._() {
+    throw UnimplementedError();
   }
 
-  Map getSupportedConstraints() => {};
+  Future<List<dynamic>> enumerateDevices() => throw UnimplementedError();
+
+  Map getSupportedConstraints() {
+    throw UnimplementedError();
+  }
+
+  Future<MediaStream> getUserMedia([Map? constraints]) {
+    throw UnimplementedError();
+  }
 }
 
-abstract class MediaError {
+@Unstable()
+@Native('MediaError')
+class MediaError {
   static const int MEDIA_ERR_ABORTED = 1;
 
   static const int MEDIA_ERR_DECODE = 3;
@@ -108,9 +117,13 @@ abstract class MediaError {
     throw UnimplementedError();
   }
 
-  int? get code;
+  int get code {
+    throw UnimplementedError();
+  }
 
-  String? get message;
+  String? get message {
+    throw UnimplementedError();
+  }
 }
 
 abstract class MediaKeys {
@@ -131,8 +144,8 @@ abstract class MediaKeysPolicy {
   String? get minHdcpVersion;
 }
 
-abstract class MediaRecorder implements EventTarget {
-  // To suppress missing implicit constructor warnings.
+@Native('MediaRecorder')
+class MediaRecorder extends EventTarget {
   static const EventStreamProvider<Event> errorEvent =
       EventStreamProvider<Event>('error');
 
@@ -143,31 +156,78 @@ abstract class MediaRecorder implements EventTarget {
     throw UnimplementedError();
   }
 
-  int get audioBitsPerSecond;
+  int? get audioBitsPerSecond {
+    throw UnimplementedError();
+  }
 
-  String get mimeType;
+  String? get mimeType {
+    throw UnimplementedError();
+  }
 
   Stream<Event> get onError => errorEvent.forTarget(this);
 
   Stream<Event> get onPause => pauseEvent.forTarget(this);
 
-  String get state;
+  String? get state {
+    throw UnimplementedError();
+  }
 
-  MediaStream get stream;
+  MediaStream? get stream {
+    throw UnimplementedError();
+  }
 
-  int get videoBitsPerSecond;
+  int? get videoBitsPerSecond {
+    throw UnimplementedError();
+  }
 
-  void pause();
+  void pause() {
+    throw UnimplementedError();
+  }
 
-  void requestData();
+  void requestData() {
+    throw UnimplementedError();
+  }
 
-  void resume();
+  void resume() {
+    throw UnimplementedError();
+  }
 
-  void start([int timeslice]);
+  void start([int? timeslice]) {
+    throw UnimplementedError();
+  }
 
-  void stop();
+  void stop() {
+    throw UnimplementedError();
+  }
 
   static bool isTypeSupported(String type) {
+    throw UnimplementedError();
+  }
+}
+
+@Native('MediaSession')
+class MediaSession {
+  factory MediaSession._() {
+    throw UnimplementedError();
+  }
+
+  MediaMetadata? get metadata {
+    throw UnimplementedError();
+  }
+
+  set metadata(MediaMetadata? value) {
+    throw UnimplementedError();
+  }
+
+  String? get playbackState {
+    throw UnimplementedError();
+  }
+
+  set playbackState(String? value) {
+    throw UnimplementedError();
+  }
+
+  void setActionHandler(String action, MediaSessionActionHandler? handler) {
     throw UnimplementedError();
   }
 }
@@ -182,20 +242,59 @@ abstract class MediaSettingsRange {
   num get step;
 }
 
-abstract class MediaSource extends EventTarget {
+@SupportedBrowser(SupportedBrowser.CHROME)
+@SupportedBrowser(SupportedBrowser.IE, '11')
+@Native('MediaSource')
+class MediaSource extends EventTarget {
   static bool get supported => false;
 
-  MediaSource._() : super.internal();
+  factory MediaSource() {
+    throw UnimplementedError();
+  }
 
-  List<SourceBuffer> get activeSourceBuffers;
+  List<SourceBuffer>? get activeSourceBuffers {
+    throw UnimplementedError();
+  }
 
-  num get duration;
+  num? get duration {
+    throw UnimplementedError();
+  }
 
-  String get readyState;
+  set duration(num? value) {
+    throw UnimplementedError();
+  }
 
-  List<SourceBuffer> get sourceBuffers;
+  String? get readyState {
+    throw UnimplementedError();
+  }
 
-  static bool isTypeSupported(String type) => false;
+  List<SourceBuffer>? get sourceBuffers {
+    throw UnimplementedError();
+  }
+
+  SourceBuffer addSourceBuffer(String type) {
+    throw UnimplementedError();
+  }
+
+  void clearLiveSeekableRange() {
+    throw UnimplementedError();
+  }
+
+  void endOfStream([String? error]) {
+    throw UnimplementedError();
+  }
+
+  void removeSourceBuffer(SourceBuffer buffer) {
+    throw UnimplementedError();
+  }
+
+  void setLiveSeekableRange(num start, num end) {
+    throw UnimplementedError();
+  }
+
+  static bool isTypeSupported(String type) {
+    return false;
+  }
 }
 
 abstract class MediaStream implements EventTarget {
@@ -303,16 +402,94 @@ abstract class RemotePlayback extends EventTarget {
   Future<int> watchAvailability(RemotePlaybackAvailabilityCallback callback);
 }
 
-abstract class SourceBuffer {
-  SourceBuffer._();
+@Native('SourceBuffer')
+class SourceBuffer extends EventTarget {
+  static const EventStreamProvider<Event> abortEvent =
+      EventStreamProvider<Event>('abort');
 
-  void abort();
+  static const EventStreamProvider<Event> errorEvent =
+      EventStreamProvider<Event>('error');
 
-  void appendBuffer(ByteBuffer data);
+  factory SourceBuffer._() {
+    throw UnimplementedError();
+  }
 
-  void appendTypedData(TypedData data);
+  num? get appendWindowEnd {
+    throw UnimplementedError();
+  }
 
-  void remove(num start, num end);
+  set appendWindowEnd(num? value) {
+    throw UnimplementedError();
+  }
+
+  num? get appendWindowStart {
+    throw UnimplementedError();
+  }
+
+  set appendWindowStart(num? value) {
+    throw UnimplementedError();
+  }
+
+  List<AudioTrack>? get audioTracks {
+    throw UnimplementedError();
+  }
+
+  TimeRanges? get buffered {
+    throw UnimplementedError();
+  }
+
+  String? get mode {
+    throw UnimplementedError();
+  }
+
+  set mode(String? value) {
+    throw UnimplementedError();
+  }
+
+  Stream<Event> get onAbort => abortEvent.forTarget(this);
+
+  Stream<Event> get onError => errorEvent.forTarget(this);
+
+  num? get timestampOffset {
+    throw UnimplementedError();
+  }
+
+  set timestampOffset(num? value) {
+    throw UnimplementedError();
+  }
+
+  List<TrackDefault>? get trackDefaults {
+    throw UnimplementedError();
+  }
+
+  set trackDefaults(List<TrackDefault>? value) {
+    throw UnimplementedError();
+  }
+
+  bool? get updating {
+    throw UnimplementedError();
+  }
+
+  List<VideoTrack>? get videoTracks {
+    throw UnimplementedError();
+  }
+
+  void abort() {
+    throw UnimplementedError();
+  }
+
+  void appendBuffer(ByteBuffer data) {
+    throw UnimplementedError();
+  }
+
+  @JSName('appendBuffer')
+  void appendTypedData(TypedData data) {
+    throw UnimplementedError();
+  }
+
+  void remove(num start, num end) {
+    throw UnimplementedError();
+  }
 }
 
 class TextTrack {
@@ -331,6 +508,70 @@ abstract class TimeRanges {
   double start(int index);
 }
 
+@Native('TrackDefault')
+class TrackDefault {
+  factory TrackDefault(
+      String type, String language, String label, List<String> kinds,
+      [String? byteStreamTrackID]) {
+    throw UnimplementedError();
+  }
+
+  String? get byteStreamTrackID {
+    throw UnimplementedError();
+  }
+
+  Object? get kinds {
+    throw UnimplementedError();
+  }
+
+  String? get label {
+    throw UnimplementedError();
+  }
+
+  String? get language {
+    throw UnimplementedError();
+  }
+
+  String? get type {
+    throw UnimplementedError();
+  }
+}
+
 class VideoPlaybackQuality {
   VideoPlaybackQuality._();
+}
+
+@Native('VideoTrack')
+class VideoTrack {
+  factory VideoTrack._() {
+    throw UnimplementedError();
+  }
+
+  String? get id {
+    throw UnimplementedError();
+  }
+
+  String? get kind {
+    throw UnimplementedError();
+  }
+
+  String? get label {
+    throw UnimplementedError();
+  }
+
+  String? get language {
+    throw UnimplementedError();
+  }
+
+  bool? get selected {
+    throw UnimplementedError();
+  }
+
+  set selected(bool? value) {
+    throw UnimplementedError();
+  }
+
+  SourceBuffer? get sourceBuffer {
+    throw UnimplementedError();
+  }
 }

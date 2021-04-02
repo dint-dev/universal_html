@@ -30,14 +30,15 @@ import 'src/libraries.dart';
 
 part 'src/controller/content_type_sniffer.dart';
 part 'src/controller/window_controller.dart';
+part 'src/controller/window_controller_networking.dart';
 part 'src/html/api/blob.dart';
 part 'src/html/api/event_target.dart';
 part 'src/html/api/file.dart';
 part 'src/html/api/history.dart';
 part 'src/html/api/navigator.dart';
-part 'src/controller/window_controller_networking.dart';
 part 'src/html/api/networking_event_source.dart';
 part 'src/html/api/networking_http_request.dart';
+part 'src/html/api/workers.dart';
 part 'src/html/api/window.dart';
 part 'src/html/dom/cloning.dart';
 part 'src/html/dom/css_queries.dart';
@@ -68,10 +69,17 @@ void main() {
   }, testOn: 'node');
 }
 
+const _httpServerWrongPort = 314;
+
+late int _httpServerPort;
+
 var _isBrowser = false;
 
+// Local TCP port that has a HTTP server.
 var _isVM = false;
 
+// Local TCP port hat DOES NOT have HTTP server.
+// Used for testing connection failures.
 void _sharedTests() {
   // DOM
   _testCloning();
@@ -93,6 +101,7 @@ void _sharedTests() {
   _testHistory();
   _testNavigator();
   _testNetworking();
+  _testServiceWorker();
   _testWindow();
 
   //
@@ -107,16 +116,9 @@ void _sharedTests() {
   testLibraries();
 }
 
-// Local TCP port that has a HTTP server.
-const _httpServerWrongPort = 314;
-
-// Local TCP port hat DOES NOT have HTTP server.
-// Used for testing connection failures.
-late int _httpServerPort;
-
 void _testNetworking() {
   group(
-    'Networking-requiring tests:',
+    'Tests that require HTTP server:',
     () {
       setUpAll(() async {
         // Do not run in Flutter or Node.JS

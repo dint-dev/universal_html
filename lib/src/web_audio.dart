@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 /*
-Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
-  https://github.com/dart-lang/sdk/tree/master/tools/dom
+This file was derived from the Dart SDK.
 
-The source code adopted from 'dart:html' had the following license:
+The original files in the Dart SDK had the following license:
 
   Copyright 2012, the Dart project authors. All rights reserved.
   Redistribution and use in source and binary forms, with or without
@@ -32,7 +31,7 @@ The source code adopted from 'dart:html' had the following license:
       from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -44,102 +43,40 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+library universal_html.web_audio.internal;
 
-abstract class MemoryInfo {
-  factory MemoryInfo._() {
+import 'html.dart';
+
+class AudioTrack {
+  factory AudioTrack._() {
     throw UnimplementedError();
   }
 
-  int get jsHeapSizeLimit;
-
-  int get totalJSHeapSize;
-
-  int get usedJSHeapSize;
-}
-
-@SupportedBrowser(SupportedBrowser.CHROME)
-@SupportedBrowser(SupportedBrowser.FIREFOX)
-@SupportedBrowser(SupportedBrowser.IE)
-@Native('Performance')
-class Performance extends EventTarget {
-  // To suppress missing implicit constructor warnings.
-  factory Performance._() {
+  bool? get enabled {
     throw UnimplementedError();
   }
 
-  /// Checks if this type is supported on the current platform.
-  static bool get supported => false;
-
-  MemoryInfo? get memory {
+  set enabled(bool? value) {
     throw UnimplementedError();
   }
 
-  num? get timeOrigin {
+  String? get id {
     throw UnimplementedError();
   }
 
-  void clearMarks(String? markName) {
+  String? get kind {
     throw UnimplementedError();
   }
 
-  void clearMeasures(String? measureName) {
+  String? get label {
     throw UnimplementedError();
   }
 
-  void clearResourceTimings() {
+  String? get language {
     throw UnimplementedError();
   }
 
-  List<PerformanceEntry> getEntries() {
-    throw UnimplementedError();
-  }
-
-  List<PerformanceEntry> getEntriesByName(String name, String? entryType) {
-    throw UnimplementedError();
-  }
-
-  List<PerformanceEntry> getEntriesByType(String entryType) {
-    throw UnimplementedError();
-  }
-
-  void mark(String markName) {
-    throw UnimplementedError();
-  }
-
-  void measure(String measureName, String? startMark, String? endMark) {
-    throw UnimplementedError();
-  }
-
-  double now() {
-    throw UnimplementedError();
-  }
-
-  void setResourceTimingBufferSize(int maxSize) {
-    throw UnimplementedError();
-  }
-}
-
-@Native('PerformanceEntry')
-class PerformanceEntry {
-  // To suppress missing implicit constructor warnings.
-  factory PerformanceEntry._() {
-    throw UnimplementedError();
-  }
-
-  num get duration {
-    throw UnimplementedError();
-  }
-
-  String get entryType {
-    throw UnimplementedError();
-  }
-
-  String get name {
-    throw UnimplementedError();
-  }
-
-  num get startTime {
+  SourceBuffer? get sourceBuffer {
     throw UnimplementedError();
   }
 }

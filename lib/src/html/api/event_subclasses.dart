@@ -71,11 +71,19 @@ class AnimationPlaybackEvent extends Event {
 }
 
 class BackgroundFetchedEvent extends Event {
-  BackgroundFetchedEvent(String type) : super.internal(type);
+  BackgroundFetchedEvent(String type, Map init) : super.internal(type);
+
+  final List<BackgroundFetchSettledFetch>? fetches = [];
+
+  Future updateUI(String title) {
+    throw UnimplementedError();
+  }
 }
 
 class BackgroundFetchEvent extends Event {
-  BackgroundFetchEvent(String type) : super.internal(type);
+  BackgroundFetchEvent(String type, Map init) : super.internal(type);
+
+  String? get id => throw UnimplementedError();
 }
 
 class BackgroundFetchFailEvent extends Event {
@@ -114,13 +122,13 @@ abstract class CanMakePaymentEvent extends ExtendableEvent {
     throw UnimplementedError();
   }
 
-  List get methodData;
+  List? get methodData => throw UnimplementedError();
 
-  List get modifiers;
+  List? get modifiers => throw UnimplementedError();
 
-  String get paymentRequestOrigin;
+  String? get paymentRequestOrigin => throw UnimplementedError();
 
-  String get topLevelOrigin;
+  String? get topLevelOrigin => throw UnimplementedError();
 
   void respondWith(Future canMakePaymentResponse) {
     throw UnimplementedError();
@@ -191,8 +199,11 @@ abstract class DeviceMotionEvent extends Event {
   factory DeviceMotionEvent(String type, [Map? eventInitDict]) {
     throw UnimplementedError();
   }
+
   DeviceAcceleration? get acceleration;
+
   DeviceAcceleration? get accelerationIncludingGravity;
+
   num? get interval;
 
   DeviceRotationRate? get rotationRate;
@@ -310,40 +321,42 @@ class KeyboardEvent extends UIEvent {
   static const int DOM_KEY_LOCATION_STANDARD = 0x00;
 
   final bool altKey;
-  final int? charCode;
+  final int charCode;
   final String? code;
   final bool ctrlKey;
-  final bool isComposing;
-  final int? keyCode;
+  final bool? isComposing;
+  final int keyCode;
   final int? location;
   final bool metaKey;
-  final bool repeat;
+  final bool? repeat;
   final bool shiftKey;
 
   KeyboardEvent(
     String type, {
+    Window? view,
     this.altKey = false,
-    this.charCode,
+    int? charCode,
     this.code,
     this.ctrlKey = false,
     this.isComposing = false,
-    this.keyCode,
+    int? keyCode,
     this.location,
     this.metaKey = false,
     this.repeat = false,
     this.shiftKey = false,
     bool canBubble = true,
     bool cancelable = true,
-    Object? view,
-  }) : super(
+  })  : charCode = charCode ?? -1,
+        keyCode = keyCode ?? -1,
+        super(
           type,
           canBubble: canBubble,
           cancelable: cancelable,
         );
 
-  String get key => throw UnimplementedError();
+  String? get key => throw UnimplementedError();
 
-  int get which => throw UnimplementedError();
+  int? get which => throw UnimplementedError();
 
   bool getModifierState(String keyArg) => false;
 }
@@ -362,15 +375,12 @@ class KeyEvent extends KeyboardEvent {
       throw UnimplementedError();
 
   @override
-  final int charCode;
-
-  @override
   final EventTarget currentTarget;
 
   KeyEvent(
     String type, {
     required this.currentTarget,
-    this.charCode = 0,
+    int? charCode,
     bool altKey = false,
     bool canBubble = true,
     bool cancelable = true,
@@ -385,6 +395,7 @@ class KeyEvent extends KeyboardEvent {
           view: view,
           canBubble: canBubble,
           cancelable: cancelable,
+          charCode: charCode,
           keyCode: keyCode,
           location: location,
           ctrlKey: ctrlKey,
@@ -396,19 +407,21 @@ class KeyEvent extends KeyboardEvent {
 
 class MessageEvent extends Event {
   final dynamic? data;
-  final String? lastEventId;
-  final String? origin;
+  final String lastEventId;
+  final String origin;
   final EventTarget? source;
-  final List<MessagePort>? ports;
+  final List<MessagePort> ports;
 
   MessageEvent(
     String type, {
     this.data,
-    this.origin,
+    String? origin,
     String? lastEventId,
     this.source,
-    this.ports,
+    List<MessagePort>? ports,
   })  : lastEventId = lastEventId ?? '',
+        origin = origin ?? '',
+        ports = ports ?? const [],
         super.internal(type);
 
   String? get suborigin => null;

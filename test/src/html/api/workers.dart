@@ -12,9 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:stream_channel/stream_channel.dart';
-import '../../test/server.dart' as impl;
+part of main_test;
 
-void hybridMain(StreamChannel streamChannel, Object message) async {
-  impl.hybridMain(streamChannel, message);
+void _testServiceWorker() {
+  group('Worker:', () {
+    test('Worker()', () {
+      final worker = Worker('example');
+      worker.postMessage('message');
+    }, testOn: 'browser && !browser'); // We don't want to execute this test
+  });
+
+  group('ServiceWorker', () {
+    test('ServiceWorker()', () async {
+      final registration =
+          await window.navigator.serviceWorker!.register('example');
+      final worker = registration.active!;
+      worker.postMessage('message');
+    }, testOn: 'browser && !browser'); // We don't want to execute this test
+  });
 }

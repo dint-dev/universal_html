@@ -51,29 +51,29 @@ abstract class ScrollState {
     throw UnimplementedError();
   }
 
-  num get deltaGranularity;
+  num? get deltaGranularity;
 
-  num get deltaX;
+  num? get deltaX;
 
-  num get deltaY;
+  num? get deltaY;
 
-  bool get fromUserInput;
+  bool? get fromUserInput;
 
-  bool get inInertialPhase;
+  bool? get inInertialPhase;
 
-  bool get isBeginning;
+  bool? get isBeginning;
 
-  bool get isDirectManipulation;
+  bool? get isDirectManipulation;
 
-  bool get isEnding;
+  bool? get isEnding;
 
-  int get positionX;
+  int? get positionX;
 
-  int get positionY;
+  int? get positionY;
 
-  num get velocityX;
+  num? get velocityX;
 
-  num get velocityY;
+  num? get velocityY;
 
   void consumeDelta(num x, num y);
 

@@ -1,3 +1,8 @@
+## 2.0.8
+* Adds missing APIs: Worker ([issue #36](https://github.com/dint-dev/universal_html/issues/36))
+  and a few others.
+* Fixes issues with nullability suffixes in Window, Navigator, and others.
+
 ## 2.0.7
 * Fixes documentation issues and other small issues.
 * WindowController can now load (fake) `Window` instances in browser just like in VM.

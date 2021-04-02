@@ -16,8 +16,6 @@ import 'dart:html';
 import 'dart:indexed_db';
 import 'dart:web_sql';
 
-import 'package:universal_html/parsing.dart';
-
 import 'window_controller.dart';
 
 Document newDocument({
@@ -32,8 +30,8 @@ HtmlDocument newHtmlDocument({
   required Window window,
   required String? contentType,
 }) {
-  return DomParser().parseFromString('<html></html>', contentType ?? 'text/html')
-      as HtmlDocument;
+  return DomParser().parseFromString(
+      '<html></html>', contentType ?? 'text/html') as HtmlDocument;
 }
 
 Navigator newNavigator({
@@ -68,7 +66,8 @@ class _FakeWindow implements Window {
   String? status;
 
   @override
-  late final Document document = newHtmlDocument(window: this, contentType: 'text/html');
+  late final Document document =
+      newHtmlDocument(window: this, contentType: 'text/html');
 
   @override
   // TODO: implement animationFrame

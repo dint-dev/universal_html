@@ -72,40 +72,68 @@ abstract class PaymentAddress {
   String? get sortingCode;
 }
 
-abstract class PaymentInstruments {
-  PaymentInstruments._();
+@Native('PaymentInstruments')
+class PaymentInstruments {
+  factory PaymentInstruments._() {
+    throw UnimplementedError();
+  }
 
-  Future clear();
+  Future clear() => throw UnimplementedError();
 
-  Future<bool> delete(String instrumentKey);
+  Future<bool> delete(String instrumentKey) => throw UnimplementedError();
 
-  Future<Map<String, dynamic>> get(String instrumentKey);
+  Future<Map<String, dynamic>?> get(String instrumentKey) =>
+      throw UnimplementedError();
 
-  Future has(String instrumentKey);
+  Future has(String instrumentKey) => throw UnimplementedError();
 
-  Future<List<String>> keys();
+  Future<List<dynamic>> keys() => throw UnimplementedError();
 
-  Future set(String instrumentKey, Map details);
+  Future set(String instrumentKey, Map details) {
+    throw UnimplementedError();
+  }
 }
 
-abstract class PaymentManager {
-  String? userHint;
+@Native('PaymentManager')
+class PaymentManager {
+  factory PaymentManager._() {
+    throw UnimplementedError();
+  }
 
-  PaymentManager._();
+  PaymentInstruments? get instruments {
+    throw UnimplementedError();
+  }
 
-  PaymentInstruments get instruments;
+  String? get userHint {
+    throw UnimplementedError();
+  }
+
+  set userHint(String? value) {
+    throw UnimplementedError();
+  }
 }
 
-abstract class PaymentRequest extends EventTarget {
+@Native('PaymentRequest')
+class PaymentRequest extends EventTarget {
   factory PaymentRequest(List<Map> methodData, Map details, [Map? options]) {
     throw UnimplementedError();
   }
 
-  PaymentAddress? get shippingAddress;
+  String? get id {
+    throw UnimplementedError();
+  }
 
-  String? get shippingOption;
+  PaymentAddress? get shippingAddress {
+    throw UnimplementedError();
+  }
 
-  String? get shippingType;
+  String? get shippingOption {
+    throw UnimplementedError();
+  }
+
+  String? get shippingType {
+    throw UnimplementedError();
+  }
 
   Future abort() => throw UnimplementedError();
 
@@ -114,26 +142,43 @@ abstract class PaymentRequest extends EventTarget {
   Future<PaymentResponse> show() => throw UnimplementedError();
 }
 
-abstract class PaymentResponse {
-  PaymentResponse._();
-
-  Object? get details;
-
-  String? get methodName;
-
-  String? get payerEmail;
-
-  String? get payerName;
-
-  String? get payerPhone;
-
-  String? get requestId;
-
-  PaymentAddress? get shippingAddress;
-
-  String? get shippingOption;
-
-  Future complete([String? paymentResult]) {
+@Native('PaymentResponse')
+class PaymentResponse {
+  factory PaymentResponse._() {
     throw UnimplementedError();
   }
+
+  Object? get details {
+    throw UnimplementedError();
+  }
+
+  String? get methodName {
+    throw UnimplementedError();
+  }
+
+  String? get payerEmail {
+    throw UnimplementedError();
+  }
+
+  String? get payerName {
+    throw UnimplementedError();
+  }
+
+  String? get payerPhone {
+    throw UnimplementedError();
+  }
+
+  String? get requestId {
+    throw UnimplementedError();
+  }
+
+  PaymentAddress? get shippingAddress {
+    throw UnimplementedError();
+  }
+
+  String? get shippingOption {
+    throw UnimplementedError();
+  }
+
+  Future complete([String? paymentResult]) => throw UnimplementedError();
 }

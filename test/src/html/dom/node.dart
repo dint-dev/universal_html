@@ -285,6 +285,11 @@ void _testNode() {
       node.replaceData(2, 1, 'c');
       expect(node.nodeValue, 'abcde');
     });
+    test('text', () {
+      final node = Comment('awert');
+      node.text = 'abXde';
+      expect(node.text, 'abXde');
+    });
   });
 
   group('Comment', () {
@@ -313,6 +318,11 @@ void _testNode() {
     test('toString()', () {
       final node = Text('abc');
       expect(node.toString(), 'abc');
+    });
+    test('text', () {
+      final node = Text('abc');
+      node.text = 'hjkyu';
+      expect(node.nodeValue, 'hjkyu');
     });
   });
 }

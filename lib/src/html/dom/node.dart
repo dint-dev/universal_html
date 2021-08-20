@@ -87,6 +87,11 @@ abstract class CharacterData extends Node
   }
 
   @override
+  set text(String? newValue) {
+    data = newValue;
+  }
+
+  @override
   String? get text => nodeValue;
 
   void appendData(String data) {

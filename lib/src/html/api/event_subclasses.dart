@@ -406,7 +406,7 @@ class KeyEvent extends KeyboardEvent {
 }
 
 class MessageEvent extends Event {
-  final dynamic? data;
+  final dynamic data;
   final String lastEventId;
   final String origin;
   final EventTarget? source;

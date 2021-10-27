@@ -2209,9 +2209,9 @@ abstract class Element extends Node
 
   void requestPointerLock() {}
 
-  void scroll([dynamic? options_OR_x, num? y]) {}
+  void scroll([dynamic options_OR_x, num? y]) {}
 
-  void scrollBy([dynamic? options_OR_x, num? y]) {}
+  void scrollBy([dynamic options_OR_x, num? y]) {}
 
   /// Scrolls this element into view.
   ///
@@ -2234,7 +2234,7 @@ abstract class Element extends Node
     // Ignore
   }
 
-  void scrollTo([dynamic? options_OR_x, num? y]) {}
+  void scrollTo([dynamic options_OR_x, num? y]) {}
 
   Future<ScrollState> setApplyScroll(String nativeScrollBehavior) {
     throw UnimplementedError();

@@ -219,7 +219,7 @@ mixin _UrlBase {
 
   String? get origin => _uri?.origin ?? '';
 
-  String get pathname => _uri?.path ?? '';
+  String? get pathname => _uri?.path ?? '';
 
   set pathname(String? value) {
     throw UnimplementedError();

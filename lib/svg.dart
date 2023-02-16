@@ -14,7 +14,7 @@
 
 library universal_html.svg;
 
-export 'dart:svg'
-    if (dart.library.svg) 'dart:svg' // Browser
+export 'src/_sdk/svg.dart'
+    if (dart.library.svg) 'src/_sdk/svg.dart' // Browser
     if (dart.library.io) 'src/svg.dart' // VM
     if (dart.library.js) 'src/svg.dart'; // Node.JS

@@ -27,7 +27,7 @@ void _testElement() {
         const invalidChars = ['<', '>', '"', ' ', '&'];
         for (var c in invalidChars) {
           expect(() {
-            Element.tag('$c');
+            Element.tag(c);
           }, throwsDomException);
 
           expect(() {

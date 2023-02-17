@@ -187,7 +187,6 @@ class HtmlDocument extends Document
       }
     }
     head.append(TitleElement()..text = value);
-    return null;
   }
 
   HtmlHtmlElement? get _html {

@@ -315,7 +315,7 @@ void _testElementSubclasses() {
     });
 
     test('click', () {
-      element.onClick.listen(expectAsync1((event) => null));
+      element.onClick.listen(expectAsync1((event) {}));
       element.click();
     });
 

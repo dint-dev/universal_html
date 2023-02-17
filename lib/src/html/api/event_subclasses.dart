@@ -71,9 +71,9 @@ class AnimationPlaybackEvent extends Event {
 }
 
 class BackgroundFetchedEvent extends Event {
-  BackgroundFetchedEvent(String type, Map init) : super.internal(type);
-
   final List<BackgroundFetchSettledFetch>? fetches = [];
+
+  BackgroundFetchedEvent(String type, Map init) : super.internal(type);
 
   Future updateUI(String title) {
     throw UnimplementedError();
@@ -150,7 +150,7 @@ class CloseEvent extends Event {
 
   final bool? wasClean;
 
-  CloseEvent._(
+  CloseEvent.constructor(
     String type, {
     this.code,
     this.reason,
@@ -218,7 +218,7 @@ class DeviceOrientationEvent extends Event {
 
   final num? gamma;
 
-  DeviceOrientationEvent._(
+  DeviceOrientationEvent.constructor(
     String type, {
     this.absolute,
     this.alpha,
@@ -634,9 +634,10 @@ class PointerEvent extends MouseEvent {
   final int? twist;
   final num? width;
 
-  factory PointerEvent(String type, [Map? dict]) => PointerEvent._(type: type);
+  factory PointerEvent(String type, [Map? dict]) =>
+      PointerEvent.constructor(type: type);
 
-  PointerEvent._({
+  PointerEvent.constructor({
     required String type,
     this.height,
     this.isPrimary,
@@ -725,7 +726,7 @@ class SecurityPolicyViolationEvent extends Event {
 
   final String? violatedDirective;
 
-  SecurityPolicyViolationEvent._(
+  SecurityPolicyViolationEvent.constructor(
     String type, {
     this.blockedUri,
     this.columnNumber,
@@ -785,7 +786,7 @@ class TouchEvent extends UIEvent {
 
   final TouchList? touches;
 
-  TouchEvent._(
+  TouchEvent.constructor(
     String type, {
     this.altKey = false,
     this.changedTouches,
@@ -821,10 +822,10 @@ class TransitionEvent extends Event {
   final String? pseudoElement;
 
   factory TransitionEvent(String type, [Map? eventInitDict]) {
-    return TransitionEvent._(type);
+    return TransitionEvent.constructor(type);
   }
 
-  TransitionEvent._(
+  TransitionEvent.constructor(
     String type, {
     this.elapsedTime,
     this.propertyName,

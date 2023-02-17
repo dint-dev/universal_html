@@ -360,6 +360,14 @@ class Window extends EventTarget
   @protected
   Selection? internalSelection;
 
+  /// Information about the screen displaying this window.
+  ///
+  /// ## Other resources
+  ///
+  /// * [The Screen interface specification](http://www.w3.org/TR/cssom-view/#screen)
+  ///   from W3C.
+  late final Screen? screen = Screen.constructor();
+
   /// An internal constructor that's NOT part of "dart:html".
   ///
   /// This API is not for public use.
@@ -393,9 +401,9 @@ class Window extends EventTarget
     return completer.future;
   }
 
-  _Worklet? get animationWorklet => null;
+  Worklet? get animationWorklet => null;
 
-  _Worklet? get audioWorklet => null;
+  Worklet? get audioWorklet => null;
 
   @override
   bool? get closed => null;
@@ -565,10 +573,10 @@ class Window extends EventTarget
   @override
   Stream<Event> get onHashChange => hashChangeEvent.forTarget(this);
 
+  // From WindowBase64
+
   /// Stream of `input` events handled by this [Window].
   Stream<Event> get onInput => Element.inputEvent.forTarget(this);
-
-  // From WindowBase64
 
   /// Stream of `invalid` events handled by this [Window].
   Stream<Event> get onInvalid => Element.invalidEvent.forTarget(this);
@@ -724,14 +732,6 @@ class Window extends EventTarget
 
   @override
   WindowBase? get parent => null;
-
-  /// Information about the screen displaying this window.
-  ///
-  /// ## Other resources
-  ///
-  /// * [The Screen interface specification](http://www.w3.org/TR/cssom-view/#screen)
-  ///   from W3C.
-  late final Screen? screen = Screen._();
 
   /// The distance from the left side of the screen to the left side of this
   /// window.
@@ -978,7 +978,7 @@ class Window extends EventTarget
 
   @override
   void postMessage(/*any*/ message, String targetOrigin,
-      [List<Object>? transfer]) {
+      [List<Object>? messagePorts]) {
     throw UnimplementedError();
   }
 

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// Cross-platform "dart:indexed_db" library.
 library universal_html.indexed_db;
 
 export 'src/_sdk/indexed_db.dart'

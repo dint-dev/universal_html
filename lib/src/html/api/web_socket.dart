@@ -113,13 +113,6 @@ class WebSocket extends EventTarget {
   static const EventStreamProvider<Event> openEvent =
       EventStreamProvider<Event>('open');
 
-  factory WebSocket(String url, [Object? protocols]) {
-    throw UnimplementedError();
-  }
-
-  /// Checks if this type is supported on the current platform.
-  static bool get supported => false;
-
   static const int CLOSED = 3;
 
   static const int CLOSING = 2;
@@ -127,6 +120,13 @@ class WebSocket extends EventTarget {
   static const int CONNECTING = 0;
 
   static const int OPEN = 1;
+
+  /// Checks if this type is supported on the current platform.
+  static bool get supported => false;
+
+  factory WebSocket(String url, [Object? protocols]) {
+    throw UnimplementedError();
+  }
 
   String? get binaryType {
     throw UnimplementedError();
@@ -143,6 +143,18 @@ class WebSocket extends EventTarget {
   String? get extensions {
     throw UnimplementedError();
   }
+
+  /// Stream of `close` events handled by this [WebSocket].
+  Stream<CloseEvent> get onClose => closeEvent.forTarget(this);
+
+  /// Stream of `error` events handled by this [WebSocket].
+  Stream<Event> get onError => errorEvent.forTarget(this);
+
+  /// Stream of `message` events handled by this [WebSocket].
+  Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
+
+  /// Stream of `open` events handled by this [WebSocket].
+  Stream<Event> get onOpen => openEvent.forTarget(this);
 
   String? get protocol {
     throw UnimplementedError();
@@ -212,16 +224,4 @@ class WebSocket extends EventTarget {
   void sendTypedData(TypedData data) {
     throw UnimplementedError();
   }
-
-  /// Stream of `close` events handled by this [WebSocket].
-  Stream<CloseEvent> get onClose => closeEvent.forTarget(this);
-
-  /// Stream of `error` events handled by this [WebSocket].
-  Stream<Event> get onError => errorEvent.forTarget(this);
-
-  /// Stream of `message` events handled by this [WebSocket].
-  Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
-
-  /// Stream of `open` events handled by this [WebSocket].
-  Stream<Event> get onOpen => openEvent.forTarget(this);
 }

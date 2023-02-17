@@ -18,6 +18,8 @@ import 'package:test/test.dart';
 import 'package:universal_html/html.dart';
 import 'package:universal_html/parsing.dart';
 
+const _ = '';
+
 void main() {
   test('parseHtmlDocument()', () {
     final document = parseHtmlDocument('<html><body>abc</body></html>');
@@ -121,8 +123,9 @@ void main() {
         expect(node.text, '\n\t');
       });
 
-      test(('<!--') + '->' + '-->', () {
-        final document = parseXmlDocument(('<xml><!--') + '->' + '--></xml>');
+      // $_ prevents HTML warnings
+      test('<!--$_->-->', () {
+        final document = parseXmlDocument('<xml><!--$_->--></xml>');
         expect(document, isA<XmlDocument>());
         final node = document.firstChild!.firstChild!;
         expect(node, isA<Comment>());
@@ -132,7 +135,8 @@ void main() {
     });
 
     test('cdata', () {
-      final document = parseXmlDocument('<xml><![CDATA[ value ]]></xml>');
+      // $_ prevents HTML warnings
+      final document = parseXmlDocument('<xml><![CDATA[ value ]$_]></xml>');
       expect(document, isA<XmlDocument>());
       final node = document.firstChild!.firstChild!;
       expect(node, isA<Text>());

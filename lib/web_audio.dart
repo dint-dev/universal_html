@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// Cross-platform "dart:web_audio" library.
 library universal_html.web_audio;
 
 export 'src/_sdk/web_audio.dart'

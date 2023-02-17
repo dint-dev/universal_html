@@ -139,7 +139,9 @@ void _testNode() {
       expect(e.text, '');
       e.appendText('a');
       expect(e.text, 'a');
-      e.append(Element.tag('innerElement')..appendText('')..appendText('b'));
+      e.append(Element.tag('innerElement')
+        ..appendText('')
+        ..appendText('b'));
       expect(e.text, 'ab');
       e.append(Comment('not text'));
       expect(e.text, 'ab');

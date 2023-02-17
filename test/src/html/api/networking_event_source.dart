@@ -15,7 +15,7 @@
 part of main_test;
 
 void _testEventSource() {
-  Stream<List<int>> _input(String s) {
+  Stream<List<int>> makeStream(String s) {
     return Stream<List<int>>.fromIterable([utf8.encode(s)]);
   }
 
@@ -264,28 +264,28 @@ void _testEventSource() {
 
     group('parsing: ', () {
       test('empty', () async {
-        final input = _input('');
+        final input = makeStream('');
         final decoder = EventStreamDecoder();
         final output = await decoder.bind(input).toList();
         expect(output, []);
       });
 
       test('comment', () async {
-        final input = _input(':comment');
+        final input = makeStream(':comment');
         final decoder = EventStreamDecoder();
         final output = await decoder.bind(input).toList();
         expect(output, []);
       });
 
       test('comment, newline', () async {
-        final input = _input(':comment\n');
+        final input = makeStream(':comment\n');
         final decoder = EventStreamDecoder();
         final output = await decoder.bind(input).toList();
         expect(output, []);
       });
 
       test('comment, newline, newline', () async {
-        final input = _input(':comment\ndata:\n\n');
+        final input = makeStream(':comment\ndata:\n\n');
         final decoder = EventStreamDecoder();
         final output = await decoder.bind(input).toList();
         expect(output, hasLength(1));
@@ -295,7 +295,7 @@ void _testEventSource() {
       });
 
       test(r'""', () async {
-        final input = _input('data: \n\n');
+        final input = makeStream('data: \n\n');
         final decoder = EventStreamDecoder();
         final output = await decoder.bind(input).toList();
         expect(output, hasLength(1));
@@ -305,7 +305,7 @@ void _testEventSource() {
       });
 
       test('"a"', () async {
-        final input = _input('data: a\n\n');
+        final input = makeStream('data: a\n\n');
         final decoder = EventStreamDecoder();
         final output = await decoder.bind(input).toList();
         expect(output, hasLength(1));
@@ -315,7 +315,7 @@ void _testEventSource() {
       });
 
       test('"a\\nb"', () async {
-        final input = _input('data:a\ndata: b\n\n');
+        final input = makeStream('data:a\ndata: b\n\n');
         final decoder = EventStreamDecoder();
         final output = await decoder.bind(input).toList();
         expect(output, hasLength(1));
@@ -325,7 +325,7 @@ void _testEventSource() {
       });
 
       test('type', () async {
-        final input = _input('''
+        final input = makeStream('''
 event:x0
 
 event: x1
@@ -349,7 +349,7 @@ event: x2
       });
 
       test('id', () async {
-        final input = _input('''
+        final input = makeStream('''
 id: ignored because this one has no data
 
 id:x1
@@ -373,7 +373,7 @@ id: x2
       });
 
       test('retry', () async {
-        final input = _input('''
+        final input = makeStream('''
 retry:1
 retry: 2
 ''');

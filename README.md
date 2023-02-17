@@ -34,7 +34,7 @@ documented in the relevant files.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^2.0.8
+  universal_html: ^2.0.9
 ```
 
 ## 2. Use

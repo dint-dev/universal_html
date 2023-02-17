@@ -179,11 +179,12 @@ class _EventStream<T extends Event> extends Stream<T> {
     bool? cancelOnError,
   }) {
     final controller = StreamController<T>();
-    final listener = (Event event) {
+    listener(Event event) {
       if (event is T) {
         controller.add(event);
       }
-    };
+    }
+
     target.addEventListener(type, listener, useCapture);
     controller.onCancel = () {
       target.removeEventListener(type, listener, useCapture);

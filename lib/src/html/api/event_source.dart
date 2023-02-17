@@ -75,7 +75,7 @@ class EventSource extends EventTarget {
   static const String _mediaType = 'text/event-stream';
 
   /// URL of this event source.
-  final String? url;
+  final String url;
 
   /// Value of `withCredentials` given in the constructor.
   final bool? withCredentials;
@@ -89,9 +89,7 @@ class EventSource extends EventTarget {
   /// Used by [readyState].
   int _readyState = CONNECTING;
 
-  EventSource(String url, {this.withCredentials = false})
-      : url = url,
-        super.internal() {
+  EventSource(this.url, {this.withCredentials = false}) : super.internal() {
     // Parse URI
     var parsedUri = Uri.tryParse(url);
     if (parsedUri == null) {
@@ -215,7 +213,6 @@ class EventSource extends EventTarget {
 
   Stream<MessageEvent> _readHttpResponse(io.HttpClientResponse httpResponse,
       void Function(Duration d) onTimeout) async* {
-    var close = false;
     EventStreamDecoder? transformer;
     try {
       // Check HTTP status
@@ -253,12 +250,11 @@ class EventSource extends EventTarget {
         origin: origin,
         onReceivedTimeout: onTimeout,
       );
-    } finally {
-      if (close) {
-        // To avoid leaking memory, dart:io instructs to read HTTP response body.
-        // ignore: unawaited_futures
-        httpResponse.listen((_) {}).cancel();
-      }
+    } catch (error) {
+      // To avoid leaking memory, dart:io instructs to read HTTP response body.
+      // ignore: unawaited_futures
+      httpResponse.listen((_) {}).cancel();
+      rethrow;
     }
     yield* (httpResponse.map((data) {
       return data;

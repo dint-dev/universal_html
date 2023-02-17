@@ -1,0 +1,19 @@
+name: Flutter CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        sdk: [3.7.2]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+        with:
+          flutter_version: ${{ matrix.sdk }}
+      - name: Run tests
+        run: flutter test
+        working-directory: ./test_in_flutter

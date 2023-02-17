@@ -43,7 +43,28 @@ void _testHttpRequest() {
       final event = await onLoadEnd.next.timeout(
         const Duration(seconds: 5),
       );
-      expect(event, TypeMatcher<ProgressEvent>());
+      expect(event, isA<ProgressEvent>());
+      expect(request.status, 200);
+      expect(request.statusText, isNotEmpty);
+      expect(
+        request.responseHeaders,
+        containsPair('x-example', 'example value'),
+      );
+      expect(request.response, 'hello');
+
+      // No error
+      expect(onError.eventsDispatched, 0);
+      expect(onTimeout.eventsDispatched, 0);
+    }, timeout: Timeout(Duration(seconds: 5)));
+
+    test('GET, type "text"', () async {
+      request.open('GET', 'http://localhost:$_httpServerPort/http_request/ok');
+      request.responseType = 'text';
+      request.send();
+      final event = await onLoadEnd.next.timeout(
+        const Duration(milliseconds: 200),
+      );
+      expect(event, isA<ProgressEvent>());
       expect(request.status, 200);
       expect(request.statusText, isNotEmpty);
       expect(
@@ -64,14 +85,14 @@ void _testHttpRequest() {
       final event = await onLoadEnd.next.timeout(
         const Duration(milliseconds: 200),
       );
-      expect(event, TypeMatcher<ProgressEvent>());
+      expect(event, isA<ProgressEvent>());
       expect(request.status, 200);
       expect(request.statusText, isNotEmpty);
       expect(
         request.responseHeaders,
         containsPair('x-example', 'example value'),
       );
-      expect(request.response, TypeMatcher<ByteBuffer>());
+      expect(request.response, isA<ByteBuffer>());
       expect(
         utf8.decode(Uint8List.view(request.response as ByteBuffer)),
         'hello',
@@ -90,7 +111,7 @@ void _testHttpRequest() {
       final event = await onLoadEnd.next.timeout(
         const Duration(milliseconds: 200),
       );
-      expect(event, TypeMatcher<ProgressEvent>());
+      expect(event, isA<ProgressEvent>());
       expect(request.status, 200);
       expect(request.statusText, isNotEmpty);
       expect(
@@ -132,7 +153,7 @@ void _testHttpRequest() {
       final event = await onError.next.timeout(
         const Duration(milliseconds: 200),
       );
-      expect(event, TypeMatcher<ProgressEvent>());
+      expect(event, isA<ProgressEvent>());
       expect(request.status, 0);
       expect(request.statusText, '');
       expect(request.responseText, '');

@@ -87,12 +87,12 @@ abstract class CharacterData extends Node
   }
 
   @override
+  String? get text => nodeValue;
+
+  @override
   set text(String? newValue) {
     data = newValue;
   }
-
-  @override
-  String? get text => nodeValue;
 
   void appendData(String data) {
     final oldData = this.data!;
@@ -216,9 +216,7 @@ abstract class Node extends EventTarget {
   Node? _previousNode;
 
   /// Constructor for most subclasses.
-  Node._(Document ownerDocument)
-      : ownerDocument = ownerDocument,
-        super.internal();
+  Node._(this.ownerDocument) : super.internal();
 
   /// Constructor used by [Document].
   Node._document()

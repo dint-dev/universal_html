@@ -1,3 +1,6 @@
+## 2.0.9
+* Fixes various issues.
+
 ## 2.0.8
 * Adds missing APIs: Worker ([issue #36](https://github.com/dint-dev/universal_html/issues/36))
   and a few others.

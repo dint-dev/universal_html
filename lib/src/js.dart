@@ -193,9 +193,6 @@ abstract class JsObject {
     throw UnimplementedError();
   }
 
-  @override
-  int get hashCode => 0;
-
   /// Returns the value associated with [property] from the proxied JavaScript
   /// object.
   ///

@@ -56,7 +56,7 @@ abstract class Element extends Node
   static const EventStreamProvider<Event> abortEvent =
       EventStreamProvider<Event>('abort');
 
-  static final _whitespaceRegExp = RegExp('\s');
+  static final _whitespaceRegExp = RegExp(r'\s');
 
   /// Static factory designed to expose `beforecopy` events to event
   /// handlers that are not necessarily instances of [Element].
@@ -1728,10 +1728,6 @@ abstract class Element extends Node
   /// of the [Timing] object.
   @SupportedBrowser(SupportedBrowser.CHROME, '36')
   Animation animate(Iterable<Map<String, dynamic>> frames, [timing]) {
-    if (frames is! Iterable || !(frames.every((x) => x is Map))) {
-      throw ArgumentError('The frames parameter should be a List of Maps '
-          'with frame information');
-    }
     return Animation();
   }
 
@@ -2141,10 +2137,6 @@ abstract class Element extends Node
       name = name.toLowerCase();
 
       if (name == 'style') {
-        final style = _style;
-        if (style == null) {
-          return null;
-        }
         _style = null;
         return;
       }
@@ -2179,10 +2171,6 @@ abstract class Element extends Node
       name = name.toLowerCase();
 
       if (name == 'style' && _isHtmlNamespaceUri(namespaceUri)) {
-        final style = _style;
-        if (style == null) {
-          return null;
-        }
         _style = null;
         return;
       }

@@ -51,7 +51,6 @@ class AnchorElement extends HtmlElement
     implements HtmlHyperlinkElementUtils {
   factory AnchorElement({String? href}) {
     final element = AnchorElement._(window.document);
-    ;
     if (href != null) {
       element.href = href;
     }
@@ -1598,7 +1597,7 @@ class InputElement extends HtmlElement
 
   @override
   ValidityState get validity {
-    return ValidityState._();
+    return ValidityState.constructor();
   }
 
   @override
@@ -2230,12 +2229,10 @@ class OptionElement extends HtmlElement
     final siblings = selectElement.options;
     var i = 0;
     for (var sibling in siblings) {
-      if (sibling is OptionElement) {
-        if (identical(sibling, this)) {
-          return i;
-        }
-        i++;
+      if (identical(sibling, this)) {
+        return i;
       }
+      i++;
     }
     return null;
   }
@@ -2245,7 +2242,7 @@ class OptionElement extends HtmlElement
   set selected(bool? value) {
     final selectElement = _selectElement;
     if (selectElement == null) {
-      return null;
+      return;
     }
     _selected = value;
     if (selectElement.multiple == false) {
@@ -2558,7 +2555,7 @@ class SelectElement extends HtmlElement
 
   String get validationMessage => '';
 
-  ValidityState get validity => ValidityState._();
+  ValidityState get validity => ValidityState.constructor();
 
   String get value {
     final options = this.options;
@@ -2709,7 +2706,7 @@ class StyleElement extends HtmlElement {
     }
     final text = this.text;
     final parsed = css.parse(text);
-    final styleSheet = CssStyleSheet._();
+    final styleSheet = CssStyleSheet.constructor();
     for (var node in parsed.topLevels) {
       if (node is css.RuleSet) {
         final styleRule = CssStyleRule.internal(styleSheet, node);
@@ -3127,7 +3124,7 @@ class TextAreaElement extends HtmlElement
 
   String? get validationMessage => null;
 
-  ValidityState get validity => ValidityState._();
+  ValidityState get validity => ValidityState.constructor();
 
   String get value => text ?? '';
 
@@ -3274,7 +3271,7 @@ class ValidityState {
   final bool? valid;
   final bool? valueMissing;
 
-  ValidityState._({
+  ValidityState.constructor({
     this.badInput,
     this.customError,
     this.patternMismatch,

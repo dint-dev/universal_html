@@ -1,20 +1,20 @@
 name: Dart CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
-    container:
-      image:  google/dart:latest
-
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        sdk: [stable, beta, dev]
     steps:
-      - uses: actions/checkout@v1
-
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
       - name: Install dependencies
         run: dart pub get
-
       - name: Run tests
         run: dart test --platform vm

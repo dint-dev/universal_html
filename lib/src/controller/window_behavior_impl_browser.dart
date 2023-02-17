@@ -14,7 +14,6 @@
 
 import 'dart:html';
 import 'dart:indexed_db';
-import 'dart:web_sql';
 
 import 'window_controller.dart';
 
@@ -685,14 +684,6 @@ class _FakeWindow implements Window {
   @override
   WindowBase open(String url, String name, [String? options]) {
     // TODO: implement open
-    throw UnimplementedError();
-  }
-
-  @override
-  SqlDatabase openDatabase(
-      String name, String version, String displayName, int estimatedSize,
-      [creationCallback]) {
-    // TODO: implement openDatabase
     throw UnimplementedError();
   }
 

@@ -133,7 +133,7 @@ class Event {
       case 'PopStateEvent':
         return PopStateEvent(name);
       case 'TouchEvent':
-        return TouchEvent._(name);
+        return TouchEvent.constructor(name);
       default:
         return Event.internal(type);
     }

@@ -1,5 +1,6 @@
 [![Pub Package](https://img.shields.io/pub/v/universal_html.svg)](https://pub.dartlang.org/packages/universal_html)
-[![Github Actions CI](https://github.com/dint-dev/universal_html/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/universal_html/actions?query=workflow%3A%22Dart+CI%22)
+[![package publisher](https://img.shields.io/pub/publisher/universal_html.svg)](https://pub.dev/packages/universal_html/publisher)
+[![Github Actions CI](https://github.com/dint-dev/universal_html/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/universal_html/actions)
 
 # Introduction
 A cross-platform `dart:html`:

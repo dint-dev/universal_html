@@ -244,6 +244,15 @@ class ErrorEvent extends Event {
   final int? lineno;
   final String? message;
 
+  ErrorEvent(String type, [Map? eventInitDict])
+      : this.internal(
+          colno: eventInitDict?['colno'],
+          error: eventInitDict?['error'],
+          filename: eventInitDict?['filename'],
+          lineno: eventInitDict?['lineno'],
+          message: eventInitDict?['message'],
+        );
+
   /// Internal constructor. __Not part of dart:html__.
   ErrorEvent.internal({
     this.colno,
@@ -418,10 +427,10 @@ class MessageEvent extends Event {
     String? origin,
     String? lastEventId,
     this.source,
-    List<MessagePort>? ports,
+    List<MessagePort>? messagePorts,
   })  : lastEventId = lastEventId ?? '',
         origin = origin ?? '',
-        ports = ports ?? const [],
+        ports = messagePorts ?? const [],
         super.internal(type);
 
   String? get suborigin => null;

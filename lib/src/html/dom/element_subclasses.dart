@@ -840,7 +840,7 @@ class FormElement extends HtmlElement {
   Future<void> _sendMultiPart(
     Uri uri,
   ) async {
-    final httpClient = io.HttpClient();
+    final httpClient = window.internalWindowController.onChooseHttpClient(uri);
     final httpRequest = await httpClient.openUrl(method ?? 'POST', uri);
 
     final writer = MultipartFormWriter(httpRequest);
@@ -927,7 +927,8 @@ class FormElement extends HtmlElement {
         );
 
       case 'post':
-        final httpClient = io.HttpClient();
+        final httpClient =
+            window.internalWindowController.onChooseHttpClient(uri);
         final httpRequest = await httpClient.openUrl(method, uri);
         httpRequest.headers.contentType = io.ContentType(
           'application',

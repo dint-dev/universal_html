@@ -60,7 +60,7 @@ class EventStreamDecoder
               lastEventId: id,
               data: dataBuilder.toString(),
               origin: origin,
-              ports: const <MessagePort>[],
+              messagePorts: const <MessagePort>[],
             ));
           }
           dataBuilder.clear();

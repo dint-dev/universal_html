@@ -454,7 +454,8 @@ class HttpRequest extends HttpRequestEventTarget {
       return;
     }
 
-    final httpClient = io.HttpClient();
+    final httpClient =
+        window.internalWindowController.onChooseHttpClient(_requestUrl!);
     try {
       // Wait for request
       final httpRequest =

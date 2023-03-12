@@ -14,12 +14,12 @@
 
 // The library name is needed for generating differences between our library
 // and dart:html.
-
 library universal_html.internal;
 
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert' show json, utf8;
+import 'dart:io' as io;
 import 'dart:math' show Rectangle;
 import 'dart:math' show Random;
 import 'dart:math' show Point, min, max;
@@ -32,7 +32,6 @@ import 'package:csslib/visitor.dart' as css;
 import 'package:meta/meta.dart';
 import 'package:typed_data/typed_buffers.dart';
 import 'package:universal_html/html.dart' as universal_html_in_browser_or_vm;
-import 'package:universal_io/io.dart' as io;
 
 import '../controller.dart';
 import 'html.dart' as universal_html;

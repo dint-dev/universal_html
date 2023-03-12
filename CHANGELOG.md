@@ -1,3 +1,9 @@
+## 2.1.0
+* Adds `EventSourceOutsideBrowser` interface for changing EventSource HTTP headers
+  ([issue #63](https://github.com/dint-dev/universal_html/issues/63)).
+* Adds WindowController.defaultHttpClient, which will be used as default HTTP client by EventSource
+  and other APIs. It's safe because it does not affect cookies, headers, or anything else dangerous.
+
 ## 2.0.9
 * Fixes various issues.
 

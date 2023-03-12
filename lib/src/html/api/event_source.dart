@@ -46,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
 
 part of universal_html.internal;
 
-class EventSource extends EventTarget {
+abstract class EventSource extends EventTarget {
   /// Static factory designed to expose `error` events to event
   /// handlers that are not necessarily instances of [EventSource].
   ///
@@ -72,12 +72,70 @@ class EventSource extends EventTarget {
   static const int CONNECTING = 0;
   static const int OPEN = 1;
 
-  static const String _mediaType = 'text/event-stream';
+  factory EventSource(String url, {bool? withCredentials = false}) {
+    return _EventSource(url, withCredentials: withCredentials);
+  }
+
+  EventSource.internal() : super.internal();
+
+  Stream<Event> get onError => errorEvent.forTarget(this);
+
+  Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
+
+  Stream<Event> get onOpen => openEvent.forTarget(this);
+
+  int? get readyState;
 
   /// URL of this event source.
-  final String url;
+  String get url;
 
   /// Value of `withCredentials` given in the constructor.
+  bool? get withCredentials;
+
+  /// Closes the event stream.
+  void close();
+}
+
+abstract class EventSourceOutsideBrowser implements EventSource {
+  /// A callback called when a [HttpClientRequest] is ready (only outside
+  /// browsers).
+  ///
+  /// You can access [httpClientRequest] if you want to set headers.
+  FutureOr<void> Function(
+          EventSourceOutsideBrowser eventSource, io.HttpClientRequest request)?
+      onHttpClientRequest;
+
+  /// A callback called when a [HttpClientResponse] arrives (only outside
+  /// browsers).
+  ///
+  /// You can access [httpClientResponse] if you want to access headers.
+  FutureOr<void> Function(
+      EventSourceOutsideBrowser eventSource,
+      io.HttpClientRequest request,
+      io.HttpClientResponse response)? onHttpClientResponse;
+
+  Duration retryDuration = Duration(seconds: 3);
+}
+
+class _EventSource extends EventSource implements EventSourceOutsideBrowser {
+  static const String _mediaType = 'text/event-stream';
+
+  @override
+  FutureOr<void> Function(
+          EventSourceOutsideBrowser eventSource, io.HttpClientRequest request)?
+      onHttpClientRequest;
+
+  @override
+  FutureOr<void> Function(
+      EventSourceOutsideBrowser eventSource,
+      io.HttpClientRequest request,
+      io.HttpClientResponse response)? onHttpClientResponse;
+
+  /// URL of this event source.
+  @override
+  final String url;
+
+  @override
   final bool? withCredentials;
 
   /// Parsed [url].
@@ -87,9 +145,9 @@ class EventSource extends EventTarget {
   StreamSubscription? _eventSubscription;
 
   /// Used by [readyState].
-  int _readyState = CONNECTING;
+  int? _readyState = EventSource.CONNECTING;
 
-  EventSource(this.url, {this.withCredentials = false}) : super.internal() {
+  _EventSource(this.url, {this.withCredentials = false}) : super.internal() {
     // Parse URI
     var parsedUri = Uri.tryParse(url);
     if (parsedUri == null) {
@@ -121,17 +179,15 @@ class EventSource extends EventTarget {
     _connect();
   }
 
-  Stream<Event> get onError => errorEvent.forTarget(this);
+  @override
+  int? get readyState => _readyState;
 
-  Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
+  @override
+  Duration retryDuration = const Duration(seconds: 3);
 
-  Stream<Event> get onOpen => openEvent.forTarget(this);
-
-  int get readyState => _readyState;
-
-  /// Closes the event stream.
+  @override
   void close() {
-    _readyState = CLOSED;
+    _readyState = EventSource.CLOSED;
     final eventSubscription = _eventSubscription;
     if (eventSubscription != null) {
       eventSubscription.cancel();
@@ -142,9 +198,12 @@ class EventSource extends EventTarget {
   Future<void> _connect() async {
     try {
       String? lastEventId;
-      while (_readyState != CLOSED) {
+      while (_readyState != EventSource.CLOSED) {
+        // Select HTTP client
+        final httpClient =
+            window.internalWindowController.onChooseHttpClient(_parsedUri!);
+
         // Create a HTTP request
-        final httpClient = io.HttpClient();
         final httpRequest = await httpClient.getUrl(_parsedUri!);
 
         // Add HTTP header 'Accept'
@@ -156,15 +215,25 @@ class EventSource extends EventTarget {
           httpRequest.headers.set('Last-Event-ID', currentLastEventId);
         }
 
+        await onHttpClientRequest?.call(
+          this as dynamic,
+          httpRequest,
+        );
+
         // Send the HTTP request
         final httpResponse = await httpRequest.close();
 
-        // Validate and parse HTTP response
-        var timeout = Duration(seconds: 5);
-        final eventStream = _readHttpResponse(
+        await onHttpClientResponse?.call(
+          this as dynamic,
+          httpRequest,
           httpResponse,
-          (newTimeout) {
-            timeout = newTimeout;
+        );
+
+        // Validate and parse HTTP response
+        final eventStream = _readHttpResponse(
+          httpResponse: httpResponse,
+          onRetryDuration: (duration) {
+            retryDuration = duration;
           },
         );
 
@@ -178,30 +247,30 @@ class EventSource extends EventTarget {
         // Wait for
         await eventSubscription.asFuture();
 
-        if (_readyState == CLOSED) {
+        if (_readyState == EventSource.CLOSED) {
           return;
         }
 
         // Update state
-        _readyState = CONNECTING;
+        _readyState = EventSource.CONNECTING;
 
         // Dispatch 'stream interruption' event
         dispatchEvent(Event.internal('error'));
 
-        // Reconnect after a timeout
-        await Future.delayed(timeout);
+        // Reconnect after a polling period
+        await Future.delayed(retryDuration);
       }
     } catch (error, stackTrace) {
       // Ignore errors after closing
-      if (_readyState == CLOSED) {
+      if (_readyState == EventSource.CLOSED) {
         return;
       }
-      _readyState = CLOSED;
+      _readyState = EventSource.CLOSED;
 
       // Add error
       dispatchEvent(
         ErrorEvent.internal(
-          error: error,
+          error: error.toString(),
           message: 'Error:\n  $error\n\nStack trace:\n  $stackTrace',
         ),
       );
@@ -211,8 +280,10 @@ class EventSource extends EventTarget {
     }
   }
 
-  Stream<MessageEvent> _readHttpResponse(io.HttpClientResponse httpResponse,
-      void Function(Duration d) onTimeout) async* {
+  Stream<MessageEvent> _readHttpResponse({
+    required io.HttpClientResponse httpResponse,
+    required void Function(Duration d) onRetryDuration,
+  }) async* {
     EventStreamDecoder? transformer;
     try {
       // Check HTTP status
@@ -236,19 +307,19 @@ class EventSource extends EventTarget {
       }
 
       // Did we close the stream already?
-      if (_readyState == CLOSED) {
+      if (_readyState == EventSource.CLOSED) {
         return;
       }
 
       // The connection is open
-      _readyState = OPEN;
+      _readyState = EventSource.OPEN;
       dispatchEvent(Event.internal('open'));
 
       // Transform to event stream
       final origin = _parsedUri!.origin;
       transformer = EventStreamDecoder(
         origin: origin,
-        onReceivedTimeout: onTimeout,
+        onReceivedTimeout: onRetryDuration,
       );
     } catch (error) {
       // To avoid leaking memory, dart:io instructs to read HTTP response body.

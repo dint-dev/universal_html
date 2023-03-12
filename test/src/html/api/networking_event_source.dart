@@ -28,6 +28,26 @@ void _testEventSource() {
       baseUrl = '$origin/event_source';
     });
 
+    test(
+      'with `newEventSource(...)`',
+      () async {
+        final eventSource = EventSource('$baseUrl/single_poll');
+        if (eventSource is EventSourceOutsideBrowser) {
+          eventSource.onHttpClientRequest =
+              expectAsync2((eventSource, request) {});
+          eventSource.onHttpClientResponse =
+              expectAsync3((eventSource, request, response) {});
+        }
+        addTearDown(() {
+          eventSource.close();
+        });
+        expect(eventSource.readyState, EventSource.CONNECTING);
+        await Future.delayed(const Duration(milliseconds: 200));
+        eventSource.close();
+      },
+      timeout: Timeout(const Duration(seconds: 5)),
+    );
+
     test('a single poll', () async {
       // -----------------------------------------------------------------------
       // Construct EventStream
@@ -80,8 +100,10 @@ void _testEventSource() {
       // Check state
       expect(eventSource.readyState, EventSource.CONNECTING);
       expect(openEvents, hasLength(1));
+      expect(openEvents.single.type, 'open');
       expect(messageEvents, hasLength(2));
       expect(errorEvents, hasLength(1));
+      expect(errorEvents.single.type, 'error');
 
       // -----------------------------------------------------------------------
       // Close

@@ -30,3 +30,5 @@
 // This file solves the problem.
 //
 export 'dart:html';
+
+export '../_sdk_html_additions.dart';

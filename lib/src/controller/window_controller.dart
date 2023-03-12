@@ -14,12 +14,13 @@
 
 import 'dart:async';
 import 'dart:convert' show utf8;
+import 'dart:io' as io;
+import 'dart:io' show ContentType, HttpClient;
 
 import 'package:universal_html/controller.dart';
 import 'package:universal_html/html.dart';
 import 'package:universal_html/parsing.dart' as parsing;
-import 'package:universal_io/io.dart' show ContentType;
-import 'package:universal_io/io.dart' as io;
+import 'package:universal_io/io.dart';
 
 /// Defines behavior of the browser APIs (such as navigation events).
 ///
@@ -54,6 +55,18 @@ class WindowController {
 
   /// Gets window controlled by this [WindowController].
   Window? get window => _window;
+
+  /// Default [HttpClient].
+  ///
+  /// If you want to create a new [HttpClient] instance for every request,
+  /// change [onChooseHttpClient].
+  late HttpClient defaultHttpClient = newUniversalHttpClient();
+
+  /// Chooses HTTP client that will be used for the URL.
+  ///
+  /// The default callback returns [defaultHttpClient].
+  late HttpClient Function(Uri uri) onChooseHttpClient =
+      (url) => defaultHttpClient;
 
   /// Sets window.
   ///
@@ -153,7 +166,7 @@ class WindowController {
     }
 
     // Write HTTP request.
-    final client = io.HttpClient();
+    final client = onChooseHttpClient(uri);
     final request = await client.openUrl(method, uri);
     if (contentType != null) {
       request.headers.contentType = contentType;

@@ -16,6 +16,36 @@ part of main_test;
 
 void _testCss() {
   group('CSS-related tests for Element:', () {
+    test('querySelector("")', () {
+      final element = HeadingElement.h1();
+      try {
+        element.querySelector('');
+      } on DomException catch (e) {
+        expect(e.name, DomException.SYNTAX);
+      }
+    });
+
+    test('querySelector("not found")', () {
+      final element = HeadingElement.h1();
+      final result = element.querySelector('not found');
+      expect(result, isNull);
+    });
+
+    test('querySelectorAll("")', () {
+      final element = HeadingElement.h1();
+      try {
+        element.querySelectorAll('');
+      } on DomException catch (e) {
+        expect(e.name, DomException.SYNTAX);
+      }
+    });
+
+    test('querySelectorAll("not found")', () {
+      final element = HeadingElement.h1();
+      final result = element.querySelectorAll('not found');
+      expect(result, []);
+    });
+
     group('matches:', () {
       void expectMatches(Element element, String selector, Matcher matcher) {
         final root = element.getRootNode() as Element;

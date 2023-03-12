@@ -208,7 +208,7 @@ abstract class JsObject {
   /// object.
   ///
   /// The type of [property] must be either [String] or [num].
-  void operator []=(Object property, Object value) {
+  void operator []=(Object property, dynamic value) {
     if (property is! String && property is! num) {
       throw ArgumentError('property is not a String or num');
     }
@@ -219,7 +219,7 @@ abstract class JsObject {
   /// returns the result.
   ///
   /// The type of [method] must be either [String] or [num].
-  dynamic callMethod(method, [List? args]) {
+  dynamic callMethod(Object method, [List? args]) {
     if (method is! String && method is! num) {
       throw ArgumentError('method is not a String or num');
     }
@@ -240,7 +240,7 @@ abstract class JsObject {
   /// either directly or though its prototype chain.
   ///
   /// This is the equivalent of the `in` operator in JavaScript.
-  bool hasProperty(property) {
+  bool hasProperty(Object property) {
     if (property is! String && property is! num) {
       throw ArgumentError('property is not a String or num');
     }

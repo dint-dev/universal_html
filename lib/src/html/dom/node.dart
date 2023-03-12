@@ -760,7 +760,13 @@ mixin _ElementOrDocument implements Node, ParentNode {
   /// For details about CSS selector syntax, see the
   /// [CSS selector specification](http://www.w3.org/TR/css3-selectors/).
   ElementList<T> querySelectorAll<T extends Element>(String input) {
-    final selectorGroup = css.parseSelectorGroup(input)!;
+    final selectorGroup = css.parseSelectorGroup(input);
+    if (selectorGroup == null) {
+      throw DomException._(
+        DomException.SYNTAX,
+        "Failed to execute 'querySelector' on 'Element': The provided selector is empty.",
+      );
+    }
     final result = <Element>[];
     _forEachElementInTree((element) {
       if (_matchesSelectorGroup(element, selectorGroup, null)) {

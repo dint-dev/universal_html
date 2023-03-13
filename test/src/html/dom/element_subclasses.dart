@@ -464,6 +464,49 @@ void _testElementSubclasses() {
         setter: (e, v) => e.width = v,
       );
     });
+
+    test('children after setting innerHtml', () {
+      final innerHtml =
+          '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
+      final iframe = IFrameElement()
+        ..className = 'example'
+        ..innerHtml = innerHtml;
+      expect(iframe.children, hasLength(0));
+      expect(iframe.childNodes, hasLength(1));
+      expect(iframe.text, innerHtml);
+      expect(iframe.outerHtml, '<iframe class="example">$innerHtml</iframe>');
+    });
+
+    test('outerHtml after setting innerHtml', () {
+      final innerHtml =
+          '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
+      final iframe = IFrameElement()
+        ..className = 'example'
+        ..innerHtml = innerHtml;
+      expect(iframe.outerHtml, '<iframe class="example">$innerHtml</iframe>');
+    });
+
+    test('children after parsing document', () {
+      final innerHtml =
+          '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
+      final html = '<html><body><iframe>$innerHtml</iframe></body></html>';
+      final doc = parseHtmlDocument(html);
+      final iframe = doc.body!.children.single;
+      expect(iframe.children, hasLength(0));
+      expect(iframe.childNodes, hasLength(1));
+      expect(iframe.childNodes.single.childNodes, hasLength(0));
+      expect(iframe.childNodes.single.text, innerHtml);
+    });
+
+    test('outerHtml after parsing document', () {
+      final innerHtml =
+          '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
+      final html = '<html><body><iframe>$innerHtml</iframe></body></html>';
+      final doc = parseHtmlDocument(html);
+      expect(
+          doc.body?.children.single.outerHtml, '<iframe>$innerHtml</iframe>');
+      expect(doc.body?.outerHtml, '<body><iframe>$innerHtml</iframe></body>');
+    });
   });
 
   // ---------------------------------------------------------------------------

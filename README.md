@@ -14,8 +14,8 @@ A cross-platform `dart:html`:
       and other CSS query methods.
   * __EventSource streaming support__
     * Cross-platform _dart:html_ `EventSource` ("application/event-stream").
-    * If you want to customize EventSource HTTP headers (outside browsers), replace normal
-      [EventSource] with [UniversalEventSource](https://pub.dev/documentation/universal_html/latest/universal_html.event_source/UniversalEventSource-class.html).
+    * If you want to customize EventSource HTTP headers outside browsers, see
+      [EventSourceOutsideBrowser](https://pub.dev/documentation/universal_html/latest/universal_html/EventSourceOutsideBrowser-class.html).
 
 The project is licensed under the [Apache License 2.0](LICENSE). Some of the source code was adopted
 from the original [dart:html](https://github.com/dart-lang/sdk/tree/master/tools/dom) in Dart SDK,
@@ -35,7 +35,7 @@ which is documented in the relevant files.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^2.1.0
+  universal_html: ^2.2.0
 ```
 
 ## 2. Use
@@ -86,17 +86,29 @@ void main() {
 Load a _Window_ with [WindowController](https://pub.dev/documentation/universal_html/latest/universal_html.controller/WindowController-class.html):
 
 ```dart
+import 'dart:io' show Cookie;
 import 'package:universal_html/controller.dart';
 
 Future main() async {
   // Load a document.
   final controller = WindowController();
+  controller.defaultHttpClient.userAgent = 'My Hacker News client';
   await controller.openHttp(
+    method: 'GET',
     uri: Uri.parse("https://news.ycombinator.com/"),
+    onRequest: (HttpClientRequest request) {
+      // Add custom headers
+      request.headers.set('Authorization', 'headerValue');
+      request.cookies.add(Cookie('cookieName', 'cookieValue'));
+    },
+    onResponse: (HttpClientResponse response) {
+      print('Status code: ${response.statusCode}');
+    },
   );
 
   // Select the top story using a CSS query
-  final topStoryTitle = controller.document.querySelectorAll(".athing > .title").first.text;
+  final titleElements = controller.document.querySelectorAll(".athing > .title");
+  final topStoryTitle = titleElements.first.text;
 
   // Print result
   print("Top Hacker News story is: $topStoryTitle");
@@ -122,7 +134,7 @@ Future<void> main() async {
 
 EventSource requests from real browsers are typically authenticated using cookies.
 If you want to add cookies or customize other HTTP headers, you need to use
-[UniversalEventSource](https://pub.dev/documentation/universal_html/latest/universal_html.event_source/UniversalEventSource-class.html):
+[EventSourceOutsideBrowser](https://pub.dev/documentation/universal_html/latest/universal_html/EventSourceOutsideBrowser-class.html):
 ```dart
 import 'package:universal_html/universal_html.dart';
 import 'dart:io' show Cookie;

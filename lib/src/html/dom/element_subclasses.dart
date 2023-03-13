@@ -605,34 +605,77 @@ class DListElement extends HtmlElement {
 }
 
 class DomTokenList {
-  DomTokenList._();
+  final Element _element;
+  final String _name;
+
+  DomTokenList._(this._element, this._name);
+
+  int get length => _getList().length;
 
   void add(String tokens) {
-    throw UnimplementedError();
+    final list = _getList();
+    final splitTokens =
+        tokens.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty);
+    list.addAll(splitTokens);
+    _setList(list);
   }
 
   bool contains(String token) {
-    throw UnimplementedError();
+    return _getList().contains(token);
   }
 
   String item(int index) {
-    throw UnimplementedError();
+    return _getList()[index];
   }
 
   void remove(String tokens) {
-    throw UnimplementedError();
+    final list = _getList();
+    final splitTokens =
+        tokens.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty);
+    for (var token in splitTokens) {
+      list.remove(token);
+    }
+    _setList(list);
   }
 
   void replace(String token, String newToken) {
-    throw UnimplementedError();
+    final list = _getList();
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] == token) {
+        list[i] = newToken;
+      }
+    }
+    _setList(list);
   }
 
   bool supports(String token) {
-    throw UnimplementedError();
+    return true;
   }
 
   bool toggle(String token, [bool? force]) {
-    throw UnimplementedError();
+    if (contains(token)) {
+      remove(token);
+      return true;
+    } else {
+      add(token);
+      return false;
+    }
+  }
+
+  List<String> _getList() {
+    final value = _element._getAttribute(_name);
+    if (value == null || value.isEmpty) {
+      return <String>[];
+    }
+    return value
+        .split(' ')
+        .map((e) => e.trim())
+        .where((e) => e.trim().isNotEmpty)
+        .toList();
+  }
+
+  void _setList(List<String> list) {
+    _element._setAttribute(_name, list.join(' '));
   }
 }
 
@@ -1101,6 +1144,8 @@ abstract class HtmlHyperlinkElementUtils implements _UrlBase {
 }
 
 class IFrameElement extends HtmlElement {
+  late final _sandbox = DomTokenList._(this, 'sandbox');
+
   factory IFrameElement() => IFrameElement._(window.document);
 
   IFrameElement._(Document ownerDocument) : super._(ownerDocument, 'IFRAME');
@@ -1149,9 +1194,7 @@ class IFrameElement extends HtmlElement {
     _setAttribute('referrerpolicy', value);
   }
 
-  DomTokenList get sandbox {
-    throw UnimplementedError();
-  }
+  DomTokenList? get sandbox => _sandbox;
 
   String? get src => _getAttributeResolvedUri('src') ?? '';
 

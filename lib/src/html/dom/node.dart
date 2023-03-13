@@ -49,11 +49,15 @@ part of universal_html.internal;
 abstract class CharacterData extends Node
     with _ChildNode, _NonDocumentTypeChildNode
     implements ChildNode, NonDocumentTypeChildNode {
-  String? data;
+  String _data = '';
+  CharacterData._(Document ownerDocument, this._data) : super._(ownerDocument);
+  String? get data => _data;
 
-  CharacterData._(Document ownerDocument, this.data) : super._(ownerDocument);
+  set data(String? value) {
+    _data = value ?? '';
+  }
 
-  int get length => data!.length;
+  int? get length => data?.length;
 
   @override
   Element? get nextElementSibling {
@@ -95,37 +99,37 @@ abstract class CharacterData extends Node
   }
 
   void appendData(String data) {
-    final oldData = this.data!;
+    final oldData = this.data ?? '';
     this.data = '$oldData$data';
   }
 
   void deleteData(int offset, int count) {
-    final oldData = data!;
+    final oldData = data ?? '';
     final a = oldData.substring(0, offset);
     final b = oldData.substring(offset + count);
     data = '$a$b';
   }
 
   void insertData(int offset, String data) {
-    final oldData = this.data!;
+    final oldData = this.data ?? '';
     final a = oldData.substring(0, offset);
     final b = oldData.substring(offset);
     this.data = '$a$data$b';
   }
 
   void replaceData(int offset, int count, String data) {
-    final oldData = this.data!;
+    final oldData = this.data ?? '';
     final a = oldData.substring(0, offset);
     final b = oldData.substring(offset + count);
     this.data = '$a$data$b';
   }
 
   String substringData(int offset, int count) {
-    return data!.substring(offset, offset + count);
+    return (data ?? '').substring(offset, offset + count);
   }
 
   @override
-  String toString() => nodeValue!;
+  String toString() => nodeValue ?? '';
 }
 
 abstract class ChildNode {
@@ -152,7 +156,7 @@ class Comment extends CharacterData {
   @visibleForTesting
   @override
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool? deep) =>
-      Comment.internal(ownerDocument, data!);
+      Comment.internal(ownerDocument, data ?? '');
 }
 
 /// Internal class. __Not part of dart:html__.

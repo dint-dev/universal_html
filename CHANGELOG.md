@@ -1,3 +1,6 @@
+## 2.2.1
+* Fixes small bugs.
+
 ## 2.2.0
 * Allows users to access HTTP request/response when using `WindowController.openHttp`.
 

@@ -438,6 +438,24 @@ void _testElementSubclasses() {
       );
     });
 
+    test('allowFullScreen', () {
+      _testAttributeBool<IFrameElement>(
+        'allowFullscreen',
+        element,
+        (e) => e.allowFullscreen,
+        (e, v) => e.allowFullscreen = v,
+      );
+    });
+
+    test('allowPaymentRequest', () {
+      _testAttributeBool<IFrameElement>(
+        'allowPaymentRequest',
+        element,
+        (e) => e.allowPaymentRequest,
+        (e, v) => e.allowPaymentRequest = v,
+      );
+    });
+
     test('height', () {
       _testAttribute<IFrameElement>(
         name: 'height',
@@ -445,6 +463,24 @@ void _testElementSubclasses() {
         getter: (e) => e.height,
         setter: (e, v) => e.height = v,
       );
+    });
+
+    test('referrerPolicy', () {
+      _testAttribute<IFrameElement>(
+        name: 'referrerPolicy',
+        element: element,
+        getter: (e) => e.referrerPolicy,
+        setter: (e, v) => e.referrerPolicy = v,
+        value: 'no-referrer',
+      );
+    });
+
+    test('sandbox', () {
+      expect(element.sandbox?.length, 0);
+      element.sandbox?.add('x');
+      expect(element.sandbox?.length, 1);
+      element.sandbox?.remove('x');
+      expect(element.sandbox?.length, 0);
     });
 
     test('src', () {

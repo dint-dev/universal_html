@@ -62,7 +62,11 @@ bool _matchesNthChildSelector(
     Element element, css.PseudoClassFunctionSelector selector) {
   // Find index of this node
   var index = 0;
-  for (var sibling in element.parent!.childNodes) {
+  final parent = element.parent;
+  if (parent == null) {
+    return false;
+  }
+  for (var sibling in parent.childNodes) {
     if (identical(sibling, element)) {
       break;
     }
@@ -101,7 +105,7 @@ bool _matchesNthChildSelector(
             return index % 2 == 1;
         }
       }
-      throw _UnsupportedCssSelectorException(selector.span!.text);
+      throw _UnsupportedCssSelectorException(selector.span?.text ?? '');
 
     case 2:
       //
@@ -127,7 +131,7 @@ bool _matchesNthChildSelector(
       final rem = (term2.value as num).toInt();
       return (index % mod) == (rem - 1);
     default:
-      throw _UnsupportedCssSelectorException(selector.span!.text);
+      throw _UnsupportedCssSelectorException(selector.span?.text ?? '');
   }
 }
 
@@ -227,7 +231,7 @@ bool _matchesSelector(
 
     default:
       throw UnsupportedError(
-        'Unsupported combinator "$combinator" in "${simpleSelectorSequence.span!.text}"',
+        'Unsupported combinator "$combinator" in "${simpleSelectorSequence.span?.text}"',
       );
   }
 }
@@ -286,8 +290,11 @@ bool _matchesSimpleSelector(
     //
     // :not(selector)
     //
-    return !_matchesSimpleSelector(
-        element, selector.negationArg!, pseudoElement);
+    final arg = selector.negationArg;
+    if (arg == null) {
+      return false;
+    }
+    return !_matchesSimpleSelector(element, arg, pseudoElement);
   } else if (selector is css.PseudoClassSelector) {
     //
     // :somePseudoSelector
@@ -372,7 +379,7 @@ bool _matchesSimpleSelector(
         return true;
     }
   }
-  throw _UnsupportedCssSelectorException(selector.span!.text);
+  throw _UnsupportedCssSelectorException(selector.span?.text ?? '');
 }
 
 class _UnsupportedCssSelectorException implements Exception {

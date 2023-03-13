@@ -1,4 +1,5 @@
 ## 2.1.0
+* Makes `WindowController` more testing-friendly.
 * Adds `EventSourceOutsideBrowser` interface for changing EventSource HTTP headers
   ([issue #63](https://github.com/dint-dev/universal_html/issues/63)).
 * Adds WindowController.defaultHttpClient, which will be used as default HTTP client by EventSource

@@ -27,7 +27,7 @@ Document newDocument({
 
 HtmlDocument newHtmlDocument({
   required Window window,
-  required String? contentType,
+  String? contentType,
 }) {
   return DomParser().parseFromString(
       '<html></html>', contentType ?? 'text/html') as HtmlDocument;
@@ -65,8 +65,7 @@ class _FakeWindow implements Window {
   String? status;
 
   @override
-  late final Document document =
-      newHtmlDocument(window: this, contentType: 'text/html');
+  late final Document document = newHtmlDocument(window: this);
 
   @override
   // TODO: implement animationFrame

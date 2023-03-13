@@ -21,7 +21,7 @@ void _testController() {
           '<!DOCTYPE html><html><body><h1>Hello world!</h1></body></html>';
       final windowController = WindowController();
       windowController.openContent(content);
-      final document = windowController.window!.document as HtmlDocument;
+      final document = windowController.window.document as HtmlDocument;
       final body = document.body!;
       expect(body.text, 'Hello world!');
     });
@@ -32,9 +32,20 @@ void _testController() {
         '<html><body><h1>Hello world!</h1></body></html>',
         contentType: io.ContentType('text', 'html'),
       );
-      final document = windowController.window!.document as HtmlDocument;
+      final document = windowController.window.document as HtmlDocument;
       final body = document.body!;
       expect(body.text, 'Hello world!');
     });
+
+    test('Mock WindowController', () {
+      final oldWindowController = WindowController.instance;
+      addTearDown(() {
+        WindowController.instance = oldWindowController;
+      });
+      WindowController.instance = WindowControllerMock();
+      expect(WindowController.instance, isA<WindowControllerMock>());
+    });
   });
 }
+
+class WindowControllerMock extends WindowController {}

@@ -14,18 +14,19 @@
 
 import 'dart:async';
 import 'dart:convert' show utf8;
-import 'dart:io' as io;
-import 'dart:io' show ContentType, HttpClient;
+import 'dart:io';
 
 import 'package:universal_html/controller.dart';
-import 'package:universal_html/html.dart';
+import 'package:universal_html/html.dart' as html;
+import 'package:universal_html/html.dart' hide File;
 import 'package:universal_html/parsing.dart' as parsing;
-import 'package:universal_io/io.dart';
+import 'package:universal_io/io.dart' show newUniversalHttpClient;
 
 /// Defines behavior of the browser APIs (such as navigation events).
 ///
 /// # Example
 /// ```
+/// import 'package:universal_html/controller.dart';
 /// import 'package:universal_html/parsing.dart';
 ///
 /// Future<void> main() async {
@@ -38,23 +39,58 @@ import 'package:universal_io/io.dart';
 ///   // ...
 /// }
 /// ```
+///
+/// ## Testing
+/// ```dart
+/// import 'package:universal_html/controller.dart';
+/// import 'package:test/test.dart';
+///
+/// void main() {
+///   setUp(() {
+///     WindowController.instance = WindowController();
+///   });
+///
+///   test('test #1', () {
+///     // ...
+///   });
+///
+///   test('test #2', () {
+///     // ...
+///   });
+/// }
+/// ```
 class WindowController {
-  /// Instance returned by top-level `window` variable.
-  static final WindowController topLevel = WindowController();
+  static final Object _zoneKey = Object();
+  static final _rootScope = _WindowControllerScope(WindowController());
 
-  late Window? _window = windowBehavior.newWindow(windowController: this);
+  static bool _hasChangedInstance = false;
+
+  /// Zone-local, mutable [WindowController].
+  static WindowController get instance {
+    return _scope.windowController;
+  }
+
+  static set instance(WindowController instance) {
+    _hasChangedInstance = true;
+    _scope.windowController = instance;
+  }
+
+  /// Old alias for [instance].
+  ///
+  /// This could be deprecated in future.
+  static WindowController get topLevel => instance;
+
+  static set topLevel(WindowController value) {
+    instance = value;
+  }
+
+  static _WindowControllerScope get _scope =>
+      Zone.current[_zoneKey] as _WindowControllerScope? ?? _rootScope;
+
+  late Window _window = windowBehavior.newWindow(windowController: this);
 
   /// Behavior of the window.
   final WindowBehavior windowBehavior = WindowBehavior();
-
-  /// Returns true if this controller for the top-level window inside a browser.
-  ///
-  /// Very limited features are available in browser.
-  bool get isTopLevelWindowInsideBrowser =>
-      identical(this, topLevel) && !identical(_window, window);
-
-  /// Gets window controlled by this [WindowController].
-  Window? get window => _window;
 
   /// Default [HttpClient].
   ///
@@ -68,11 +104,20 @@ class WindowController {
   late HttpClient Function(Uri uri) onChooseHttpClient =
       (url) => defaultHttpClient;
 
-  /// Sets window.
+  /// Returns true if this controller for the top-level window inside a browser.
   ///
-  /// Attempt to replace top-level window inside browser will cause
-  /// [StateError] to be thrown.
-  set window(Window? window) {
+  /// Very limited features are available in browser.
+  bool get isTopLevelWindowInsideBrowser =>
+      !_hasChangedInstance &&
+      !identical(html.window, _window) &&
+      identical(instance, this);
+
+  /// Gets window controlled by this [WindowController].
+  ///
+  /// Throws [StateError] if modified inside a browser.
+  Window get window => _window;
+
+  set window(Window window) {
     if (isTopLevelWindowInsideBrowser) {
       throw StateError('Failed to mutate the main window inside a browser');
     }
@@ -80,6 +125,8 @@ class WindowController {
   }
 
   /// Opens the content.
+  ///
+  /// Throws [StateError] if called inside a browser.
   void openContent(String content, {ContentType? contentType}) {
     if (isTopLevelWindowInsideBrowser) {
       throw StateError('Failed to mutate the main window inside a browser');
@@ -132,7 +179,9 @@ class WindowController {
   }
 
   /// Opens the file.
-  Future<void> openFile(io.File file) async {
+  ///
+  /// Throws [StateError] if called inside a browser.
+  Future<void> openFile(File file) async {
     if (isTopLevelWindowInsideBrowser) {
       throw StateError('Failed to mutate the main window inside a browser');
     }
@@ -141,6 +190,8 @@ class WindowController {
   }
 
   /// Loads content using HTTP client.
+  ///
+  /// Throws [StateError] if called inside a browser.
   ///
   /// # Example
   /// ```
@@ -179,17 +230,60 @@ class WindowController {
     return openContent(content);
   }
 
-  /// Loads content from "file", "http", or "https" URI.
+  /// Loads content from a file or network URI.
+  ///
+  /// Supported input patterns:
+  ///   * "file:///path/to/file"
+  ///   * "file://localhost/path/to/file"
+  ///   * "http://example.com/path?query=1"
+  ///   * "https://example.com/path?query=1"
   Future<void> openUri(Uri uri) {
+    final originalUri = uri;
     if (!uri.isAbsolute) {
-      uri = Uri.parse(window!.location.href).resolveUri(uri);
+      uri = Uri.parse(window.location.href).resolveUri(uri);
     }
-    if (uri.scheme == 'file') {
-      return openFile(io.File.fromUri(uri));
+    if (uri.scheme == 'file' && (uri.host.isEmpty || uri.host == 'localhost')) {
+      return openFile(File.fromUri(uri));
     }
     if (uri.scheme == 'http' || uri.scheme == 'https') {
       return openHttp(uri: uri);
     }
-    throw ArgumentError.value(uri, 'uri');
+    throw ArgumentError.value(originalUri, 'uri', 'Invalid URI scheme');
   }
+
+  /// Enables zone-local [WindowController] instances.
+  ///
+  /// ## Example
+  /// ```
+  /// import 'package:universal_html/html.dart;
+  ///
+  /// void main() {
+  ///   final zone = WindowController.newZone();
+  ///   final outerWindow = window;
+  ///   zone.run(() {
+  ///     final innerWindow = window;
+  ///     print(identical(outerWindow, innerWindow)); // --> false
+  ///   });
+  /// }
+  /// ```
+  static Zone newZone() {
+    return newZoneWith(WindowController());
+  }
+
+  /// Returns a new [Zone] with the given [windowController].
+  ///
+  /// ## Example
+  ///
+  /// See [WindowController.newZone].
+  static Zone newZoneWith(WindowController windowController) {
+    _hasChangedInstance = true;
+    return Zone.current
+        .fork(zoneValues: {_zoneKey: _WindowControllerScope(windowController)});
+  }
+}
+
+class _WindowControllerScope {
+  WindowController windowController;
+
+  _WindowControllerScope(this.windowController);
 }

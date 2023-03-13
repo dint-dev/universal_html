@@ -150,3 +150,23 @@ Future<void> main() async {
   }
 }
 ```
+
+## Testing
+```dart
+import 'package:universal_html/controller.dart';
+import 'package:test/test.dart';
+
+void main() {
+  setUp(() {
+    WindowController.instance = WindowController();
+  });
+  
+  test('test #1', () {
+    // ...
+  });
+  
+  test('test #2', () {
+    // ...
+  });
+}
+```

@@ -2348,6 +2348,13 @@ abstract class Element extends Node
     NodeValidator? validator,
     NodeTreeSanitizer? treeSanitizer,
   }) {
+    if (this is IFrameElement) {
+      childNodes.clear();
+      if (html != null) {
+        innerText = html;
+      }
+      return;
+    }
     while (true) {
       final firstChild = this.firstChild;
       if (firstChild == null) {

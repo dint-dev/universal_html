@@ -127,6 +127,16 @@ class WindowController {
   /// Opens the content.
   ///
   /// Throws [StateError] if called inside a browser.
+  ///
+  /// ## Example
+  /// ```dart
+  /// import 'package:universal_html/controller.dart';
+  ///
+  /// void main() {
+  ///   final controller = WindowController();
+  ///   controller.openContent('<html><body>Hello</body></html>');
+  /// }
+  /// ```
   void openContent(String content, {ContentType? contentType}) {
     if (isTopLevelWindowInsideBrowser) {
       throw StateError('Failed to mutate the main window inside a browser');
@@ -181,6 +191,17 @@ class WindowController {
   /// Opens the file.
   ///
   /// Throws [StateError] if called inside a browser.
+  ///
+  /// ## Example
+  /// ```dart
+  /// import 'dart:io';
+  /// import 'package:universal_html/controller.dart';
+  ///
+  /// void main() {
+  ///   final controller = WindowController();
+  ///   controller.openFile(File('index.html'));
+  /// }
+  /// ```
   Future<void> openFile(File file) async {
     if (isTopLevelWindowInsideBrowser) {
       throw StateError('Failed to mutate the main window inside a browser');
@@ -195,22 +216,41 @@ class WindowController {
   ///
   /// # Example
   /// ```
-  /// import 'package:universal_html/parsing.dart';
+  /// import 'dart:io' show Cookie;
+  /// import 'package:universal_html/controller.dart';
   ///
-  /// Future<void> main() async {
+  /// Future main() async {
+  ///   // Load a document.
   ///   final controller = WindowController();
+  ///   controller.defaultHttpClient.userAgent = 'My Hacker News client';
   ///   await controller.openHttp(
   ///     method: 'GET',
-  ///     uri: Uri.parse('https://www.ietf.org/'),
+  ///     uri: Uri.parse("https://news.ycombinator.com/"),
+  ///     onRequest: (HttpClientRequest request) {
+  ///       // Add custom headers
+  ///       request.headers.set('Authorization', 'headerValue');
+  ///       request.cookies.add(Cookie('cookieName', 'cookieValue'));
+  ///     },
+  ///     onResponse: (HttpClientResponse response) {
+  ///       print('Status code: ${response.statusCode}');
+  ///     },
   ///   );
-  ///   final document = controller.window.document;
-  ///   // ...
+  ///
+  ///   // Select the top story using a CSS query
+  ///   final titleElements = controller.document.querySelectorAll(".athing > .title");
+  ///   final topStoryTitle = titleElements.first.text;
+  ///
+  ///   // Print result
+  ///   print("Top Hacker News story is: $topStoryTitle");
+  /// }
   /// }
   /// ```
   Future<void> openHttp({
     String method = 'GET',
     required Uri uri,
     ContentType? contentType,
+    void Function(HttpClientRequest request)? onRequest,
+    void Function(HttpClientResponse response)? onResponse,
   }) async {
     if (isTopLevelWindowInsideBrowser) {
       throw StateError('Failed to mutate the main window inside a browser');
@@ -219,15 +259,22 @@ class WindowController {
     // Write HTTP request.
     final client = onChooseHttpClient(uri);
     final request = await client.openUrl(method, uri);
+    if (onRequest != null) {
+      onRequest(request);
+    }
     if (contentType != null) {
       request.headers.contentType = contentType;
     }
 
     // Read HTTP response.
     final response = await request.close();
-    final content = await utf8.decodeStream(response);
+    final future = utf8.decodeStream(response);
+    if (onResponse != null) {
+      onResponse(response);
+    }
+    final content = await future;
 
-    return openContent(content);
+    return openContent(content, contentType: response.headers.contentType);
   }
 
   /// Loads content from a file or network URI.

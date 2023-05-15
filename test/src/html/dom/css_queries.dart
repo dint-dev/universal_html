@@ -125,13 +125,24 @@ void _testCss() {
       test(':nth-child(2)', () {
         final e = DivElement()
           ..id = 'root'
-          ..append(DivElement()..id = 'child0')
+          ..append(DivElement()
+            ..id = 'child0'
+            ..append(DivElement()..append(DivElement())))
           ..append(DivElement()..id = 'child1');
         expectMatches(e.childNodes[0] as Element, ':nth-child(1)', isTrue);
         expectMatches(e.childNodes[0] as Element, ':nth-child(2)', isFalse);
         expectMatches(e.childNodes[1] as Element, ':nth-child(1)', isFalse);
         expectMatches(e.childNodes[1] as Element, ':nth-child(2)', isTrue);
         expectMatches(e.childNodes[1] as Element, ':nth-child(3)', isFalse);
+
+        final p = DivElement()..append(e);
+        expect(p.querySelectorAll('#root'), hasLength(1));
+        expect(p.querySelectorAll('#root div'), hasLength(4));
+        expect(p.querySelectorAll('#root div:nth-child(0)'), hasLength(0));
+        expect(p.querySelectorAll('#root div:nth-child(1)'), hasLength(3));
+        expect(p.querySelectorAll('#root > div:nth-child(1)'), hasLength(1));
+        expect(p.querySelectorAll('#root div:nth-child(2)'), hasLength(1));
+        expect(p.querySelectorAll('#root div:nth-child(3)'), hasLength(0));
       });
       test(':nth-child(2n)', () {
         final e = DivElement()

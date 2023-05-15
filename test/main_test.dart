@@ -23,6 +23,7 @@ import 'package:test/test.dart';
 import 'package:universal_html/controller.dart';
 import 'package:universal_html/html.dart' hide document;
 import 'package:universal_html/html.dart' as universal_html;
+import 'package:universal_html/parsing.dart';
 import 'package:universal_html/src/internal/event_stream_decoder.dart';
 import 'package:universal_io/io.dart' as io;
 

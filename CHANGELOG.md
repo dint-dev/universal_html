@@ -1,3 +1,12 @@
+## 2.2.2
+* Fixes [Issue #72: "please add flutter 3.10 full support and update package on pub"](https://github.com/dint-dev/universal_html/issues/72).
+
+## 2.2.1
+* Fixes small bugs.
+
+## 2.2.0
+* Allows users to access HTTP request/response when using `WindowController.openHttp`.
+
 ## 2.1.0
 * Makes `WindowController` more testing-friendly.
 * Adds `EventSourceOutsideBrowser` interface for changing EventSource HTTP headers

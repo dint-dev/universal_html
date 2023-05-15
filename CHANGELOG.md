@@ -1,3 +1,6 @@
+## 2.2.2
+* Fixes [Issue #72: "please add flutter 3.10 full support and update package on pub"](https://github.com/dint-dev/universal_html/issues/72).
+
 ## 2.2.1
 * Fixes small bugs.
 

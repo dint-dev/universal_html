@@ -8,13 +8,20 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        sdk: [stable, beta, dev]
+        channel: [stable, beta, dev]
     steps:
       - uses: actions/checkout@v3
-      - uses: dart-lang/setup-dart@v1
+      - uses: subosito/flutter-action@v2
         with:
-          sdk: ${{ matrix.sdk }}
-      - name: Install dependencies
+          channel: ${{ matrix.channel }}
+      - run: flutter --version
+      - name: Install dependencies (Dart)
         run: dart pub get
-      - name: Run tests
-        run: dart test --platform vm
+      - name: Install dependencies (Flutter)
+        run: flutter pub get
+        working-directory: test_in_flutter
+      - name: Run tests (Dart)
+        run: dart test --platform=vm
+      - name: Run tests (Flutter)
+        run: flutter test
+        working-directory: test_in_flutter

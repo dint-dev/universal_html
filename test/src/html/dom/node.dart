@@ -139,7 +139,9 @@ void _testNode() {
       expect(e.text, '');
       e.appendText('a');
       expect(e.text, 'a');
-      e.append(Element.tag('innerElement')..appendText('')..appendText('b'));
+      e.append(Element.tag('innerElement')
+        ..appendText('')
+        ..appendText('b'));
       expect(e.text, 'ab');
       e.append(Comment('not text'));
       expect(e.text, 'ab');
@@ -265,30 +267,30 @@ void _testNode() {
   });
 
   group('CharacterData', () {
-    test('appendData', () {
-      final node = Comment('ab');
-      node.appendData('c');
-      expect(node.nodeValue, 'abc');
+    late CharacterData node;
+    setUp(() {
+      node = Text('abc');
     });
     test('deleteData', () {
-      final node = Comment('abcde');
       node.deleteData(2, 1);
-      expect(node.nodeValue, 'abde');
+      expect(node.nodeValue, 'ab');
     });
     test('insertData', () {
-      final node = Comment('abde');
       node.insertData(2, 'c');
-      expect(node.nodeValue, 'abcde');
+      expect(node.nodeValue, 'abcc');
     });
     test('replaceData', () {
-      final node = Comment('abXde');
       node.replaceData(2, 1, 'c');
-      expect(node.nodeValue, 'abcde');
+      expect(node.nodeValue, 'abc');
     });
     test('text', () {
-      final node = Comment('awert');
       node.text = 'abXde';
       expect(node.text, 'abXde');
+    });
+    test('text', () {
+      expect(node.data, 'abc');
+      node.data = null;
+      expect(node.data, '');
     });
   });
 

@@ -91,6 +91,15 @@ class Console {
 
   void log(Object? arg) {}
 
+  // The following is deprecated and should be removed once we drop support for
+  // older Safari browsers.
+  void markTimeline(Object? arg) {}
+
+  // The following are non-standard methods.
+  void profile([String? title]) {}
+
+  void profileEnd([String? title]) {}
+
   void table([Object? tabularData, List<String>? properties]) {}
 
   void time([String? label]) {}
@@ -99,18 +108,9 @@ class Console {
 
   void timeLog([String? label, Object? arg]) {}
 
+  void timeStamp([Object? arg]) {}
+
   void trace(Object? arg) {}
 
   void warn(Object? arg) {}
-
-  // The following are non-standard methods.
-  void profile([String? title]) {}
-
-  void profileEnd([String? title]) {}
-
-  void timeStamp([Object? arg]) {}
-
-  // The following is deprecated and should be removed once we drop support for
-  // older Safari browsers.
-  void markTimeline(Object? arg) {}
 }

@@ -293,8 +293,10 @@ class _ContentCssListRect extends _ContentCssRect {
   /// function in jQuery and the calculated `height` CSS value, converted to a
   /// num in pixels.
   @override
-  set height(newHeight) {
-    _elementList.forEach((e) => e.contentEdge.height = newHeight);
+  set height(Object? newHeight) {
+    for (var e in _elementList) {
+      e.contentEdge.height = newHeight;
+    }
   }
 
   /// Set the current computed width in pixels of this element.
@@ -302,8 +304,10 @@ class _ContentCssListRect extends _ContentCssRect {
   /// This is equivalent to the `width` function in jQuery and the calculated
   /// `width` CSS value, converted to a dimensionless num in pixels.
   @override
-  set width(newWidth) {
-    _elementList.forEach((e) => e.contentEdge.width = newWidth);
+  set width(Object? newWidth) {
+    for (var e in _elementList) {
+      e.contentEdge.width = newWidth;
+    }
   }
 }
 

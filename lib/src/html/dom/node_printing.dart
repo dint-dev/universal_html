@@ -175,6 +175,10 @@ void _printNode(StringBuffer sb, int flags, Node node) {
 
     case Node.TEXT_NODE:
       final value = node.nodeValue!;
+      if (node.parent is IFrameElement) {
+        sb.write(value);
+        return;
+      }
 
       // The choice of escaped characters should be identical to
       // 'outerHTML' in Chrome.

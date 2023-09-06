@@ -14,30 +14,29 @@
 
 // The library name is needed for generating differences between our library
 // and dart:html.
-
 library universal_html.internal;
 
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert' show json, utf8;
+import 'dart:io' as io;
 import 'dart:math' show Rectangle;
 import 'dart:math' show Random;
 import 'dart:math' show Point, min, max;
 import 'dart:typed_data';
 
-import 'package:async/async.dart' show collectBytes;
 import 'package:charcode/ascii.dart' as charcode;
 import 'package:collection/collection.dart';
 import 'package:csslib/parser.dart' as css;
 import 'package:csslib/visitor.dart' as css;
 import 'package:meta/meta.dart';
+import 'package:typed_data/typed_buffers.dart';
 import 'package:universal_html/html.dart' as universal_html_in_browser_or_vm;
-import 'package:universal_io/io.dart' as io;
 
 import '../controller.dart';
+import 'html.dart' as universal_html;
 import 'html/_dom_parser_driver.dart' show DomParserDriver;
 import 'html/dom/shared_with_dart2js/metadata.dart';
-import 'html.dart' as universal_html;
 import 'indexed_db.dart';
 import 'internal/event_stream_decoder.dart';
 import 'internal/multipart_form_writer.dart';
@@ -49,6 +48,7 @@ export 'dart:math' show Point, Rectangle;
 
 export 'package:universal_io/io.dart' show HttpStatus;
 
+export 'html_top_level_functions.dart';
 export 'js_util.dart' show promiseToFuture;
 
 part 'html/api/accessible_node.dart';

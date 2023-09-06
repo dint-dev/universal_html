@@ -21,7 +21,7 @@ void _testWindowControllerNetworking() {
     );
     final windowController = WindowController();
     await windowController.openHttp(uri: uri);
-    final document = windowController.window!.document as HtmlDocument;
+    final document = windowController.window.document as HtmlDocument;
     final body = document.body!;
     expect(body.text, 'Hello world!');
   }, tags: 'networking');

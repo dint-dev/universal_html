@@ -454,7 +454,8 @@ class HttpRequest extends HttpRequestEventTarget {
       return;
     }
 
-    final httpClient = io.HttpClient();
+    final httpClient =
+        window.internalWindowController.onChooseHttpClient(_requestUrl!);
     try {
       // Wait for request
       final httpRequest =
@@ -500,7 +501,14 @@ class HttpRequest extends HttpRequestEventTarget {
       _setReadyState(HEADERS_RECEIVED);
 
       // Wait for response data
-      final responseData = await collectBytes(httpResponse);
+      final buffer = Uint8Buffer();
+      await for (var chunk in httpResponse) {
+        // Was this request aborted while we waited?
+        if (_requestId != requestId) {
+          return;
+        }
+        buffer.addAll(chunk);
+      }
 
       // Was this request aborted while we waited?
       if (_requestId != requestId) {
@@ -508,7 +516,7 @@ class HttpRequest extends HttpRequestEventTarget {
       }
 
       // Set response data
-      _responseData = responseData;
+      _responseData = Uint8List.fromList(buffer);
     } catch (error) {
       dispatchEvent(ProgressEvent('error'));
     } finally {

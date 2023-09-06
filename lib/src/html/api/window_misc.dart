@@ -153,11 +153,11 @@ class Screen {
 
   bool keepAwake;
 
-  final ScreenOrientation orientation = ScreenOrientation._();
+  final ScreenOrientation orientation = ScreenOrientation.constructor();
 
   final int width;
 
-  Screen._({
+  Screen.constructor({
     this.colorDepth = 24,
     this.height = 800,
     this.keepAwake = false,
@@ -177,7 +177,7 @@ class ScreenOrientation extends EventTarget {
 
   final String type;
 
-  ScreenOrientation._({this.angle = 1, this.type = 'vertical'})
+  ScreenOrientation.constructor({this.angle = 1, this.type = 'vertical'})
       : super.internal();
 
   Stream<Event> get onChange => changeEvent.forTarget(this);
@@ -214,7 +214,7 @@ abstract class Selection {
 
   final String? type;
 
-  Selection._({
+  Selection.constructor({
     this.anchorNode,
     this.anchorOffset,
     this.baseNode,
@@ -328,4 +328,4 @@ abstract class VisualViewport implements EventTarget {
   num get width;
 }
 
-abstract class _Worklet {}
+abstract class Worklet {}

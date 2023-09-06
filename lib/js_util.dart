@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// Cross-platform "dart:js_util" library.
 library universal_html.js_util;
 
 export 'src/_sdk/js_util.dart'

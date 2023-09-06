@@ -63,13 +63,13 @@ abstract class MemoryInfo {
 @SupportedBrowser(SupportedBrowser.IE)
 @Native('Performance')
 class Performance extends EventTarget {
+  /// Checks if this type is supported on the current platform.
+  static bool get supported => false;
+
   // To suppress missing implicit constructor warnings.
   factory Performance._() {
     throw UnimplementedError();
   }
-
-  /// Checks if this type is supported on the current platform.
-  static bool get supported => false;
 
   MemoryInfo? get memory {
     throw UnimplementedError();

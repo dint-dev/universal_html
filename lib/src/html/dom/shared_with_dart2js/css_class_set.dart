@@ -287,7 +287,6 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
       return false;
     }
     _validateToken(value);
-    if (value is! String) return false;
     final s = readClasses();
     final result = s.remove(value);
     writeClasses(s);
@@ -368,7 +367,9 @@ abstract class _CssClassSetImpl extends SetBase<String> implements CssClassSet {
   /// [iterable] from the element.
   @override
   void toggleAll(Iterable<String> iterable, [bool? shouldAdd]) {
-    iterable.forEach((e) => toggle(e, shouldAdd));
+    for (var e in iterable) {
+      toggle(e, shouldAdd);
+    }
   }
 
   @override
@@ -456,14 +457,18 @@ class _MultiElementCssClassSet extends _CssClassSetImpl {
   ///       className property of this element.
   @override
   R? modify<R>(R Function(Set<String> s) f) {
-    _sets.forEach((_CssClassSetImpl e) => e.modify(f));
+    for (var e in _sets) {
+      e.modify(f);
+    }
     return null;
   }
 
   @override
   Set<String> readClasses() {
     var s = <String>{};
-    _sets.forEach((_CssClassSetImpl e) => s.addAll(e.readClasses()));
+    for (var e in _sets) {
+      s.addAll(e.readClasses());
+    }
     return s;
   }
 

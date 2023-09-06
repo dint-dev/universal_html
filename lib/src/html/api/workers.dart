@@ -64,7 +64,7 @@ class BackgroundFetchFetch {
     throw UnimplementedError();
   }
 
-  _Request? get request => null;
+  Request? get request => null;
 }
 
 class BackgroundFetchManager {
@@ -107,11 +107,11 @@ class BackgroundFetchRegistration extends EventTarget {
 }
 
 class BackgroundFetchSettledFetch extends BackgroundFetchFetch {
-  factory BackgroundFetchSettledFetch(_Request request, _Response response) {
+  factory BackgroundFetchSettledFetch(Request request, Response response) {
     throw UnimplementedError();
   }
 
-  _Response? get response => null;
+  Response? get response => null;
 }
 
 abstract class Body {
@@ -299,6 +299,40 @@ abstract class PushSubscriptionOptions {
   ByteBuffer get applicationServerKey;
 
   bool get userVisibleOnly;
+}
+
+@Native('Request')
+class Request extends Body {
+  factory Request() {
+    throw UnimplementedError();
+  }
+
+  String? get cache => null;
+
+  String? get credentials => null;
+
+  Headers? get headers => null;
+
+  String? get integrity => null;
+
+  String? get mode => null;
+
+  String? get redirect => null;
+
+  String? get referrer => null;
+
+  String? get referrerPolicy => null;
+
+  String? get url => null;
+
+  Request clone() => throw UnimplementedError();
+}
+
+@Native('Response')
+abstract class Response extends Body {
+  factory Response() {
+    throw UnimplementedError();
+  }
 }
 
 @Native('ServiceWorker')
@@ -571,7 +605,7 @@ class WorkerGlobalScope extends EventTarget {
 
   Location get location => throw UnimplementedError();
 
-  _WorkerNavigator get navigator => throw UnimplementedError();
+  WorkerNavigator get navigator => throw UnimplementedError();
 
   /// Stream of `error` events handled by this [WorkerGlobalScope].
   Stream<Event> get onError => errorEvent.forTarget(this);
@@ -597,6 +631,15 @@ class WorkerGlobalScope extends EventTarget {
   }
 
   void importScripts(String urls) {
+    throw UnimplementedError();
+  }
+}
+
+@Native('WorkerNavigator')
+abstract class WorkerNavigator extends NavigatorConcurrentHardware
+    implements NavigatorOnLine, NavigatorID {
+  // To suppress missing implicit constructor warnings.
+  factory WorkerNavigator._() {
     throw UnimplementedError();
   }
 }
@@ -684,49 +727,6 @@ class WorkletAnimation {
 class WorkletGlobalScope {
   // To suppress missing implicit constructor warnings.
   factory WorkletGlobalScope._() {
-    throw UnimplementedError();
-  }
-}
-
-@Native('Request')
-class _Request extends Body {
-  factory _Request() {
-    throw UnimplementedError();
-  }
-
-  String? get cache => null;
-
-  String? get credentials => null;
-
-  Headers? get headers => null;
-
-  String? get integrity => null;
-
-  String? get mode => null;
-
-  String? get redirect => null;
-
-  String? get referrer => null;
-
-  String? get referrerPolicy => null;
-
-  String? get url => null;
-
-  _Request clone() => throw UnimplementedError();
-}
-
-@Native('Response')
-abstract class _Response extends Body {
-  factory _Response() {
-    throw UnimplementedError();
-  }
-}
-
-@Native('WorkerNavigator')
-abstract class _WorkerNavigator extends NavigatorConcurrentHardware
-    implements NavigatorOnLine, NavigatorID {
-  // To suppress missing implicit constructor warnings.
-  factory _WorkerNavigator._() {
     throw UnimplementedError();
   }
 }

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// Cross-platform "dart:web_gl" library.
 library universal_html.web_gl;
 
 export 'src/_sdk/web_gl.dart'

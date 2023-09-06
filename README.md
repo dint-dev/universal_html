@@ -1,24 +1,25 @@
 [![Pub Package](https://img.shields.io/pub/v/universal_html.svg)](https://pub.dartlang.org/packages/universal_html)
-[![Github Actions CI](https://github.com/dint-dev/universal_html/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/universal_html/actions?query=workflow%3A%22Dart+CI%22)
+[![package publisher](https://img.shields.io/pub/publisher/universal_html.svg)](https://pub.dev/packages/universal_html/publisher)
+[![Github Actions CI](https://github.com/dint-dev/universal_html/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/universal_html/actions)
 
 # Introduction
 A cross-platform `dart:html`:
   * __Eases cross-platform development__
-    * You can use this package in browsers, mobile, desktop, and server-side VM, and server-side
-      Javascript (Node.JS, Cloud Functions, etc.).
+    * You can use this package in browsers, mobile, desktop, and server-side VM, and Node.JS.
     * Just replace `dart:html` imports with `package:universal_html/html.dart`. Normal
       _dart:html_ will continue to be used when application run in browsers.
   * __Extensive support for processing HTML and XML documents__
-    * Parse, manipulate, and print [DOM nodes](https://pub.dev/documentation/universal_html/latest/universal_html/Node-class.html).
-    * Find DOM nodes with [querySelectorAll](https://pub.dev/documentation/universal_html/latest/universal_html/querySelectorAll.html)
+    * Parse, manipulate, and print [DOM nodes](https://api.dart.dev/stable/2.19.3/dart-html/Node-class.html).
+    * Find DOM nodes with [querySelectorAll](https://api.dart.dev/stable/2.19.3/dart-html/querySelectorAll.html)
       and other CSS query methods.
-    * Submit forms and more.
   * __EventSource streaming support__
-    * Implements _dart:html_ [EventSource API](https://developer.mozilla.org/en-US/docs/Web/API/EventSource).
+    * Cross-platform _dart:html_ `EventSource` ("application/event-stream").
+    * If you want to customize EventSource HTTP headers outside browsers, see
+      [EventSourceOutsideBrowser](https://pub.dev/documentation/universal_html/latest/universal_html/EventSourceOutsideBrowser-class.html).
 
 The project is licensed under the [Apache License 2.0](LICENSE). Some of the source code was adopted
-from the original [dart:html](https://github.com/dart-lang/sdk/tree/master/tools/dom), which is
-documented in the relevant files.
+from the original [dart:html](https://github.com/dart-lang/sdk/tree/master/tools/dom) in Dart SDK,
+which is documented in the relevant files.
 
 ## Documentation
   * [API reference](https://pub.dev/documentation/universal_html/latest/)
@@ -34,7 +35,7 @@ documented in the relevant files.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^2.0.8
+  universal_html: ^2.2.3
 ```
 
 ## 2. Use
@@ -57,20 +58,6 @@ void main() {
   // --> Hello world
 }
 ```
-
-## Implemented APIs
-### Summary
-  * __Document node classes__
-  * __DOM parsing__
-    * Use _element.innerHtml_ setter, _DomParser_, or _package:universal_html/parsing.dart_.
-    * HTML parsing uses [package:html](https://pub.dev/packages/html), CSS parsing uses
-      [package:csslib](https://pub.dev/packages/csslib), and XML parsing uses our own parser.
-  * __DOM printing__
-    * Use _element.innerHtml_ or _element.outerHtml_.
-  * __DOM events__
-    * For example, _element.onClick.listen(...)_ receives invocation of _element.click()_.
-  * __CSS classes__ (_CssStyleDeclaration_, etc.)
-  * __Most CSS queries__
 
 # Examples
 ## Parsing HTML
@@ -99,19 +86,99 @@ void main() {
 Load a _Window_ with [WindowController](https://pub.dev/documentation/universal_html/latest/universal_html.controller/WindowController-class.html):
 
 ```dart
+import 'dart:io' show Cookie;
 import 'package:universal_html/controller.dart';
 
 Future main() async {
   // Load a document.
   final controller = WindowController();
+  controller.defaultHttpClient.userAgent = 'My Hacker News client';
   await controller.openHttp(
+    method: 'GET',
     uri: Uri.parse("https://news.ycombinator.com/"),
+    onRequest: (HttpClientRequest request) {
+      // Add custom headers
+      request.headers.set('Authorization', 'headerValue');
+      request.cookies.add(Cookie('cookieName', 'cookieValue'));
+    },
+    onResponse: (HttpClientResponse response) {
+      print('Status code: ${response.statusCode}');
+    },
   );
 
   // Select the top story using a CSS query
-  final topStoryTitle = controller.document.querySelectorAll(".athing > .title").first.text;
+  final titleElements = controller.document.querySelectorAll(".athing > .title");
+  final topStoryTitle = titleElements.first.text;
 
   // Print result
   print("Top Hacker News story is: $topStoryTitle");
+}
+```
+
+## EventSource
+`EventSource` ([see mozilla.org](https://developer.mozilla.org/en-US/docs/Web/API/EventSource))
+is a browser API for reading "application/event-stream" streams. It has been supported by browsers
+for a long time.
+
+```dart
+import 'package:universal_html/html.dart';
+
+Future<void> main() async {
+  final eventSource = EventSource('http://example.com/events');
+  await for (var message in event.onMessage) {
+    print('Event type: ${message.type}');
+    print('Event data: ${message.data}');
+  }
+}
+```
+
+EventSource requests from real browsers are typically authenticated using cookies.
+If you want to add cookies or customize other HTTP headers, you need to use
+[EventSourceOutsideBrowser](https://pub.dev/documentation/universal_html/latest/universal_html/EventSourceOutsideBrowser-class.html):
+```dart
+import 'package:universal_html/universal_html.dart';
+import 'dart:io' show Cookie;
+
+Future<void> main() async {
+  final eventSource = EventSource('http://example.com/events');
+  
+  // The following block will NOT be executed in browsers.
+  // Because compiler can infer instances of EventSourceOutsideBrowser are never constructed,
+  // it will not appear in Javascript either.
+  if (eventSource is EventSourceOutsideBrowser) {
+    eventSource.onHttpClientRequest = (eventSource, request) {
+      request.headers.set('Authorization', 'example');
+      request.cookies.add(Cookie('name', 'value'));
+    };
+    eventSource.onHttpClientResponse = (eventSource, request, response) {
+      // ...
+    };
+  }
+  
+  await for (var message in eventSource.onMessage) {
+    print('Event:');
+    print('  type: ${message.type}');
+    print('  data: ${message.data}');
+  }
+}
+```
+
+## Testing
+```dart
+import 'package:universal_html/controller.dart';
+import 'package:test/test.dart';
+
+void main() {
+  setUp(() {
+    WindowController.instance = WindowController();
+  });
+  
+  test('test #1', () {
+    // ...
+  });
+  
+  test('test #2', () {
+    // ...
+  });
 }
 ```

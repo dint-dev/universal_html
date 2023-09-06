@@ -30,18 +30,18 @@ void _testDocument() {
       expect(htmlHtml, const TypeMatcher<HtmlHtmlElement>());
 
       // Helper that skips text nodes
-      Node? _nonText(Node? node) {
+      Node? nonText(Node? node) {
         while (node != null && node.nodeType == Node.TEXT_NODE) {
           node = node.nextNode;
         }
         return node;
       }
 
-      final head = _nonText(htmlHtml.firstChild!)!;
+      final head = nonText(htmlHtml.firstChild!)!;
       expect(head, const TypeMatcher<HeadElement>());
       expect(document.head, same(head));
 
-      final body = _nonText(head.nextNode!);
+      final body = nonText(head.nextNode!);
       expect(body, const TypeMatcher<BodyElement>());
       expect(document.body, same(body));
     });

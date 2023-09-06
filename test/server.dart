@@ -50,10 +50,12 @@ Future<void> handleHttpRequest(HttpRequest request) async {
       // -----------------
 
       case '/hello_world.html':
+        response.headers.contentType = ContentType.html;
         response.write('<html><body><h1>Hello world!</h1></body></html>');
         break;
 
       case '/http_request/ok':
+        response.headers.contentType = ContentType.text;
         response.write('hello');
         break;
 

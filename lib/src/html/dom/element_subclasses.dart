@@ -51,7 +51,6 @@ class AnchorElement extends HtmlElement
     implements HtmlHyperlinkElementUtils {
   factory AnchorElement({String? href}) {
     final element = AnchorElement._(window.document);
-    ;
     if (href != null) {
       element.href = href;
     }
@@ -612,34 +611,77 @@ class DListElement extends HtmlElement {
 }
 
 class DomTokenList {
-  DomTokenList._();
+  final Element _element;
+  final String _name;
+
+  DomTokenList._(this._element, this._name);
+
+  int get length => _getList().length;
 
   void add(String tokens) {
-    throw UnimplementedError();
+    final list = _getList();
+    final splitTokens =
+        tokens.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty);
+    list.addAll(splitTokens);
+    _setList(list);
   }
 
   bool contains(String token) {
-    throw UnimplementedError();
+    return _getList().contains(token);
   }
 
   String item(int index) {
-    throw UnimplementedError();
+    return _getList()[index];
   }
 
   void remove(String tokens) {
-    throw UnimplementedError();
+    final list = _getList();
+    final splitTokens =
+        tokens.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty);
+    for (var token in splitTokens) {
+      list.remove(token);
+    }
+    _setList(list);
   }
 
   void replace(String token, String newToken) {
-    throw UnimplementedError();
+    final list = _getList();
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] == token) {
+        list[i] = newToken;
+      }
+    }
+    _setList(list);
   }
 
   bool supports(String token) {
-    throw UnimplementedError();
+    return true;
   }
 
   bool toggle(String token, [bool? force]) {
-    throw UnimplementedError();
+    if (contains(token)) {
+      remove(token);
+      return true;
+    } else {
+      add(token);
+      return false;
+    }
+  }
+
+  List<String> _getList() {
+    final value = _element._getAttribute(_name);
+    if (value == null || value.isEmpty) {
+      return <String>[];
+    }
+    return value
+        .split(' ')
+        .map((e) => e.trim())
+        .where((e) => e.trim().isNotEmpty)
+        .toList();
+  }
+
+  void _setList(List<String> list) {
+    _element._setAttribute(_name, list.join(' '));
   }
 }
 
@@ -847,7 +889,7 @@ class FormElement extends HtmlElement {
   Future<void> _sendMultiPart(
     Uri uri,
   ) async {
-    final httpClient = io.HttpClient();
+    final httpClient = window.internalWindowController.onChooseHttpClient(uri);
     final httpRequest = await httpClient.openUrl(method ?? 'POST', uri);
 
     final writer = MultipartFormWriter(httpRequest);
@@ -934,7 +976,8 @@ class FormElement extends HtmlElement {
         );
 
       case 'post':
-        final httpClient = io.HttpClient();
+        final httpClient =
+            window.internalWindowController.onChooseHttpClient(uri);
         final httpRequest = await httpClient.openUrl(method, uri);
         httpRequest.headers.contentType = io.ContentType(
           'application',
@@ -1107,6 +1150,8 @@ abstract class HtmlHyperlinkElementUtils implements _UrlBase {
 }
 
 class IFrameElement extends HtmlElement {
+  late final _sandbox = DomTokenList._(this, 'sandbox');
+
   factory IFrameElement() => IFrameElement._(window.document);
 
   IFrameElement._(Document ownerDocument) : super._(ownerDocument, 'IFRAME');
@@ -1155,9 +1200,7 @@ class IFrameElement extends HtmlElement {
     _setAttribute('referrerpolicy', value);
   }
 
-  DomTokenList get sandbox {
-    throw UnimplementedError();
-  }
+  DomTokenList? get sandbox => _sandbox;
 
   String? get src => _getAttributeResolvedUri('src') ?? '';
 
@@ -1604,7 +1647,7 @@ class InputElement extends HtmlElement
 
   @override
   ValidityState get validity {
-    return ValidityState._();
+    return ValidityState.constructor();
   }
 
   @override
@@ -2236,12 +2279,10 @@ class OptionElement extends HtmlElement
     final siblings = selectElement.options;
     var i = 0;
     for (var sibling in siblings) {
-      if (sibling is OptionElement) {
-        if (identical(sibling, this)) {
-          return i;
-        }
-        i++;
+      if (identical(sibling, this)) {
+        return i;
       }
+      i++;
     }
     return null;
   }
@@ -2251,7 +2292,7 @@ class OptionElement extends HtmlElement
   set selected(bool? value) {
     final selectElement = _selectElement;
     if (selectElement == null) {
-      return null;
+      return;
     }
     _selected = value;
     if (selectElement.multiple == false) {
@@ -2564,7 +2605,7 @@ class SelectElement extends HtmlElement
 
   String get validationMessage => '';
 
-  ValidityState get validity => ValidityState._();
+  ValidityState get validity => ValidityState.constructor();
 
   String get value {
     final options = this.options;
@@ -2714,8 +2755,8 @@ class StyleElement extends HtmlElement {
       return null;
     }
     final text = this.text;
-    final parsed = css.parse(text);
-    final styleSheet = CssStyleSheet._();
+    final parsed = css.parse(text as String);
+    final styleSheet = CssStyleSheet.constructor();
     for (var node in parsed.topLevels) {
       if (node is css.RuleSet) {
         final styleRule = CssStyleRule.internal(styleSheet, node);
@@ -3133,7 +3174,7 @@ class TextAreaElement extends HtmlElement
 
   String? get validationMessage => null;
 
-  ValidityState get validity => ValidityState._();
+  ValidityState get validity => ValidityState.constructor();
 
   String get value => text ?? '';
 
@@ -3280,7 +3321,7 @@ class ValidityState {
   final bool? valid;
   final bool? valueMissing;
 
-  ValidityState._({
+  ValidityState.constructor({
     this.badInput,
     this.customError,
     this.patternMismatch,

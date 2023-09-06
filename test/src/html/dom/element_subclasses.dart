@@ -315,7 +315,7 @@ void _testElementSubclasses() {
     });
 
     test('click', () {
-      element.onClick.listen(expectAsync1((event) => null));
+      element.onClick.listen(expectAsync1((event) {}));
       element.click();
     });
 
@@ -438,6 +438,24 @@ void _testElementSubclasses() {
       );
     });
 
+    test('allowFullScreen', () {
+      _testAttributeBool<IFrameElement>(
+        'allowFullscreen',
+        element,
+        (e) => e.allowFullscreen,
+        (e, v) => e.allowFullscreen = v,
+      );
+    });
+
+    test('allowPaymentRequest', () {
+      _testAttributeBool<IFrameElement>(
+        'allowPaymentRequest',
+        element,
+        (e) => e.allowPaymentRequest,
+        (e, v) => e.allowPaymentRequest = v,
+      );
+    });
+
     test('height', () {
       _testAttribute<IFrameElement>(
         name: 'height',
@@ -445,6 +463,24 @@ void _testElementSubclasses() {
         getter: (e) => e.height,
         setter: (e, v) => e.height = v,
       );
+    });
+
+    test('referrerPolicy', () {
+      _testAttribute<IFrameElement>(
+        name: 'referrerPolicy',
+        element: element,
+        getter: (e) => e.referrerPolicy,
+        setter: (e, v) => e.referrerPolicy = v,
+        value: 'no-referrer',
+      );
+    });
+
+    test('sandbox', () {
+      expect(element.sandbox?.length, 0);
+      element.sandbox?.add('x');
+      expect(element.sandbox?.length, 1);
+      element.sandbox?.remove('x');
+      expect(element.sandbox?.length, 0);
     });
 
     test('src', () {
@@ -463,6 +499,49 @@ void _testElementSubclasses() {
         getter: (e) => e.width,
         setter: (e, v) => e.width = v,
       );
+    });
+
+    test('children after setting innerHtml', () {
+      final innerHtml =
+          '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
+      final iframe = IFrameElement()
+        ..className = 'example'
+        ..innerHtml = innerHtml;
+      expect(iframe.children, hasLength(0));
+      expect(iframe.childNodes, hasLength(1));
+      expect(iframe.text, innerHtml);
+      expect(iframe.outerHtml, '<iframe class="example">$innerHtml</iframe>');
+    });
+
+    test('outerHtml after setting innerHtml', () {
+      final innerHtml =
+          '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
+      final iframe = IFrameElement()
+        ..className = 'example'
+        ..innerHtml = innerHtml;
+      expect(iframe.outerHtml, '<iframe class="example">$innerHtml</iframe>');
+    });
+
+    test('children after parsing document', () {
+      final innerHtml =
+          '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
+      final html = '<html><body><iframe>$innerHtml</iframe></body></html>';
+      final doc = parseHtmlDocument(html);
+      final iframe = doc.body!.children.single;
+      expect(iframe.children, hasLength(0));
+      expect(iframe.childNodes, hasLength(1));
+      expect(iframe.childNodes.single.childNodes, hasLength(0));
+      expect(iframe.childNodes.single.text, innerHtml);
+    });
+
+    test('outerHtml after parsing document', () {
+      final innerHtml =
+          '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
+      final html = '<html><body><iframe>$innerHtml</iframe></body></html>';
+      final doc = parseHtmlDocument(html);
+      expect(
+          doc.body?.children.single.outerHtml, '<iframe>$innerHtml</iframe>');
+      expect(doc.body?.outerHtml, '<body><iframe>$innerHtml</iframe></body>');
     });
   });
 

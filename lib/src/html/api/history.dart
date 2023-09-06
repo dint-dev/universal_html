@@ -83,10 +83,10 @@ class History extends HistoryBase {
   }
 
   @override
-  void go([int? delta]) {
+  void go([int? distance]) {
     // The effect is is asynchronous
     scheduleMicrotask(() {
-      final newIndex = _index + (delta ?? 0);
+      final newIndex = _index + (distance ?? 0);
       if (newIndex < 0 || newIndex >= _stack.length) {
         // Fail silently
         return;

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// Cross-platform "dart:svg" library.
 library universal_html.svg;
 
 export 'src/_sdk/svg.dart'

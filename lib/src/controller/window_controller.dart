@@ -14,17 +14,19 @@
 
 import 'dart:async';
 import 'dart:convert' show utf8;
+import 'dart:io';
 
 import 'package:universal_html/controller.dart';
-import 'package:universal_html/html.dart';
+import 'package:universal_html/html.dart' as html;
+import 'package:universal_html/html.dart' hide File;
 import 'package:universal_html/parsing.dart' as parsing;
-import 'package:universal_io/io.dart' show ContentType;
-import 'package:universal_io/io.dart' as io;
+import 'package:universal_io/io.dart' show newUniversalHttpClient;
 
 /// Defines behavior of the browser APIs (such as navigation events).
 ///
 /// # Example
 /// ```
+/// import 'package:universal_html/controller.dart';
 /// import 'package:universal_html/parsing.dart';
 ///
 /// Future<void> main() async {
@@ -37,29 +39,85 @@ import 'package:universal_io/io.dart' as io;
 ///   // ...
 /// }
 /// ```
+///
+/// ## Testing
+/// ```dart
+/// import 'package:universal_html/controller.dart';
+/// import 'package:test/test.dart';
+///
+/// void main() {
+///   setUp(() {
+///     WindowController.instance = WindowController();
+///   });
+///
+///   test('test #1', () {
+///     // ...
+///   });
+///
+///   test('test #2', () {
+///     // ...
+///   });
+/// }
+/// ```
 class WindowController {
-  /// Instance returned by top-level `window` variable.
-  static final WindowController topLevel = WindowController();
+  static final Object _zoneKey = Object();
+  static final _rootScope = _WindowControllerScope(WindowController());
 
-  late Window? _window = windowBehavior.newWindow(windowController: this);
+  static bool _hasChangedInstance = false;
+
+  /// Zone-local, mutable [WindowController].
+  static WindowController get instance {
+    return _scope.windowController;
+  }
+
+  static set instance(WindowController instance) {
+    _hasChangedInstance = true;
+    _scope.windowController = instance;
+  }
+
+  /// Old alias for [instance].
+  ///
+  /// This could be deprecated in future.
+  static WindowController get topLevel => instance;
+
+  static set topLevel(WindowController value) {
+    instance = value;
+  }
+
+  static _WindowControllerScope get _scope =>
+      Zone.current[_zoneKey] as _WindowControllerScope? ?? _rootScope;
+
+  late Window _window = windowBehavior.newWindow(windowController: this);
 
   /// Behavior of the window.
   final WindowBehavior windowBehavior = WindowBehavior();
+
+  /// Default [HttpClient].
+  ///
+  /// If you want to create a new [HttpClient] instance for every request,
+  /// change [onChooseHttpClient].
+  late HttpClient defaultHttpClient = newUniversalHttpClient();
+
+  /// Chooses HTTP client that will be used for the URL.
+  ///
+  /// The default callback returns [defaultHttpClient].
+  late HttpClient Function(Uri uri) onChooseHttpClient =
+      (url) => defaultHttpClient;
 
   /// Returns true if this controller for the top-level window inside a browser.
   ///
   /// Very limited features are available in browser.
   bool get isTopLevelWindowInsideBrowser =>
-      identical(this, topLevel) && !identical(_window, window);
+      !_hasChangedInstance &&
+      !identical(html.window, _window) &&
+      identical(instance, this);
 
   /// Gets window controlled by this [WindowController].
-  Window? get window => _window;
-
-  /// Sets window.
   ///
-  /// Attempt to replace top-level window inside browser will cause
-  /// [StateError] to be thrown.
-  set window(Window? window) {
+  /// Throws [StateError] if modified inside a browser.
+  Window get window => _window;
+
+  set window(Window window) {
     if (isTopLevelWindowInsideBrowser) {
       throw StateError('Failed to mutate the main window inside a browser');
     }
@@ -67,6 +125,18 @@ class WindowController {
   }
 
   /// Opens the content.
+  ///
+  /// Throws [StateError] if called inside a browser.
+  ///
+  /// ## Example
+  /// ```dart
+  /// import 'package:universal_html/controller.dart';
+  ///
+  /// void main() {
+  ///   final controller = WindowController();
+  ///   controller.openContent('<html><body>Hello</body></html>');
+  /// }
+  /// ```
   void openContent(String content, {ContentType? contentType}) {
     if (isTopLevelWindowInsideBrowser) {
       throw StateError('Failed to mutate the main window inside a browser');
@@ -119,7 +189,20 @@ class WindowController {
   }
 
   /// Opens the file.
-  Future<void> openFile(io.File file) async {
+  ///
+  /// Throws [StateError] if called inside a browser.
+  ///
+  /// ## Example
+  /// ```dart
+  /// import 'dart:io';
+  /// import 'package:universal_html/controller.dart';
+  ///
+  /// void main() {
+  ///   final controller = WindowController();
+  ///   controller.openFile(File('index.html'));
+  /// }
+  /// ```
+  Future<void> openFile(File file) async {
     if (isTopLevelWindowInsideBrowser) {
       throw StateError('Failed to mutate the main window inside a browser');
     }
@@ -129,54 +212,125 @@ class WindowController {
 
   /// Loads content using HTTP client.
   ///
+  /// Throws [StateError] if called inside a browser.
+  ///
   /// # Example
   /// ```
-  /// import 'package:universal_html/parsing.dart';
+  /// import 'dart:io' show Cookie;
+  /// import 'package:universal_html/controller.dart';
   ///
-  /// Future<void> main() async {
+  /// Future main() async {
+  ///   // Load a document.
   ///   final controller = WindowController();
+  ///   controller.defaultHttpClient.userAgent = 'My Hacker News client';
   ///   await controller.openHttp(
   ///     method: 'GET',
-  ///     uri: Uri.parse('https://www.ietf.org/'),
+  ///     uri: Uri.parse("https://news.ycombinator.com/"),
+  ///     onRequest: (HttpClientRequest request) {
+  ///       // Add custom headers
+  ///       request.headers.set('Authorization', 'headerValue');
+  ///       request.cookies.add(Cookie('cookieName', 'cookieValue'));
+  ///     },
+  ///     onResponse: (HttpClientResponse response) {
+  ///       print('Status code: ${response.statusCode}');
+  ///     },
   ///   );
-  ///   final document = controller.window.document;
-  ///   // ...
+  ///
+  ///   // Select the top story using a CSS query
+  ///   final titleElements = controller.document.querySelectorAll(".athing > .title");
+  ///   final topStoryTitle = titleElements.first.text;
+  ///
+  ///   // Print result
+  ///   print("Top Hacker News story is: $topStoryTitle");
+  /// }
   /// }
   /// ```
   Future<void> openHttp({
     String method = 'GET',
     required Uri uri,
     ContentType? contentType,
+    void Function(HttpClientRequest request)? onRequest,
+    void Function(HttpClientResponse response)? onResponse,
   }) async {
     if (isTopLevelWindowInsideBrowser) {
       throw StateError('Failed to mutate the main window inside a browser');
     }
 
     // Write HTTP request.
-    final client = io.HttpClient();
+    final client = onChooseHttpClient(uri);
     final request = await client.openUrl(method, uri);
+    if (onRequest != null) {
+      onRequest(request);
+    }
     if (contentType != null) {
       request.headers.contentType = contentType;
     }
 
     // Read HTTP response.
     final response = await request.close();
-    final content = await utf8.decodeStream(response);
+    final future = utf8.decodeStream(response);
+    if (onResponse != null) {
+      onResponse(response);
+    }
+    final content = await future;
 
-    return openContent(content);
+    return openContent(content, contentType: response.headers.contentType);
   }
 
-  /// Loads content from "file", "http", or "https" URI.
+  /// Loads content from a file or network URI.
+  ///
+  /// Supported input patterns:
+  ///   * "file:///path/to/file"
+  ///   * "file://localhost/path/to/file"
+  ///   * "http://example.com/path?query=1"
+  ///   * "https://example.com/path?query=1"
   Future<void> openUri(Uri uri) {
+    final originalUri = uri;
     if (!uri.isAbsolute) {
-      uri = Uri.parse(window!.location.href).resolveUri(uri);
+      uri = Uri.parse(window.location.href).resolveUri(uri);
     }
-    if (uri.scheme == 'file') {
-      return openFile(io.File.fromUri(uri));
+    if (uri.scheme == 'file' && (uri.host.isEmpty || uri.host == 'localhost')) {
+      return openFile(File.fromUri(uri));
     }
     if (uri.scheme == 'http' || uri.scheme == 'https') {
       return openHttp(uri: uri);
     }
-    throw ArgumentError.value(uri, 'uri');
+    throw ArgumentError.value(originalUri, 'uri', 'Invalid URI scheme');
   }
+
+  /// Enables zone-local [WindowController] instances.
+  ///
+  /// ## Example
+  /// ```
+  /// import 'package:universal_html/html.dart;
+  ///
+  /// void main() {
+  ///   final zone = WindowController.newZone();
+  ///   final outerWindow = window;
+  ///   zone.run(() {
+  ///     final innerWindow = window;
+  ///     print(identical(outerWindow, innerWindow)); // --> false
+  ///   });
+  /// }
+  /// ```
+  static Zone newZone() {
+    return newZoneWith(WindowController());
+  }
+
+  /// Returns a new [Zone] with the given [windowController].
+  ///
+  /// ## Example
+  ///
+  /// See [WindowController.newZone].
+  static Zone newZoneWith(WindowController windowController) {
+    _hasChangedInstance = true;
+    return Zone.current
+        .fork(zoneValues: {_zoneKey: _WindowControllerScope(windowController)});
+  }
+}
+
+class _WindowControllerScope {
+  WindowController windowController;
+
+  _WindowControllerScope(this.windowController);
 }

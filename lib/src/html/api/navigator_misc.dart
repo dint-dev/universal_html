@@ -54,6 +54,18 @@ typedef StorageQuotaCallback = void Function(int grantedQuotaInBytes);
 typedef StorageUsageCallback = void Function(
     int currentUsageInBytes, int currentQuotaInBytes);
 
+class BudgetService {
+  factory BudgetService._() {
+    throw UnimplementedError();
+  }
+
+  Future<BudgetState> getBudget() => throw UnimplementedError();
+
+  Future<double> getCost(String operation) => throw UnimplementedError();
+
+  Future<bool> reserve(String operation) => throw UnimplementedError();
+}
+
 @Native('BudgetState')
 class BudgetState {
   factory BudgetState._() {
@@ -63,6 +75,18 @@ class BudgetState {
   num? get budgetAt => throw UnimplementedError();
 
   int? get time => throw UnimplementedError();
+}
+
+abstract class Clipboard implements EventTarget {
+  Clipboard._();
+
+  Future<DataTransfer> read() => throw UnimplementedError();
+
+  Future<String> readText() => throw UnimplementedError();
+
+  Future write(DataTransfer data) => throw UnimplementedError();
+
+  Future writeText(String data) => throw UnimplementedError();
 }
 
 abstract class Credential {
@@ -266,6 +290,13 @@ abstract class NetworkInformation implements EventTarget {
   String? get type;
 }
 
+@Native('NFC')
+abstract class NFC {
+  factory NFC._() {
+    throw UnimplementedError();
+  }
+}
+
 abstract class Plugin {
   Plugin._();
 
@@ -403,35 +434,4 @@ abstract class VR implements EventTarget {
   VR._();
 
   Future getDevices();
-}
-
-class _BudgetService {
-  factory _BudgetService._() {
-    throw UnimplementedError();
-  }
-
-  Future<BudgetState> getBudget() => throw UnimplementedError();
-
-  Future<double> getCost(String operation) => throw UnimplementedError();
-
-  Future<bool> reserve(String operation) => throw UnimplementedError();
-}
-
-abstract class _Clipboard implements EventTarget {
-  _Clipboard._();
-
-  Future<DataTransfer> read() => throw UnimplementedError();
-
-  Future<String> readText() => throw UnimplementedError();
-
-  Future write(DataTransfer data) => throw UnimplementedError();
-
-  Future writeText(String data) => throw UnimplementedError();
-}
-
-@Native('NFC')
-abstract class _NFC {
-  factory _NFC._() {
-    throw UnimplementedError();
-  }
 }

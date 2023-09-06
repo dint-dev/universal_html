@@ -102,7 +102,7 @@ class CssStyleSheet extends StyleSheet {
   final CssStyleSheet? parentStyleSheet;
   final List<CssRule> cssRules = [];
 
-  CssStyleSheet._({
+  CssStyleSheet.constructor({
     this.href,
     this.parentStyleSheet,
   }) : super._();

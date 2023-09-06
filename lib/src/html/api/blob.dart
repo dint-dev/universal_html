@@ -53,7 +53,7 @@ abstract class Blob {
     for (var i = 0; i < blobParts.length; i++) {
       final part = blobParts[i];
       if (part is String && i + 1 < blobParts.length) {
-        blobParts[i] = part + '\x00';
+        blobParts[i] = '$part\x00';
       }
     }
     var parts = List<List<int>>.from(blobParts.map((part) {

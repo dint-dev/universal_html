@@ -605,8 +605,9 @@ class _CssStyleDeclarationSet extends CssStyleDeclarationBase {
 
   @override
   void setProperty(String propertyName, String? value, [String? priority]) {
-    _elementCssStyleDeclarationSetIterable
-        .forEach((e) => e.setProperty(propertyName, value, priority));
+    for (var e in _elementCssStyleDeclarationSetIterable) {
+      e.setProperty(propertyName, value, priority);
+    }
   }
 
   void _setAll(String propertyName, String? value) {

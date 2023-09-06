@@ -89,9 +89,9 @@ class Navigator extends NavigatorConcurrentHardware
     this.productSub = '20030107',
   }) : super._();
 
-  _BudgetService? get budget => null;
+  BudgetService? get budget => null;
 
-  _Clipboard? get clipboard => null;
+  Clipboard? get clipboard => null;
 
   NetworkInformation? get connection => null;
 
@@ -125,7 +125,7 @@ class Navigator extends NavigatorConcurrentHardware
 
   List<MimeType>? get mimeTypes => null;
 
-  _NFC? get nfc => null;
+  NFC? get nfc => null;
 
   @override
   bool get onLine => false;

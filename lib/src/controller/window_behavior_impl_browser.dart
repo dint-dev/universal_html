@@ -14,7 +14,6 @@
 
 import 'dart:html';
 import 'dart:indexed_db';
-import 'dart:web_sql';
 
 import 'window_controller.dart';
 
@@ -28,7 +27,7 @@ Document newDocument({
 
 HtmlDocument newHtmlDocument({
   required Window window,
-  required String? contentType,
+  String? contentType,
 }) {
   return DomParser().parseFromString(
       '<html></html>', contentType ?? 'text/html') as HtmlDocument;
@@ -66,8 +65,7 @@ class _FakeWindow implements Window {
   String? status;
 
   @override
-  late final Document document =
-      newHtmlDocument(window: this, contentType: 'text/html');
+  late final Document document = newHtmlDocument(window: this);
 
   @override
   // TODO: implement animationFrame
@@ -685,14 +683,6 @@ class _FakeWindow implements Window {
   @override
   WindowBase open(String url, String name, [String? options]) {
     // TODO: implement open
-    throw UnimplementedError();
-  }
-
-  @override
-  SqlDatabase openDatabase(
-      String name, String version, String displayName, int estimatedSize,
-      [creationCallback]) {
-    // TODO: implement openDatabase
     throw UnimplementedError();
   }
 

@@ -23,6 +23,7 @@ import 'package:test/test.dart';
 import 'package:universal_html/controller.dart';
 import 'package:universal_html/html.dart' hide document;
 import 'package:universal_html/html.dart' as universal_html;
+import 'package:universal_html/parsing.dart';
 import 'package:universal_html/src/internal/event_stream_decoder.dart';
 import 'package:universal_io/io.dart' as io;
 
@@ -38,8 +39,8 @@ part 'src/html/api/history.dart';
 part 'src/html/api/navigator.dart';
 part 'src/html/api/networking_event_source.dart';
 part 'src/html/api/networking_http_request.dart';
-part 'src/html/api/workers.dart';
 part 'src/html/api/window.dart';
+part 'src/html/api/workers.dart';
 part 'src/html/dom/cloning.dart';
 part 'src/html/dom/css_queries.dart';
 part 'src/html/dom/css_style_declaration.dart';

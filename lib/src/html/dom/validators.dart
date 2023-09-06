@@ -203,7 +203,7 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
 
       var child = node.lastChild;
       while (null != child) {
-        var nextChild;
+        Node? nextChild;
         try {
           // Child may be removed during the walk, and we may not
           // even be able to get its previousNode.
@@ -295,8 +295,8 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
     // can't declare the type of element, as an embed won't pass any type
     // check in dart2js.
     var corrupted = true;
-    var attrs;
-    var isAttr;
+    dynamic attrs;
+    dynamic isAttr;
     try {
       // If getting/indexing attributes throws, count that as corrupt.
       attrs = element.attributes;

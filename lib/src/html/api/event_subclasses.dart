@@ -772,6 +772,8 @@ class Touch {
   final int radiusX;
   final int radiusY;
 
+  Point get page => Point(radiusX, radiusY);
+
   Touch({
     this.radiusX = 0,
     this.radiusY = 0,

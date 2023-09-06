@@ -993,7 +993,7 @@ abstract class Element extends Node
     classSet.addAll(value);
   }
 
-  String? get className => _getAttribute('class');
+  String get className => _getAttribute('class') ?? '';
 
   set className(String? newValue) {
     _setAttribute('class', newValue);

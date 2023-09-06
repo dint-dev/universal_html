@@ -275,7 +275,7 @@ class HttpRequest extends HttpRequestEventTarget {
   Map<String, String>? get responseHeaders => _responseHeaders;
 
   /// The response in String form or empty String on failure.
-  String get responseText {
+  String? get responseText {
     final responseData = _responseData;
     if (responseData == null) {
       return '';
@@ -291,7 +291,7 @@ class HttpRequest extends HttpRequestEventTarget {
   /// `text/xml` stream, unless responseType = 'document' and the request is
   /// synchronous.
   Document get responseXml =>
-      DomParser().parseFromString(responseText, 'text/xml');
+      DomParser().parseFromString(responseText ?? '', 'text/xml');
 
   /// The HTTP result code from the request (200, 404, etc).
   /// See also: [HTTP Status Codes](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
@@ -560,7 +560,7 @@ class HttpRequest extends HttpRequestEventTarget {
       url,
       withCredentials: withCredentials,
       onProgress: onProgress,
-    ).then((HttpRequest xhr) => xhr.responseText);
+    ).then((HttpRequest xhr) => xhr.responseText ?? '');
   }
 
   /// Makes a server POST request with the specified data encoded as form data.
@@ -749,7 +749,7 @@ class HttpRequest extends HttpRequestEventTarget {
   }
 }
 
-class HttpRequestEventTarget extends EventTarget {
+class HttpRequestEventTarget extends EventTarget implements HttpRequestUpload {
   /// Static factory designed to expose `abort` events to event
   /// handlers that are not necessarily instances of [HttpRequestEventTarget].
   ///
@@ -821,8 +821,17 @@ class HttpRequestEventTarget extends EventTarget {
 
   /// Stream of `timeout` events handled by this [HttpRequestEventTarget].
   Stream<ProgressEvent> get onTimeout => timeoutEvent.forTarget(this);
+
 }
 
 abstract class HttpRequestUpload {
   HttpRequestUpload._();
+
+  Stream<ProgressEvent> get onAbort;
+  Stream<ProgressEvent> get onError;
+  Stream<ProgressEvent> get onLoad;
+  Stream<ProgressEvent> get onLoadEnd;
+  Stream<ProgressEvent> get onLoadStart;
+  Stream<ProgressEvent> get onProgress;
+  Stream<ProgressEvent> get onTimeout;
 }

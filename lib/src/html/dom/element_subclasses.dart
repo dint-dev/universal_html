@@ -113,6 +113,12 @@ class AreaElement extends HtmlElement
   set rel(String value) {
     _setAttribute('rel', value);
   }
+  
+  String? get target => _getAttribute('target');
+
+  set target(String? value) {
+    _setAttribute('target', value);
+  }
 
   @override
   Element _newInstance(Document ownerDocument) => AreaElement._(ownerDocument);

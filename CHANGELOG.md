@@ -1,3 +1,8 @@
+## 2.2.4
+* Add support for csslib 1.x.
+* Fixes [issue #80](https://github.com/dint-dev/universal_html/issues/80).
+* Fixes [issue #81](https://github.com/dint-dev/universal_html/issues/81).
+
 ## 2.2.3
 * Fixes dependency constraint issues.
 

@@ -802,26 +802,32 @@ class HttpRequestEventTarget extends EventTarget implements HttpRequestUpload {
   HttpRequestEventTarget._() : super.internal();
 
   /// Stream of `abort` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onAbort => abortEvent.forTarget(this);
 
   /// Stream of `error` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onError => errorEvent.forTarget(this);
 
   /// Stream of `load` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onLoad => loadEvent.forTarget(this);
 
   /// Stream of `loadend` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onLoadEnd => loadEndEvent.forTarget(this);
 
   /// Stream of `loadstart` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onLoadStart => loadStartEvent.forTarget(this);
 
   /// Stream of `progress` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onProgress => progressEvent.forTarget(this);
 
   /// Stream of `timeout` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onTimeout => timeoutEvent.forTarget(this);
-
 }
 
 abstract class HttpRequestUpload {

@@ -113,7 +113,7 @@ class AreaElement extends HtmlElement
   set rel(String value) {
     _setAttribute('rel', value);
   }
-  
+
   String? get target => _getAttribute('target');
 
   set target(String? value) {
@@ -1726,6 +1726,7 @@ class InputElement extends HtmlElement
   @protected
   void internalDefaultClick() {
     final type = (this.type ?? '').toLowerCase();
+    final form = this.form;
     switch (type) {
       case 'file':
         throw UnimplementedError();
@@ -1739,7 +1740,6 @@ class InputElement extends HtmlElement
         break;
 
       case 'radio':
-        final form = this.form;
         if (form != null) {
           final name = this.name;
           for (var item in form._items) {

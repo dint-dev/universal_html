@@ -16,7 +16,7 @@ class InfoBuilder implements Builder {
     await buildStep.writeAsString(assetId, content);
   }
 
-  String _generateContent(Map<String, Object> html) {
+  String _generateContent(Map<String, Object?> html) {
     final result = StringBuffer();
     result.writeln('// IMPORTANT: DO NOT MODIFY');
     result.writeln(
@@ -77,8 +77,12 @@ class InfoBuilder implements Builder {
     return result;
   }
 
-  static void _addClassMembers(Map<String, Object?> result, String className,
-      {required ClassElement classElement, required bool isInherited}) {
+  static void _addClassMembers(
+    Map<String, Object?> result,
+    String className, {
+    required InterfaceElement classElement,
+    required bool isInherited,
+  }) {
     if (className != classElement.name) {
       result['$className implements ${classElement.name}'];
     }

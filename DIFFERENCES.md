@@ -1,5 +1,5 @@
 32710 APIs in "dart:html"
-29260 APIs in "package:universal_html/html.dart"
+29262 APIs in "package:universal_html/html.dart"
 
 # Missing APIs
   * AbsoluteOrientationSensor (class)
@@ -307,11 +307,9 @@
   * HtmlDocument.fonts
   * HtmlDocument.getAnimations(...)
   * HtmlDocument.lastModified
-  * HtmlDocument.onVisibilityChange
   * HtmlDocument.preferredStylesheetSet
   * HtmlDocument.selectedStylesheetSet
   * HtmlDocument.selectedStylesheetSet=
-  * HtmlDocument.visibilityChangeEvent
   * HtmlFormControlsCollection (class)
   * HtmlHtmlElement.created
   * HtmlOptionsCollection (class)

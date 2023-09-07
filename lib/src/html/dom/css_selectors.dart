@@ -279,7 +279,7 @@ bool _matchesSimpleSelector(
     // .className
     //
     final className = element.className;
-    if (className == null || className.isEmpty) return false;
+    if (className.isEmpty) return false;
     final expected = selector.name;
     if (className.contains(' ')) {
       return className.split(' ').contains(expected);

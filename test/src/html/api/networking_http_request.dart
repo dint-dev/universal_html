@@ -125,6 +125,11 @@ void _testHttpRequest() {
       expect(onTimeout.eventsDispatched, 0);
     }, timeout: Timeout(Duration(seconds: 5)));
 
+    test('GET, using getString', () async {
+      String testResponse = await HttpRequest.getString('http://localhost:$_httpServerPort/http_request/ok');
+      expect(testResponse, 'hello');
+    }, timeout: Timeout(Duration(seconds: 5)));
+
     test('Failing request', () async {
       //
       // Declare HttpRequest

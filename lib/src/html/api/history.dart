@@ -242,9 +242,9 @@ mixin _UrlBase {
     return '$scheme:';
   }
 
-  String get search => _uri?.query ?? '';
+  String? get search => _uri?.query;
 
-  set search(String value) {
+  set search(String? value) {
     throw UnimplementedError();
   }
 

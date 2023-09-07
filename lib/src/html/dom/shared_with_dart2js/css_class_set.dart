@@ -416,7 +416,7 @@ class _ElementCssClassSet extends _CssClassSetImpl {
   @override
   Set<String> readClasses() {
     var s = <String>{};
-    var classname = _element.className!;
+    var classname = _element.className;
 
     for (final name in classname.split(' ')) {
       final trimmed = name.trim();

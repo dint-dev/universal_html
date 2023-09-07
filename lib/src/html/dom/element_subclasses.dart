@@ -2607,7 +2607,7 @@ class SelectElement extends HtmlElement
 
   ValidityState get validity => ValidityState.constructor();
 
-  String get value {
+  String? get value {
     final options = this.options;
     for (var option in options) {
       if (option.selected ?? false) {
@@ -2620,7 +2620,7 @@ class SelectElement extends HtmlElement
     return options.first.value;
   }
 
-  set value(String value) {
+  set value(String? value) {
     for (var option in options) {
       option.selected = option.value == value;
     }
@@ -3168,7 +3168,7 @@ class TextAreaElement extends HtmlElement
     _setAttributeInt('rows', value);
   }
 
-  int get textLength => value.length;
+  int? get textLength => value?.length;
 
   String? get type => null;
 
@@ -3176,10 +3176,10 @@ class TextAreaElement extends HtmlElement
 
   ValidityState get validity => ValidityState.constructor();
 
-  String get value => text ?? '';
+  String? get value => text;
 
-  set value(String value) {
-    text = value.replaceAll('\n', '');
+  set value(String? value) {
+    text = value?.replaceAll('\n', '');
   }
 
   bool get willValidate {
@@ -3204,7 +3204,7 @@ class TextAreaElement extends HtmlElement
   }
 
   void select() {
-    setSelectionRange(0, textLength);
+    setSelectionRange(0, textLength ?? 0);
   }
 
   void setCustomValidity(String error) {}

@@ -4,14 +4,13 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest]
         channel: [stable, beta, dev]
     steps:
       - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: ${{ matrix.channel }}
       - run: flutter --version
@@ -20,8 +19,17 @@ jobs:
       - name: Install dependencies (Flutter)
         run: flutter pub get
         working-directory: test_in_flutter
-      - name: Run tests (Dart)
+      - name: Run tests (VM)
         run: dart test --platform=vm
-      - name: Run tests (Flutter)
-        run: flutter test
-        working-directory: test_in_flutter
+  test_in_chrome:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+        with:
+          channel: stable
+      - run: flutter --version
+      - name: Install dependencies (Dart)
+        run: dart pub get
+      - name: Run tests (Chrome)
+        run: dart test --platform=chrome

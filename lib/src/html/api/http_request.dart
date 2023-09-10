@@ -517,6 +517,7 @@ class HttpRequest extends HttpRequestEventTarget {
 
       // Set response data
       _responseData = Uint8List.fromList(buffer);
+      dispatchEvent(ProgressEvent('load'));
     } catch (error) {
       dispatchEvent(ProgressEvent('error'));
     } finally {

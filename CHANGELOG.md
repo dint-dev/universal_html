@@ -1,3 +1,7 @@
+## 2.2.4
+ * Fixes a number of bug.
+ * Adds support for csslib 1.0.0.
+
 ## 2.2.3
 * Fixes dependency constraint issues.
 

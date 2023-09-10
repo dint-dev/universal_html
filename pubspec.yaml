@@ -1,5 +1,5 @@
 name: universal_html
-version: 2.2.3
+version: 2.2.4
 description:
   A 'dart:html' that works in all platforms, including Flutter and server-side.
   Eases cross-platform development and HTML / XML processing.
@@ -10,7 +10,7 @@ environment:
 
 dependencies:
   async: ^2.11.0
-  csslib: ^0.17.3
+  csslib: '>=0.17.3 <2.0.0'
   charcode: ^1.2.0
   collection: ^1.17.1
   html: ^0.15.3

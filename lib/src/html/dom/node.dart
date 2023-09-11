@@ -389,43 +389,17 @@ abstract class Node extends EventTarget {
   void remove() {
     final parent = _parent;
     if (parent == null) {
-      assert(_previousNode == null);
-      assert(_nextNode == null);
       return;
     }
 
     // Mark node as dirty
     _markDirty();
-
-    // Get previous and next
-    final previous = _previousNode;
-    final next = _nextNode;
-
-    if (previous == null) {
-      // This was the first sibling
-      parent._firstChild = next;
-    } else {
-      // Mutate the previous sibling
-      previous._nextNode = next;
-    }
-
-    if (next == null) {
-      // This was the last sibling
-      parent._lastChild = previous;
-    } else {
-      // Mutate the next sibling
-      next._previousNode = previous;
-    }
-
-    // Set fields of this node
-    _parent = null;
-    _previousNode = null;
-    _nextNode = null;
+    _removeFromTree(null);
     parent._mutated();
     _mutated();
   }
 
-  void replaceWith(Node node) {
+  void _removeFromTree(Node? replaceWith) {
     final parent = _parent;
     if (parent == null) {
       assert(_previousNode == null);
@@ -433,36 +407,48 @@ abstract class Node extends EventTarget {
       return;
     }
 
-    // Mark nodes as dirty
-    _markDirty();
-    node._markDirty();
-
     // Get previous and next
     final previous = _previousNode;
     final next = _nextNode;
 
     if (previous == null) {
       // This was the first sibling
-      parent._firstChild = node;
+      parent._firstChild = replaceWith ?? next;
     } else {
       // Mutate the previous sibling
-      previous._nextNode = node;
+      previous._nextNode = replaceWith ?? next;
     }
 
     if (next == null) {
       // This was the last sibling
-      parent._lastChild = node;
+      parent._lastChild = replaceWith ?? previous;
     } else {
       // Mutate the next sibling
-      next._previousNode = node;
+      next._previousNode = replaceWith ?? previous;
     }
-
-    node._parent = parent;
-    node._previousNode = previous;
-    node._nextNode = next;
+    if (replaceWith != null) {
+      // move replaceWith
+      replaceWith._parent = parent;
+      replaceWith._previousNode = previous;
+      replaceWith._nextNode = next;
+    }
+    // Set fields of this node
     _parent = null;
     _previousNode = null;
     _nextNode = null;
+  }
+
+  void replaceWith(Node node) {
+    final parent = _parent;
+    if (parent == null) {
+      return;
+    }
+
+    // Mark nodes as dirty
+    _markDirty();
+    node._markDirty();
+    node._removeFromTree(null);
+    _removeFromTree(node);
     _mutated();
     node._mutated();
   }

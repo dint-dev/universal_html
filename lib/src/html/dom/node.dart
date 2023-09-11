@@ -386,19 +386,6 @@ abstract class Node extends EventTarget {
     return sb.toString();
   }
 
-  void remove() {
-    final parent = _parent;
-    if (parent == null) {
-      return;
-    }
-
-    // Mark node as dirty
-    _markDirty();
-    _removeFromTree(null);
-    parent._mutated();
-    _mutated();
-  }
-
   void _removeFromTree(Node? replaceWith) {
     final parent = _parent;
     if (parent == null) {
@@ -438,12 +425,16 @@ abstract class Node extends EventTarget {
     _nextNode = null;
   }
 
-  void replaceWith(Node node) {
+  void remove() {
     final parent = _parent;
-    if (parent == null) {
-      return;
-    }
+    // Mark node as dirty
+    _markDirty();
+    _removeFromTree(null);
+    parent?._mutated();
+    _mutated();
+  }
 
+  void replaceWith(Node node) {
     // Mark nodes as dirty
     _markDirty();
     node._markDirty();

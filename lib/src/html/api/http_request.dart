@@ -272,7 +272,7 @@ class HttpRequest extends HttpRequestEventTarget {
   /// separated by a comma and a space.
   ///
   /// See: http://www.w3.org/TR/XMLHttpRequest/#the-getresponseheader()-method
-  Map<String, String>? get responseHeaders => _responseHeaders;
+  Map<String, String> get responseHeaders => _responseHeaders;
 
   /// The response in String form or empty String on failure.
   String? get responseText {

@@ -87,6 +87,7 @@ part 'html/api/web_socket.dart';
 part 'html/api/window.dart';
 part 'html/api/window_misc.dart';
 part 'html/api/workers.dart';
+part 'html/api/broadcast_channel.dart';
 part 'html/dom/css.dart';
 part 'html/dom/css_computed_style.dart';
 part 'html/dom/css_rect.dart';

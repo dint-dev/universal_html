@@ -14,4 +14,9 @@ void main() {
   // Do a CSS query
   print(divElement.querySelector('div > .greeting')!.text);
   // --> Hello world
+
+  final broadcastChannel = BroadcastChannel('Channel_Name');
+  broadcastChannel.onMessage.listen((event) {
+    print(event);
+  });
 }

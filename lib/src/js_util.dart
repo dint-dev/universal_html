@@ -103,3 +103,7 @@ Future<T> promiseToFuture<T>(jsPromise) {
 void setProperty(o, name, value) {
   throw UnimplementedError();
 }
+
+F allowInterop<F extends Function>(F f) {
+  throw UnimplementedError();
+}

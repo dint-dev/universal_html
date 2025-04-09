@@ -972,8 +972,8 @@ class Window extends EventTarget
   ///
   /// * [Window.open](https://developer.mozilla.org/en-US/docs/Web/API/Window.open)
   ///   from MDN.
-  WindowBase? open(String url, String name, [String? options]) {
-    return null;
+  WindowBase open(String url, String name, [String? options]) {
+    throw UnimplementedError();
   }
 
   @override

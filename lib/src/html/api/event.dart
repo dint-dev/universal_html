@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// ignore_for_file: constant_identifier_names
+
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -44,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 typedef EventListener = Function(Event event);
 
@@ -121,8 +123,12 @@ class Event {
   ///
   ///     var e = new Event.type('MouseEvent', 'mousedown', true, true);
   ///
-  factory Event.eventType(String type, String name,
-      {bool canBubble = true, bool cancelable = true}) {
+  factory Event.eventType(
+    String type,
+    String name, {
+    bool canBubble = true,
+    bool cancelable = true,
+  }) {
     switch (type) {
       case 'KeyboardEvent':
         return KeyboardEvent(name);
@@ -146,9 +152,9 @@ class Event {
     this.composed = false,
     bool canBubble = true,
     this.cancelable = true,
-  })  : bubbles = canBubble,
-        _target = target,
-        timeStamp = DateTime.now().microsecondsSinceEpoch;
+  }) : bubbles = canBubble,
+       _target = target,
+       timeStamp = DateTime.now().microsecondsSinceEpoch;
 
   EventTarget? get currentTarget => _currentTarget;
 

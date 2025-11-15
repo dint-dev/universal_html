@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testElementComputedStyle() {
   group('element.computedStyle():', () {
@@ -21,7 +21,8 @@ void _testElementComputedStyle() {
     test('Case #1', () {
       _temporarilyRemoveChildrenFromDocument(root: document.body!);
 
-      final styleElement = StyleElement()..appendText('''
+      final styleElement =
+          StyleElement()..appendText('''
 .exampleClass {
   font-family: exampleFont
 }''');

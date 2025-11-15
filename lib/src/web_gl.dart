@@ -44,7 +44,7 @@ The original files in the Dart SDK had the following license:
 */
 
 @visibleForTesting
-library universal_html.web_gl.internal;
+library;
 
 import 'package:meta/meta.dart';
 
@@ -52,7 +52,7 @@ import 'html.dart';
 
 class ContextEvent extends Event {
   // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-  ContextEvent._(String type) : super.internal(type);
+  ContextEvent._(super.type) : super.internal();
 }
 
 class RenderingContext {

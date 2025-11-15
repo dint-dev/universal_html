@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 abstract class CanvasGradient {
   CanvasGradient._();
@@ -77,19 +77,19 @@ class ImageData {
   final int height;
   final int width;
 
-  factory ImageData(data_OR_sw, int sh_OR_sw, [int? sh]) {
-    if (data_OR_sw is int) {
-      final width = data_OR_sw;
-      final height = sh_OR_sw;
+  factory ImageData(dynamic dataOrSw, int shOrSw, [int? sh]) {
+    if (dataOrSw is int) {
+      final width = dataOrSw;
+      final height = shOrSw;
       final data = Uint8ClampedList(4 * width * height);
       return ImageData._(data, width, height);
-    } else if (data_OR_sw is List<int>) {
-      final data = Uint8ClampedList.fromList(data_OR_sw);
-      final width = sh_OR_sw;
+    } else if (dataOrSw is List<int>) {
+      final data = Uint8ClampedList.fromList(dataOrSw);
+      final width = shOrSw;
       final height = sh ?? data.lengthInBytes ~/ (width * 4);
       return ImageData._(data, width, height);
     } else {
-      throw ArgumentError.value(data_OR_sw);
+      throw ArgumentError.value(dataOrSw);
     }
   }
   ImageData._(this.data, this.width, this.height);
@@ -131,8 +131,14 @@ abstract class OffscreenCanvasRenderingContext2D {
   String? textBaseline;
   OffscreenCanvasRenderingContext2D._();
 
-  void arc(num x, num y, num radius, num startAngle, num endAngle,
-      [bool anticlockwise = false]);
+  void arc(
+    num x,
+    num y,
+    num radius,
+    num startAngle,
+    num endAngle, [
+    bool anticlockwise = false,
+  ]);
 
   void arcTo(num x1, num y1, num x2, num y2, num radius);
 
@@ -142,28 +148,44 @@ abstract class OffscreenCanvasRenderingContext2D {
 
   void clearRect(num x, num y, num width, num height);
 
-  void clip([dynamic path_OR_winding, String winding]);
+  void clip([dynamic pathOrWinding, String winding]);
 
   void closePath();
 
-  ImageData createImageData(dynamic data_OR_imagedata_OR_sw,
-      [int sh_OR_sw,
-      dynamic imageDataColorSettings_OR_sh,
-      Map imageDataColorSettings]);
+  ImageData createImageData(
+    dynamic dataOrImagedataOrSw, [
+    int shOrSw,
+    dynamic imagedatacolorsettingsOrSh,
+    Map imageDataColorSettings,
+  ]);
 
   CanvasGradient createLinearGradient(num x0, num y0, num x1, num y1);
 
   CanvasPattern createPattern(Object image, String repetitionType);
 
   CanvasGradient createRadialGradient(
-      num x0, num y0, num r0, num x1, num y1, num r1);
+    num x0,
+    num y0,
+    num r0,
+    num x1,
+    num y1,
+    num r1,
+  );
 
   void drawImage(CanvasImageSource source, num destX, num destY);
 
-  void ellipse(num x, num y, num radiusX, num radiusY, num rotation,
-      num startAngle, num endAngle, bool anticlockwise);
+  void ellipse(
+    num x,
+    num y,
+    num radiusX,
+    num radiusY,
+    num rotation,
+    num startAngle,
+    num endAngle,
+    bool anticlockwise,
+  );
 
-  void fill([dynamic path_OR_winding, String winding]);
+  void fill([dynamic pathOrWinding, String winding]);
 
   void fillRect(num x, num y, num width, num height);
 
@@ -173,10 +195,14 @@ abstract class OffscreenCanvasRenderingContext2D {
 
   List<num> getLineDash();
 
-  bool isPointInPath(dynamic path_OR_x, num x_OR_y,
-      [dynamic winding_OR_y, String winding]);
+  bool isPointInPath(
+    dynamic pathOrX,
+    num xOrY, [
+    dynamic windingOrY,
+    String winding,
+  ]);
 
-  bool isPointInStroke(dynamic path_OR_x, num x_OR_y, [num y]);
+  bool isPointInStroke(dynamic pathOrX, num xOrY, [num y]);
 
   void lineTo(num x, num y);
 
@@ -184,8 +210,15 @@ abstract class OffscreenCanvasRenderingContext2D {
 
   void moveTo(num x, num y);
 
-  void putImageData(ImageData imagedata, int dx, int dy,
-      [int dirtyX, int dirtyY, int dirtyWidth, int dirtyHeight]);
+  void putImageData(
+    ImageData imagedata,
+    int dx,
+    int dy, [
+    int dirtyX,
+    int dirtyY,
+    int dirtyWidth,
+    int dirtyHeight,
+  ]);
 
   void quadraticCurveTo(num cpx, num cpy, num x, num y);
 
@@ -215,12 +248,18 @@ abstract class OffscreenCanvasRenderingContext2D {
 }
 
 abstract class Path2D {
-  Path2D([dynamic path_OR_text]);
+  Path2D([dynamic pathOrText]);
 
   void addPath(Path2D path, [DomMatrix transform]);
 
-  void arc(num x, num y, num radius, num startAngle, num endAngle,
-      bool anticlockwise);
+  void arc(
+    num x,
+    num y,
+    num radius,
+    num startAngle,
+    num endAngle,
+    bool anticlockwise,
+  );
 
   void arcTo(num x1, num y1, num x2, num y2, num radius);
 
@@ -228,8 +267,16 @@ abstract class Path2D {
 
   void closePath();
 
-  void ellipse(num x, num y, num radiusX, num radiusY, num rotation,
-      num startAngle, num endAngle, bool anticlockwise);
+  void ellipse(
+    num x,
+    num y,
+    num radiusX,
+    num radiusY,
+    num rotation,
+    num startAngle,
+    num endAngle,
+    bool anticlockwise,
+  );
 
   void lineTo(num x, num y);
 
@@ -294,8 +341,14 @@ abstract class _CanvasRenderingContext2DBase implements CanvasRenderingContext {
 
   void addHitRegion([Map options]);
 
-  void arc(num x, num y, num radius, num startAngle, num endAngle,
-      [bool anticlockwise = false]);
+  void arc(
+    num x,
+    num y,
+    num radius,
+    num startAngle,
+    num endAngle, [
+    bool anticlockwise = false,
+  ]);
 
   void arcTo(num x1, num y1, num x2, num y2, num radius);
 
@@ -307,14 +360,16 @@ abstract class _CanvasRenderingContext2DBase implements CanvasRenderingContext {
 
   void clearRect(num x, num y, num width, num height);
 
-  void clip([dynamic path_OR_winding, String winding]);
+  void clip([dynamic pathOrWinding, String winding]);
 
   void closePath();
 
-  ImageData createImageData(dynamic data_OR_imagedata_OR_sw,
-      [int sh_OR_sw,
-      dynamic imageDataColorSettings_OR_sh,
-      Map imageDataColorSettings]);
+  ImageData createImageData(
+    dynamic dataOrImagedataOrSw, [
+    int shOrSw,
+    dynamic imagedatacolorsettingsOrSh,
+    Map imageDataColorSettings,
+  ]);
 
   ImageData createImageDataFromImageData(ImageData imagedata);
 
@@ -323,36 +378,61 @@ abstract class _CanvasRenderingContext2DBase implements CanvasRenderingContext {
   CanvasPattern createPattern(Object image, String repetitionType);
 
   CanvasPattern createPatternFromImage(
-      ImageElement image, String repetitionType);
+    ImageElement image,
+    String repetitionType,
+  );
 
   CanvasGradient createRadialGradient(
-      num x0, num y0, num r0, num x1, num y1, num r1);
+    num x0,
+    num y0,
+    num r0,
+    num x1,
+    num y1,
+    num r1,
+  );
 
-  void drawFocusIfNeeded(dynamic element_OR_path, [Element element]);
+  void drawFocusIfNeeded(dynamic elementOrPath, [Element element]);
 
   void drawImage(CanvasImageSource source, num destX, num destY);
 
-  void drawImageScaled(CanvasImageSource source, num destX, num destY,
-      num destWidth, num destHeight);
+  void drawImageScaled(
+    CanvasImageSource source,
+    num destX,
+    num destY,
+    num destWidth,
+    num destHeight,
+  );
 
   void drawImageScaledFromSource(
-      CanvasImageSource source,
-      num sourceX,
-      num sourceY,
-      num sourceWidth,
-      num sourceHeight,
-      num destX,
-      num destY,
-      num destWidth,
-      num destHeight);
+    CanvasImageSource source,
+    num sourceX,
+    num sourceY,
+    num sourceWidth,
+    num sourceHeight,
+    num destX,
+    num destY,
+    num destWidth,
+    num destHeight,
+  );
 
-  void drawImageToRect(CanvasImageSource source, Rectangle<num> destRect,
-      {Rectangle<num> sourceRect});
+  void drawImageToRect(
+    CanvasImageSource source,
+    Rectangle<num> destRect, {
+    Rectangle<num> sourceRect,
+  });
 
-  void ellipse(num x, num y, num radiusX, num radiusY, num rotation,
-      num startAngle, num endAngle, bool anticlockwise);
+  void ellipse(
+    num x,
+    num y,
+    num radiusX,
+    num radiusY,
+    num rotation,
+    num startAngle,
+    num endAngle,
+    bool anticlockwise,
+  );
 
-  void fill([dynamic path_OR_winding, String winding]);
+  void fill([dynamic pathOrWinding, String winding]);
 
   void fillRect(num x, num y, num width, num height);
 
@@ -366,10 +446,14 @@ abstract class _CanvasRenderingContext2DBase implements CanvasRenderingContext {
 
   bool isContextLost();
 
-  bool isPointInPath(dynamic path_OR_x, num x_OR_y,
-      [dynamic winding_OR_y, String winding]);
+  bool isPointInPath(
+    dynamic pathOrX,
+    num xOrY, [
+    dynamic windingOrY,
+    String winding,
+  ]);
 
-  bool isPointInStroke(dynamic path_OR_x, num x_OR_y, [num y]);
+  bool isPointInStroke(dynamic pathOrX, num xOrY, [num y]);
 
   void lineTo(num x, num y);
 
@@ -377,8 +461,15 @@ abstract class _CanvasRenderingContext2DBase implements CanvasRenderingContext {
 
   void moveTo(num x, num y);
 
-  void putImageData(ImageData imagedata, int dx, int dy,
-      [int dirtyX, int dirtyY, int dirtyWidth, int dirtyHeight]);
+  void putImageData(
+    ImageData imagedata,
+    int dx,
+    int dy, [
+    int dirtyX,
+    int dirtyY,
+    int dirtyWidth,
+    int dirtyHeight,
+  ]);
 
   void quadraticCurveTo(num cpx, num cpy, num x, num y);
 

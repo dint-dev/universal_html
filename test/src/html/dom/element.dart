@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 final throwsDomException = throwsA(isA<DomException>());
 
@@ -60,19 +60,21 @@ void _testElement() {
 
     group('innerHtml:', () {
       test('attributes', () {
-        final input = Element.tag('a')
-          ..setAttribute('someAttribute', 'someValue')
-          ..appendText('a')
-          ..appendText('b')
-          ..appendText('c');
+        final input =
+            Element.tag('a')
+              ..setAttribute('someAttribute', 'someValue')
+              ..appendText('a')
+              ..appendText('b')
+              ..appendText('c');
         expect(input.innerHtml, 'abc');
       });
 
       test('text, comments', () {
-        final input = Element.tag('a')
-          ..appendText('a')
-          ..append(Comment('b'))
-          ..appendText('c');
+        final input =
+            Element.tag('a')
+              ..appendText('a')
+              ..append(Comment('b'))
+              ..appendText('c');
         expect(input.innerHtml, 'a<!--b-->c');
       });
     });
@@ -125,9 +127,10 @@ void _testElement() {
       });
 
       test('uses lowerCase for element/attribute names', () {
-        final input = Element.tag('aA')
-          ..setAttribute('bB', 'cC')
-          ..appendText('dD');
+        final input =
+            Element.tag('aA')
+              ..setAttribute('bB', 'cC')
+              ..appendText('dD');
         final expected = '<aa bb="cC">dD</aa>';
         expect(input.outerHtml, equals(expected));
       });
@@ -196,36 +199,39 @@ void _testElement() {
 
       test('escapes attribute value', () {
         final input = Element.tag('sometag')..setAttribute('k', '&"<>');
-        final expected = '<sometag k="&amp;&quot;<>"></sometag>';
+        final expected = '<sometag k="&amp;&quot;&lt;&gt;"></sometag>';
         expect(input.outerHtml, equals(expected));
       });
 
       test('supports multiple attributes', () {
-        final input = Element.tag('a')
-          ..className = 'x'
-          ..setAttribute('id', 'y')
-          ..setAttribute('href', 'z');
+        final input =
+            Element.tag('a')
+              ..className = 'x'
+              ..setAttribute('id', 'y')
+              ..setAttribute('href', 'z');
         final expected = '<a class="x" id="y" href="z"></a>';
         expect(input.outerHtml, equals(expected));
       });
 
       test('supports multiple children', () {
-        final input = Element.tag('sometag')
-          ..appendText('a')
-          ..append(Element.tag('b')..appendText('c'))
-          ..append(Comment('d'));
+        final input =
+            Element.tag('sometag')
+              ..appendText('a')
+              ..append(Element.tag('b')..appendText('c'))
+              ..append(Comment('d'));
         final expected = '<sometag>a<b>c</b><!--d--></sometag>';
         expect(input.outerHtml, equals(expected));
       });
 
       test('supports multiple attributes and multiple children', () {
-        final input = Element.tag('sometag')
-          ..className = 'x'
-          ..setAttribute('k0', 'v0')
-          ..setAttribute('k1', 'v1')
-          ..appendText('a')
-          ..append(Element.tag('b')..appendText('c'))
-          ..append(Comment('d'));
+        final input =
+            Element.tag('sometag')
+              ..className = 'x'
+              ..setAttribute('k0', 'v0')
+              ..setAttribute('k1', 'v1')
+              ..appendText('a')
+              ..append(Element.tag('b')..appendText('c'))
+              ..append(Comment('d'));
         final expected =
             '<sometag class="x" k0="v0" k1="v1">a<b>c</b><!--d--></sometag>';
         expect(input.outerHtml, equals(expected));
@@ -246,9 +252,10 @@ void _testElement() {
         expect(node.toString(), '<div></div>');
       });
       test('complex element', () {
-        final node = Element.div()
-          ..setAttribute('data-k0', 'v0')
-          ..appendText('abc');
+        final node =
+            Element.div()
+              ..setAttribute('data-k0', 'v0')
+              ..appendText('abc');
         expect(node.toString(), '''<div data-k0="v0">abc</div>''');
       });
     }, testOn: 'vm');

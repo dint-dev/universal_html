@@ -43,7 +43,7 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html.internal;
+part of '../../html.dart';
 
 /// Internally [Element] treats attributes as a linked list of these nodes.
 class _Attribute {

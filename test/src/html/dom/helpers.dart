@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _expectSaneDocument(Document document) {
   _expectSaneTree(document, expectedOwnerDocument: document);
@@ -26,14 +26,20 @@ void _expectSaneTree(
 }) {
   // 'ownerDocument'
   if (expectedOwnerDocument != null && node is! Document) {
-    expect(node.ownerDocument, expectedOwnerDocument,
-        reason: "Node '$node' has incorrect 'ownerDocument': $node");
+    expect(
+      node.ownerDocument,
+      expectedOwnerDocument,
+      reason: "Node '$node' has incorrect 'ownerDocument': $node",
+    );
   }
 
   // 'parentNode'
   if (expectedParentNode != null) {
-    expect(node.parentNode, same(expectedParentNode),
-        reason: "Node '$node' has incorrect 'parentNode': $node");
+    expect(
+      node.parentNode,
+      same(expectedParentNode),
+      reason: "Node '$node' has incorrect 'parentNode': $node",
+    );
   }
 
   // 'previousNode.nextNode' or 'parentNode.firstChild'
@@ -74,8 +80,11 @@ void _expectSaneTree(
   Node? previousChild;
   var nextChild = node.firstChild;
   while (nextChild != null) {
-    _expectSaneTree(nextChild,
-        expectedOwnerDocument: expectedOwnerDocument, expectedParentNode: node);
+    _expectSaneTree(
+      nextChild,
+      expectedOwnerDocument: expectedOwnerDocument,
+      expectedParentNode: node,
+    );
     previousChild = nextChild;
     nextChild = nextChild.nextNode;
   }

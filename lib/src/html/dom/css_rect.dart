@@ -43,14 +43,7 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html.internal;
-
-final _CONTENT = 'content';
-
-final _HEIGHT = ['top', 'bottom'];
-final _MARGIN = 'margin';
-final _PADDING = 'padding';
-final _WIDTH = ['right', 'left'];
+part of '../../html.dart';
 
 /// A class for representing CSS dimensions.
 ///
@@ -63,6 +56,12 @@ final _WIDTH = ['right', 'left'];
 /// animation frame is discouraged. See also:
 /// [Browser Reflow](https://developers.google.com/speed/articles/reflow)
 abstract class CssRect implements Rectangle<num> {
+  static const _content = 'content';
+  static const _heightProperties = ['top', 'bottom'];
+  static const _marginProperty = 'margin';
+  static const _paddingProperty = 'padding';
+  static const _widthProperties = ['right', 'left'];
+
   final Element _element;
 
   CssRect(this._element);
@@ -79,7 +78,11 @@ abstract class CssRect implements Rectangle<num> {
 
   @override
   int get hashCode => _JenkinsSmiHash.hash4(
-      left.hashCode, top.hashCode, right.hashCode, bottom.hashCode);
+    left.hashCode,
+    top.hashCode,
+    right.hashCode,
+    bottom.hashCode,
+  );
 
   /// The height of this rectangle.
   ///
@@ -224,7 +227,9 @@ abstract class CssRect implements Rectangle<num> {
   /// to augmentingMeasurement, we may need to add or subtract margin, padding,
   /// or border values, depending on the measurement we're trying to obtain.
   num _addOrSubtractToBoxModel(
-      List<String> dimensions, String augmentingMeasurement) {
+    List<String> dimensions,
+    String augmentingMeasurement,
+  ) {
     // getComputedStyle always returns pixel values (hence, computed), so we're
     // always dealing with pixels in this method.
     var styles = _element.getComputedStyle();
@@ -234,25 +239,29 @@ abstract class CssRect implements Rectangle<num> {
     for (var measurement in dimensions) {
       // The border-box and default box model both exclude margin in the regular
       // height/width calculation, so add it if we want it for this measurement.
-      if (augmentingMeasurement == _MARGIN) {
-        val += Dimension.css(
-                styles.getPropertyValue('$augmentingMeasurement-$measurement'))
-            .value;
+      if (augmentingMeasurement == _marginProperty) {
+        val +=
+            Dimension.css(
+              styles.getPropertyValue('$augmentingMeasurement-$measurement'),
+            ).value;
       }
 
       // The border-box includes padding and border, so remove it if we want
       // just the content itself.
-      if (augmentingMeasurement == _CONTENT) {
-        val -= Dimension.css(styles.getPropertyValue('$_PADDING-$measurement'))
-            .value;
+      if (augmentingMeasurement == _content) {
+        val -=
+            Dimension.css(
+              styles.getPropertyValue('$_paddingProperty-$measurement'),
+            ).value;
       }
 
       // At this point, we don't wan't to augment with border or margin,
       // so remove border.
-      if (augmentingMeasurement != _MARGIN) {
+      if (augmentingMeasurement != _marginProperty) {
         val -=
-            Dimension.css(styles.getPropertyValue('border-$measurement-width'))
-                .value;
+            Dimension.css(
+              styles.getPropertyValue('border-$measurement-width'),
+            ).value;
       }
     }
     return val;
@@ -263,7 +272,7 @@ abstract class CssRect implements Rectangle<num> {
 /// element's content + padding + border in the
 /// [box model](http://www.w3.org/TR/CSS2/box.html).
 class _BorderCssRect extends CssRect {
-  _BorderCssRect(element) : super(element);
+  _BorderCssRect(super.element);
   @override
   num get height => _element.offsetHeight;
 
@@ -283,8 +292,8 @@ class _ContentCssListRect extends _ContentCssRect {
   final List<Element> _elementList;
 
   _ContentCssListRect(List<Element> elementList)
-      : _elementList = elementList,
-        super(elementList.first);
+    : _elementList = elementList,
+      super(elementList.first);
 
   /// Set the height to `newHeight`.
   ///
@@ -314,11 +323,12 @@ class _ContentCssListRect extends _ContentCssRect {
 /// A rectangle representing all the content of the element in the
 /// [box model](http://www.w3.org/TR/CSS2/box.html).
 class _ContentCssRect extends CssRect {
-  _ContentCssRect(Element element) : super(element);
+  _ContentCssRect(super.element);
 
   @override
   num get height =>
-      _element.offsetHeight + _addOrSubtractToBoxModel(_HEIGHT, _CONTENT);
+      _element.offsetHeight +
+      _addOrSubtractToBoxModel(CssRect._heightProperties, CssRect._content);
 
   /// Set the height to `newHeight`.
   ///
@@ -344,16 +354,17 @@ class _ContentCssRect extends CssRect {
   @override
   num get left =>
       _element.getBoundingClientRect().left -
-      _addOrSubtractToBoxModel(['left'], _CONTENT);
+      _addOrSubtractToBoxModel(['left'], CssRect._content);
 
   @override
   num get top =>
       _element.getBoundingClientRect().top -
-      _addOrSubtractToBoxModel(['top'], _CONTENT);
+      _addOrSubtractToBoxModel(['top'], CssRect._content);
 
   @override
   num get width =>
-      _element.offsetWidth + _addOrSubtractToBoxModel(_WIDTH, _CONTENT);
+      _element.offsetWidth +
+      _addOrSubtractToBoxModel(CssRect._widthProperties, CssRect._content);
 
   /// Set the current computed width in pixels of this element.
   ///
@@ -405,7 +416,7 @@ class _JenkinsSmiHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 
-  static int hash4(a, b, c, d) =>
+  static int hash4(dynamic a, dynamic b, dynamic c, dynamic d) =>
       finish(combine(combine(combine(combine(0, a), b), c), d));
 }
 
@@ -413,47 +424,63 @@ class _JenkinsSmiHash {
 /// element's content + padding + border + margin in the
 /// [box model](http://www.w3.org/TR/CSS2/box.html).
 class _MarginCssRect extends CssRect {
-  _MarginCssRect(element) : super(element);
+  _MarginCssRect(super.element);
   @override
   num get height =>
-      _element.offsetHeight + _addOrSubtractToBoxModel(_HEIGHT, _MARGIN);
+      _element.offsetHeight +
+      _addOrSubtractToBoxModel(
+        CssRect._heightProperties,
+        CssRect._marginProperty,
+      );
 
   @override
   num get left =>
       _element.getBoundingClientRect().left -
-      _addOrSubtractToBoxModel(['left'], _MARGIN);
+      _addOrSubtractToBoxModel(['left'], CssRect._marginProperty);
 
   @override
   num get top =>
       _element.getBoundingClientRect().top -
-      _addOrSubtractToBoxModel(['top'], _MARGIN);
+      _addOrSubtractToBoxModel(['top'], CssRect._marginProperty);
 
   @override
   num get width =>
-      _element.offsetWidth + _addOrSubtractToBoxModel(_WIDTH, _MARGIN);
+      _element.offsetWidth +
+      _addOrSubtractToBoxModel(
+        CssRect._widthProperties,
+        CssRect._marginProperty,
+      );
 }
 
 /// A rectangle representing the dimensions of the space occupied by the
 /// element's content + padding in the
 /// [box model](http://www.w3.org/TR/CSS2/box.html).
 class _PaddingCssRect extends CssRect {
-  _PaddingCssRect(element) : super(element);
+  _PaddingCssRect(super.element);
 
   @override
   num get height =>
-      _element.offsetHeight + _addOrSubtractToBoxModel(_HEIGHT, _PADDING);
+      _element.offsetHeight +
+      _addOrSubtractToBoxModel(
+        CssRect._heightProperties,
+        CssRect._paddingProperty,
+      );
 
   @override
   num get left =>
       _element.getBoundingClientRect().left -
-      _addOrSubtractToBoxModel(['left'], _PADDING);
+      _addOrSubtractToBoxModel(['left'], CssRect._paddingProperty);
 
   @override
   num get top =>
       _element.getBoundingClientRect().top -
-      _addOrSubtractToBoxModel(['top'], _PADDING);
+      _addOrSubtractToBoxModel(['top'], CssRect._paddingProperty);
 
   @override
   num get width =>
-      _element.offsetWidth + _addOrSubtractToBoxModel(_WIDTH, _PADDING);
+      _element.offsetWidth +
+      _addOrSubtractToBoxModel(
+        CssRect._widthProperties,
+        CssRect._paddingProperty,
+      );
 }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testDocument() {
   group('Document:', () {
@@ -68,113 +68,114 @@ void _testDocument() {
       _expectSaneDocument(document);
 
       // Insert
-      final n0_n2 = Element.tag('div')..id = 'n0_n2';
-      n0.append(n0_n2);
+      final n0N2 = Element.tag('div')..id = 'n0_n2';
+      n0.append(n0N2);
 
       // Document:
       //   n0
       //     n0_n2
       expect(n0.parent, isNull);
       expect(n0.parentNode, same(document));
-      expect(n0.firstChild, same(n0_n2));
-      expect(n0.lastChild, same(n0_n2));
+      expect(n0.firstChild, same(n0N2));
+      expect(n0.lastChild, same(n0N2));
       expect(n0.nextNode, isNull);
       expect(n0.getRootNode(), document);
 
-      expect(n0_n2.parent, same(n0));
-      expect(n0_n2.parentNode, same(n0));
-      expect(n0_n2.firstChild, isNull);
-      expect(n0_n2.lastChild, isNull);
-      expect(n0_n2.nextNode, isNull);
-      expect(n0_n2.getRootNode(), document);
+      expect(n0N2.parent, same(n0));
+      expect(n0N2.parentNode, same(n0));
+      expect(n0N2.firstChild, isNull);
+      expect(n0N2.lastChild, isNull);
+      expect(n0N2.nextNode, isNull);
+      expect(n0N2.getRootNode(), document);
       _expectSaneDocument(document);
 
       // Insert
-      final n0_n0 = Element.tag('div')
-        ..setAttribute('id', 'n0_n0')
-        ..id = 'n0_n0';
-      n0.insertBefore(n0_n0, n0_n2);
+      final n0N0 =
+          Element.tag('div')
+            ..setAttribute('id', 'n0_n0')
+            ..id = 'n0_n0';
+      n0.insertBefore(n0N0, n0N2);
 
       // Document:
       //   n0
       //     n0_n0
       //     n0_n2
-      expect(n0.firstChild, same(n0_n0));
-      expect(n0.lastChild, same(n0_n2));
+      expect(n0.firstChild, same(n0N0));
+      expect(n0.lastChild, same(n0N2));
 
-      expect(n0_n0.parent, same(n0));
-      expect(n0_n0.parentNode, same(n0));
-      expect(n0_n0.firstChild, isNull);
-      expect(n0_n0.nextNode, n0_n2);
-      expect(n0_n2.previousNode, n0_n0);
+      expect(n0N0.parent, same(n0));
+      expect(n0N0.parentNode, same(n0));
+      expect(n0N0.firstChild, isNull);
+      expect(n0N0.nextNode, n0N2);
+      expect(n0N2.previousNode, n0N0);
       _expectSaneDocument(document);
 
       // Insert
-      final n0_n1 = Element.tag('div')..id = 'n0_n1';
-      n0.insertBefore(n0_n1, n0_n2);
+      final n0N1 = Element.tag('div')..id = 'n0_n1';
+      n0.insertBefore(n0N1, n0N2);
 
       // Document:
       //   n0
       //     n0_n0
       //     n0_n1
       //     n0_n2
-      expect(n0.firstChild, same(n0_n0));
-      expect(n0.lastChild, same(n0_n2));
-      expect(n0_n0.parent, same(n0));
-      expect(n0_n0.parentNode, same(n0));
-      expect(n0_n0.nextNode, n0_n1);
-      expect(n0_n1.parent, same(n0));
-      expect(n0_n1.parentNode, same(n0));
-      expect(n0_n1.nextNode, n0_n2);
+      expect(n0.firstChild, same(n0N0));
+      expect(n0.lastChild, same(n0N2));
+      expect(n0N0.parent, same(n0));
+      expect(n0N0.parentNode, same(n0));
+      expect(n0N0.nextNode, n0N1);
+      expect(n0N1.parent, same(n0));
+      expect(n0N1.parentNode, same(n0));
+      expect(n0N1.nextNode, n0N2);
       _expectSaneDocument(document);
 
       // Remove
-      n0_n1.remove();
+      n0N1.remove();
 
       // Document:
       //   n0
       //     n0_n0
       //     n0_n2
-      expect(n0_n1.parent, isNull);
-      expect(n0_n1.parentNode, isNull);
-      expect(n0_n1.getRootNode(), same(n0_n1));
+      expect(n0N1.parent, isNull);
+      expect(n0N1.parentNode, isNull);
+      expect(n0N1.getRootNode(), same(n0N1));
       expect(document.firstChild, n0);
       expect(document.lastChild, n0);
-      expect(n0.firstChild, n0_n0);
-      expect(n0.lastChild, n0_n2);
+      expect(n0.firstChild, n0N0);
+      expect(n0.lastChild, n0N2);
       _expectSaneDocument(document);
-      _expectSaneTree(n0_n1);
+      _expectSaneTree(n0N1);
 
       // Remove
-      n0_n2.remove();
+      n0N2.remove();
 
       // Document:
       //   n0
       //     n0_n0
-      expect(n0_n2.parent, isNull);
-      expect(n0_n2.parentNode, isNull);
-      expect(n0_n2.getRootNode(), same(n0_n2));
+      expect(n0N2.parent, isNull);
+      expect(n0N2.parentNode, isNull);
+      expect(n0N2.getRootNode(), same(n0N2));
       expect(document.firstChild, n0);
       expect(document.lastChild, n0);
-      expect(n0.firstChild, n0_n0);
-      expect(n0.lastChild, n0_n0);
+      expect(n0.firstChild, n0N0);
+      expect(n0.lastChild, n0N0);
       _expectSaneDocument(document);
-      _expectSaneTree(n0_n2);
+      _expectSaneTree(n0N2);
 
       // Remove
-      n0_n0.remove();
+      n0N0.remove();
 
       // Document:
       //   n0
-      expect(n0_n0.parent, isNull);
-      expect(n0_n0.parentNode, isNull);
-      expect(n0_n0.getRootNode(), same(n0_n0));
+      expect(n0N0.parent, isNull);
+      expect(n0N0.parentNode, isNull);
+      expect(n0N0.getRootNode(), same(n0N0));
       expect(document.firstChild, n0);
       expect(document.lastChild, n0);
       expect(n0.firstChild, isNull);
       expect(n0.lastChild, isNull);
       _expectSaneDocument(document);
-      _expectSaneTree(n0_n0);
+      _expectSaneTree(n0N0);
 
       // Remove
       n0.remove();
@@ -203,9 +204,11 @@ void _testDocument() {
         document.append(Text('c'));
       } catch (e) {
         expect(
-            e.toString(),
-            contains(
-                'Nodes of type \'#text\' may not be inserted inside nodes of type \'#document\'.'));
+          e.toString(),
+          contains(
+            'Nodes of type \'#text\' may not be inserted inside nodes of type \'#document\'.',
+          ),
+        );
       }
     });
 
@@ -225,10 +228,7 @@ void _testDocument() {
       try {
         document.append(HtmlHtmlElement());
       } catch (e) {
-        expect(
-          e.toString(),
-          contains('Only one element on document allowed.'),
-        );
+        expect(e.toString(), contains('Only one element on document allowed.'));
       }
     });
 
@@ -236,19 +236,19 @@ void _testDocument() {
       _temporarilyRemoveChildrenFromDocument();
 
       final n0 = Element.tag('div')..id = 'n0';
-      final n0_n0 = Element.tag('div')..id = 'n0_n0';
-      final n0_n1 = Element.tag('div')..id = 'n0_n1';
-      final n0_n2 = Element.tag('div')..id = 'n0_n2';
-      n0.append(n0_n0);
-      n0.append(n0_n1);
-      n0.append(n0_n2);
+      final n0N0 = Element.tag('div')..id = 'n0_n0';
+      final n0N1 = Element.tag('div')..id = 'n0_n1';
+      final n0N2 = Element.tag('div')..id = 'n0_n2';
+      n0.append(n0N0);
+      n0.append(n0N1);
+      n0.append(n0N2);
       document.append(n0);
 
       // Check getElementById
       expect(document.getElementById(n0.id), same(n0));
-      expect(document.getElementById(n0_n0.id), same(n0_n0));
-      expect(document.getElementById(n0_n1.id), same(n0_n1));
-      expect(document.getElementById(n0_n2.id), same(n0_n2));
+      expect(document.getElementById(n0N0.id), same(n0N0));
+      expect(document.getElementById(n0N1.id), same(n0N1));
+      expect(document.getElementById(n0N2.id), same(n0N2));
       expect(document.getElementById('nonExistingId'), isNull);
     });
 

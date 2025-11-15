@@ -43,7 +43,7 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html.internal;
+part of '../../html.dart';
 
 typedef FrameRequestCallback = void Function(num highResTime);
 
@@ -64,7 +64,7 @@ class CacheStorage {
 
   Future keys() => throw UnimplementedError();
 
-  Future match(/*RequestInfo*/ request, [Map? options]) {
+  Future match(dynamic request, [Map? options]) {
     throw UnimplementedError();
   }
 
@@ -93,18 +93,6 @@ abstract class CustomElementRegistry {
   Object get(String name);
 
   Future whenDefined(String name);
-}
-
-class External {
-  External.internal();
-
-  void AddSearchProvider() {
-    throw UnimplementedError();
-  }
-
-  void IsSearchProviderInstalled() {
-    throw UnimplementedError();
-  }
 }
 
 class IdleDeadline {
@@ -178,7 +166,7 @@ class ScreenOrientation extends EventTarget {
   final String type;
 
   ScreenOrientation.constructor({this.angle = 1, this.type = 'vertical'})
-      : super.internal();
+    : super.internal();
 
   Stream<Event> get onChange => changeEvent.forTarget(this);
 
@@ -281,7 +269,11 @@ abstract class Selection {
   }
 
   void setBaseAndExtent(
-      Node baseNode, int baseOffset, Node extentNode, int extentOffset) {
+    Node baseNode,
+    int baseOffset,
+    Node extentNode,
+    int extentOffset,
+  ) {
     throw UnimplementedError();
   }
 

@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../main_test.dart';
 
 void _testWindowControllerNetworking() {
   test('In VM, openHttp(_) returns the content', () async {
-    final uri = Uri.parse(
-      'http://localhost:$_httpServerPort/hello_world.html',
-    );
+    final uri = Uri.parse('http://localhost:$_httpServerPort/hello_world.html');
     final windowController = WindowController();
     await windowController.openHttp(uri: uri);
     final document = windowController.window.document as HtmlDocument;

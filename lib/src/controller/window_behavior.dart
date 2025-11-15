@@ -19,7 +19,8 @@ import 'package:universal_html/html.dart';
 import 'window_behavior_impl_browser.dart'
     if (dart.library.html) 'window_behavior_impl_browser.dart' // Browser
     if (dart.library.io) 'window_behavior_impl_others.dart' // VM
-    if (dart.library.js) 'window_behavior_impl_others.dart' as impl; // Node.JS
+    if (dart.library.js) 'window_behavior_impl_others.dart'
+    as impl; // Node.JS
 
 /// Defines behavior of the browser APIs (such as navigation events).
 ///
@@ -49,21 +50,15 @@ class WindowBehavior {
 
   /// Intercepts DOM text changes.
   @protected
-  void beforeElementChildrenMutation({
-    required Element element,
-  }) {}
+  void beforeElementChildrenMutation({required Element element}) {}
 
   /// Intercepts DOM node attachment operations.
   @protected
-  void beforeNodeAttached({
-    required Node node,
-  }) {}
+  void beforeNodeAttached({required Node node}) {}
 
   /// Intercepts DOM node detachments operations.
   @protected
-  void beforeNodeDetached({
-    required Node node,
-  }) {}
+  void beforeNodeDetached({required Node node}) {}
 
   /// Called by [EventTarget] when default behavior of an event should occur.
   ///
@@ -122,7 +117,9 @@ class WindowBehavior {
   /// Called when [FileUploadInputElement] is clicked.
   @protected
   void handleFileUploadInputElementClick(
-      FileUploadInputElement element, Event event) {
+    FileUploadInputElement element,
+    Event event,
+  ) {
     throw UnimplementedError();
   }
 
@@ -142,9 +139,7 @@ class WindowBehavior {
     );
   }
 
-  InternalElementData newInternalElementData({
-    required Element element,
-  }) {
+  InternalElementData newInternalElementData({required Element element}) {
     return InternalElementData();
   }
 
@@ -152,17 +147,11 @@ class WindowBehavior {
   ///
   /// This method enables developers to override the default [Navigator]
   /// implementation.
-  Navigator newNavigator({
-    required Window window,
-  }) {
-    return impl.newNavigator(
-      window: window,
-    );
+  Navigator newNavigator({required Window window}) {
+    return impl.newNavigator(window: window);
   }
 
-  Window newWindow({
-    required WindowController windowController,
-  }) {
+  Window newWindow({required WindowController windowController}) {
     return impl.newWindow(windowController: windowController);
   }
 }

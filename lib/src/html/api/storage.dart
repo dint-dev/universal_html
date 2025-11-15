@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 /// The type used by the
 /// [Window.localStorage] and [Window.sessionStorage] properties.
@@ -137,8 +137,11 @@ class Storage extends DelegatingMap<String, String> {
 
   // We need to override this to ensure we dispatch StorageEvent events.
   @override
-  String update(String key, String Function(String value) update,
-      {String Function()? ifAbsent}) {
+  String update(
+    String key,
+    String Function(String value) update, {
+    String Function()? ifAbsent,
+  }) {
     var value = this[key];
     if (value == null) {
       if (ifAbsent == null) {
@@ -170,17 +173,13 @@ class StorageEvent extends Event {
   final String? url;
 
   StorageEvent(
-    String type, {
+    super.type, {
     this.key,
     this.newValue,
     this.oldValue,
     this.storageArea,
     this.url,
-    bool canBubble = false,
-    bool cancelable = false,
-  }) : super.internal(
-          type,
-          canBubble: canBubble,
-          cancelable: cancelable,
-        );
+    super.canBubble = false,
+    bool super.cancelable = false,
+  }) : super.internal();
 }

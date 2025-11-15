@@ -76,8 +76,9 @@ class _HtmlParser {
   static final NodeValidatorBuilder _defaultValidator =
       NodeValidatorBuilder.common();
 
-  static final NodeTreeSanitizer _defaultSanitizer =
-      NodeTreeSanitizer(_defaultValidator);
+  static final NodeTreeSanitizer _defaultSanitizer = NodeTreeSanitizer(
+    _defaultValidator,
+  );
 
   static const int _typeHtml = 0;
   static const int _typeXml = 1;
@@ -87,11 +88,7 @@ class _HtmlParser {
   final int type;
   final String mime;
 
-  _HtmlParser({
-    required this.window,
-    required this.type,
-    required this.mime,
-  });
+  _HtmlParser({required this.window, required this.type, required this.mime});
 
   DocumentFragment parseDocumentFragment({
     required int type,
@@ -136,10 +133,7 @@ class _HtmlParser {
         final tagName = localName.toUpperCase();
 
         // ignore: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-        return Element.internalTag(
-          ownerDocument,
-          tagName,
-        );
+        return Element.internalTag(ownerDocument, tagName);
       case _typeXml:
         return UnknownElement.internal(
           ownerDocument,
@@ -169,9 +163,10 @@ class _HtmlParser {
           if (name is html_parsing.AttributeName) {
             result.internalSetAttributeNSFromParser(
               namespaceUri: name.namespace,
-              qualifiedName: name.prefix == null
-                  ? name.name
-                  : '${name.prefix}:${name.name}',
+              qualifiedName:
+                  name.prefix == null
+                      ? name.name
+                      : '${name.prefix}:${name.name}',
               localName: name.name,
               value: value,
             );
@@ -208,7 +203,8 @@ class _HtmlParser {
       final data = input.data!;
       if (data.startsWith('[CDATA[') && data.endsWith(']]')) {
         return Text(
-            data.substring('[CDATA['.length, data.length - ']]'.length));
+          data.substring('[CDATA['.length, data.length - ']]'.length),
+        );
       }
 
       return Comment(data);
@@ -254,10 +250,7 @@ class _HtmlParser {
       // DocumentType
       // ------------
 
-      return InternalDocumentType.internal(
-        ownerDocument,
-        input.name!,
-      );
+      return InternalDocumentType.internal(ownerDocument, input.name!);
     } else {
       throw UnimplementedError();
     }

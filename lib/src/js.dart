@@ -44,7 +44,7 @@ The original files in the Dart SDK had the following license:
 */
 
 @visibleForTesting
-library universal_html.js.internal;
+library;
 
 import 'package:meta/meta.dart';
 
@@ -172,7 +172,7 @@ abstract class JsObject {
   ///
   /// An exception will be thrown if [object] either is `null` or has the type
   /// `bool`, `num`, or `String`.
-  factory JsObject.fromBrowserObject(object) {
+  factory JsObject.fromBrowserObject(dynamic object) {
     if (object is num || object is String || object is bool || object == null) {
       throw ArgumentError('object cannot be a num, string, bool, or null');
     }
@@ -186,7 +186,7 @@ abstract class JsObject {
   /// converted. Maps and Iterables are copied to a new JavaScript object.
   /// Primitives and other transferrable values are directly converted to their
   /// JavaScript type, and all other objects are proxied.
-  factory JsObject.jsify(object) {
+  factory JsObject.jsify(dynamic object) {
     if ((object is! Map) && (object is! Iterable)) {
       throw ArgumentError('object must be a Map or Iterable');
     }
@@ -229,7 +229,7 @@ abstract class JsObject {
   /// Removes [property] from the JavaScript object.
   ///
   /// This is the equivalent of the `delete` operator in JavaScript.
-  void deleteProperty(property) {
+  void deleteProperty(dynamic property) {
     if (property is! String && property is! num) {
       throw ArgumentError('property is not a String or num');
     }

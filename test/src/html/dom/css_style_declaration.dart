@@ -1,4 +1,4 @@
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testCssStyleDeclaration() {
   group('CssStyleDeclaration:', () {

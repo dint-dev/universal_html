@@ -43,7 +43,7 @@ The original files in the Dart SDK had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-library universal_html.web_audio.internal;
+library;
 
 import 'html.dart';
 

@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 /// Performs sanitization of a node tree after construction to ensure that it
 /// does not contain any disallowed elements or attributes.
@@ -148,7 +148,8 @@ class _ThrowsNodeValidator implements NodeValidator {
   bool allowsAttribute(Element element, String attributeName, String value) {
     if (!validator.allowsAttribute(element, attributeName, value)) {
       throw ArgumentError(
-          '${Element._safeTagName(element)}[$attributeName="$value"]');
+        '${Element._safeTagName(element)}[$attributeName="$value"]',
+      );
     }
     return true;
   }
@@ -239,12 +240,20 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
   /// Having done basic sanity checking on the element, and computed the
   /// important attributes we want to check, remove it if it's not valid
   /// or not allowed, either as a whole or particular attributes.
-  void _sanitizeElement(Element element, Node? parent, bool corrupted,
-      String text, String tag, Map attrs, String? isAttr) {
+  void _sanitizeElement(
+    Element element,
+    Node? parent,
+    bool corrupted,
+    String text,
+    String tag,
+    Map attrs,
+    String? isAttr,
+  ) {
     if (false != corrupted) {
       _removeNode(element, parent);
-      window.console
-          .warn('Removing element due to corrupted attributes on <$text>');
+      window.console.warn(
+        'Removing element due to corrupted attributes on <$text>',
+      );
       return;
     }
     if (!validator.allowsElement(element)) {
@@ -256,8 +265,10 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
     if (isAttr != null) {
       if (!validator.allowsAttribute(element, 'is', isAttr)) {
         _removeNode(element, parent);
-        window.console.warn('Removing disallowed type extension '
-            '<$tag is="$isAttr">');
+        window.console.warn(
+          'Removing disallowed type extension '
+          '<$tag is="$isAttr">',
+        );
         return;
       }
     }
@@ -268,9 +279,14 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
     for (var i = attrs.length - 1; i >= 0; --i) {
       var name = keys[i];
       if (!validator.allowsAttribute(
-          element, name.toLowerCase(), attrs[name])) {
-        window.console.warn('Removing disallowed attribute '
-            '<$tag $name="${attrs[name]}">');
+        element,
+        name.toLowerCase(),
+        attrs[name],
+      )) {
+        window.console.warn(
+          'Removing disallowed attribute '
+          '<$tag $name="${attrs[name]}">',
+        );
         attrs.remove(name);
       }
     }
@@ -282,7 +298,7 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
   }
 
   /// Sanitize the element, assuming we can't trust anything about it.
-  void _sanitizeUntrustedElement(/* Element */ element, Node? parent) {
+  void _sanitizeUntrustedElement(dynamic element, Node? parent) {
     // If the _hasCorruptedAttributes does not successfully return false,
     // then we consider it corrupted and remove.
     // TODO(alanknight): This is a workaround because on Firefox
@@ -306,9 +322,10 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
       // On IE, erratically, the hasCorruptedAttributes test can return false,
       // even though it clearly is corrupted. A separate copy of the test
       // inlining just the basic check seems to help.
-      corrupted = corruptedTest1
-          ? true
-          : Element._hasCorruptedAttributesAdditionalCheck(element);
+      corrupted =
+          corruptedTest1
+              ? true
+              : Element._hasCorruptedAttributesAdditionalCheck(element);
     } catch (e) {
       // Ignore
     }
@@ -320,8 +337,15 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
     }
     try {
       var elementTagName = Element._safeTagName(element);
-      _sanitizeElement(element, parent, corrupted, elementText, elementTagName,
-          attrs, isAttr);
+      _sanitizeElement(
+        element,
+        parent,
+        corrupted,
+        elementText,
+        elementTagName,
+        attrs,
+        isAttr,
+      );
     } on ArgumentError {
       // Thrown by _ThrowsNodeValidator
       rethrow;

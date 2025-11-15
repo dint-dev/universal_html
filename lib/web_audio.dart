@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// Cross-platform "dart:web_audio" library.
-library universal_html.web_audio;
+library;
 
 export 'src/_sdk/web_audio.dart'
     if (dart.library.web_audio) 'src/_sdk/web_audio.dart' // Browser

@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 typedef BlobCallback = void Function(Blob blob);
 
@@ -56,28 +56,30 @@ abstract class Blob {
         blobParts[i] = '$part\x00';
       }
     }
-    var parts = List<List<int>>.from(blobParts.map((part) {
-      if (part is String) {
-        return utf8.encode(part);
-      }
-      if (part is _Blob) {
-        return part._data;
-      }
-      if (part is TypedData) {
-        return Uint8List.view(
-          part.buffer,
-          part.offsetInBytes,
-          part.lengthInBytes,
-        );
-      }
-      if (part is ByteBuffer) {
-        return part.asUint8List();
-      }
-      if (part is List<int>) {
-        return part;
-      }
-      throw ArgumentError('Encountered an invalid blob part');
-    }));
+    var parts = List<List<int>>.from(
+      blobParts.map((part) {
+        if (part is String) {
+          return utf8.encode(part);
+        }
+        if (part is _Blob) {
+          return part._data;
+        }
+        if (part is TypedData) {
+          return Uint8List.view(
+            part.buffer,
+            part.offsetInBytes,
+            part.lengthInBytes,
+          );
+        }
+        if (part is ByteBuffer) {
+          return part.asUint8List();
+        }
+        if (part is List<int>) {
+          return part;
+        }
+        throw ArgumentError('Encountered an invalid blob part');
+      }),
+    );
     var n = 0;
     for (var part in parts) {
       n += part.length;

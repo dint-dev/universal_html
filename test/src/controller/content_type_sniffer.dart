@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../main_test.dart';
 
 void _testContentTypeSniffer() {
   group('ContentTypeSniffer', () {

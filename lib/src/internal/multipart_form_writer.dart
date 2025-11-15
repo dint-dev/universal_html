@@ -28,14 +28,10 @@ class MultipartFormWriter {
   }
 
   void writeFieldValue(String name, String value) {
-    final parameters = <String, String>{
-      'name': name,
-    };
-    writeContentDisposition(io.ContentType(
-      'text',
-      'plain',
-      parameters: parameters,
-    ));
+    final parameters = <String, String>{'name': name};
+    writeContentDisposition(
+      io.ContentType('text', 'plain', parameters: parameters),
+    );
     sink.writeln();
     sink.writeln(value);
     sink.writeln();
@@ -44,18 +40,14 @@ class MultipartFormWriter {
   }
 
   void writeFile(String name, Uint8List value, {String? fileName}) {
-    final parameters = <String, String>{
-      'name': name,
-    };
+    final parameters = <String, String>{'name': name};
     fileName ??= '';
     if (fileName != '') {
       parameters['filename'] = fileName;
     }
-    writeContentDisposition(io.ContentType(
-      'application',
-      'octet-stream',
-      parameters: parameters,
-    ));
+    writeContentDisposition(
+      io.ContentType('application', 'octet-stream', parameters: parameters),
+    );
     sink.writeln();
     sink.add(value);
     sink.writeln();

@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 /// Lazy implementation of the child nodes of an element that does not request
 /// the actual child nodes of an element until strictly necessary greatly
@@ -214,8 +214,12 @@ class _ChildNodeListLazy extends ListBase<Node> {
   }
 
   @override
-  void setRange(int start, int end, Iterable<Node> iterable,
-      [int skipCount = 0]) {
+  void setRange(
+    int start,
+    int end,
+    Iterable<Node> iterable, [
+    int skipCount = 0,
+  ]) {
     throw UnsupportedError('Cannot setRange on Node list');
   }
 

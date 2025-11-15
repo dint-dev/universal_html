@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testServiceWorker() {
   group('Worker:', () {
@@ -24,8 +24,9 @@ void _testServiceWorker() {
 
   group('ServiceWorker', () {
     test('ServiceWorker()', () async {
-      final registration =
-          await window.navigator.serviceWorker!.register('example');
+      final registration = await window.navigator.serviceWorker!.register(
+        'example',
+      );
       final worker = registration.active!;
       worker.postMessage('message');
     }, testOn: 'browser && !browser'); // We don't want to execute this test

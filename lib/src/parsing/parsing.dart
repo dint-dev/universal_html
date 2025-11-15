@@ -18,7 +18,8 @@ import 'package:universal_html/html.dart' as universal_html;
 import 'parsing_impl_browser.dart'
     if (dart.library.html) 'parsing_impl_browser.dart' // Browser
     if (dart.library.io) 'parsing_impl_vm.dart' // VM
-    if (dart.library.js) 'parsing_impl_vm.dart' as impl; // Node.JS
+    if (dart.library.js) 'parsing_impl_vm.dart'
+    as impl; // Node.JS
 
 /// Parses a [HtmlDocument].
 ///
@@ -29,15 +30,9 @@ import 'parsing_impl_browser.dart'
 ///   final document = parseHtmlDocument('<html>...</html>');
 /// }
 /// ```
-HtmlDocument parseHtmlDocument(
-  String content, {
-  Window? window,
-}) {
+HtmlDocument parseHtmlDocument(String content, {Window? window}) {
   window ??= universal_html.window;
-  return impl.parseHtmlDocument(
-    window: window,
-    content: content,
-  );
+  return impl.parseHtmlDocument(window: window, content: content);
 }
 
 /// Parses an [XmlDocument].
@@ -55,9 +50,5 @@ XmlDocument parseXmlDocument(
   String mime = 'text/xml',
 }) {
   window ??= universal_html.window;
-  return impl.parseXmlDocument(
-    window: window,
-    content: content,
-    mime: mime,
-  );
+  return impl.parseXmlDocument(window: window, content: content, mime: mime);
 }

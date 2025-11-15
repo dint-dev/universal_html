@@ -50,17 +50,21 @@ abstract class EventSourceOutsideBrowser implements EventSource {
   ///
   /// You can access [httpClientRequest] if you want to set headers.
   FutureOr<void> Function(
-          EventSourceOutsideBrowser eventSource, HttpClientRequest request)?
-      onHttpClientRequest;
+    EventSourceOutsideBrowser eventSource,
+    HttpClientRequest request,
+  )?
+  onHttpClientRequest;
 
   /// A callback called when a [HttpClientResponse] arrives (only outside
   /// browsers).
   ///
   /// You can access [httpClientResponse] if you want to access headers.
   FutureOr<void> Function(
-      EventSourceOutsideBrowser eventSource,
-      HttpClientRequest request,
-      HttpClientResponse response)? onHttpClientResponse;
+    EventSourceOutsideBrowser eventSource,
+    HttpClientRequest request,
+    HttpClientResponse response,
+  )?
+  onHttpClientResponse;
 
   /// Current timeout.
   Duration retryDuration = Duration(seconds: 3);

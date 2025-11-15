@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// ignore_for_file: constant_identifier_names
+
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -43,7 +45,7 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html.internal;
+part of '../../html.dart';
 
 typedef RemotePlaybackAvailabilityCallback = void Function(bool available);
 
@@ -133,7 +135,7 @@ abstract class MediaKeys {
 
   Future getStatusForPolicy(MediaKeysPolicy policy);
 
-  Future setServerCertificate(/*BufferSource*/ serverCertificate);
+  Future setServerCertificate(dynamic serverCertificate);
 }
 
 abstract class MediaKeysPolicy {
@@ -314,7 +316,7 @@ abstract class MediaStream implements EventTarget {
 
   static bool get supported => false;
 
-  factory MediaStream([stream_OR_tracks]) {
+  factory MediaStream([dynamic streamOrTracks]) {
     throw UnimplementedError();
   }
 
@@ -346,7 +348,7 @@ abstract class MediaStream implements EventTarget {
 abstract class MediaStreamEvent extends Event {
   static bool get supported => false;
 
-  MediaStreamEvent(String type) : super.internal(type);
+  MediaStreamEvent(super.type) : super.internal();
 
   MediaStream get stream;
 }
@@ -511,8 +513,12 @@ abstract class TimeRanges {
 @Native('TrackDefault')
 class TrackDefault {
   factory TrackDefault(
-      String type, String language, String label, List<String> kinds,
-      [String? byteStreamTrackID]) {
+    String type,
+    String language,
+    String label,
+    List<String> kinds, [
+    String? byteStreamTrackID,
+  ]) {
     throw UnimplementedError();
   }
 

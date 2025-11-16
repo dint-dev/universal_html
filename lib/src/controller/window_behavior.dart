@@ -19,8 +19,7 @@ import 'package:universal_html/html.dart';
 import 'window_behavior_impl_browser.dart'
     if (dart.library.html) 'window_behavior_impl_browser.dart' // Browser
     if (dart.library.io) 'window_behavior_impl_others.dart' // VM
-    if (dart.library.js) 'window_behavior_impl_others.dart'
-    as impl; // Node.JS
+    if (dart.library.js) 'window_behavior_impl_others.dart' as impl; // Node.JS
 
 /// Defines behavior of the browser APIs (such as navigation events).
 ///

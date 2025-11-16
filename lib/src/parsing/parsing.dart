@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:universal_html/html.dart';
 import 'package:universal_html/html.dart' as universal_html;
+import 'package:universal_html/html.dart';
 
 import 'parsing_impl_browser.dart'
     if (dart.library.html) 'parsing_impl_browser.dart' // Browser
     if (dart.library.io) 'parsing_impl_vm.dart' // VM
-    if (dart.library.js) 'parsing_impl_vm.dart'
-    as impl; // Node.JS
+    if (dart.library.js) 'parsing_impl_vm.dart' as impl; // Node.JS
 
 /// Parses a [HtmlDocument].
 ///

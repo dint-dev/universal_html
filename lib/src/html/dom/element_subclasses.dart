@@ -102,7 +102,7 @@ class AreaElement extends HtmlElement
   factory AreaElement() => AreaElement._(window.document);
 
   AreaElement._(Document ownerDocument, {String nodeName = 'AREA'})
-    : super._(ownerDocument, nodeName);
+      : super._(ownerDocument, nodeName);
 
   String? get download => _getAttribute('download');
 
@@ -387,7 +387,7 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
   late final CanvasRenderingContext2D context2D = throw UnimplementedError();
 
   CanvasElement({int? width, int? height})
-    : super._(window.document, 'CANVAS') {
+      : super._(window.document, 'CANVAS') {
     if (width != null) {
       _setAttributeInt('width', width);
     }
@@ -545,7 +545,7 @@ class DataListElement extends HtmlElement {
   factory DataListElement() => DataListElement._(window.document);
 
   DataListElement._(Document ownerDocument)
-    : super._(ownerDocument, 'DATALIST');
+      : super._(ownerDocument, 'DATALIST');
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -622,10 +622,8 @@ class DomTokenList {
 
   void add(String tokens) {
     final list = _getList();
-    final splitTokens = tokens
-        .split(' ')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty);
+    final splitTokens =
+        tokens.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty);
     list.addAll(splitTokens);
     _setList(list);
   }
@@ -640,10 +638,8 @@ class DomTokenList {
 
   void remove(String tokens) {
     final list = _getList();
-    final splitTokens = tokens
-        .split(' ')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty);
+    final splitTokens =
+        tokens.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty);
     for (var token in splitTokens) {
       list.remove(token);
     }
@@ -706,7 +702,7 @@ class FieldSetElement extends HtmlElement with _FormFieldElement {
   factory FieldSetElement() => FieldSetElement._(window.document);
 
   FieldSetElement._(Document ownerDocument)
-    : super._(ownerDocument, 'FIELDSET');
+      : super._(ownerDocument, 'FIELDSET');
 
   bool get disabled => _getAttributeBool('disabled');
 
@@ -790,8 +786,8 @@ class FormElement extends HtmlElement {
   /// Returns all items of this form.
   Iterable<Element> get _items {
     return _treeAsIterable(this).whereType<InputElement>().where(
-      (element) => identical(element.form, this),
-    );
+          (element) => identical(element.form, this),
+        );
   }
 
   bool checkValidity() {
@@ -2219,7 +2215,7 @@ class OptGroupElement extends HtmlElement {
   factory OptGroupElement() => OptGroupElement._(window.document);
 
   OptGroupElement._(Document ownerDocument)
-    : super._(ownerDocument, 'OPTGROUP');
+      : super._(ownerDocument, 'OPTGROUP');
 
   bool get disabled => _getAttributeBool('disabled');
 
@@ -2238,7 +2234,7 @@ class OptionElement extends HtmlElement
   bool? _selected;
 
   OptionElement({String data = '', String value = '', bool selected = false})
-    : super._(window.document, 'option') {
+      : super._(window.document, 'option') {
     if (data.isNotEmpty) {
       appendText(data);
     }
@@ -2256,7 +2252,7 @@ class OptionElement extends HtmlElement
   OptionElement.created() : super.created();
 
   OptionElement._(Document ownerDocument, {String nodeName = 'OPTION'})
-    : super._(ownerDocument, nodeName);
+      : super._(ownerDocument, nodeName);
 
   bool get defaultSelected => _getAttributeBool('selected');
 
@@ -2358,7 +2354,7 @@ class ParagraphElement extends HtmlElement {
   factory ParagraphElement() => ParagraphElement._(window.document);
 
   ParagraphElement._(Document ownerDocument, {String nodeName = 'P'})
-    : super._(ownerDocument, nodeName);
+      : super._(ownerDocument, nodeName);
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -2390,7 +2386,7 @@ class PictureElement extends HtmlElement {
   factory PictureElement.created() => PictureElement._(window.document);
 
   PictureElement._(Document ownerDocument, {String nodeName = 'PICTURE'})
-    : super._(ownerDocument, nodeName);
+      : super._(ownerDocument, nodeName);
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -2401,7 +2397,7 @@ class PreElement extends HtmlElement {
   factory PreElement() => PreElement._(window.document);
 
   PreElement._(Document ownerDocument, {String nodeName = 'PRE'})
-    : super._(ownerDocument, nodeName);
+      : super._(ownerDocument, nodeName);
 
   @override
   Element _newInstance(Document ownerDocument) => PreElement._(ownerDocument);
@@ -2413,7 +2409,7 @@ class ProgressElement extends HtmlElement {
   factory ProgressElement() => ProgressElement._(window.document);
 
   ProgressElement._(Document ownerDocument, {String nodeName = 'PROGRESS'})
-    : super._(ownerDocument, nodeName);
+      : super._(ownerDocument, nodeName);
 
   num? get max => _getAttributeNum('max', defaultValue: null);
 
@@ -2445,7 +2441,7 @@ class ScriptElement extends HtmlElement {
   factory ScriptElement() => ScriptElement._(window.document);
 
   ScriptElement._(Document ownerDocument, {String nodeName = 'SCRIPT'})
-    : super._(ownerDocument, nodeName);
+      : super._(ownerDocument, nodeName);
 
   bool get async => _getAttributeBool('async');
 
@@ -2774,7 +2770,7 @@ class TableCaptionElement extends HtmlElement {
   factory TableCaptionElement() => TableCaptionElement._(window.document);
 
   TableCaptionElement._(Document ownerDocument)
-    : super._(ownerDocument, 'CAPTION');
+      : super._(ownerDocument, 'CAPTION');
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -2918,9 +2914,9 @@ class TableElement extends HtmlElement {
     required T Function() constructor,
   }) {
     final existing = children.whereType<T?>().firstWhere(
-      (e) => e != null && e._lowerCaseTagName == lowerCaseTagName,
-      orElse: () => null,
-    );
+          (e) => e != null && e._lowerCaseTagName == lowerCaseTagName,
+          orElse: () => null,
+        );
     if (existing != null) {
       return existing;
     }
@@ -3044,7 +3040,7 @@ class TemplateElement extends HtmlElement {
   factory TemplateElement() => TemplateElement._(window.document);
 
   TemplateElement._(Document ownerDocument)
-    : super._(ownerDocument, 'TEMPLATE');
+      : super._(ownerDocument, 'TEMPLATE');
 
   DocumentFragment get content {
     throw UnimplementedError();
@@ -3090,7 +3086,7 @@ class TextAreaElement extends HtmlElement
   TextAreaElement.created() : super.created();
 
   TextAreaElement._(Document ownerDocument)
-    : super._(ownerDocument, 'TEXTAREA');
+      : super._(ownerDocument, 'TEXTAREA');
 
   String? get autocapitalize => _getAttribute('autocapitalize');
 

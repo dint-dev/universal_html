@@ -77,7 +77,7 @@ class Window extends EventTarget
   ///
   /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<DeviceOrientationEvent>
-  deviceOrientationEvent = EventStreamProvider<DeviceOrientationEvent>(
+      deviceOrientationEvent = EventStreamProvider<DeviceOrientationEvent>(
     'deviceorientation',
   );
 
@@ -380,8 +380,8 @@ class Window extends EventTarget
     required String href,
     this.outerWidth = 0,
     this.outerHeight = 0,
-  }) : _initialHref = href,
-       super.internal();
+  })  : _initialHref = href,
+        super.internal();
 
   /// Returns a Future that completes just before the window is about to
   /// repaint so the user can draw an animation frame.
@@ -928,6 +928,7 @@ class Window extends EventTarget
   }
 
   @JSName('getMatchedCSSRules')
+
   /// Returns all CSS rules that apply to the element's pseudo-element.
   List<CssRule> getMatchedCssRules(Element? element, String? pseudoElement) {
     throw UnimplementedError();
@@ -1060,6 +1061,7 @@ class Window extends EventTarget
   void resizeTo(int x, int y) {}
 
   @JSName('webkitResolveLocalFileSystemURL')
+
   /// Asynchronously retrieves a local filesystem entry.
   ///
   /// ## Other resources

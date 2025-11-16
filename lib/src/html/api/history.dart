@@ -131,7 +131,9 @@ class History extends HistoryBase {
 
 abstract class HistoryBase {
   void back();
+
   void forward();
+
   void go(int distance);
 }
 

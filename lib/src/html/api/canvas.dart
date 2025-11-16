@@ -48,6 +48,7 @@ part of '../../html.dart';
 
 abstract class CanvasGradient {
   CanvasGradient._();
+
   void addColorStop(num offset, String color);
 }
 
@@ -61,6 +62,7 @@ abstract class CanvasPattern {
 
 abstract class CanvasRenderingContext {
   CanvasRenderingContext._();
+
   CanvasElement get canvas;
 }
 
@@ -92,6 +94,7 @@ class ImageData {
       throw ArgumentError.value(dataOrSw);
     }
   }
+
   ImageData._(this.data, this.width, this.height);
 }
 
@@ -129,6 +132,7 @@ abstract class OffscreenCanvasRenderingContext2D {
   Object? strokeStyle;
   String? textAlign;
   String? textBaseline;
+
   OffscreenCanvasRenderingContext2D._();
 
   void arc(

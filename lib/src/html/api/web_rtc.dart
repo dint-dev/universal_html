@@ -266,7 +266,7 @@ abstract class RtcPeerConnection extends EventTarget {
   ///
   /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<RtcPeerConnectionIceEvent>
-  iceCandidateEvent = EventStreamProvider<RtcPeerConnectionIceEvent>(
+      iceCandidateEvent = EventStreamProvider<RtcPeerConnectionIceEvent>(
     'icecandidate',
   );
 

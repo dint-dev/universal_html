@@ -152,9 +152,9 @@ class Event {
     this.composed = false,
     bool canBubble = true,
     this.cancelable = true,
-  }) : bubbles = canBubble,
-       _target = target,
-       timeStamp = DateTime.now().microsecondsSinceEpoch;
+  })  : bubbles = canBubble,
+        _target = target,
+        timeStamp = DateTime.now().microsecondsSinceEpoch;
 
   EventTarget? get currentTarget => _currentTarget;
 

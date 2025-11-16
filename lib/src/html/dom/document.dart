@@ -66,10 +66,10 @@ abstract class Document extends Node
   ///
   /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<SecurityPolicyViolationEvent>
-  securityPolicyViolationEvent =
+      securityPolicyViolationEvent =
       EventStreamProvider<SecurityPolicyViolationEvent>(
-        'securitypolicyviolation',
-      );
+    'securitypolicyviolation',
+  );
 
   /// Static factory designed to expose `selectionchange` events to event
   /// handlers that are not necessarily instances of [Document].
@@ -98,7 +98,7 @@ abstract class Document extends Node
   }
 
   Document._({required this.contentType, required this.window, this.origin})
-    : super._document();
+      : super._document();
 
   /// Outside the browser, returns null.
   Element? get activeElement => null;

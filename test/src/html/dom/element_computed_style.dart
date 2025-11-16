@@ -21,8 +21,7 @@ void _testElementComputedStyle() {
     test('Case #1', () {
       _temporarilyRemoveChildrenFromDocument(root: document.body!);
 
-      final styleElement =
-          StyleElement()..appendText('''
+      final styleElement = StyleElement()..appendText('''
 .exampleClass {
   font-family: exampleFont
 }''');

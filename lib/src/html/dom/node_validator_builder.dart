@@ -112,13 +112,11 @@ class NodeValidatorBuilder implements NodeValidator {
     Iterable<String>? uriAttributes,
   }) {
     var tagNameUpper = tagName.toUpperCase();
-    var attrs =
-        attributes?.map<String>(
+    var attrs = attributes?.map<String>(
           (name) => '$tagNameUpper::${name.toLowerCase()}',
         ) ??
         const [];
-    var uriAttrs =
-        uriAttributes?.map<String>(
+    var uriAttrs = uriAttributes?.map<String>(
           (name) => '$tagNameUpper::${name.toLowerCase()}',
         ) ??
         const [];
@@ -225,13 +223,11 @@ class NodeValidatorBuilder implements NodeValidator {
   }) {
     var baseNameUpper = baseName.toUpperCase();
     var tagNameUpper = tagName.toUpperCase();
-    var attrs =
-        attributes?.map<String>(
+    var attrs = attributes?.map<String>(
           (name) => '$baseNameUpper::${name.toLowerCase()}',
         ) ??
         const [];
-    var uriAttrs =
-        uriAttributes?.map<String>(
+    var uriAttrs = uriAttributes?.map<String>(
           (name) => '$baseNameUpper::${name.toLowerCase()}',
         ) ??
         const [];
@@ -296,13 +292,13 @@ class _CustomElementNodeValidator extends _SimpleNodeValidator {
     Iterable<String> allowedUriAttributes,
     bool allowTypeExtension,
     bool allowCustomTag,
-  ) : allowTypeExtension = allowTypeExtension == true,
-      allowCustomTag = allowCustomTag == true,
-      super(
-        allowedElements: allowedElements,
-        allowedAttributes: allowedAttributes,
-        allowedUriAttributes: allowedUriAttributes,
-      );
+  )   : allowTypeExtension = allowTypeExtension == true,
+        allowCustomTag = allowCustomTag == true,
+        super(
+          allowedElements: allowedElements,
+          allowedAttributes: allowedAttributes,
+          allowedUriAttributes: allowedUriAttributes,
+        );
 
   @override
   bool allowsAttribute(Element element, String attributeName, String value) {
@@ -496,12 +492,12 @@ class _TemplatingNodeValidator extends _SimpleNodeValidator {
   final Set<String> _templateAttrs;
 
   _TemplatingNodeValidator()
-    : _templateAttrs = Set<String>.from(_TEMPLATE_ATTRS),
-      super(
-        null,
-        allowedElements: ['TEMPLATE'],
-        allowedAttributes: _TEMPLATE_ATTRS.map((attr) => 'TEMPLATE::$attr'),
-      );
+      : _templateAttrs = Set<String>.from(_TEMPLATE_ATTRS),
+        super(
+          null,
+          allowedElements: ['TEMPLATE'],
+          allowedAttributes: _TEMPLATE_ATTRS.map((attr) => 'TEMPLATE::$attr'),
+        );
 
   @override
   bool allowsAttribute(Element element, String attributeName, String value) {

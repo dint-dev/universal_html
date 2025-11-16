@@ -113,7 +113,7 @@ class BlobEvent extends Event {
   final num? timecode;
 
   BlobEvent(String type, [Map? dict])
-    : this._(type, data: dict?['data'], timecode: dict?['timecode']);
+      : this._(type, data: dict?['data'], timecode: dict?['timecode']);
 
   BlobEvent._(super.type, {this.data, this.timecode}) : super.internal();
 }
@@ -152,7 +152,7 @@ class CloseEvent extends Event {
   final bool? wasClean;
 
   CloseEvent.constructor(super.type, {this.code, this.reason, this.wasClean})
-    : super.internal();
+      : super.internal();
 }
 
 class CompositionEvent extends Event {
@@ -242,13 +242,13 @@ class ErrorEvent extends Event {
   final String? message;
 
   ErrorEvent(String type, [Map? eventInitDict])
-    : this.internal(
-        colno: eventInitDict?['colno'],
-        error: eventInitDict?['error'],
-        filename: eventInitDict?['filename'],
-        lineno: eventInitDict?['lineno'],
-        message: eventInitDict?['message'],
-      );
+      : this.internal(
+          colno: eventInitDict?['colno'],
+          error: eventInitDict?['error'],
+          filename: eventInitDict?['filename'],
+          lineno: eventInitDict?['lineno'],
+          message: eventInitDict?['message'],
+        );
 
   /// Internal constructor. __Not part of dart:html__.
   ErrorEvent.internal({
@@ -352,8 +352,8 @@ class KeyboardEvent extends UIEvent {
     this.shiftKey = false,
     super.canBubble,
     super.cancelable,
-  }) : charCode = charCode ?? -1,
-       keyCode = keyCode ?? -1;
+  })  : charCode = charCode ?? -1,
+        keyCode = keyCode ?? -1;
 
   String? get key => throw UnimplementedError();
 
@@ -408,10 +408,10 @@ class MessageEvent extends Event {
     String? lastEventId,
     this.source,
     List<MessagePort>? messagePorts,
-  }) : lastEventId = lastEventId ?? '',
-       origin = origin ?? '',
-       ports = messagePorts ?? const [],
-       super.internal();
+  })  : lastEventId = lastEventId ?? '',
+        origin = origin ?? '',
+        ports = messagePorts ?? const [],
+        super.internal();
 
   String? get suborigin => null;
 }
@@ -519,17 +519,17 @@ class MouseEvent extends UIEvent {
     super.cancelable,
     int super.detail = 0,
     super.view,
-  }) : buttons = 0,
-       _screenX = screenX,
-       _screenY = screenY,
-       _clientX = clientX,
-       _clientY = clientY,
-       _layerX = layerX,
-       _layerY = layerY,
-       _movementX = movementX,
-       _movementY = movementY,
-       _pageX = pageX,
-       _pageY = pageY;
+  })  : buttons = 0,
+        _screenX = screenX,
+        _screenY = screenY,
+        _clientX = clientX,
+        _clientY = clientY,
+        _layerX = layerX,
+        _layerY = layerY,
+        _movementX = movementX,
+        _movementY = movementY,
+        _pageX = pageX,
+        _pageY = pageY;
 
   Point get client => Point(_clientX!, _clientY!);
 
@@ -568,7 +568,7 @@ class NotificationEvent extends ExtendableEvent {
   }
 
   NotificationEvent.internal({this.action, this.notification, this.reply})
-    : super._('Notification');
+      : super._('Notification');
 }
 
 class PageTransitionEvent extends Event {
@@ -621,18 +621,18 @@ class PointerEvent extends MouseEvent {
     EventTarget? relatedTarget,
     Object? view,
   }) : super._(
-         type,
-         view: view,
-         detail: detail,
-         button: button,
-         canBubble: canBubble,
-         cancelable: cancelable,
-         ctrlKey: ctrlKey,
-         altKey: altKey,
-         shiftKey: shiftKey,
-         metaKey: metaKey,
-         relatedTarget: relatedTarget,
-       );
+          type,
+          view: view,
+          detail: detail,
+          button: button,
+          canBubble: canBubble,
+          cancelable: cancelable,
+          ctrlKey: ctrlKey,
+          altKey: altKey,
+          shiftKey: shiftKey,
+          metaKey: metaKey,
+          relatedTarget: relatedTarget,
+        );
 }
 
 class PopStateEvent extends Event {
@@ -641,7 +641,7 @@ class PopStateEvent extends Event {
   PopStateEvent(String type) : this._(type: type);
 
   PopStateEvent._({String type = 'popstate', this.state})
-    : super.internal(type);
+      : super.internal(type);
 }
 
 class ProgressEvent extends Event {

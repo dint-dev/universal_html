@@ -38,12 +38,11 @@ void _testNode() {
       final e0 = Element.tag('e0')..appendText('e0-text');
       final e1 = Element.tag('e1')..appendText('e1-text');
       final e2 = Element.tag('e2')..appendText('e2-text');
-      final root =
-          Element.tag('sometag')
-            ..setAttribute('k', 'v')
-            ..append(e0)
-            ..append(e1)
-            ..append(e2);
+      final root = Element.tag('sometag')
+        ..setAttribute('k', 'v')
+        ..append(e0)
+        ..append(e1)
+        ..append(e2);
 
       // Initial tree
       expect(
@@ -103,12 +102,11 @@ void _testNode() {
       final e0 = Element.tag('e0')..appendText('e0-text');
       final e1 = Element.tag('e1')..appendText('e1-text');
       final e2 = Element.tag('e2')..appendText('e2-text');
-      final root =
-          Element.tag('sometag')
-            ..setAttribute('k', 'v')
-            ..append(e0)
-            ..append(e1)
-            ..append(e2);
+      final root = Element.tag('sometag')
+        ..setAttribute('k', 'v')
+        ..append(e0)
+        ..append(e1)
+        ..append(e2);
 
       // Initial tree
       expect(

@@ -52,8 +52,7 @@ abstract class EventSourceOutsideBrowser implements EventSource {
   FutureOr<void> Function(
     EventSourceOutsideBrowser eventSource,
     HttpClientRequest request,
-  )?
-  onHttpClientRequest;
+  )? onHttpClientRequest;
 
   /// A callback called when a [HttpClientResponse] arrives (only outside
   /// browsers).
@@ -63,8 +62,7 @@ abstract class EventSourceOutsideBrowser implements EventSource {
     EventSourceOutsideBrowser eventSource,
     HttpClientRequest request,
     HttpClientResponse response,
-  )?
-  onHttpClientResponse;
+  )? onHttpClientResponse;
 
   /// Current timeout.
   Duration retryDuration = Duration(seconds: 3);

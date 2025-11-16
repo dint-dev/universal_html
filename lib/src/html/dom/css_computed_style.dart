@@ -161,9 +161,8 @@ class _ComputedStyle extends CssStyleDeclaration {
     }
     final parent = node.parent;
     if (parent == null) {
-      for (var styleSheet
-          in (node.ownerDocument as HtmlDocument).styleSheets ??
-              const <StyleSheet>[]) {
+      for (var styleSheet in (node.ownerDocument as HtmlDocument).styleSheets ??
+          const <StyleSheet>[]) {
         if (!result.contains(styleSheet)) {
           result.add(styleSheet);
         }

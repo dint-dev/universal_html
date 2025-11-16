@@ -105,6 +105,7 @@ abstract class AnimationEffectTiming extends AnimationEffectTimingReadOnly {
   String? fill;
   num? iterations;
   num? iterationStart;
+
   AnimationEffectTiming._() : super._();
 }
 
@@ -114,6 +115,7 @@ abstract class AnimationEffectTimingReadOnly {
 
 abstract class AnimationTimeline {
   AnimationTimeline._();
+
   num get currentTime;
 }
 

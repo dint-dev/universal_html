@@ -90,10 +90,9 @@ void _testDocument() {
       _expectSaneDocument(document);
 
       // Insert
-      final n0N0 =
-          Element.tag('div')
-            ..setAttribute('id', 'n0_n0')
-            ..id = 'n0_n0';
+      final n0N0 = Element.tag('div')
+        ..setAttribute('id', 'n0_n0')
+        ..id = 'n0_n0';
       n0.insertBefore(n0N0, n0N2);
 
       // Document:

@@ -78,11 +78,11 @@ abstract class CssRect implements Rectangle<num> {
 
   @override
   int get hashCode => _JenkinsSmiHash.hash4(
-    left.hashCode,
-    top.hashCode,
-    right.hashCode,
-    bottom.hashCode,
-  );
+        left.hashCode,
+        top.hashCode,
+        right.hashCode,
+        bottom.hashCode,
+      );
 
   /// The height of this rectangle.
   ///
@@ -240,28 +240,25 @@ abstract class CssRect implements Rectangle<num> {
       // The border-box and default box model both exclude margin in the regular
       // height/width calculation, so add it if we want it for this measurement.
       if (augmentingMeasurement == _marginProperty) {
-        val +=
-            Dimension.css(
-              styles.getPropertyValue('$augmentingMeasurement-$measurement'),
-            ).value;
+        val += Dimension.css(
+          styles.getPropertyValue('$augmentingMeasurement-$measurement'),
+        ).value;
       }
 
       // The border-box includes padding and border, so remove it if we want
       // just the content itself.
       if (augmentingMeasurement == _content) {
-        val -=
-            Dimension.css(
-              styles.getPropertyValue('$_paddingProperty-$measurement'),
-            ).value;
+        val -= Dimension.css(
+          styles.getPropertyValue('$_paddingProperty-$measurement'),
+        ).value;
       }
 
       // At this point, we don't wan't to augment with border or margin,
       // so remove border.
       if (augmentingMeasurement != _marginProperty) {
-        val -=
-            Dimension.css(
-              styles.getPropertyValue('border-$measurement-width'),
-            ).value;
+        val -= Dimension.css(
+          styles.getPropertyValue('border-$measurement-width'),
+        ).value;
       }
     }
     return val;
@@ -273,6 +270,7 @@ abstract class CssRect implements Rectangle<num> {
 /// [box model](http://www.w3.org/TR/CSS2/box.html).
 class _BorderCssRect extends CssRect {
   _BorderCssRect(super.element);
+
   @override
   num get height => _element.offsetHeight;
 
@@ -292,8 +290,8 @@ class _ContentCssListRect extends _ContentCssRect {
   final List<Element> _elementList;
 
   _ContentCssListRect(List<Element> elementList)
-    : _elementList = elementList,
-      super(elementList.first);
+      : _elementList = elementList,
+        super(elementList.first);
 
   /// Set the height to `newHeight`.
   ///
@@ -425,6 +423,7 @@ class _JenkinsSmiHash {
 /// [box model](http://www.w3.org/TR/CSS2/box.html).
 class _MarginCssRect extends CssRect {
   _MarginCssRect(super.element);
+
   @override
   num get height =>
       _element.offsetHeight +

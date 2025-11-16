@@ -51,8 +51,8 @@ typedef StorageErrorCallback = void Function(DomError error);
 
 typedef StorageQuotaCallback = void Function(int grantedQuotaInBytes);
 
-typedef StorageUsageCallback =
-    void Function(int currentUsageInBytes, int currentQuotaInBytes);
+typedef StorageUsageCallback = void Function(
+    int currentUsageInBytes, int currentQuotaInBytes);
 
 class BudgetService {
   factory BudgetService._() {
@@ -402,7 +402,9 @@ class PresentationRequest extends EventTarget {
 
 abstract class RelatedApplication {
   RelatedApplication._();
+
   String? get id;
+
   String? get platform;
 
   String? get url;

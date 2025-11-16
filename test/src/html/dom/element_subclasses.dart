@@ -496,10 +496,9 @@ void _testElementSubclasses() {
     test('children after setting innerHtml', () {
       final innerHtml =
           '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
-      final iframe =
-          IFrameElement()
-            ..className = 'example'
-            ..innerHtml = innerHtml;
+      final iframe = IFrameElement()
+        ..className = 'example'
+        ..innerHtml = innerHtml;
       expect(iframe.children, hasLength(0));
       expect(iframe.childNodes, hasLength(1));
       expect(iframe.text, innerHtml);
@@ -509,10 +508,9 @@ void _testElementSubclasses() {
     test('outerHtml after setting innerHtml', () {
       final innerHtml =
           '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
-      final iframe =
-          IFrameElement()
-            ..className = 'example'
-            ..innerHtml = innerHtml;
+      final iframe = IFrameElement()
+        ..className = 'example'
+        ..innerHtml = innerHtml;
       expect(iframe.outerHtml, '<iframe class="example">$innerHtml</iframe>');
     });
 

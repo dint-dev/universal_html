@@ -52,7 +52,9 @@ abstract class CharacterData extends Node
     with _ChildNode, _NonDocumentTypeChildNode
     implements ChildNode, NonDocumentTypeChildNode {
   String _data = '';
+
   CharacterData._(Document super.ownerDocument, this._data) : super._();
+
   String? get data => _data;
 
   set data(String? value) {
@@ -136,8 +138,11 @@ abstract class CharacterData extends Node
 
 abstract class ChildNode {
   ChildNode._();
+
   void after(Object nodes);
+
   void before(Object nodes);
+
   void remove();
 }
 
@@ -150,7 +155,7 @@ class Comment extends CharacterData {
   }
 
   Comment.internal(Document ownerDocument, String? value)
-    : super._(ownerDocument, value ?? '');
+      : super._(ownerDocument, value ?? '');
 
   @override
   int get nodeType => Node.COMMENT_NODE;
@@ -168,7 +173,7 @@ class InternalDocumentType extends Node {
 
   /// Internal constructor. __Not part of dart:html__.
   InternalDocumentType.internal(Document super.ownerDocument, this._value)
-    : super._();
+      : super._();
 
   @override
   String get nodeName {
@@ -225,7 +230,9 @@ abstract class Node extends EventTarget {
   Node._(this.ownerDocument) : super.internal();
 
   /// Constructor used by [Document].
-  Node._document() : ownerDocument = null, super.internal();
+  Node._document()
+      : ownerDocument = null,
+        super.internal();
 
   String? get baseUri {
     return ownerDocument?.baseUri;
@@ -534,12 +541,15 @@ abstract class Node extends EventTarget {
 
 abstract class NonDocumentTypeChildNode {
   NonDocumentTypeChildNode._();
+
   Element? get nextElementSibling;
+
   Element? get previousElementSibling;
 }
 
 abstract class ParentNode {
   ParentNode._();
+
   Element? querySelector(String selectors);
 }
 

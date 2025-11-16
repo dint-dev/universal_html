@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 /// An immutable list containing HTML elements. This list contains some
 /// additional methods when compared to regular lists for ease of CSS

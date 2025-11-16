@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 abstract class Animation extends EventTarget {
   static const EventStreamProvider<Event> cancelEvent =
@@ -55,8 +55,10 @@ abstract class Animation extends EventTarget {
 
   static bool get supported => false;
 
-  factory Animation(
-      [AnimationEffectTimingReadOnly? effect, AnimationTimeline? timeline]) {
+  factory Animation([
+    AnimationEffectTimingReadOnly? effect,
+    AnimationTimeline? timeline,
+  ]) {
     throw UnimplementedError();
   }
 
@@ -126,8 +128,11 @@ abstract class DocumentTimeline extends AnimationTimeline {
 
 @Native('KeyframeEffectReadOnly')
 class KeyframeEffectReadOnly extends AnimationEffectReadOnly {
-  factory KeyframeEffectReadOnly(Element? target, Object? effect,
-      [Object? options]) {
+  factory KeyframeEffectReadOnly(
+    Element? target,
+    Object? effect, [
+    Object? options,
+  ]) {
     throw UnimplementedError();
   }
 }

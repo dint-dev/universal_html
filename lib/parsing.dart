@@ -13,6 +13,6 @@
 // limitations under the License.
 
 /// Helpers for parsing HTML / XML.
-library universal_html.parsing;
+library;
 
 export 'src/parsing/parsing.dart';

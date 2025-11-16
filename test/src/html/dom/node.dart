@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testNode() {
   group('Node:', () {
@@ -38,17 +38,20 @@ void _testNode() {
       final e0 = Element.tag('e0')..appendText('e0-text');
       final e1 = Element.tag('e1')..appendText('e1-text');
       final e2 = Element.tag('e2')..appendText('e2-text');
-      final root = Element.tag('sometag')
-        ..setAttribute('k', 'v')
-        ..append(e0)
-        ..append(e1)
-        ..append(e2);
+      final root =
+          Element.tag('sometag')
+            ..setAttribute('k', 'v')
+            ..append(e0)
+            ..append(e1)
+            ..append(e2);
 
       // Initial tree
       expect(
-          root.outerHtml,
-          equals(
-              '<sometag k="v"><e0>e0-text</e0><e1>e1-text</e1><e2>e2-text</e2></sometag>'));
+        root.outerHtml,
+        equals(
+          '<sometag k="v"><e0>e0-text</e0><e1>e1-text</e1><e2>e2-text</e2></sometag>',
+        ),
+      );
 
       // Replace child #1 of 'e1'
       {
@@ -62,9 +65,11 @@ void _testNode() {
         expect(e1.firstChild, same(replacement));
         expect(e1.firstChild!.parent, same(e1));
         expect(
-            root.outerHtml,
-            equals(
-                '<sometag k="v"><e0>e0-text</e0><e1>e1-text-replaced</e1><e2>e2-text</e2></sometag>'));
+          root.outerHtml,
+          equals(
+            '<sometag k="v"><e0>e0-text</e0><e1>e1-text-replaced</e1><e2>e2-text</e2></sometag>',
+          ),
+        );
       }
 
       // Replace child #2 of root ('e1')
@@ -81,9 +86,11 @@ void _testNode() {
         expect(replacement.parent, same(root));
         expect(replacement.nextNode, same(e2));
         expect(
-            root.outerHtml,
-            equals(
-                '<sometag k="v"><e0>e0-text</e0>e1-replaced<e2>e2-text</e2></sometag>'));
+          root.outerHtml,
+          equals(
+            '<sometag k="v"><e0>e0-text</e0>e1-replaced<e2>e2-text</e2></sometag>',
+          ),
+        );
       }
     });
     test('replaceWith when the node has no parent', () {
@@ -96,15 +103,18 @@ void _testNode() {
       final e0 = Element.tag('e0')..appendText('e0-text');
       final e1 = Element.tag('e1')..appendText('e1-text');
       final e2 = Element.tag('e2')..appendText('e2-text');
-      final root = Element.tag('sometag')
-        ..setAttribute('k', 'v')
-        ..append(e0)
-        ..append(e1)
-        ..append(e2);
+      final root =
+          Element.tag('sometag')
+            ..setAttribute('k', 'v')
+            ..append(e0)
+            ..append(e1)
+            ..append(e2);
 
       // Initial tree
-      expect(root.outerHtml,
-          '<sometag k="v"><e0>e0-text</e0><e1>e1-text</e1><e2>e2-text</e2></sometag>');
+      expect(
+        root.outerHtml,
+        '<sometag k="v"><e0>e0-text</e0><e1>e1-text</e1><e2>e2-text</e2></sometag>',
+      );
 
       // Remove child #1 of 'e1'
       {
@@ -114,8 +124,10 @@ void _testNode() {
         expect(removed.parent, isNull);
         expect(removed.nextNode, isNull);
         expect(e1.firstChild, isNull);
-        expect(root.outerHtml,
-            '<sometag k="v"><e0>e0-text</e0><e1></e1><e2>e2-text</e2></sometag>');
+        expect(
+          root.outerHtml,
+          '<sometag k="v"><e0>e0-text</e0><e1></e1><e2>e2-text</e2></sometag>',
+        );
       }
 
       // Remove child #2 of root ('e1')
@@ -125,8 +137,10 @@ void _testNode() {
         expect(e0.nextNode, same(e2));
         expect(e1.parent, isNull);
         expect(e1.nextNode, isNull);
-        expect(root.outerHtml,
-            '<sometag k="v"><e0>e0-text</e0><e2>e2-text</e2></sometag>');
+        expect(
+          root.outerHtml,
+          '<sometag k="v"><e0>e0-text</e0><e2>e2-text</e2></sometag>',
+        );
       }
     });
     test('remove fails when the node has parent', () {
@@ -139,9 +153,11 @@ void _testNode() {
       expect(e.text, '');
       e.appendText('a');
       expect(e.text, 'a');
-      e.append(Element.tag('innerElement')
-        ..appendText('')
-        ..appendText('b'));
+      e.append(
+        Element.tag('innerElement')
+          ..appendText('')
+          ..appendText('b'),
+      );
       expect(e.text, 'ab');
       e.append(Comment('not text'));
       expect(e.text, 'ab');

@@ -44,7 +44,7 @@ The original files in the Dart SDK had the following license:
 */
 
 @visibleForTesting
-library universal_html.js_util.internal;
+library;
 
 import 'package:meta/meta.dart';
 
@@ -52,19 +52,19 @@ dynamic callConstructor(Function constr, List arguments) {
   throw UnimplementedError();
 }
 
-dynamic callMethod(o, String method, List args) {
+dynamic callMethod(dynamic o, String method, List args) {
   throw UnimplementedError();
 }
 
-Object getProperty(o, name) {
+Object getProperty(dynamic o, dynamic name) {
   throw UnimplementedError();
 }
 
-bool hasProperty(o, name) {
+bool hasProperty(dynamic o, dynamic name) {
   throw UnimplementedError();
 }
 
-bool instanceof(o, Function type) {
+bool instanceof(dynamic o, Function type) {
   throw UnimplementedError();
 }
 
@@ -78,7 +78,7 @@ bool instanceof(o, Function type) {
 /// converted. Maps and Iterables are copied to a new JavaScript object.
 /// Primitives and other transferable values are directly converted to their
 /// JavaScript type, and all other objects are proxied.
-dynamic jsify(object) {
+dynamic jsify(dynamic object) {
   throw UnimplementedError();
 }
 
@@ -96,10 +96,10 @@ dynamic newObject() {
 ///
 /// final three = await threeFuture; // == 3
 /// ```
-Future<T> promiseToFuture<T>(jsPromise) {
+Future<T> promiseToFuture<T>(dynamic jsPromise) {
   throw UnimplementedError();
 }
 
-void setProperty(o, name, value) {
+void setProperty(dynamic o, dynamic name, dynamic value) {
   throw UnimplementedError();
 }

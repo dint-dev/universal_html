@@ -14,7 +14,7 @@
 
 // The library name is needed for generating differences between our library
 // and dart:html.
-library universal_html.internal;
+library;
 
 import 'dart:async';
 import 'dart:collection';

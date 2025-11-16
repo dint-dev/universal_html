@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testParsing() {
   group('Parsing nodes:', () {
@@ -284,14 +284,11 @@ some text
             expect(element.attributes, hasLength(2));
             expect(element.attributes['k0'], 'v0');
             expect(element.attributes['k1'], 'v1');
-            expect(
-              element.getNamespacedAttributes('test/ns'),
-              hasLength(0),
-            );
-//          expect(
-//            element.getNamespacedAttributes(null),
-//            hasLength(0),
-//          );
+            expect(element.getNamespacedAttributes('test/ns'), hasLength(0));
+            //          expect(
+            //            element.getNamespacedAttributes(null),
+            //            hasLength(0),
+            //          );
             expect(element.getAttribute('k0'), 'v0');
             expect(element.getAttribute('k1'), 'v1');
             expect(element.getAttributeNS(null, 'k0'), 'v0');
@@ -405,20 +402,22 @@ some text
       });
 
       test(
-          'DomParser, "text/xml" (element that doesn\'t have closing tag in HTML)',
-          () {
-        const source = '''<img>text</img>''';
-        final document = DomParser().parseFromString(source, 'text/xml');
-        expect(document.documentElement!.outerHtml, source);
-      });
+        'DomParser, "text/xml" (element that doesn\'t have closing tag in HTML)',
+        () {
+          const source = '''<img>text</img>''';
+          final document = DomParser().parseFromString(source, 'text/xml');
+          expect(document.documentElement!.outerHtml, source);
+        },
+      );
 
       test(
-          'DomParser, "text/xml" (element that doesn\'t have closing tag in HTML, no content)',
-          () {
-        const source = '''<img/>''';
-        final document = DomParser().parseFromString(source, 'text/xml');
-        expect(document.documentElement!.outerHtml, source);
-      });
+        'DomParser, "text/xml" (element that doesn\'t have closing tag in HTML, no content)',
+        () {
+          const source = '''<img/>''';
+          final document = DomParser().parseFromString(source, 'text/xml');
+          expect(document.documentElement!.outerHtml, source);
+        },
+      );
     });
   });
 }

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// Contains [WindowController] for controlling [Window] instances.
-library universal_html.controller;
+library;
 
 export 'src/controller/content_type_sniffer.dart';
 export 'src/controller/internal_element_data.dart';

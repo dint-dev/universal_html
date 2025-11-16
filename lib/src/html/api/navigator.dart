@@ -43,7 +43,7 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html.internal;
+part of '../../html.dart';
 
 class Navigator extends NavigatorConcurrentHardware
     implements
@@ -132,17 +132,11 @@ class Navigator extends NavigatorConcurrentHardware
 
   Permissions? get permissions => null;
 
-  @deprecated
-  DeprecatedStorageQuota? get persistentStorage => null;
-
   Presentation? get presentation => null;
 
   ServiceWorkerContainer? get serviceWorker => null;
 
   StorageManager? get storage => null;
-
-  @deprecated
-  DeprecatedStorageQuota? get temporaryStorage => null;
 
   @override
   String get userAgent => '-';
@@ -203,8 +197,10 @@ class Navigator extends NavigatorConcurrentHardware
   ///
   /// See also:
   /// * [MediaStream.supported]
-  Future<MediaStream> getUserMedia(
-      {dynamic audio = false, dynamic video = false}) {
+  Future<MediaStream> getUserMedia({
+    dynamic audio = false,
+    dynamic video = false,
+  }) {
     return Future.error(UnimplementedError());
   }
 
@@ -221,7 +217,9 @@ class Navigator extends NavigatorConcurrentHardware
   }
 
   Future requestMediaKeySystemAccess(
-      String keySystem, List<Map> supportedConfigurations) {
+    String keySystem,
+    List<Map> supportedConfigurations,
+  ) {
     return Future.error(UnimplementedError());
   }
 

@@ -31,7 +31,7 @@
 /// DOM types.
 ///
 /// For information on writing web apps with Dart, see https://webdev.dartlang.org.
-library universal_html;
+library;
 
 export 'src/_sdk/html.dart'
     if (dart.library.html) 'src/_sdk/html.dart' // Browser

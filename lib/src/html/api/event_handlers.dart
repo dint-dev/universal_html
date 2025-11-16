@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 abstract class GlobalEventHandlers implements EventTarget {
   static const EventStreamProvider<Event> abortEvent =
@@ -342,13 +342,19 @@ abstract class GlobalEventHandlers implements EventTarget {
   Stream<WheelEvent> get onWheel => wheelEvent.forTarget(this);
 
   @override
-  void addEventListener(String type, dynamic Function(Event event) listener,
-      [bool? useCapture]);
+  void addEventListener(
+    String type,
+    dynamic Function(Event event) listener, [
+    bool? useCapture,
+  ]);
 
   @override
   bool dispatchEvent(Event event);
 
   @override
-  void removeEventListener(String type, dynamic Function(Event event) listener,
-      [bool? useCapture]);
+  void removeEventListener(
+    String type,
+    dynamic Function(Event event) listener, [
+    bool? useCapture,
+  ]);
 }

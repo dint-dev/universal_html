@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// Cross-platform "dart:js" library.
-library universal_html.js;
+library;
 
 export 'src/_sdk/js.dart'
     if (dart.library.js) 'src/_sdk/js.dart' // Browser, Node.JS

@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 class ElementEvents extends Events {
   static final webkitEvents = {
@@ -61,10 +61,10 @@ class ElementEvents extends Events {
     'pointerlockerror': 'webkitpointerlockerror',
     'resourcetimingbufferfull': 'webkitresourcetimingbufferfull',
     'transitionend': 'webkitTransitionEnd',
-    'speechchange': 'webkitSpeechChange'
+    'speechchange': 'webkitSpeechChange',
   };
 
-  ElementEvents(Element ptr) : super(ptr);
+  ElementEvents(Element super.ptr);
 
   @override
   Stream<Event> operator [](String type) {
@@ -72,7 +72,7 @@ class ElementEvents extends Events {
       if (_Device.isWebKit) {
         return _ElementEventStreamImpl(
           _ptr,
-          webkitEvents[type.toLowerCase()],
+          webkitEvents[type.toLowerCase()]!,
           false,
         );
       }
@@ -135,8 +135,11 @@ abstract class EventTarget {
 
   EventTarget? get _parentEventTarget => null;
 
-  void addEventListener(String type, EventListener listener,
-      [bool? useCapture]) {
+  void addEventListener(
+    String type,
+    EventListener listener, [
+    bool? useCapture,
+  ]) {
     final eventListener = _AddedEventListener(
       type,
       listener,
@@ -189,13 +192,18 @@ abstract class EventTarget {
     return event._defaultPrevented;
   }
 
-  void removeEventListener(String type, EventListener listener,
-      [bool? useCapture]) {
+  void removeEventListener(
+    String type,
+    EventListener listener, [
+    bool? useCapture,
+  ]) {
     useCapture ??= false;
-    _listeners?.removeWhere((e) =>
-        e._type == type &&
-        e._listener == listener &&
-        e._useCapture == useCapture);
+    _listeners?.removeWhere(
+      (e) =>
+          e._type == type &&
+          e._listener == listener &&
+          e._useCapture == useCapture,
+    );
   }
 
   /// Called by [BrowserImplementation].

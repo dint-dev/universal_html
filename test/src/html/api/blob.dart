@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testBlob() {
   test('Blob([\'ab\'])', () {
-    final blob = Blob([
-      'ab',
-    ]);
+    final blob = Blob(['ab']);
     expect(blob.size, 2);
     // Data in the blob is tested in BrowserImplementationUtils test
   });
@@ -26,7 +24,7 @@ void _testBlob() {
   test('Blob([\'ab\', [1,2]])', () {
     final blob = Blob([
       'ab',
-      [1, 2]
+      [1, 2],
     ]);
     expect(blob.size, 5);
     // Data in the blob is tested in BrowserImplementationUtils test
@@ -36,7 +34,7 @@ void _testBlob() {
     final blob = Blob([
       'ab',
       [1, 2],
-      Uint8List.fromList([3, 4])
+      Uint8List.fromList([3, 4]),
     ]);
     expect(blob.size, 7);
     // Data in the blob is tested in BrowserImplementationUtils test

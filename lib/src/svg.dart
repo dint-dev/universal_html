@@ -44,7 +44,7 @@ The original files in the Dart SDK had the following license:
 */
 
 @visibleForTesting
-library universal_html.svg.internal;
+library;
 
 import 'package:meta/meta.dart';
 

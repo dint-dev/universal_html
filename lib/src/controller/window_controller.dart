@@ -324,8 +324,9 @@ class WindowController {
   /// See [WindowController.newZone].
   static Zone newZoneWith(WindowController windowController) {
     _hasChangedInstance = true;
-    return Zone.current
-        .fork(zoneValues: {_zoneKey: _WindowControllerScope(windowController)});
+    return Zone.current.fork(
+      zoneValues: {_zoneKey: _WindowControllerScope(windowController)},
+    );
   }
 }
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testElementAttributes() {
   group('element.hasAttribute', () {
@@ -175,10 +175,7 @@ void _testElementAttributes() {
       final e = Element.tag('e');
       e.setAttributeNS('https://ns/', 'k0', 'v0');
       expect(e.getAttributeNS('https://ns/', 'k0'), 'v0');
-      expect(
-        e.getNamespacedAttributes('https://ns/'),
-        {'k0': 'v0'},
-      );
+      expect(e.getNamespacedAttributes('https://ns/'), {'k0': 'v0'});
     });
 
     test('null namespace', () {
@@ -186,10 +183,7 @@ void _testElementAttributes() {
       e.setAttributeNS(null, 'k0', 'v0');
       expect(e.getAttributeNS(null, 'other'), isNull);
       expect(e.getAttributeNS(null, 'k0'), 'v0');
-      expect(
-        e.getNamespacedAttributes(''),
-        {'k0': 'v0'},
-      );
+      expect(e.getNamespacedAttributes(''), {'k0': 'v0'});
       expect(e.getAttribute('other'), isNull);
       expect(e.getAttribute('k0'), 'v0');
     });
@@ -310,36 +304,38 @@ void _testElementAttributes() {
     });
 
     test(
-        'simple name, existing attribute was set with setAttributeNS(null, ...)',
-        () {
-      // Set two attributes
-      final e = Element.tag('e');
-      e.setAttributeNS(null, 'k', 'v0');
-      expect(e.getAttribute('k'), 'v0');
+      'simple name, existing attribute was set with setAttributeNS(null, ...)',
+      () {
+        // Set two attributes
+        final e = Element.tag('e');
+        e.setAttributeNS(null, 'k', 'v0');
+        expect(e.getAttribute('k'), 'v0');
 
-      // Remove
-      e.removeAttribute('k');
-      expect(e.getAttribute('k'), isNull);
-    });
+        // Remove
+        e.removeAttribute('k');
+        expect(e.getAttribute('k'), isNull);
+      },
+    );
 
     test(
-        'simple name, existing attribute was set with setAttributeNS("ns", ...)',
-        () {
-      // Set two attributes
-      final e = Element.tag('e');
-      e.setAttributeNS('ns', 'k', 'v0');
-      expect(e.getAttribute('k'), 'v0');
-      expect(e.getAttributeNS(null, 'k'), isNull);
-      expect(e.getAttributeNS('', 'k'), isNull);
-      expect(e.getAttributeNS('ns', 'k'), 'v0');
+      'simple name, existing attribute was set with setAttributeNS("ns", ...)',
+      () {
+        // Set two attributes
+        final e = Element.tag('e');
+        e.setAttributeNS('ns', 'k', 'v0');
+        expect(e.getAttribute('k'), 'v0');
+        expect(e.getAttributeNS(null, 'k'), isNull);
+        expect(e.getAttributeNS('', 'k'), isNull);
+        expect(e.getAttributeNS('ns', 'k'), 'v0');
 
-      // Remove
-      e.removeAttribute('k');
-      expect(e.getAttribute('k'), isNull);
-      expect(e.getAttributeNS(null, 'k'), isNull);
-      expect(e.getAttributeNS('', 'k'), isNull);
-      expect(e.getAttributeNS('ns', 'k'), isNull);
-    });
+        // Remove
+        e.removeAttribute('k');
+        expect(e.getAttribute('k'), isNull);
+        expect(e.getAttributeNS(null, 'k'), isNull);
+        expect(e.getAttributeNS('', 'k'), isNull);
+        expect(e.getAttributeNS('ns', 'k'), isNull);
+      },
+    );
   });
 
   group('element.removeAttributeNS(...):', () {
@@ -508,13 +504,14 @@ void _testElementAttributes() {
       });
 
       test(
-          'changes result of element.attributes, obtained before setting style',
-          () {
-        final e = Element.tag('a');
-        final attributes = e.attributes;
-        e.style.setProperty('color', 'blue');
-        expect(attributes['style'], contains('blue'));
-      });
+        'changes result of element.attributes, obtained before setting style',
+        () {
+          final e = Element.tag('a');
+          final attributes = e.attributes;
+          e.style.setProperty('color', 'blue');
+          expect(attributes['style'], contains('blue'));
+        },
+      );
 
       test('changes result of element.outerHtml', () {
         final e = Element.tag('a');
@@ -537,54 +534,61 @@ void _testElementAttributes() {
     });
 
     test(
-        'element.style.getProperty("font-size") returns non-quoted value when value is "90px"',
-        () {
-      final e = Element.tag('a');
-      e.style.setProperty('font-size', '90px');
-      expect(e.style.getPropertyValue('font-size'), '90px');
-    });
+      'element.style.getProperty("font-size") returns non-quoted value when value is "90px"',
+      () {
+        final e = Element.tag('a');
+        e.style.setProperty('font-size', '90px');
+        expect(e.style.getPropertyValue('font-size'), '90px');
+      },
+    );
 
     test(
-        'element.setAttribute("style", "invalid value"), changes attribute value',
-        () {
-      final e = Element.tag('a');
-      final value = 'invalid value';
-      e.setAttribute('style', value);
-      expect(e.getAttribute('style'), value);
-      expect(e.attributes['style'], value);
-    });
-
-    test('element.setAttribute("style", "color: blue"), changes element.style',
-        () {
-      final e = Element.tag('a');
-      final value = 'color: blue';
-      e.setAttribute('style', value);
-      expect(e.getAttribute('style'), value);
-      expect(e.attributes['style'], value);
-      expect(e.style.color, 'blue');
-    });
-
-    test('element.attributes["style"]="color: blue", changes element.style',
-        () {
-      final e = Element.tag('a');
-      final value = 'color: blue';
-      e.attributes['style'] = value;
-      expect(e.getAttribute('style'), value);
-      expect(e.attributes['style'], value);
-      expect(e.style.color, 'blue');
-    });
+      'element.setAttribute("style", "invalid value"), changes attribute value',
+      () {
+        final e = Element.tag('a');
+        final value = 'invalid value';
+        e.setAttribute('style', value);
+        expect(e.getAttribute('style'), value);
+        expect(e.attributes['style'], value);
+      },
+    );
 
     test(
-        'element.attributes["style"]="color: blue; font-size: 2em", changes element.style',
-        () {
-      final e = Element.tag('a');
-      final value = 'color: blue; font-size: 2em';
-      e.attributes['style'] = value;
-      expect(e.getAttribute('style'), value);
-      expect(e.attributes['style'], value);
-      expect(e.style.color, 'blue');
-      expect(e.style.fontSize, '2em');
-    });
+      'element.setAttribute("style", "color: blue"), changes element.style',
+      () {
+        final e = Element.tag('a');
+        final value = 'color: blue';
+        e.setAttribute('style', value);
+        expect(e.getAttribute('style'), value);
+        expect(e.attributes['style'], value);
+        expect(e.style.color, 'blue');
+      },
+    );
+
+    test(
+      'element.attributes["style"]="color: blue", changes element.style',
+      () {
+        final e = Element.tag('a');
+        final value = 'color: blue';
+        e.attributes['style'] = value;
+        expect(e.getAttribute('style'), value);
+        expect(e.attributes['style'], value);
+        expect(e.style.color, 'blue');
+      },
+    );
+
+    test(
+      'element.attributes["style"]="color: blue; font-size: 2em", changes element.style',
+      () {
+        final e = Element.tag('a');
+        final value = 'color: blue; font-size: 2em';
+        e.attributes['style'] = value;
+        expect(e.getAttribute('style'), value);
+        expect(e.attributes['style'], value);
+        expect(e.style.color, 'blue');
+        expect(e.style.fontSize, '2em');
+      },
+    );
 
     test('element.removeAttribute("style") removes style', () {
       final e = Element.tag('e');

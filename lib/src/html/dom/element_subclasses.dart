@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// ignore_for_file: constant_identifier_names
+
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -44,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 class AnchorElement extends HtmlElement
     with _HtmlHyperlinkElementUtils, _UrlBase, _HrefAttributeElement
@@ -100,7 +102,7 @@ class AreaElement extends HtmlElement
   factory AreaElement() => AreaElement._(window.document);
 
   AreaElement._(Document ownerDocument, {String nodeName = 'AREA'})
-      : super._(ownerDocument, nodeName);
+    : super._(ownerDocument, nodeName);
 
   String? get download => _getAttribute('download');
 
@@ -113,7 +115,7 @@ class AreaElement extends HtmlElement
   set rel(String value) {
     _setAttribute('rel', value);
   }
-  
+
   String? get target => _getAttribute('target');
 
   set target(String? value) {
@@ -385,7 +387,7 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
   late final CanvasRenderingContext2D context2D = throw UnimplementedError();
 
   CanvasElement({int? width, int? height})
-      : super._(window.document, 'CANVAS') {
+    : super._(window.document, 'CANVAS') {
     if (width != null) {
       _setAttributeInt('width', width);
     }
@@ -436,12 +438,12 @@ class CanvasElement extends HtmlElement implements CanvasImageSource {
   @SupportedBrowser(SupportedBrowser.CHROME)
   @SupportedBrowser(SupportedBrowser.FIREFOX)
   gl.RenderingContext getContext3d({
-    alpha = true,
-    depth = true,
-    stencil = false,
-    antialias = true,
-    premultipliedAlpha = true,
-    preserveDrawingBuffer = false,
+    bool alpha = true,
+    bool depth = true,
+    bool stencil = false,
+    bool antialias = true,
+    bool premultipliedAlpha = true,
+    bool preserveDrawingBuffer = false,
   }) {
     var options = {
       'alpha': alpha,
@@ -543,7 +545,7 @@ class DataListElement extends HtmlElement {
   factory DataListElement() => DataListElement._(window.document);
 
   DataListElement._(Document ownerDocument)
-      : super._(ownerDocument, 'DATALIST');
+    : super._(ownerDocument, 'DATALIST');
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -620,8 +622,10 @@ class DomTokenList {
 
   void add(String tokens) {
     final list = _getList();
-    final splitTokens =
-        tokens.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty);
+    final splitTokens = tokens
+        .split(' ')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty);
     list.addAll(splitTokens);
     _setList(list);
   }
@@ -636,8 +640,10 @@ class DomTokenList {
 
   void remove(String tokens) {
     final list = _getList();
-    final splitTokens =
-        tokens.split(' ').map((e) => e.trim()).where((e) => e.isNotEmpty);
+    final splitTokens = tokens
+        .split(' ')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty);
     for (var token in splitTokens) {
       list.remove(token);
     }
@@ -700,7 +706,7 @@ class FieldSetElement extends HtmlElement with _FormFieldElement {
   factory FieldSetElement() => FieldSetElement._(window.document);
 
   FieldSetElement._(Document ownerDocument)
-      : super._(ownerDocument, 'FIELDSET');
+    : super._(ownerDocument, 'FIELDSET');
 
   bool get disabled => _getAttributeBool('disabled');
 
@@ -783,9 +789,9 @@ class FormElement extends HtmlElement {
 
   /// Returns all items of this form.
   Iterable<Element> get _items {
-    return _treeAsIterable(this)
-        .whereType<InputElement>()
-        .where((element) => identical(element.form, this));
+    return _treeAsIterable(this).whereType<InputElement>().where(
+      (element) => identical(element.form, this),
+    );
   }
 
   bool checkValidity() {
@@ -886,9 +892,7 @@ class FormElement extends HtmlElement {
   Element _newInstance(Document ownerDocument) => FormElement._(ownerDocument);
 
   /// Sends values in 'multipart/form-data' format.
-  Future<void> _sendMultiPart(
-    Uri uri,
-  ) async {
+  Future<void> _sendMultiPart(Uri uri) async {
     final httpClient = window.internalWindowController.onChooseHttpClient(uri);
     final httpRequest = await httpClient.openUrl(method ?? 'POST', uri);
 
@@ -897,9 +901,7 @@ class FormElement extends HtmlElement {
     httpRequest.headers.contentType = io.ContentType(
       'multipart',
       'form-data',
-      parameters: {
-        'boundary': writer.boundary,
-      },
+      parameters: {'boundary': writer.boundary},
     );
 
     for (var item in _items) {
@@ -913,7 +915,9 @@ class FormElement extends HtmlElement {
   /// Sends an element in 'multipart/form-data' format.
   /// Called by [_sendMultiPart].
   void _sendMultiPartElement(
-      MultipartFormWriter writer, Element element) async {
+    MultipartFormWriter writer,
+    Element element,
+  ) async {
     if (element is InputElement) {
       final name = element.name;
       if (name == null || name.isEmpty) {
@@ -960,24 +964,19 @@ class FormElement extends HtmlElement {
   }
 
   /// Sends values in 'application/x-www-form-urlencoded' format.
-  Future<void> _sendUrlEncoded(
-    String method,
-    Uri uri,
-  ) async {
+  Future<void> _sendUrlEncoded(String method, Uri uri) async {
     final windowController = ownerDocument!.window.internalWindowController;
     switch (method.toLowerCase()) {
       case 'get':
         uri = uri.replace(
           queryParameters: _valuesToQueryParameters(uri.queryParameters),
         );
-        return windowController.openHttp(
-          method: 'GET',
-          uri: uri,
-        );
+        return windowController.openHttp(method: 'GET', uri: uri);
 
       case 'post':
-        final httpClient =
-            window.internalWindowController.onChooseHttpClient(uri);
+        final httpClient = window.internalWindowController.onChooseHttpClient(
+          uri,
+        );
         final httpRequest = await httpClient.openUrl(method, uri);
         httpRequest.headers.contentType = io.ContentType(
           'application',
@@ -1083,8 +1082,7 @@ class HeadingElement extends HtmlElement {
 
   factory HeadingElement.h6() => HeadingElement._(window.document, 'H6');
 
-  HeadingElement._(Document ownerDocument, String name)
-      : super._(ownerDocument, name);
+  HeadingElement._(super.ownerDocument, super.name) : super._();
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -1107,8 +1105,7 @@ abstract class HtmlElement extends Element implements NoncedElement {
 
   HtmlElement.created() : super.created();
 
-  HtmlElement._(Document ownerDocument, String tagName)
-      : super._(ownerDocument, tagName);
+  HtmlElement._(super.ownerDocument, super.tagName) : super._();
 
   @override
   String? get nonce => _getAttribute('nonce');
@@ -1972,8 +1969,7 @@ abstract class MediaElement extends HtmlElement {
 
   bool disableRemotePlayback = false;
 
-  MediaElement._(Document ownerDocument, String tag)
-      : super._(ownerDocument, tag);
+  MediaElement._(super.ownerDocument, super.tag) : super._();
 
   bool get autoplay => _getAttributeBool('autoplay');
 
@@ -2223,7 +2219,7 @@ class OptGroupElement extends HtmlElement {
   factory OptGroupElement() => OptGroupElement._(window.document);
 
   OptGroupElement._(Document ownerDocument)
-      : super._(ownerDocument, 'OPTGROUP');
+    : super._(ownerDocument, 'OPTGROUP');
 
   bool get disabled => _getAttributeBool('disabled');
 
@@ -2241,11 +2237,8 @@ class OptionElement extends HtmlElement
   String? label;
   bool? _selected;
 
-  OptionElement({
-    String data = '',
-    String value = '',
-    bool selected = false,
-  }) : super._(window.document, 'option') {
+  OptionElement({String data = '', String value = '', bool selected = false})
+    : super._(window.document, 'option') {
     if (data.isNotEmpty) {
       appendText(data);
     }
@@ -2263,7 +2256,7 @@ class OptionElement extends HtmlElement
   OptionElement.created() : super.created();
 
   OptionElement._(Document ownerDocument, {String nodeName = 'OPTION'})
-      : super._(ownerDocument, nodeName);
+    : super._(ownerDocument, nodeName);
 
   bool get defaultSelected => _getAttributeBool('selected');
 
@@ -2365,7 +2358,7 @@ class ParagraphElement extends HtmlElement {
   factory ParagraphElement() => ParagraphElement._(window.document);
 
   ParagraphElement._(Document ownerDocument, {String nodeName = 'P'})
-      : super._(ownerDocument, nodeName);
+    : super._(ownerDocument, nodeName);
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -2397,7 +2390,7 @@ class PictureElement extends HtmlElement {
   factory PictureElement.created() => PictureElement._(window.document);
 
   PictureElement._(Document ownerDocument, {String nodeName = 'PICTURE'})
-      : super._(ownerDocument, nodeName);
+    : super._(ownerDocument, nodeName);
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -2408,7 +2401,7 @@ class PreElement extends HtmlElement {
   factory PreElement() => PreElement._(window.document);
 
   PreElement._(Document ownerDocument, {String nodeName = 'PRE'})
-      : super._(ownerDocument, nodeName);
+    : super._(ownerDocument, nodeName);
 
   @override
   Element _newInstance(Document ownerDocument) => PreElement._(ownerDocument);
@@ -2420,7 +2413,7 @@ class ProgressElement extends HtmlElement {
   factory ProgressElement() => ProgressElement._(window.document);
 
   ProgressElement._(Document ownerDocument, {String nodeName = 'PROGRESS'})
-      : super._(ownerDocument, nodeName);
+    : super._(ownerDocument, nodeName);
 
   num? get max => _getAttributeNum('max', defaultValue: null);
 
@@ -2452,7 +2445,7 @@ class ScriptElement extends HtmlElement {
   factory ScriptElement() => ScriptElement._(window.document);
 
   ScriptElement._(Document ownerDocument, {String nodeName = 'SCRIPT'})
-      : super._(ownerDocument, nodeName);
+    : super._(ownerDocument, nodeName);
 
   bool get async => _getAttributeBool('async');
 
@@ -2781,7 +2774,7 @@ class TableCaptionElement extends HtmlElement {
   factory TableCaptionElement() => TableCaptionElement._(window.document);
 
   TableCaptionElement._(Document ownerDocument)
-      : super._(ownerDocument, 'CAPTION');
+    : super._(ownerDocument, 'CAPTION');
 
   @override
   Element _newInstance(Document ownerDocument) =>
@@ -2925,8 +2918,9 @@ class TableElement extends HtmlElement {
     required T Function() constructor,
   }) {
     final existing = children.whereType<T?>().firstWhere(
-        (e) => e != null && e._lowerCaseTagName == lowerCaseTagName,
-        orElse: () => null);
+      (e) => e != null && e._lowerCaseTagName == lowerCaseTagName,
+      orElse: () => null,
+    );
     if (existing != null) {
       return existing;
     }
@@ -2999,8 +2993,7 @@ class TableRowElement extends HtmlElement {
 }
 
 class TableSectionElement extends HtmlElement {
-  TableSectionElement._(Document ownerDocument, String tag)
-      : super._(ownerDocument, tag);
+  TableSectionElement._(super.ownerDocument, super.tag) : super._();
 
   List<TableRowElement> get rows =>
       childNodes.whereType<TableRowElement>().toList();
@@ -3051,7 +3044,7 @@ class TemplateElement extends HtmlElement {
   factory TemplateElement() => TemplateElement._(window.document);
 
   TemplateElement._(Document ownerDocument)
-      : super._(ownerDocument, 'TEMPLATE');
+    : super._(ownerDocument, 'TEMPLATE');
 
   DocumentFragment get content {
     throw UnimplementedError();
@@ -3097,7 +3090,7 @@ class TextAreaElement extends HtmlElement
   TextAreaElement.created() : super.created();
 
   TextAreaElement._(Document ownerDocument)
-      : super._(ownerDocument, 'TEXTAREA');
+    : super._(ownerDocument, 'TEXTAREA');
 
   String? get autocapitalize => _getAttribute('autocapitalize');
 
@@ -3292,8 +3285,10 @@ class UnknownElement extends HtmlElement {
 
   /// Internal constructor. __Not part of dart:html__.
   UnknownElement.internal(
-      Document ownerDocument, this._namespaceUri, String tag)
-      : super._(ownerDocument, tag);
+    Document ownerDocument,
+    this._namespaceUri,
+    String tag,
+  ) : super._(ownerDocument, tag);
 
   @override
   String? get namespaceUri {

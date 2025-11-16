@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testAttribute<T extends Element>({
   required String name,
@@ -23,11 +23,7 @@ void _testAttribute<T extends Element>({
   String value = 'x',
 }) {
   // Test expectations
-  expect(
-    getter(element),
-    defaultValue,
-    reason: 'Default value is incorrect',
-  );
+  expect(getter(element), defaultValue, reason: 'Default value is incorrect');
 
   // Use element.setAttribute
   element.setAttribute(name, value);
@@ -53,21 +49,13 @@ void _testAttribute<T extends Element>({
     null,
     reason: 'Removing fails (getAttribute)',
   );
-  expect(
-    getter(element),
-    defaultValue,
-    reason: 'Removing fails (getter)',
-  );
+  expect(getter(element), defaultValue, reason: 'Removing fails (getter)');
 
   // Use element.propertyName=
   setter(element, value);
 
   // Test expectations
-  expect(
-    getter(element),
-    value,
-    reason: 'Setting with setter fails (getter',
-  );
+  expect(getter(element), value, reason: 'Setting with setter fails (getter');
   expect(
     element.getAttribute(name),
     value,
@@ -75,8 +63,12 @@ void _testAttribute<T extends Element>({
   );
 }
 
-void _testAttributeBool<T extends Element>(String name, T element,
-    bool? Function(T e) getter, void Function(T element, bool value) setter) {
+void _testAttributeBool<T extends Element>(
+  String name,
+  T element,
+  bool? Function(T e) getter,
+  void Function(T element, bool value) setter,
+) {
   // Test expectations
   expect(getter(element), false);
 
@@ -504,9 +496,10 @@ void _testElementSubclasses() {
     test('children after setting innerHtml', () {
       final innerHtml =
           '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
-      final iframe = IFrameElement()
-        ..className = 'example'
-        ..innerHtml = innerHtml;
+      final iframe =
+          IFrameElement()
+            ..className = 'example'
+            ..innerHtml = innerHtml;
       expect(iframe.children, hasLength(0));
       expect(iframe.childNodes, hasLength(1));
       expect(iframe.text, innerHtml);
@@ -516,9 +509,10 @@ void _testElementSubclasses() {
     test('outerHtml after setting innerHtml', () {
       final innerHtml =
           '<html><body><a href="url">&amp;&lt;&gt;</a></body></html>';
-      final iframe = IFrameElement()
-        ..className = 'example'
-        ..innerHtml = innerHtml;
+      final iframe =
+          IFrameElement()
+            ..className = 'example'
+            ..innerHtml = innerHtml;
       expect(iframe.outerHtml, '<iframe class="example">$innerHtml</iframe>');
     });
 
@@ -540,7 +534,9 @@ void _testElementSubclasses() {
       final html = '<html><body><iframe>$innerHtml</iframe></body></html>';
       final doc = parseHtmlDocument(html);
       expect(
-          doc.body?.children.single.outerHtml, '<iframe>$innerHtml</iframe>');
+        doc.body?.children.single.outerHtml,
+        '<iframe>$innerHtml</iframe>',
+      );
       expect(doc.body?.outerHtml, '<body><iframe>$innerHtml</iframe></body>');
     });
   });
@@ -797,10 +793,7 @@ void _testElementSubclasses() {
       final option1 = OptionElement()..appendText('example');
       element.append(option1);
 
-      expect(element.options, [
-        option0,
-        option1,
-      ]);
+      expect(element.options, [option0, option1]);
     });
 
     test('selectedIndex (single)', () {
@@ -1090,11 +1083,7 @@ void _testNonNullableAttribute<T extends Element>(
   String value = 'x',
 }) {
   // Test expectations
-  expect(
-    getter(element),
-    defaultValue,
-    reason: 'Default value is incorrect',
-  );
+  expect(getter(element), defaultValue, reason: 'Default value is incorrect');
 
   // Use element.setAttribute
   element.setAttribute(name, value);
@@ -1120,21 +1109,13 @@ void _testNonNullableAttribute<T extends Element>(
     null,
     reason: 'Removing fails (getAttribute)',
   );
-  expect(
-    getter(element),
-    defaultValue,
-    reason: 'Removing fails (getter)',
-  );
+  expect(getter(element), defaultValue, reason: 'Removing fails (getter)');
 
   // Use element.propertyName=
   setter(element, value);
 
   // Test expectations
-  expect(
-    getter(element),
-    value,
-    reason: 'Setting with setter fails (getter',
-  );
+  expect(getter(element), value, reason: 'Setting with setter fails (getter');
   expect(
     element.getAttribute(name),
     value,

@@ -445,7 +445,7 @@ class _Html5NodeValidator implements NodeValidator {
   /// All known URI attributes will be validated against the UriPolicy, if
   /// [uriPolicy] is null then a default UriPolicy will be used.
   _Html5NodeValidator({UriPolicy? uriPolicy})
-    : uriPolicy = uriPolicy ?? UriPolicy() {
+      : uriPolicy = uriPolicy ?? UriPolicy() {
     if (_attributeValidators.isEmpty) {
       for (var attr in _standardAttributes) {
         _attributeValidators[attr] = _standardAttributeValidator;

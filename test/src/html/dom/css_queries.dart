@@ -54,8 +54,7 @@ void _testCss() {
         expect(
           element.matches(selector),
           matcher,
-          reason:
-              'Element: "$idOrOuterHtml"\n'
+          reason: 'Element: "$idOrOuterHtml"\n'
               'Selector: "$selector"\n'
               'Tree: ${root.outerHtml}',
         );
@@ -108,33 +107,30 @@ void _testCss() {
         expectMatches(e, ':not(div)', isFalse);
       });
       test(':first-child', () {
-        final e =
-            DivElement()
-              ..id = 'e0'
-              ..append(DivElement()..id = 'e1')
-              ..append(DivElement()..id = 'e2');
+        final e = DivElement()
+          ..id = 'e0'
+          ..append(DivElement()..id = 'e1')
+          ..append(DivElement()..id = 'e2');
         expectMatches(e.firstChild as Element, ':first-child', isTrue);
         expectMatches(e.lastChild as Element, ':first-child', isFalse);
       });
       test(':last-child', () {
-        final e =
-            DivElement()
-              ..id = 'e0'
-              ..append(DivElement()..id = 'e1')
-              ..append(DivElement()..id = 'e2');
+        final e = DivElement()
+          ..id = 'e0'
+          ..append(DivElement()..id = 'e1')
+          ..append(DivElement()..id = 'e2');
         expectMatches(e.firstChild as Element, ':last-child', isFalse);
         expectMatches(e.lastChild as Element, ':last-child', isTrue);
       });
       test(':nth-child(2)', () {
-        final e =
+        final e = DivElement()
+          ..id = 'root'
+          ..append(
             DivElement()
-              ..id = 'root'
-              ..append(
-                DivElement()
-                  ..id = 'child0'
-                  ..append(DivElement()..append(DivElement())),
-              )
-              ..append(DivElement()..id = 'child1');
+              ..id = 'child0'
+              ..append(DivElement()..append(DivElement())),
+          )
+          ..append(DivElement()..id = 'child1');
         expectMatches(e.childNodes[0] as Element, ':nth-child(1)', isTrue);
         expectMatches(e.childNodes[0] as Element, ':nth-child(2)', isFalse);
         expectMatches(e.childNodes[1] as Element, ':nth-child(1)', isFalse);
@@ -151,26 +147,24 @@ void _testCss() {
         expect(p.querySelectorAll('#root div:nth-child(3)'), hasLength(0));
       });
       test(':nth-child(2n)', () {
-        final e =
-            DivElement()
-              ..id = 'root'
-              ..append(DivElement()..id = 'child0')
-              ..append(DivElement()..id = 'child1')
-              ..append(DivElement()..id = 'child2')
-              ..append(DivElement()..id = 'child3');
+        final e = DivElement()
+          ..id = 'root'
+          ..append(DivElement()..id = 'child0')
+          ..append(DivElement()..id = 'child1')
+          ..append(DivElement()..id = 'child2')
+          ..append(DivElement()..id = 'child3');
         expectMatches(e.childNodes[0] as Element, ':nth-child(2n)', isFalse);
         expectMatches(e.childNodes[1] as Element, ':nth-child(2n)', isTrue);
         expectMatches(e.childNodes[2] as Element, ':nth-child(2n)', isFalse);
         expectMatches(e.childNodes[3] as Element, ':nth-child(2n)', isTrue);
       });
       test(':nth-child(2n+1)', () {
-        final e =
-            DivElement()
-              ..id = 'root'
-              ..append(DivElement()..id = 'child0')
-              ..append(DivElement()..id = 'child1')
-              ..append(DivElement()..id = 'child2')
-              ..append(DivElement()..id = 'child3');
+        final e = DivElement()
+          ..id = 'root'
+          ..append(DivElement()..id = 'child0')
+          ..append(DivElement()..id = 'child1')
+          ..append(DivElement()..id = 'child2')
+          ..append(DivElement()..id = 'child3');
         expectMatches(e.childNodes[0] as Element, ':nth-child(2n+1)', isTrue);
         expectMatches(e.childNodes[1] as Element, ':nth-child(2n+1)', isFalse);
         expectMatches(e.childNodes[2] as Element, ':nth-child(2n+1)', isTrue);
@@ -228,26 +222,21 @@ void _testCss() {
       });
 
       test('Complex example #1', () {
-        final e0 =
-            DivElement()
-              ..id = 'e0'
-              ..className = 'c0 all';
-        final e0_0 =
-            DivElement()
-              ..id = 'e0_0'
-              ..className = 'c0_0 all';
-        final e0_1 =
-            DivElement()
-              ..id = 'e0_1'
-              ..className = 'c0_1 all';
-        final e0_2 =
-            DivElement()
-              ..id = 'e0_2'
-              ..className = 'c0_2 all';
-        final e0_2_0 =
-            DivElement()
-              ..id = 'e0_2_0'
-              ..className = 'c0_2_0 all';
+        final e0 = DivElement()
+          ..id = 'e0'
+          ..className = 'c0 all';
+        final e0_0 = DivElement()
+          ..id = 'e0_0'
+          ..className = 'c0_0 all';
+        final e0_1 = DivElement()
+          ..id = 'e0_1'
+          ..className = 'c0_1 all';
+        final e0_2 = DivElement()
+          ..id = 'e0_2'
+          ..className = 'c0_2 all';
+        final e0_2_0 = DivElement()
+          ..id = 'e0_2_0'
+          ..className = 'c0_2_0 all';
         e0.append((e0_0));
         e0.append(e0_1);
         e0.append(e0_2);
@@ -336,35 +325,29 @@ void _testCss() {
       test('Complex example #1', () {
         final root = DivElement();
 
-        final e0 =
-            DivElement()
-              ..id = 'e0'
-              ..className = 'all';
+        final e0 = DivElement()
+          ..id = 'e0'
+          ..className = 'all';
 
-        final e0_0 =
-            DivElement()
-              ..id = 'e0-0'
-              ..className = 'all';
+        final e0_0 = DivElement()
+          ..id = 'e0-0'
+          ..className = 'all';
 
-        final e0_1 =
-            DivElement()
-              ..id = 'e0-1'
-              ..className = 'all';
+        final e0_1 = DivElement()
+          ..id = 'e0-1'
+          ..className = 'all';
 
-        final e0_2 =
-            Element.nav()
-              ..id = 'e0-2'
-              ..className = 'all';
+        final e0_2 = Element.nav()
+          ..id = 'e0-2'
+          ..className = 'all';
 
-        final e0_2_0 =
-            DivElement()
-              ..id = 'e0-2-0'
-              ..className = 'all';
+        final e0_2_0 = DivElement()
+          ..id = 'e0-2-0'
+          ..className = 'all';
 
-        final e1 =
-            DivElement()
-              ..id = 'e1'
-              ..className = 'all last';
+        final e1 = DivElement()
+          ..id = 'e1'
+          ..className = 'all last';
 
         root.append(e0);
         e0.append((e0_0));

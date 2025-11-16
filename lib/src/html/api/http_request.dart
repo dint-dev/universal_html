@@ -844,10 +844,16 @@ abstract class HttpRequestUpload {
   HttpRequestUpload._();
 
   Stream<ProgressEvent> get onAbort;
+
   Stream<ProgressEvent> get onError;
+
   Stream<ProgressEvent> get onLoad;
+
   Stream<ProgressEvent> get onLoadEnd;
+
   Stream<ProgressEvent> get onLoadStart;
+
   Stream<ProgressEvent> get onProgress;
+
   Stream<ProgressEvent> get onTimeout;
 }

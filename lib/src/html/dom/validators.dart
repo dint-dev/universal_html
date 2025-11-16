@@ -322,10 +322,9 @@ class _ValidatingTreeSanitizer implements NodeTreeSanitizer {
       // On IE, erratically, the hasCorruptedAttributes test can return false,
       // even though it clearly is corrupted. A separate copy of the test
       // inlining just the basic check seems to help.
-      corrupted =
-          corruptedTest1
-              ? true
-              : Element._hasCorruptedAttributesAdditionalCheck(element);
+      corrupted = corruptedTest1
+          ? true
+          : Element._hasCorruptedAttributesAdditionalCheck(element);
     } catch (e) {
       // Ignore
     }

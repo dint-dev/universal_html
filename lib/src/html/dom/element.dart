@@ -555,12 +555,10 @@ abstract class Element extends Node
 
   @override
   late final InternalElementData internalElementData = ownerDocument!
-      .window
-      .internalWindowController
-      .windowBehavior
+      .window.internalWindowController.windowBehavior
       .newInternalElementData(
-        element: this as universal_html_in_browser_or_vm.Element,
-      );
+    element: this as universal_html_in_browser_or_vm.Element,
+  );
 
   /// Creates a new `<a>` element.
   ///
@@ -593,9 +591,9 @@ abstract class Element extends Node
   factory Element.canvas() = CanvasElement;
 
   Element.created()
-    : _nodeName = '',
-      _lowerCaseTagName = '',
-      super._(window.document) {
+      : _nodeName = '',
+        _lowerCaseTagName = '',
+        super._(window.document) {
     throw UnimplementedError();
   }
 
@@ -666,7 +664,7 @@ abstract class Element extends Node
 
   /// Internal constructor. __Not part of dart:html__.
   Element.internal(Document document, String tagName)
-    : this._(document, tagName);
+      : this._(document, tagName);
 
   /// Internal constructor. __Not part of dart:html__.
   factory Element.internalTag(
@@ -789,10 +787,10 @@ abstract class Element extends Node
   /// Internal constructor that does not normalize or validate element name.
   /// Used by Element subclasses such as [AnchorElement].
   Element._(Document super.ownerDocument, String nodeName)
-    : _nodeName = nodeName,
-      _lowerCaseTagName =
-          ownerDocument is XmlDocument ? nodeName : nodeName.toLowerCase(),
-      super._();
+      : _nodeName = nodeName,
+        _lowerCaseTagName =
+            ownerDocument is XmlDocument ? nodeName : nodeName.toLowerCase(),
+        super._();
 
   factory Element._internalTag(
     Document ownerDocument,

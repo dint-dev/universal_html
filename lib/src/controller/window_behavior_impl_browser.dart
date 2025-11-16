@@ -27,10 +27,9 @@ Document newDocument({
 
 HtmlDocument newHtmlDocument({required Window window, String? contentType}) {
   return DomParser().parseFromString(
-        '<html></html>',
-        contentType ?? 'text/html',
-      )
-      as HtmlDocument;
+    '<html></html>',
+    contentType ?? 'text/html',
+  ) as HtmlDocument;
 }
 
 Navigator newNavigator({required Window window}) {

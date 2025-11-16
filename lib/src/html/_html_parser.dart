@@ -163,10 +163,9 @@ class _HtmlParser {
           if (name is html_parsing.AttributeName) {
             result.internalSetAttributeNSFromParser(
               namespaceUri: name.namespace,
-              qualifiedName:
-                  name.prefix == null
-                      ? name.name
-                      : '${name.prefix}:${name.name}',
+              qualifiedName: name.prefix == null
+                  ? name.name
+                  : '${name.prefix}:${name.name}',
               localName: name.name,
               value: value,
             );

@@ -48,6 +48,7 @@ class DocsEditable {
 /// [name] should be formatted as `interface.member`.
 class DomName {
   final String name;
+
   const DomName(this.name);
 }
 
@@ -75,12 +76,14 @@ class Experimental {
 ///     }
 class JSName {
   final String name;
+
   const JSName(this.name);
 }
 
 /// Marks a class as native and defines its JavaScript name(s).
 class Native {
   final String name;
+
   const Native(this.name);
 }
 

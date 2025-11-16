@@ -618,9 +618,9 @@ class _CssStyleDeclarationSet extends CssStyleDeclarationBase {
     }
   }
 
-  // Important note: CssStyleDeclarationSet does NOT implement every method
-  // available in CssStyleDeclaration. Some of the methods don't make so much
-  // sense in terms of having a resonable value to return when you're
-  // considering a list of Elements. You will need to manually add any of the
-  // items in the MEMBERS set if you want that functionality.
+// Important note: CssStyleDeclarationSet does NOT implement every method
+// available in CssStyleDeclaration. Some of the methods don't make so much
+// sense in terms of having a resonable value to return when you're
+// considering a list of Elements. You will need to manually add any of the
+// items in the MEMBERS set if you want that functionality.
 }

@@ -184,6 +184,7 @@ class WebSocket extends EventTarget {
   }
 
   @JSName('send')
+
   /// Transmit data to the server over this connection.
   ///
   /// This method accepts data of type [Blob], [ByteBuffer], [String], or
@@ -194,6 +195,7 @@ class WebSocket extends EventTarget {
   }
 
   @JSName('send')
+
   /// Transmit data to the server over this connection.
   ///
   /// This method accepts data of type [Blob], [ByteBuffer], [String], or
@@ -204,6 +206,7 @@ class WebSocket extends EventTarget {
   }
 
   @JSName('send')
+
   /// Transmit data to the server over this connection.
   ///
   /// This method accepts data of type [Blob], [ByteBuffer], [String], or
@@ -214,6 +217,7 @@ class WebSocket extends EventTarget {
   }
 
   @JSName('send')
+
   /// Transmit data to the server over this connection.
   ///
   /// This method accepts data of type [Blob], [ByteBuffer], [String], or

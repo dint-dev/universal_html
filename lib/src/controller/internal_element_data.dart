@@ -15,8 +15,7 @@
 import 'package:universal_html/html.dart';
 
 import 'internal_element_data_impl_others.dart'
-    if (dart.library.html) 'internal_element_data_impl_browser.dart'
-    as impl;
+    if (dart.library.html) 'internal_element_data_impl_browser.dart' as impl;
 
 /// Internal data of [Element].
 ///

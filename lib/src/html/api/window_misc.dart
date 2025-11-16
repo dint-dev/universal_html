@@ -166,7 +166,7 @@ class ScreenOrientation extends EventTarget {
   final String type;
 
   ScreenOrientation.constructor({this.angle = 1, this.type = 'vertical'})
-    : super.internal();
+      : super.internal();
 
   Stream<Event> get onChange => changeEvent.forTarget(this);
 

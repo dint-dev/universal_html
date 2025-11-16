@@ -1,3 +1,9 @@
+## 2.2.7
+* Improves documentation and tests.
+
+## 2.2.6
+* Removes an unnecessary dependency.
+
 ## 2.2.5
 * Updates the library for new Dart SDK and fixes most analyzer warnings.
 

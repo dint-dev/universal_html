@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 class Coordinates {
   final num accuracy;
@@ -71,16 +71,24 @@ class Geolocation {
   /// Internal constructor. __Not part of dart:html__.
   Geolocation.internal();
 
-  Future<Geoposition> getCurrentPosition(
-      {bool? enableHighAccuracy, Duration? timeout, Duration? maximumAge}) {
-    return Future<Geoposition>.value(Geoposition.internal(
-      coords: Coordinates.internal(),
-      timestamp: DateTime.now().millisecondsSinceEpoch,
-    ));
+  Future<Geoposition> getCurrentPosition({
+    bool? enableHighAccuracy,
+    Duration? timeout,
+    Duration? maximumAge,
+  }) {
+    return Future<Geoposition>.value(
+      Geoposition.internal(
+        coords: Coordinates.internal(),
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+      ),
+    );
   }
 
-  Stream<Geoposition> watchPosition(
-      {bool? enableHighAccuracy, Duration? timeout, Duration? maximumAge}) {
+  Stream<Geoposition> watchPosition({
+    bool? enableHighAccuracy,
+    Duration? timeout,
+    Duration? maximumAge,
+  }) {
     return Stream<Geoposition>.fromFuture(getCurrentPosition());
   }
 }
@@ -99,5 +107,6 @@ class Geoposition {
 class PositionError {
   final int code;
   final String message;
+
   PositionError._(this.code, this.message);
 }

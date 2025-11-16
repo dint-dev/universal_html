@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 abstract class AbstractWorker implements EventTarget {
   static const EventStreamProvider<Event> errorEvent =
@@ -72,8 +72,11 @@ class BackgroundFetchManager {
     throw UnimplementedError();
   }
 
-  Future<BackgroundFetchRegistration> fetch(String id, Object requests,
-      [Map? options]) {
+  Future<BackgroundFetchRegistration> fetch(
+    String id,
+    Object requests, [
+    Map? options,
+  ]) {
     throw UnimplementedError();
   }
 
@@ -201,7 +204,7 @@ class FormData {
 
   void delete(String name) => throw UnimplementedError();
 
-  Object get(String name) => throw UnimplementedError();
+  Object? get(String name) => throw UnimplementedError();
 
   List<Object> getAll(String name) => throw UnimplementedError();
 
@@ -357,7 +360,7 @@ class ServiceWorker extends EventTarget implements AbstractWorker {
     throw UnimplementedError();
   }
 
-  void postMessage(/*any*/ message, [List<Object>? transfer]) {
+  void postMessage(dynamic message, [List<Object>? transfer]) {
     throw UnimplementedError();
   }
 }
@@ -568,7 +571,7 @@ class Worker extends EventTarget implements AbstractWorker {
   /// Stream of `message` events handled by this [Worker].
   Stream<MessageEvent> get onMessage => messageEvent.forTarget(this);
 
-  void postMessage(/*any*/ message, [List<Object>? transfer]) {
+  void postMessage(dynamic message, [List<Object>? transfer]) {
     throw UnimplementedError();
   }
 
@@ -626,7 +629,7 @@ class WorkerGlobalScope extends EventTarget {
     throw UnimplementedError();
   }
 
-  Future fetch(/*RequestInfo*/ input, [Map? init]) {
+  Future fetch(dynamic input, [Map? init]) {
     throw UnimplementedError();
   }
 
@@ -703,10 +706,11 @@ class WorkerPerformance extends EventTarget {
 @Native('WorkletAnimation')
 class WorkletAnimation {
   factory WorkletAnimation(
-      String animatorName,
-      List<KeyframeEffectReadOnly> effects,
-      List<Object> timelines,
-      /*SerializedScriptValue*/ options) {
+    String animatorName,
+    List<KeyframeEffectReadOnly> effects,
+    List<Object> timelines,
+    /*SerializedScriptValue*/ options,
+  ) {
     throw UnimplementedError();
   }
 

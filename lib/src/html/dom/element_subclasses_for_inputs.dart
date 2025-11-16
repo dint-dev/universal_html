@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 abstract class ButtonInputElement implements InputElementBase {
   factory ButtonInputElement() => InputElement(type: 'button');
@@ -62,7 +62,9 @@ abstract class DateInputElement implements RangeInputElementBase {
 
   bool? readOnly;
   bool required = false;
+
   factory DateInputElement() => InputElement(type: 'date');
+
   DateTime get valueAsDate => throw UnimplementedError();
 
   set valueAsDate(DateTime value);
@@ -179,7 +181,9 @@ abstract class MonthInputElement implements RangeInputElementBase {
 
   bool? readOnly;
   bool required = false;
+
   factory MonthInputElement() => InputElement(type: 'month');
+
   DateTime get valueAsDate;
 
   set valueAsDate(DateTime value);
@@ -316,6 +320,7 @@ abstract class WeekInputElement implements RangeInputElementBase {
 
   bool? readOnly;
   bool required = false;
+
   factory WeekInputElement() => InputElement(type: 'week');
 
   DateTime? get valueAsDate => throw UnimplementedError();

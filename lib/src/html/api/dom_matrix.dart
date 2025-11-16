@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 abstract class DomMatrix extends DomMatrixReadOnly {
   @override
@@ -103,26 +103,47 @@ abstract class DomMatrix extends DomMatrixReadOnly {
 
 abstract class DomMatrixReadOnly {
   int get a;
+
   int get b;
+
   int get c;
+
   int get d;
+
   int get e;
+
   int get f;
+
   int get m11;
+
   int get m12;
+
   int get m13;
+
   int get m14;
+
   int get m21;
+
   int get m22;
+
   int get m23;
+
   int get m24;
+
   int get m31;
+
   int get m32;
+
   int get m33;
+
   int get m34;
+
   int get m41;
+
   int get m42;
+
   int get m43;
+
   int get m44;
 
   DomMatrix flipX();

@@ -43,7 +43,7 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html.internal;
+part of '../../html.dart';
 
 typedef MediaSessionActionHandler = void Function();
 
@@ -109,18 +109,6 @@ abstract class CredentialsContainer {
   Future requireUserMediation();
 
   Future store(Credential credential);
-}
-
-@deprecated
-abstract class DeprecatedStorageQuota {
-  DeprecatedStorageQuota._();
-
-  void queryUsageAndQuota(StorageUsageCallback usageCallback,
-      [StorageErrorCallback? errorCallback]);
-
-  void requestQuota(int newQuotaInBytes,
-      [StorageQuotaCallback? quotaCallback,
-      StorageErrorCallback? errorCallback]);
 }
 
 abstract class Gamepad {
@@ -354,7 +342,7 @@ abstract class PresentationConnection extends EventTarget {
     throw UnimplementedError();
   }
 
-  void send(data_OR_message) {
+  void send(dynamic dataOrMessage) {
     throw UnimplementedError();
   }
 
@@ -399,7 +387,7 @@ class PresentationReceiver {
 }
 
 class PresentationRequest extends EventTarget {
-  factory PresentationRequest(url_OR_urls) {
+  factory PresentationRequest(dynamic urlOrUrls) {
     throw UnimplementedError();
   }
 
@@ -414,7 +402,9 @@ class PresentationRequest extends EventTarget {
 
 abstract class RelatedApplication {
   RelatedApplication._();
+
   String? get id;
+
   String? get platform;
 
   String? get url;

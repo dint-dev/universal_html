@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// Cross-platform "dart:web_gl" library.
-library universal_html.web_gl;
+library;
 
 export 'src/_sdk/web_gl.dart'
     if (dart.library.web_gl) 'src/_sdk/web_gl.dart' // Browser

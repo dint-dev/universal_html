@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testHttpRequest() {
   group('HttpRequest', () {
@@ -40,9 +40,7 @@ void _testHttpRequest() {
       request.send();
 
       // Wait
-      final event = await onLoadEnd.next.timeout(
-        const Duration(seconds: 5),
-      );
+      final event = await onLoadEnd.next.timeout(const Duration(seconds: 5));
       expect(event, isA<ProgressEvent>());
       expect(request.status, 200);
       expect(request.statusText, isNotEmpty);
@@ -105,7 +103,9 @@ void _testHttpRequest() {
 
     test('GET, type "json"', () async {
       request.open(
-          'GET', 'http://localhost:$_httpServerPort/http_request/json');
+        'GET',
+        'http://localhost:$_httpServerPort/http_request/json',
+      );
       request.responseType = 'json';
       request.send();
       final event = await onLoadEnd.next.timeout(
@@ -123,6 +123,13 @@ void _testHttpRequest() {
       // No error
       expect(onError.eventsDispatched, 0);
       expect(onTimeout.eventsDispatched, 0);
+    }, timeout: Timeout(Duration(seconds: 5)));
+
+    test('GET, using getString', () async {
+      String testResponse = await HttpRequest.getString(
+        'http://localhost:$_httpServerPort/http_request/ok',
+      );
+      expect(testResponse, 'hello');
     }, timeout: Timeout(Duration(seconds: 5)));
 
     test('Failing request', () async {

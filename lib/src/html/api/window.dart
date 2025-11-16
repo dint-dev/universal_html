@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// ignore_for_file: constant_identifier_names
+
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -44,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 /// Global window.
 Window get window => WindowController.topLevel.window as Window;
@@ -75,8 +77,9 @@ class Window extends EventTarget
   ///
   /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<DeviceOrientationEvent>
-      deviceOrientationEvent =
-      EventStreamProvider<DeviceOrientationEvent>('deviceorientation');
+      deviceOrientationEvent = EventStreamProvider<DeviceOrientationEvent>(
+    'deviceorientation',
+  );
 
   /// Static factory designed to expose `hashchange` events to event
   /// handlers that are not necessarily instances of [Window].
@@ -228,8 +231,6 @@ class Window extends EventTarget
 
   String? defaultstatus;
 
-  late final External? external = External.internal();
-
   /// The current session history for this window's newest document.
   ///
   /// ## Other resources
@@ -272,8 +273,9 @@ class Window extends EventTarget
     // Note that `as` expressions are required because of
     // "dart:html OR universal_html" confusion by the analyzer.
     final window = this as universal_html_in_browser_or_vm.Window;
-    final navigator =
-        internalWindowController.windowBehavior.newNavigator(window: window);
+    final navigator = internalWindowController.windowBehavior.newNavigator(
+      window: window,
+    );
     return navigator as Navigator;
   }();
 
@@ -345,8 +347,9 @@ class Window extends EventTarget
     // Note that `as` expressions are required because of
     // "dart:html OR universal_html" confusion by the analyzer.
     final window = this as universal_html_in_browser_or_vm.Window;
-    final document =
-        internalWindowController.windowBehavior.newDocument(window: window);
+    final document = internalWindowController.windowBehavior.newDocument(
+      window: window,
+    );
     return document as Document;
   }();
 
@@ -895,7 +898,7 @@ class Window extends EventTarget
     throw UnimplementedError();
   }
 
-  Future fetch(/*RequestInfo*/ input, [Map? init]) {
+  Future fetch(dynamic input, [Map? init]) {
     throw UnimplementedError();
   }
 
@@ -905,13 +908,22 @@ class Window extends EventTarget
   ///
   /// * [Window.find](https://developer.mozilla.org/en-US/docs/Web/API/Window.find)
   ///   from MDN.
-  bool find(String? string, bool? caseSensitive, bool? backwards, bool? wrap,
-      bool? wholeWord, bool? searchInFrames, bool? showDialog) {
+  bool find(
+    String? string,
+    bool? caseSensitive,
+    bool? backwards,
+    bool? wrap,
+    bool? wholeWord,
+    bool? searchInFrames,
+    bool? showDialog,
+  ) {
     throw UnimplementedError();
   }
 
   StylePropertyMapReadonly getComputedStyleMap(
-      Element element, String? pseudoElement) {
+    Element element,
+    String? pseudoElement,
+  ) {
     throw UnimplementedError();
   }
 
@@ -977,8 +989,11 @@ class Window extends EventTarget
   }
 
   @override
-  void postMessage(/*any*/ message, String targetOrigin,
-      [List<Object>? messagePorts]) {
+  void postMessage(
+    /*any*/ message,
+    String targetOrigin, [
+    List<Object>? messagePorts,
+  ]) {
     throw UnimplementedError();
   }
 
@@ -1021,8 +1036,9 @@ class Window extends EventTarget
 
   int requestIdleCallback(IdleRequestCallback callback, [Map? options]) {
     Timer(const Duration(microseconds: 1), () {
-      final idleDeadline =
-          IdleDeadline._(DateTime.now().add(const Duration(microseconds: 10)));
+      final idleDeadline = IdleDeadline._(
+        DateTime.now().add(const Duration(microseconds: 10)),
+      );
       callback(idleDeadline);
     });
     return 0;
@@ -1066,7 +1082,7 @@ class Window extends EventTarget
   ///
   /// * [Window.scroll](https://developer.mozilla.org/en-US/docs/Web/API/Window/scroll)
   ///   from MDN.
-  void scroll([options_OR_x, y, Map? scrollOptions]) {}
+  void scroll([dynamic optionsOrX, y, Map? scrollOptions]) {}
 
   /// Scrolls the page horizontally and vertically by an offset.
   ///
@@ -1074,7 +1090,7 @@ class Window extends EventTarget
   ///
   /// * [Window.scrollBy](https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollBy)
   ///   from MDN.
-  void scrollBy([options_OR_x, y, Map? scrollOptions]) {}
+  void scrollBy([dynamic optionsOrX, y, Map? scrollOptions]) {}
 
   /// Scrolls the page horizontally and vertically to a specific point.
   ///
@@ -1084,7 +1100,7 @@ class Window extends EventTarget
   ///
   /// * [Window.scrollTo](https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollTo)
   ///   from MDN.
-  void scrollTo([options_OR_x, y, Map? scrollOptions]) {}
+  void scrollTo([dynamic optionsOrX, y, Map? scrollOptions]) {}
 
   /// Stops the window from loading.
   ///
@@ -1201,8 +1217,11 @@ mixin WindowBase implements EventTarget {
   ///   from MDN.
   /// * [Cross-document messaging](https://html.spec.whatwg.org/multipage/comms.html#web-messaging)
   ///   from WHATWG.
-  void postMessage(var message, String targetOrigin,
-      [List<MessagePort>? messagePorts]);
+  void postMessage(
+    dynamic message,
+    String targetOrigin, [
+    List<MessagePort>? messagePorts,
+  ]);
 }
 
 abstract class WindowEventHandlers extends EventTarget {

@@ -43,15 +43,16 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html.internal;
+part of '../../html.dart';
 
 class _CssStyleDeclarationSet extends CssStyleDeclarationBase {
   final Iterable<Element> _elementIterable;
   late Iterable<CssStyleDeclaration> _elementCssStyleDeclarationSetIterable;
 
   _CssStyleDeclarationSet(this._elementIterable) : super._() {
-    _elementCssStyleDeclarationSetIterable =
-        List.from(_elementIterable).map((e) => e.style);
+    _elementCssStyleDeclarationSetIterable = List.from(
+      _elementIterable,
+    ).map((e) => e.style);
   }
 
   /// Sets the value of "background"
@@ -600,8 +601,9 @@ class _CssStyleDeclarationSet extends CssStyleDeclarationBase {
 
   @override
   String getPropertyValue(String propertyName) =>
-      _elementCssStyleDeclarationSetIterable.first
-          .getPropertyValue(propertyName);
+      _elementCssStyleDeclarationSetIterable.first.getPropertyValue(
+        propertyName,
+      );
 
   @override
   void setProperty(String propertyName, String? value, [String? priority]) {

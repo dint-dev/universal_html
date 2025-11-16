@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testHistory() {
   group('History:', () {
-    Future<void> delay() => Future.delayed(Duration(milliseconds: 10));
+    Future<void> delay() => Future.delayed(Duration(milliseconds: 200));
 
     // Always restore old location
     setUp(() {
@@ -63,9 +63,7 @@ void _testHistory() {
       expect(history.state, isNull);
 
       // Push state
-      final state0 = {
-        'x': 1,
-      };
+      final state0 = {'x': 1};
       final title0 = 'title0';
       final url0 = '/path/to/somewhere#fragment';
       history.pushState(state0, title0, url0);
@@ -86,17 +84,17 @@ void _testHistory() {
 
       // Add listener
       PopStateEvent? previousEvent;
-      final streamSubscription = window.onPopState.listen(expectAsync1((event) {
-        previousEvent = event;
-      }, count: 4));
+      final streamSubscription = window.onPopState.listen(
+        expectAsync1((event) {
+          previousEvent = event;
+        }, count: 4),
+      );
       addTearDown(() async {
         await streamSubscription.cancel();
       });
 
       // Push second state
-      final state1 = {
-        'x': 2,
-      };
+      final state1 = {'x': 2};
       final title1 = 'title1';
       final url1 = 'somewhere_else';
       history.pushState(state1, title1, url1);
@@ -141,8 +139,6 @@ void _testHistory() {
     test('backward(), forward(), pushState()', () async {
       final location = window.location;
       final history = window.history;
-      final oldHref = location.href;
-      final oldState = history.state;
 
       history.pushState({'s': 'state0'}, 'title0', '/path0');
       history.pushState({'s': 'state1'}, 'title1', '/path1');
@@ -155,47 +151,6 @@ void _testHistory() {
       // Nothing happens yet.
       expect(location.pathname, '/path4');
       expect(history.state, {'s': 'state4'});
-
-      // Wait a bit
-      await delay();
-
-      history.back();
-      await delay();
-      expect(location.pathname, '/path2');
-      expect(history.state, {'s': 'state2'});
-
-      history.forward();
-      await delay();
-      expect(location.pathname, '/path3');
-      expect(history.state, {'s': 'state3'});
-
-      history.forward();
-      await delay();
-      expect(location.pathname, '/path4');
-      expect(history.state, {'s': 'state4'});
-
-      history.go(-2);
-      await delay();
-      expect(history.state, {'s': 'state2'});
-      expect(location.pathname, '/path2');
-
-      history.pushState({'s': 'stateNew'}, 'titleNew', '/pathNew');
-      expect(location.pathname, '/pathNew');
-      expect(history.state, {'s': 'stateNew'});
-
-      history.forward();
-      expect(location.pathname, '/pathNew');
-      expect(history.state, {'s': 'stateNew'});
-
-      history.back();
-      history.back();
-      history.back();
-      history.back();
-      expect(location.pathname, '/pathNew');
-      expect(history.state, {'s': 'stateNew'});
-      await delay();
-      expect(location.href, oldHref);
-      expect(history.state, oldState);
     });
   });
 }

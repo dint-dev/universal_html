@@ -44,11 +44,15 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 abstract class Element extends Node
-    with GlobalEventHandlers, _ChildNode, _ElementOrDocument
-    implements ChildNode, NonDocumentTypeChildNode, ParentNode {
+    with _ChildNode, _ElementOrDocument
+    implements
+        GlobalEventHandlers,
+        ChildNode,
+        NonDocumentTypeChildNode,
+        ParentNode {
   /// Static factory designed to expose `abort` events to event
   /// handlers that are not necessarily instances of [Element].
   ///
@@ -510,11 +514,13 @@ abstract class Element extends Node
   static const EventStreamProvider<WheelEvent> wheelEvent =
       EventStreamProvider<WheelEvent>('wheel');
 
-  static final _normalizedElementNameRegExp =
-      RegExp(r'^[a-zA-Z_:][a-zA-Z0-9_:\.\-]*$');
+  static final _normalizedElementNameRegExp = RegExp(
+    r'^[a-zA-Z_:][a-zA-Z0-9_:\.\-]*$',
+  );
 
-  static final _normalizedAttributeNameRegExp =
-      RegExp(r'^[a-zA-Z_:][a-zA-Z0-9_:\.\-]*$');
+  static final _normalizedAttributeNameRegExp = RegExp(
+    r'^[a-zA-Z_:][a-zA-Z0-9_:\.\-]*$',
+  );
 
   /// Static factory designed to expose `mousewheel` events to event
   /// handlers that are not necessarily instances of [Element].
@@ -661,19 +667,21 @@ abstract class Element extends Node
       : this._(document, tagName);
 
   /// Internal constructor. __Not part of dart:html__.
-  factory Element.internalTag(Document ownerDocument, String name,
-      [String? typeExtension]) {
-    return Element._internalTag(
-      ownerDocument,
-      name,
-      typeExtension,
-    );
+  factory Element.internalTag(
+    Document ownerDocument,
+    String name, [
+    String? typeExtension,
+  ]) {
+    return Element._internalTag(ownerDocument, name, typeExtension);
   }
 
   /// Internal constructor. __Not part of dart:html__.
   factory Element.internalTagNS(
-      Document ownerDocument, String namespaceUri, String name,
-      [String? typeExtension]) {
+    Document ownerDocument,
+    String namespaceUri,
+    String name, [
+    String? typeExtension,
+  ]) {
     final normalizedName = name.toLowerCase();
     if (!Element._normalizedElementNameRegExp.hasMatch(normalizedName)) {
       throw ArgumentError.value(name);
@@ -740,7 +748,10 @@ abstract class Element extends Node
   /// If the name is invalid, throws an error or exception.
   factory Element.tag(String name, [String? typeExtension]) {
     return Element.internalTag(
-        window.document, name.toUpperCase(), typeExtension);
+      window.document,
+      name.toUpperCase(),
+      typeExtension,
+    );
   }
 
   /// Creates a new `<td>` element.
@@ -775,14 +786,17 @@ abstract class Element extends Node
 
   /// Internal constructor that does not normalize or validate element name.
   /// Used by Element subclasses such as [AnchorElement].
-  Element._(Document ownerDocument, String nodeName)
+  Element._(Document super.ownerDocument, String nodeName)
       : _nodeName = nodeName,
         _lowerCaseTagName =
             ownerDocument is XmlDocument ? nodeName : nodeName.toLowerCase(),
-        super._(ownerDocument);
+        super._();
 
-  factory Element._internalTag(Document ownerDocument, String name,
-      [String? typeExtension]) {
+  factory Element._internalTag(
+    Document ownerDocument,
+    String name, [
+    String? typeExtension,
+  ]) {
     final lowerCaseName = name.toLowerCase();
     switch (lowerCaseName) {
       case 'a':
@@ -993,7 +1007,7 @@ abstract class Element extends Node
     classSet.addAll(value);
   }
 
-  String? get className => _getAttribute('class');
+  String get className => _getAttribute('class') ?? '';
 
   set className(String? newValue) {
     _setAttribute('class', newValue);
@@ -1739,10 +1753,11 @@ abstract class Element extends Node
     NodeTreeSanitizer? treeSanitizer,
   }) {
     final fragment = const DomParserDriver().parseDocumentFragmentFromHtml(
-        ownerDocument: ownerDocument!,
-        content: text,
-        validator: validator,
-        treeSanitizer: treeSanitizer);
+      ownerDocument: ownerDocument!,
+      content: text,
+      validator: validator,
+      treeSanitizer: treeSanitizer,
+    );
     while (true) {
       final child = fragment.firstChild;
       if (child == null) {
@@ -1951,7 +1966,8 @@ abstract class Element extends Node
       throw ArgumentError.value(classNames);
     }
     return querySelectorAll(
-        classNames.split(_whitespaceRegExp).map((name) => '.$name').join());
+      classNames.split(_whitespaceRegExp).map((name) => '.$name').join(),
+    );
   }
 
   Map<String, String> getNamespacedAttributes(String namespaceUri) {
@@ -2005,8 +2021,12 @@ abstract class Element extends Node
   ///
   /// * [insertAdjacentText]
   /// * [insertAdjacentElement]
-  void insertAdjacentHtml(String where, String html,
-      {NodeValidator? validator, NodeTreeSanitizer? treeSanitizer}) {
+  void insertAdjacentHtml(
+    String where,
+    String html, {
+    NodeValidator? validator,
+    NodeTreeSanitizer? treeSanitizer,
+  }) {
     throw UnimplementedError();
   }
 
@@ -2036,11 +2056,7 @@ abstract class Element extends Node
 
     // Clone children
     if (deep != false) {
-      Node._cloneChildrenFrom(
-        ownerDocument,
-        newParent: clone,
-        oldParent: this,
-      );
+      Node._cloneChildrenFrom(ownerDocument, newParent: clone, oldParent: this);
     }
 
     return clone;
@@ -2197,9 +2213,9 @@ abstract class Element extends Node
 
   void requestPointerLock() {}
 
-  void scroll([dynamic options_OR_x, num? y]) {}
+  void scroll([dynamic optionsOrX, num? y]) {}
 
-  void scrollBy([dynamic options_OR_x, num? y]) {}
+  void scrollBy([dynamic optionsOrX, num? y]) {}
 
   /// Scrolls this element into view.
   ///
@@ -2222,7 +2238,7 @@ abstract class Element extends Node
     // Ignore
   }
 
-  void scrollTo([dynamic options_OR_x, num? y]) {}
+  void scrollTo([dynamic optionsOrX, num? y]) {}
 
   Future<ScrollState> setApplyScroll(String nativeScrollBehavior) {
     throw UnimplementedError();
@@ -2255,13 +2271,7 @@ abstract class Element extends Node
       previous = attribute;
       attribute = attribute._next;
     }
-    final newAttribute = _Attribute(
-      false,
-      '',
-      name,
-      name,
-      value,
-    );
+    final newAttribute = _Attribute(false, '', name, name, value);
     if (previous == null) {
       _firstAttribute = newAttribute;
     } else {
@@ -2440,10 +2450,7 @@ abstract class Element extends Node
     String falseString = 'false',
     String trueString = 'true',
   }) {
-    final value = _getAttribute(
-      name,
-      defaultValue: null,
-    );
+    final value = _getAttribute(name, defaultValue: null);
     if (value == falseString) {
       return false;
     }
@@ -2592,13 +2599,7 @@ abstract class Element extends Node
       previous = attribute;
       attribute = attribute._next;
     }
-    final newAttribute = _Attribute(
-      false,
-      '',
-      name,
-      name,
-      value,
-    );
+    final newAttribute = _Attribute(false, '', name, name, value);
     if (previous == null) {
       _firstAttribute = newAttribute;
     } else {

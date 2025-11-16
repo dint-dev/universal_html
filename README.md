@@ -3,13 +3,13 @@
 [![Github Actions CI](https://github.com/dint-dev/universal_html/workflows/Dart%20CI/badge.svg)](https://github.com/dint-dev/universal_html/actions)
 
 # Introduction
-A cross-platform `dart:html`:
+A cross-platform replacement for `dart:html` (or `package:web`):
   * __Eases cross-platform development__
     * You can use this package in browsers, mobile, desktop, and server-side VM, and Node.JS.
-    * Just replace `dart:html` imports with `package:universal_html/html.dart`. Normal
+    * Just replace `dart:html` / `package:web` imports with `package:universal_html/universal_html.dart`. Normal
       _dart:html_ will continue to be used when application run in browsers.
   * __Extensive support for processing HTML and XML documents__
-    * Parse, manipulate, and print [DOM nodes](https://api.dart.dev/stable/2.19.3/dart-html/Node-class.html).
+    * Parse, manipulate, and print [DOM nodes](https://api.flutter.dev/flutter/dart-html/Node-class.html).
     * Find DOM nodes with [querySelectorAll](https://api.dart.dev/stable/2.19.3/dart-html/querySelectorAll.html)
       and other CSS query methods.
   * __EventSource streaming support__
@@ -35,12 +35,12 @@ which is documented in the relevant files.
 In `pubspec.yaml`:
 ```yaml
 dependencies:
-  universal_html: ^2.2.2
+  universal_html: ^2.2.7
 ```
 
 ## 2. Use
 ```dart
-import "package:universal_html/html.dart";
+import "package:universal_html/universal_html.dart";
 
 void main() {
   // Create a DOM tree
@@ -121,7 +121,7 @@ is a browser API for reading "application/event-stream" streams. It has been sup
 for a long time.
 
 ```dart
-import 'package:universal_html/html.dart';
+import 'package:universal_html/universal_html.dart';
 
 Future<void> main() async {
   final eventSource = EventSource('http://example.com/events');

@@ -43,7 +43,7 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html.internal;
+part of '../../html.dart';
 
 typedef RtcPeerConnectionErrorCallback = void Function(DomException exception);
 
@@ -138,7 +138,7 @@ abstract class RtcDataChannel extends EventTarget {
 
   void close();
 
-  void send(data);
+  void send(dynamic data);
 
   @JSName('send')
   void sendBlob(Blob data);
@@ -266,8 +266,9 @@ abstract class RtcPeerConnection extends EventTarget {
   ///
   /// See [EventStreamProvider] for usage information.
   static const EventStreamProvider<RtcPeerConnectionIceEvent>
-      iceCandidateEvent =
-      EventStreamProvider<RtcPeerConnectionIceEvent>('icecandidate');
+      iceCandidateEvent = EventStreamProvider<RtcPeerConnectionIceEvent>(
+    'icecandidate',
+  );
 
   /// Static factory designed to expose `iceconnectionstatechange` events to event
   /// handlers that are not necessarily instances of [RtcPeerConnection].
@@ -353,9 +354,11 @@ abstract class RtcPeerConnection extends EventTarget {
 
   String? get signalingState;
 
-  Future addIceCandidate(Object candidate,
-      [VoidCallback? successCallback,
-      RtcPeerConnectionErrorCallback? failureCallback]);
+  Future addIceCandidate(
+    Object candidate, [
+    VoidCallback? successCallback,
+    RtcPeerConnectionErrorCallback? failureCallback,
+  ]);
 
   void addStream(MediaStream? stream, [Map? mediaConstraints]);
 
@@ -400,7 +403,7 @@ abstract class RtcPeerConnection extends EventTarget {
 
   Future setRemoteDescription(Map description);
 
-  static Future generateCertificate(/*AlgorithmIdentifier*/ keygenAlgorithm) =>
+  static Future generateCertificate(dynamic keygenAlgorithm) =>
       throw UnimplementedError();
 }
 // Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file

@@ -44,19 +44,15 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 class XmlDocument extends Document {
   /// Internal constructor. __Not part of dart:html__.
   XmlDocument.internal({
-    required Window window,
-    required String contentType,
-    String? origin,
-  }) : super._(
-          window: window,
-          contentType: contentType,
-          origin: origin,
-        );
+    required super.window,
+    required super.contentType,
+    super.origin,
+  }) : super._();
 
   @override
   bool get _isXml => true;
@@ -70,11 +66,7 @@ class XmlDocument extends Document {
       origin: origin,
     );
     if (deep != false) {
-      Node._cloneChildrenFrom(
-        clone,
-        newParent: clone,
-        oldParent: this,
-      );
+      Node._cloneChildrenFrom(clone, newParent: clone, oldParent: this);
     }
     return clone;
   }

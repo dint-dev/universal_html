@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// Cross-platform "dart:indexed_db" library.
-library universal_html.indexed_db;
+library;
 
 export 'src/_sdk/indexed_db.dart'
     if (dart.library.indexed_db) 'src/_sdk/indexed_db.dart' // Browser

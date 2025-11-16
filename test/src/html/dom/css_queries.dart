@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testCss() {
   group('CSS-related tests for Element:', () {
@@ -125,9 +125,11 @@ void _testCss() {
       test(':nth-child(2)', () {
         final e = DivElement()
           ..id = 'root'
-          ..append(DivElement()
-            ..id = 'child0'
-            ..append(DivElement()..append(DivElement())))
+          ..append(
+            DivElement()
+              ..id = 'child0'
+              ..append(DivElement()..append(DivElement())),
+          )
           ..append(DivElement()..id = 'child1');
         expectMatches(e.childNodes[0] as Element, ':nth-child(1)', isTrue);
         expectMatches(e.childNodes[0] as Element, ':nth-child(2)', isFalse);
@@ -288,11 +290,20 @@ void _testCss() {
         expectMatches(e0_2_0, 'div.c0 div.c0_2 div.c0_2_0', isTrue);
         expectMatches(e0_2_0, 'div.c0 > div.c0_2 > div.c0_2_0', isTrue);
         expectMatches(
-            e0_2_0, 'div.c0 > div.c0_1 + div.c0_2 > div.c0_2_0', isTrue);
+          e0_2_0,
+          'div.c0 > div.c0_1 + div.c0_2 > div.c0_2_0',
+          isTrue,
+        );
         expectMatches(
-            e0_2_0, 'div.c0 > div.c0_0 ~ div.c0_2 > div.c0_2_0', isTrue);
+          e0_2_0,
+          'div.c0 > div.c0_0 ~ div.c0_2 > div.c0_2_0',
+          isTrue,
+        );
         expectMatches(
-            e0_2_0, 'div.c0 > div.c0_1 ~ div.c0_2 > div.c0_2_0', isTrue);
+          e0_2_0,
+          'div.c0 > div.c0_1 ~ div.c0_2 > div.c0_2_0',
+          isTrue,
+        );
         expectMatches(e0_2_0, '.c0 div.c0_2_0', isTrue);
         expectMatches(e0_2_0, '.c0 .c0_2_0', isTrue);
         expectMatches(e0_2_0, '.c0_2 .c0_2_0', isTrue);
@@ -300,7 +311,10 @@ void _testCss() {
 
         // false
         expectMatches(
-            e0_2_0, 'div.c0 > div.c0_0 + div.c0_2 > div.c0_2_0', isFalse);
+          e0_2_0,
+          'div.c0 > div.c0_0 + div.c0_2 > div.c0_2_0',
+          isFalse,
+        );
         expectMatches(e0_2_0, '.c0 .c0_2', isFalse);
         expectMatches(e0_2_0, '.c0 > .c0_2', isFalse);
         expectMatches(e0_2_0, '.c0 > .c0_2_0', isFalse);
@@ -347,8 +361,14 @@ void _testCss() {
 
         expect(root.querySelector('nav'), same(e0_2));
         expect(root.querySelectorAll('nav'), [e0_2]);
-        expect(
-            root.querySelectorAll('.all'), [e0, e0_0, e0_1, e0_2, e0_2_0, e1]);
+        expect(root.querySelectorAll('.all'), [
+          e0,
+          e0_0,
+          e0_1,
+          e0_2,
+          e0_2_0,
+          e1,
+        ]);
         expect(root.querySelectorAll('.last'), [e1]);
 
         // e0

@@ -42,60 +42,28 @@ class DomParserDriver {
 
       // HTML
       case 'text/html':
-        return parseHtml(
-          window: window,
-          content: content,
-          mime: mime,
-        );
+        return parseHtml(window: window, content: content, mime: mime);
       case 'application/html':
-        return parseHtml(
-          window: window,
-          content: content,
-          mime: mime,
-        );
+        return parseHtml(window: window, content: content, mime: mime);
 
       // XHTML
       case 'application/xhtml+xml':
-        return parseXml(
-          window: window,
-          content: content,
-          mime: mime,
-        );
+        return parseXml(window: window, content: content, mime: mime);
 
       // SVG
       case 'text/svg':
-        return parseSvg(
-          window: window,
-          content: content,
-          mime: mime,
-        );
+        return parseSvg(window: window, content: content, mime: mime);
       case 'application/svg':
-        return parseSvg(
-          window: window,
-          content: content,
-          mime: mime,
-        );
+        return parseSvg(window: window, content: content, mime: mime);
 
       // XML
       case 'text/xml':
-        return parseXml(
-          window: window,
-          content: content,
-          mime: mime,
-        );
+        return parseXml(window: window, content: content, mime: mime);
       case 'application/xml':
-        return parseXml(
-          window: window,
-          content: content,
-          mime: mime,
-        );
+        return parseXml(window: window, content: content, mime: mime);
 
       default:
-        throw ArgumentError.value(
-          mime,
-          'mime',
-          'Unsupported MIME type',
-        );
+        throw ArgumentError.value(mime, 'mime', 'Unsupported MIME type');
     }
   }
 
@@ -132,11 +100,7 @@ class DomParserDriver {
     required String content,
     String mime = 'text/html',
   }) {
-    return html.parseHtml(
-      window: window,
-      content: content,
-      mime: mime,
-    );
+    return html.parseHtml(window: window, content: content, mime: mime);
   }
 
   /// Parses [HtmlDocument].
@@ -185,11 +149,7 @@ class DomParserDriver {
     required String content,
     String mime = 'application/svg',
   }) {
-    return parseXml(
-      window: window,
-      content: content,
-      mime: mime,
-    );
+    return parseXml(window: window, content: content, mime: mime);
   }
 
   XmlDocument parseXhtml({
@@ -197,11 +157,7 @@ class DomParserDriver {
     required String content,
     String mime = 'application/xhtml+xml',
   }) {
-    return parseXml(
-      window: window,
-      content: content,
-      mime: mime,
-    );
+    return parseXml(window: window, content: content, mime: mime);
   }
 
   XmlDocument parseXml({
@@ -209,9 +165,6 @@ class DomParserDriver {
     required Window window,
     String mime = 'text/xml',
   }) {
-    return xml.parseXml(
-      content,
-      mime: mime,
-    );
+    return xml.parseXml(content, mime: mime);
   }
 }

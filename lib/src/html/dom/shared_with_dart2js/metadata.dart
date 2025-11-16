@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 /*
 Source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -31,7 +33,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-library metadata;
+library;
 
 /// Metadata that specifies that that member is editable through generated
 /// files.
@@ -46,6 +48,7 @@ class DocsEditable {
 /// [name] should be formatted as `interface.member`.
 class DomName {
   final String name;
+
   const DomName(this.name);
 }
 
@@ -73,12 +76,14 @@ class Experimental {
 ///     }
 class JSName {
   final String name;
+
   const JSName(this.name);
 }
 
 /// Marks a class as native and defines its JavaScript name(s).
 class Native {
   final String name;
+
   const Native(this.name);
 }
 

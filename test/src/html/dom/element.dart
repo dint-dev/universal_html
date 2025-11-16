@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 final throwsDomException = throwsA(isA<DomException>());
 
@@ -196,7 +196,7 @@ void _testElement() {
 
       test('escapes attribute value', () {
         final input = Element.tag('sometag')..setAttribute('k', '&"<>');
-        final expected = '<sometag k="&amp;&quot;<>"></sometag>';
+        final expected = '<sometag k="&amp;&quot;&lt;&gt;"></sometag>';
         expect(input.outerHtml, equals(expected));
       });
 

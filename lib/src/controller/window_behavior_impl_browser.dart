@@ -25,25 +25,20 @@ Document newDocument({
   return DomParser().parseFromString('<html></html>', contentType);
 }
 
-HtmlDocument newHtmlDocument({
-  required Window window,
-  String? contentType,
-}) {
+HtmlDocument newHtmlDocument({required Window window, String? contentType}) {
   return DomParser().parseFromString(
-      '<html></html>', contentType ?? 'text/html') as HtmlDocument;
+    '<html></html>',
+    contentType ?? 'text/html',
+  ) as HtmlDocument;
 }
 
-Navigator newNavigator({
-  required Window window,
-}) {
+Navigator newNavigator({required Window window}) {
   throw UnsupportedError(
     'Constructing a new navigator is unsupported in browser',
   );
 }
 
-Window newWindow({
-  required WindowController windowController,
-}) {
+Window newWindow({required WindowController windowController}) {
   return _FakeWindow();
 }
 
@@ -639,15 +634,24 @@ class _FakeWindow implements Window {
   }
 
   @override
-  bool find(String? string, bool? caseSensitive, bool? backwards, bool? wrap,
-      bool? wholeWord, bool? searchInFrames, bool? showDialog) {
+  bool find(
+    String? string,
+    bool? caseSensitive,
+    bool? backwards,
+    bool? wrap,
+    bool? wholeWord,
+    bool? searchInFrames,
+    bool? showDialog,
+  ) {
     // TODO: implement find
     throw UnimplementedError();
   }
 
   @override
   StylePropertyMapReadonly getComputedStyleMap(
-      Element element, String? pseudoElement) {
+    Element element,
+    String? pseudoElement,
+  ) {
     // TODO: implement getComputedStyleMap
     throw UnimplementedError();
   }
@@ -736,17 +740,17 @@ class _FakeWindow implements Window {
   }
 
   @override
-  void scroll([options_OR_x, y, Map? scrollOptions]) {
+  void scroll([optionsOrX, y, Map? scrollOptions]) {
     // TODO: implement scroll
   }
 
   @override
-  void scrollBy([options_OR_x, y, Map? scrollOptions]) {
+  void scrollBy([optionsOrX, y, Map? scrollOptions]) {
     // TODO: implement scrollBy
   }
 
   @override
-  void scrollTo([options_OR_x, y, Map? scrollOptions]) {
+  void scrollTo([optionsOrX, y, Map? scrollOptions]) {
     // TODO: implement scrollTo
   }
 

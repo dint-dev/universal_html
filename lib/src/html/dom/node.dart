@@ -393,7 +393,7 @@ abstract class Node extends EventTarget {
     return sb.toString();
   }
 
-  void remove() {
+  void _removeFromTree(Node? replaceWith) {
     final parent = _parent;
     if (parent == null) {
       assert(_previousNode == null);
@@ -401,75 +401,52 @@ abstract class Node extends EventTarget {
       return;
     }
 
-    // Mark node as dirty
-    _markDirty();
-
     // Get previous and next
     final previous = _previousNode;
     final next = _nextNode;
 
     if (previous == null) {
       // This was the first sibling
-      parent._firstChild = next;
+      parent._firstChild = replaceWith ?? next;
     } else {
       // Mutate the previous sibling
-      previous._nextNode = next;
+      previous._nextNode = replaceWith ?? next;
     }
 
     if (next == null) {
       // This was the last sibling
-      parent._lastChild = previous;
+      parent._lastChild = replaceWith ?? previous;
     } else {
       // Mutate the next sibling
-      next._previousNode = previous;
+      next._previousNode = replaceWith ?? previous;
     }
-
+    if (replaceWith != null) {
+      // move replaceWith
+      replaceWith._parent = parent;
+      replaceWith._previousNode = previous;
+      replaceWith._nextNode = next;
+    }
     // Set fields of this node
     _parent = null;
     _previousNode = null;
     _nextNode = null;
-    parent._mutated();
+  }
+
+  void remove() {
+    final parent = _parent;
+    // Mark node as dirty
+    _markDirty();
+    _removeFromTree(null);
+    parent?._mutated();
     _mutated();
   }
 
   void replaceWith(Node node) {
-    final parent = _parent;
-    if (parent == null) {
-      assert(_previousNode == null);
-      assert(_nextNode == null);
-      return;
-    }
-
     // Mark nodes as dirty
     _markDirty();
     node._markDirty();
-
-    // Get previous and next
-    final previous = _previousNode;
-    final next = _nextNode;
-
-    if (previous == null) {
-      // This was the first sibling
-      parent._firstChild = node;
-    } else {
-      // Mutate the previous sibling
-      previous._nextNode = node;
-    }
-
-    if (next == null) {
-      // This was the last sibling
-      parent._lastChild = node;
-    } else {
-      // Mutate the next sibling
-      next._previousNode = node;
-    }
-
-    node._parent = parent;
-    node._previousNode = previous;
-    node._nextNode = next;
-    _parent = null;
-    _previousNode = null;
-    _nextNode = null;
+    node._removeFromTree(null);
+    _removeFromTree(node);
     _mutated();
     node._mutated();
   }

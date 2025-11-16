@@ -13,7 +13,6 @@
 // limitations under the License.
 
 /// @nodoc
-@Deprecated('Replace with "package:universal_html/universal_html.dart.')
 library;
 
 export 'universal_html.dart';

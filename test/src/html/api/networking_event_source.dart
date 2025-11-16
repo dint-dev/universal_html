@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testEventSource() {
   Stream<List<int>> makeStream(String s) {
@@ -28,25 +28,23 @@ void _testEventSource() {
       baseUrl = '$origin/event_source';
     });
 
-    test(
-      'with `newEventSource(...)`',
-      () async {
-        final eventSource = EventSource('$baseUrl/single_poll');
-        if (eventSource is EventSourceOutsideBrowser) {
-          eventSource.onHttpClientRequest =
-              expectAsync2((eventSource, request) {});
-          eventSource.onHttpClientResponse =
-              expectAsync3((eventSource, request, response) {});
-        }
-        addTearDown(() {
-          eventSource.close();
-        });
-        expect(eventSource.readyState, EventSource.CONNECTING);
-        await Future.delayed(const Duration(milliseconds: 200));
+    test('with `newEventSource(...)`', () async {
+      final eventSource = EventSource('$baseUrl/single_poll');
+      if (eventSource is EventSourceOutsideBrowser) {
+        eventSource.onHttpClientRequest = expectAsync2(
+          (eventSource, request) {},
+        );
+        eventSource.onHttpClientResponse = expectAsync3(
+          (eventSource, request, response) {},
+        );
+      }
+      addTearDown(() {
         eventSource.close();
-      },
-      timeout: Timeout(const Duration(seconds: 5)),
-    );
+      });
+      expect(eventSource.readyState, EventSource.CONNECTING);
+      await Future.delayed(const Duration(milliseconds: 200));
+      eventSource.close();
+    }, timeout: Timeout(const Duration(seconds: 5)));
 
     test('a single poll', () async {
       // -----------------------------------------------------------------------
@@ -70,21 +68,30 @@ void _testEventSource() {
       var messageEventsDone = false;
       var errorEventsDone = false;
 
-      eventSource.onOpen.listen((event) {
-        openEvents.add(event);
-      }, onDone: () {
-        openEventsDone = true;
-      });
-      eventSource.onMessage.listen((event) {
-        messageEvents.add(event);
-      }, onDone: () {
-        messageEventsDone = true;
-      });
-      eventSource.onError.listen((event) {
-        errorEvents.add(event);
-      }, onDone: () {
-        errorEventsDone = true;
-      });
+      eventSource.onOpen.listen(
+        (event) {
+          openEvents.add(event);
+        },
+        onDone: () {
+          openEventsDone = true;
+        },
+      );
+      eventSource.onMessage.listen(
+        (event) {
+          messageEvents.add(event);
+        },
+        onDone: () {
+          messageEventsDone = true;
+        },
+      );
+      eventSource.onError.listen(
+        (event) {
+          errorEvents.add(event);
+        },
+        onDone: () {
+          errorEventsDone = true;
+        },
+      );
 
       // Check state
       expect(eventSource.readyState, EventSource.CONNECTING);
@@ -400,9 +407,11 @@ retry:1
 retry: 2
 ''');
         final retryValues = <Duration>[];
-        final decoder = EventStreamDecoder(onReceivedTimeout: (value) {
-          retryValues.add(value);
-        });
+        final decoder = EventStreamDecoder(
+          onReceivedTimeout: (value) {
+            retryValues.add(value);
+          },
+        );
         await decoder.bind(input).toList();
         expect(retryValues, [
           Duration(milliseconds: 1),

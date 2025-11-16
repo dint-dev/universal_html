@@ -43,7 +43,7 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html.internal;
+part of '../../html.dart';
 
 class CssImportRule extends CssRule {
   final String href;
@@ -62,7 +62,9 @@ class CssStyleRule extends CssRule {
   final List<_PriotizedSelector> _parsedSelectors;
 
   factory CssStyleRule.internal(
-      CssStyleSheet parentStyleSheet, css.RuleSet node) {
+    CssStyleSheet parentStyleSheet,
+    css.RuleSet node,
+  ) {
     final selectorGroup = node.selectorGroup!;
     final selectorText = selectorGroup.span!.text;
     final priotizedSelectors = <_PriotizedSelector>[];
@@ -102,10 +104,7 @@ class CssStyleSheet extends StyleSheet {
   final CssStyleSheet? parentStyleSheet;
   final List<CssRule> cssRules = [];
 
-  CssStyleSheet.constructor({
-    this.href,
-    this.parentStyleSheet,
-  }) : super._();
+  CssStyleSheet.constructor({this.href, this.parentStyleSheet}) : super._();
 
   void deleteRule(int index) {
     cssRules.removeAt(index);
@@ -303,9 +302,7 @@ class _PriotizedSelector {
     } else if (selector is css.IdSelector) {
       return 4;
     } else {
-      throw UnsupportedError(
-        'Unsupported selector: "${selector.span!.text}"',
-      );
+      throw UnsupportedError('Unsupported selector: "${selector.span!.text}"');
     }
   }
 }

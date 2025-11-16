@@ -1,3 +1,12 @@
+## 2.2.7
+* Improves documentation and tests.
+
+## 2.2.6
+* Removes an unnecessary dependency.
+
+## 2.2.5
+* Updates the library for new Dart SDK and fixes most analyzer warnings.
+
 ## 2.2.4
  * Fixes a number of bug.
  * Adds support for csslib 1.0.0.

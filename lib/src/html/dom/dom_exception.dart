@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// ignore_for_file: constant_identifier_names
+
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -44,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 class DomError implements Exception {
   final String? message;
@@ -95,9 +97,15 @@ class DomException implements Exception {
   DomException._(this.name, [this.message]);
 
   factory DomException._failedToExecute(
-      String name, String type, String method, String message) {
+    String name,
+    String type,
+    String method,
+    String message,
+  ) {
     return DomException._(
-        name, 'Failed to execute "$method" on "$type": $message');
+      name,
+      'Failed to execute "$method" on "$type": $message',
+    );
   }
 
   factory DomException._invalidMethod(String type, String method) {
@@ -110,12 +118,17 @@ class DomException implements Exception {
   }
 
   factory DomException._mayNotBeInsertedInside(
-      String type, String method, Node node, Node parent) {
+    String type,
+    String method,
+    Node node,
+    Node parent,
+  ) {
     return DomException._failedToExecute(
-        DomException.HIERARCHY_REQUEST,
-        type,
-        method,
-        'Nodes of type \'#${node._nodeTypeName}\' may not be inserted inside nodes of type \'#${parent._nodeTypeName}\'.');
+      DomException.HIERARCHY_REQUEST,
+      type,
+      method,
+      'Nodes of type \'#${node._nodeTypeName}\' may not be inserted inside nodes of type \'#${parent._nodeTypeName}\'.',
+    );
   }
 
   @override

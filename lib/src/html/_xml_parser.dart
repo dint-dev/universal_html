@@ -23,11 +23,7 @@ const _xmlEntities = <String, String>{
   'quot': '"',
 };
 
-XmlDocument parseXml(
-  String input, {
-  String mime = 'text/xml',
-  String? origin,
-}) {
+XmlDocument parseXml(String input, {String mime = 'text/xml', String? origin}) {
   final document = XmlDocument.internal(
     window: window,
     contentType: mime,
@@ -110,12 +106,7 @@ class _XmlParserState {
               }
               final value = _input.substring(i + doctypePrefix.length, end);
               i = end;
-              _document.append(
-                InternalDocumentType.internal(
-                  _document,
-                  value,
-                ),
-              );
+              _document.append(InternalDocumentType.internal(_document, value));
               continue loop;
             }
 
@@ -131,10 +122,7 @@ class _XmlParserState {
               if (end < 0) {
                 // ERROR: No ending
                 final value = _input.substring(i);
-                final node = Comment.internal(
-                  _document,
-                  value,
-                );
+                final node = Comment.internal(_document, value);
                 final parent = _parent;
                 if (parent == null) {
                   _document.append(node);
@@ -145,10 +133,7 @@ class _XmlParserState {
               }
               final value = _input.substring(i, end);
               i = end + commentSuffix.length - 1;
-              final node = Comment.internal(
-                _document,
-                value,
-              );
+              final node = Comment.internal(_document, value);
               final parent = _parent;
               if (parent == null) {
                 _document.append(node);
@@ -170,19 +155,13 @@ class _XmlParserState {
               if (end < 0) {
                 // ERROR: No ending
                 final value = _input.substring(i);
-                final node = Text.internal(
-                  _document,
-                  value,
-                );
+                final node = Text.internal(_document, value);
                 _parent?.append(node);
                 break loop;
               }
               final value = _input.substring(i, end);
               i = end + cdataSuffix.length - 1;
-              final node = Text.internal(
-                _document,
-                value,
-              );
+              final node = Text.internal(_document, value);
               _parent?.append(node);
               continue loop;
             }
@@ -462,11 +441,7 @@ class _XmlParserState {
       _sb.write('<');
       return;
     }
-    final element = UnknownElement.internal(
-      _document,
-      null,
-      name,
-    );
+    final element = UnknownElement.internal(_document, null, name);
     final parent = _parent;
     if (parent == null) {
       if (!name.startsWith('?')) {

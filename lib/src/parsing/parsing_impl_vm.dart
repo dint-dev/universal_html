@@ -19,10 +19,7 @@ HtmlDocument parseHtmlDocument({
   required Window window,
   required String content,
 }) {
-  return DomParserDriver().parseHtml(
-    window: window,
-    content: content,
-  );
+  return DomParserDriver().parseHtml(window: window, content: content);
 }
 
 XmlDocument parseXmlDocument({

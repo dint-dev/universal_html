@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// ignore_for_file: constant_identifier_names
+
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -44,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 /// Class which helps construct standard node validation policies.
 ///
@@ -99,6 +101,7 @@ class NodeValidatorBuilder implements NodeValidator {
 
   /// Allow custom elements with the specified tag name and specified attributes.
   ///
+  // ignore: unintended_html_in_doc_comment
   /// This will allow the elements as custom tags (such as <x-foo></x-foo>),
   /// but will not allow tag extensions. Use [allowTagExtension] to allow
   /// tag extensions.
@@ -109,11 +112,13 @@ class NodeValidatorBuilder implements NodeValidator {
     Iterable<String>? uriAttributes,
   }) {
     var tagNameUpper = tagName.toUpperCase();
-    var attrs = attributes
-            ?.map<String>((name) => '$tagNameUpper::${name.toLowerCase()}') ??
+    var attrs = attributes?.map<String>(
+          (name) => '$tagNameUpper::${name.toLowerCase()}',
+        ) ??
         const [];
-    var uriAttrs = uriAttributes
-            ?.map<String>((name) => '$tagNameUpper::${name.toLowerCase()}') ??
+    var uriAttrs = uriAttributes?.map<String>(
+          (name) => '$tagNameUpper::${name.toLowerCase()}',
+        ) ??
         const [];
     uriPolicy ??= UriPolicy();
 
@@ -135,10 +140,12 @@ class NodeValidatorBuilder implements NodeValidator {
     Iterable<String>? attributes,
     Iterable<String>? uriAttributes,
   }) {
-    allowCustomElement(tagName,
-        uriPolicy: uriPolicy,
-        attributes: attributes,
-        uriAttributes: uriAttributes);
+    allowCustomElement(
+      tagName,
+      uriPolicy: uriPolicy,
+      attributes: attributes,
+      uriAttributes: uriAttributes,
+    );
   }
 
   /// Allow common safe HTML5 elements and attributes.
@@ -186,8 +193,9 @@ class NodeValidatorBuilder implements NodeValidator {
 
   @override
   bool allowsAttribute(Element element, String attributeName, String value) {
-    return _validators
-        .any((v) => v.allowsAttribute(element, attributeName, value));
+    return _validators.any(
+      (v) => v.allowsAttribute(element, attributeName, value),
+    );
   }
 
   @override
@@ -206,17 +214,22 @@ class NodeValidatorBuilder implements NodeValidator {
   /// This will allow tag extensions (such as <div is='x-foo'></div>),
   /// but will not allow custom tags. Use [allowCustomElement] to allow
   /// custom tags.
-  void allowTagExtension(String tagName, String baseName,
-      {UriPolicy? uriPolicy,
-      Iterable<String>? attributes,
-      Iterable<String>? uriAttributes}) {
+  void allowTagExtension(
+    String tagName,
+    String baseName, {
+    UriPolicy? uriPolicy,
+    Iterable<String>? attributes,
+    Iterable<String>? uriAttributes,
+  }) {
     var baseNameUpper = baseName.toUpperCase();
     var tagNameUpper = tagName.toUpperCase();
-    var attrs = attributes
-            ?.map<String>((name) => '$baseNameUpper::${name.toLowerCase()}') ??
+    var attrs = attributes?.map<String>(
+          (name) => '$baseNameUpper::${name.toLowerCase()}',
+        ) ??
         const [];
-    var uriAttrs = uriAttributes
-            ?.map<String>((name) => '$baseNameUpper::${name.toLowerCase()}') ??
+    var uriAttrs = uriAttributes?.map<String>(
+          (name) => '$baseNameUpper::${name.toLowerCase()}',
+        ) ??
         const [];
     uriPolicy ??= UriPolicy();
 
@@ -273,18 +286,19 @@ class _CustomElementNodeValidator extends _SimpleNodeValidator {
   final bool allowCustomTag;
 
   _CustomElementNodeValidator(
-      UriPolicy uriPolicy,
-      Iterable<String> allowedElements,
-      Iterable<String> allowedAttributes,
-      Iterable<String> allowedUriAttributes,
-      bool allowTypeExtension,
-      bool allowCustomTag)
-      : allowTypeExtension = allowTypeExtension == true,
+    UriPolicy super.uriPolicy,
+    Iterable<String> allowedElements,
+    Iterable<String> allowedAttributes,
+    Iterable<String> allowedUriAttributes,
+    bool allowTypeExtension,
+    bool allowCustomTag,
+  )   : allowTypeExtension = allowTypeExtension == true,
         allowCustomTag = allowCustomTag == true,
-        super(uriPolicy,
-            allowedElements: allowedElements,
-            allowedAttributes: allowedAttributes,
-            allowedUriAttributes: allowedUriAttributes);
+        super(
+          allowedElements: allowedElements,
+          allowedAttributes: allowedAttributes,
+          allowedUriAttributes: allowedUriAttributes,
+        );
 
   @override
   bool allowsAttribute(Element element, String attributeName, String value) {
@@ -322,87 +336,94 @@ class _SimpleNodeValidator implements NodeValidator {
   /// Elements must be uppercased tag names. For example `'IMG'`.
   /// Attributes must be uppercased tag name followed by :: followed by
   /// lowercase attribute name. For example `'IMG:src'`.
-  _SimpleNodeValidator(this.uriPolicy,
-      {Iterable<String>? allowedElements,
-      Iterable<String>? allowedAttributes,
-      Iterable<String>? allowedUriAttributes}) {
+  _SimpleNodeValidator(
+    this.uriPolicy, {
+    Iterable<String>? allowedElements,
+    Iterable<String>? allowedAttributes,
+    Iterable<String>? allowedUriAttributes,
+  }) {
     this.allowedElements.addAll(allowedElements ?? const []);
     allowedAttributes = allowedAttributes ?? const [];
     allowedUriAttributes = allowedUriAttributes ?? const [];
-    var legalAttributes = allowedAttributes
-        .where((x) => !_Html5NodeValidator._uriAttributes.contains(x));
-    var extraUriAttributes = allowedAttributes
-        .where((x) => _Html5NodeValidator._uriAttributes.contains(x));
+    var legalAttributes = allowedAttributes.where(
+      (x) => !_Html5NodeValidator._uriAttributes.contains(x),
+    );
+    var extraUriAttributes = allowedAttributes.where(
+      (x) => _Html5NodeValidator._uriAttributes.contains(x),
+    );
     this.allowedAttributes.addAll(legalAttributes);
     this.allowedUriAttributes.addAll(allowedUriAttributes);
     this.allowedUriAttributes.addAll(extraUriAttributes);
   }
 
   factory _SimpleNodeValidator.allowImages(UriPolicy uriPolicy) {
-    return _SimpleNodeValidator(uriPolicy, allowedElements: const [
-      'IMG'
-    ], allowedAttributes: const [
-      'IMG::align',
-      'IMG::alt',
-      'IMG::border',
-      'IMG::height',
-      'IMG::hspace',
-      'IMG::ismap',
-      'IMG::name',
-      'IMG::usemap',
-      'IMG::vspace',
-      'IMG::width',
-    ], allowedUriAttributes: const [
-      'IMG::src',
-    ]);
+    return _SimpleNodeValidator(
+      uriPolicy,
+      allowedElements: const ['IMG'],
+      allowedAttributes: const [
+        'IMG::align',
+        'IMG::alt',
+        'IMG::border',
+        'IMG::height',
+        'IMG::hspace',
+        'IMG::ismap',
+        'IMG::name',
+        'IMG::usemap',
+        'IMG::vspace',
+        'IMG::width',
+      ],
+      allowedUriAttributes: const ['IMG::src'],
+    );
   }
 
   factory _SimpleNodeValidator.allowNavigation(UriPolicy uriPolicy) {
-    return _SimpleNodeValidator(uriPolicy, allowedElements: const [
-      'A',
-      'FORM'
-    ], allowedAttributes: const [
-      'A::accesskey',
-      'A::coords',
-      'A::hreflang',
-      'A::name',
-      'A::shape',
-      'A::tabindex',
-      'A::target',
-      'A::type',
-      'FORM::accept',
-      'FORM::autocomplete',
-      'FORM::enctype',
-      'FORM::method',
-      'FORM::name',
-      'FORM::novalidate',
-      'FORM::target',
-    ], allowedUriAttributes: const [
-      'A::href',
-      'FORM::action',
-    ]);
+    return _SimpleNodeValidator(
+      uriPolicy,
+      allowedElements: const ['A', 'FORM'],
+      allowedAttributes: const [
+        'A::accesskey',
+        'A::coords',
+        'A::hreflang',
+        'A::name',
+        'A::shape',
+        'A::tabindex',
+        'A::target',
+        'A::type',
+        'FORM::accept',
+        'FORM::autocomplete',
+        'FORM::enctype',
+        'FORM::method',
+        'FORM::name',
+        'FORM::novalidate',
+        'FORM::target',
+      ],
+      allowedUriAttributes: const ['A::href', 'FORM::action'],
+    );
   }
 
   factory _SimpleNodeValidator.allowTextElements() {
-    return _SimpleNodeValidator(null, allowedElements: const [
-      'B',
-      'BLOCKQUOTE',
-      'BR',
-      'EM',
-      'H1',
-      'H2',
-      'H3',
-      'H4',
-      'H5',
-      'H6',
-      'HR',
-      'I',
-      'LI',
-      'OL',
-      'P',
-      'SPAN',
-      'UL',
-    ]);
+    return _SimpleNodeValidator(
+      null,
+      allowedElements: const [
+        'B',
+        'BLOCKQUOTE',
+        'BR',
+        'EM',
+        'H1',
+        'H2',
+        'H3',
+        'H4',
+        'H5',
+        'H6',
+        'HR',
+        'I',
+        'LI',
+        'OL',
+        'P',
+        'SPAN',
+        'UL',
+      ],
+    );
   }
 
   @override
@@ -465,17 +486,18 @@ class _TemplatingNodeValidator extends _SimpleNodeValidator {
     'if',
     'ref',
     'repeat',
-    'syntax'
+    'syntax',
   ];
 
   final Set<String> _templateAttrs;
 
   _TemplatingNodeValidator()
       : _templateAttrs = Set<String>.from(_TEMPLATE_ATTRS),
-        super(null,
-            allowedElements: ['TEMPLATE'],
-            allowedAttributes:
-                _TEMPLATE_ATTRS.map((attr) => 'TEMPLATE::$attr'));
+        super(
+          null,
+          allowedElements: ['TEMPLATE'],
+          allowedAttributes: _TEMPLATE_ATTRS.map((attr) => 'TEMPLATE::$attr'),
+        );
 
   @override
   bool allowsAttribute(Element element, String attributeName, String value) {

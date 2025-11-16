@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// ignore_for_file: constant_identifier_names
+
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -44,13 +46,15 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 abstract class CharacterData extends Node
     with _ChildNode, _NonDocumentTypeChildNode
     implements ChildNode, NonDocumentTypeChildNode {
   String _data = '';
-  CharacterData._(Document ownerDocument, this._data) : super._(ownerDocument);
+
+  CharacterData._(Document super.ownerDocument, this._data) : super._();
+
   String? get data => _data;
 
   set data(String? value) {
@@ -134,8 +138,11 @@ abstract class CharacterData extends Node
 
 abstract class ChildNode {
   ChildNode._();
+
   void after(Object nodes);
+
   void before(Object nodes);
+
   void remove();
 }
 
@@ -165,8 +172,8 @@ class InternalDocumentType extends Node {
   final String? _value;
 
   /// Internal constructor. __Not part of dart:html__.
-  InternalDocumentType.internal(Document ownerDocument, this._value)
-      : super._(ownerDocument);
+  InternalDocumentType.internal(Document super.ownerDocument, this._value)
+      : super._();
 
   @override
   String get nodeName {
@@ -534,12 +541,15 @@ abstract class Node extends EventTarget {
 
 abstract class NonDocumentTypeChildNode {
   NonDocumentTypeChildNode._();
+
   Element? get nextElementSibling;
+
   Element? get previousElementSibling;
 }
 
 abstract class ParentNode {
   ParentNode._();
+
   Element? querySelector(String selectors);
 }
 
@@ -548,9 +558,11 @@ class ProcessingInstruction extends CharacterData {
   final String? target;
 
   /// Internal constructor. __Not part of dart:html__.
-  ProcessingInstruction.internal(Document ownerDocument,
-      {this.sheet, this.target})
-      : super._(ownerDocument, '');
+  ProcessingInstruction.internal(
+    Document ownerDocument, {
+    this.sheet,
+    this.target,
+  }) : super._(ownerDocument, '');
 
   @override
   int get nodeType => Node.PROCESSING_INSTRUCTION_NODE;
@@ -574,8 +586,7 @@ class Text extends CharacterData {
   }
 
   /// Internal constructor. __Not part of dart:html__.
-  Text.internal(Document ownerDocument, String value)
-      : super._(ownerDocument, value);
+  Text.internal(super.ownerDocument, super.value) : super._();
 
   @override
   int get length => data!.length;
@@ -605,7 +616,7 @@ mixin _ChildNode implements ChildNode {
   void remove();
 }
 
-class _ChildNodeIterator extends Iterator<Node> {
+class _ChildNodeIterator implements Iterator<Node> {
   final Node _parent;
   Node? _current;
 
@@ -789,8 +800,10 @@ mixin _ElementOrDocument implements Node, ParentNode {
 
     // A sanity check
     assert(identical(firstChildOfRoot.parentNode, this));
-    assert(identical(firstChildOfRoot.parent, this) ||
-        firstChildOfRoot.parent == null);
+    assert(
+      identical(firstChildOfRoot.parent, this) ||
+          firstChildOfRoot.parent == null,
+    );
 
     var node = firstChildOfRoot;
     loop:

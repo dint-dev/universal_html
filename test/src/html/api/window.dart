@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testWindow() {
   group('Window', () {
@@ -23,10 +23,7 @@ void _testWindow() {
     });
 
     test('localStorage / sessionStorage', () {
-      final storages = [
-        window.localStorage,
-        window.sessionStorage,
-      ];
+      final storages = [window.localStorage, window.sessionStorage];
       for (var storage in storages) {
         expect(storage.length, 0);
         expect(storage['k0'], isNull);

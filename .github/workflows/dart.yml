@@ -1,20 +1,69 @@
 name: Dart CI
 
-on: [push, pull_request]
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - master
+  pull_request:
+
+env:
+  PANA_SCORE_MAX_DIFFERENCE: 20
 
 jobs:
-  test:
-    runs-on: ${{ matrix.os }}
+  format:
+    name: Verify code formatting
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+      - name: Install dependencies
+        run: dart --version && dart pub get
+      - name: Verify formatting
+        run: dart format --set-exit-if-changed .
+  lints:
+    name: Analyze source code
+    runs-on: ubuntu-slim
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        sdk: [stable, beta, dev]
+        sdk: [3.6, stable, beta, dev]
     steps:
       - uses: actions/checkout@v3
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ matrix.sdk }}
       - name: Install dependencies
-        run: dart pub get
-      - name: Run tests
+        run: dart --version && dart pub get
+      - name: Analyze project source
+        run: dart analyze
+  package_health:
+    name: Analyze package health
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+      - name: Install dependencies
+        run: dart --version && dart pub get && dart pub global activate pana
+      - name: Run package analyzer
+        run: dart pub global run pana --exit-code-threshold $PANA_SCORE_MAX_DIFFERENCE
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: [stable, beta, dev]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+      - uses: browser-actions/setup-chrome@v2
+      - name: Install dependencies
+        run: dart --version && dart pub get
+      - name: Run tests (VM)
         run: dart test --platform vm
+      - name: Run tests (Chrome, JS)
+        run: dart test --platform chrome --compiler dart2js

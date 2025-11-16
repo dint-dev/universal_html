@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 abstract class Document extends Node
     with _ElementOrDocument, _DocumentOrFragment {
@@ -68,7 +68,8 @@ abstract class Document extends Node
   static const EventStreamProvider<SecurityPolicyViolationEvent>
       securityPolicyViolationEvent =
       EventStreamProvider<SecurityPolicyViolationEvent>(
-          'securitypolicyviolation');
+    'securitypolicyviolation',
+  );
 
   /// Static factory designed to expose `selectionchange` events to event
   /// handlers that are not necessarily instances of [Document].
@@ -96,11 +97,8 @@ abstract class Document extends Node
     );
   }
 
-  Document._({
-    required this.contentType,
-    required this.window,
-    this.origin,
-  }) : super._document();
+  Document._({required this.contentType, required this.window, this.origin})
+      : super._document();
 
   /// Outside the browser, returns null.
   Element? get activeElement => null;
@@ -381,10 +379,17 @@ abstract class Document extends Node
     return Element.internalTag(this, tagName, typeExtension);
   }
 
-  Element createElementNS(String namespaceUri, String qualifiedName,
-      [String? typeExtension]) {
+  Element createElementNS(
+    String namespaceUri,
+    String qualifiedName, [
+    String? typeExtension,
+  ]) {
     return Element.internalTagNS(
-        this, namespaceUri, qualifiedName, typeExtension);
+      this,
+      namespaceUri,
+      qualifiedName,
+      typeExtension,
+    );
   }
 
   bool execCommand(String commandId, [bool? showUI, String? value]) {
@@ -491,10 +496,15 @@ abstract class Document extends Node
 
   String queryCommandValue(String commandId) => throw UnimplementedError();
 
-  void registerElement(String tag, Type customElementClass,
-      {String? extendsTag}) {
-    registerElement2(
-        tag, {'prototype': customElementClass, 'extends': extendsTag});
+  void registerElement(
+    String tag,
+    Type customElementClass, {
+    String? extendsTag,
+  }) {
+    registerElement2(tag, {
+      'prototype': customElementClass,
+      'extends': extendsTag,
+    });
   }
 
   /// Register a custom subclass of Element to be instantiatable by the DOM.
@@ -565,8 +575,11 @@ abstract class DocumentOrShadowRoot {
 class DomImplementation {
   DomImplementation._();
 
-  XmlDocument createDocument(String? namespaceURI, String qualifiedName,
-      InternalDocumentType? doctype) {
+  XmlDocument createDocument(
+    String? namespaceURI,
+    String qualifiedName,
+    InternalDocumentType? doctype,
+  ) {
     final result = XmlDocument.internal(
       window: window,
       contentType: 'text/xml',
@@ -582,7 +595,10 @@ class DomImplementation {
   }
 
   InternalDocumentType createDocumentType(
-      String qualifiedName, String publicId, String systemId) {
+    String qualifiedName,
+    String publicId,
+    String systemId,
+  ) {
     return InternalDocumentType.internal(window.document, null);
   }
 

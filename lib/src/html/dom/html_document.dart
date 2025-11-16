@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 class HtmlDocument extends Document
     with _DocumentOrShadowRoot
@@ -71,15 +71,11 @@ class HtmlDocument extends Document
   /// </html>
   /// ```
   HtmlDocument.internal({
-    required Window window,
-    required String contentType,
+    required super.window,
+    required super.contentType,
     required bool filled,
-    String? origin,
-  }) : super._(
-          window: window,
-          contentType: contentType,
-          origin: origin,
-        ) {
+    super.origin,
+  }) : super._() {
     if (filled) {
       final docType = InternalDocumentType.internal(this, 'html');
       append(docType);
@@ -209,11 +205,7 @@ class HtmlDocument extends Document
       filled: false,
     );
     if (deep != false) {
-      Node._cloneChildrenFrom(
-        clone,
-        newParent: clone,
-        oldParent: this,
-      );
+      Node._cloneChildrenFrom(clone, newParent: clone, oldParent: this);
     }
     return clone;
   }

@@ -43,7 +43,7 @@ The source code adopted from 'dart:html' had the following license:
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-part of universal_html.internal;
+part of '../../html.dart';
 
 class _ComputedStyle extends CssStyleDeclaration {
   final Element _element;
@@ -85,10 +85,11 @@ class _ComputedStyle extends CssStyleDeclaration {
             for (var parsedSelector in rule._parsedSelectors) {
               final selector = parsedSelector.selector;
               if (_matchesSelector(
-                  _element,
-                  selector,
-                  selector.simpleSelectorSequences.length - 1,
-                  _pseudoElement)) {
+                _element,
+                selector,
+                selector.simpleSelectorSequences.length - 1,
+                _pseudoElement,
+              )) {
                 // Selector matches.
                 // Is the priority the highest so far?
                 final priority = parsedSelector.priority;
@@ -98,8 +99,9 @@ class _ComputedStyle extends CssStyleDeclaration {
               }
             }
             if (highestPriority > 0) {
-              prioritizedRules
-                  .add(_PriotizedCssStyleRule(highestPriority, rule));
+              prioritizedRules.add(
+                _PriotizedCssStyleRule(highestPriority, rule),
+              );
             }
           }
         }
@@ -107,8 +109,9 @@ class _ComputedStyle extends CssStyleDeclaration {
     }
 
     // Sort rules
-    prioritizedRules
-        .sort((left, right) => -left.priority.compareTo(right.priority));
+    prioritizedRules.sort(
+      (left, right) => -left.priority.compareTo(right.priority),
+    );
 
     // Create style
     final result = _element._getOrCreateStyle()._clone();

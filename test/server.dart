@@ -149,9 +149,12 @@ void hybridMain(StreamChannel streamChannel, Object message) async {
   Timer(const Duration(minutes: 5), () {
     httpServer.close();
   });
-  streamChannel.stream.listen((event) {}, onDone: () {
-    httpServer.close();
-  });
+  streamChannel.stream.listen(
+    (event) {},
+    onDone: () {
+      httpServer.close();
+    },
+  );
   subscription.onDone(() {
     streamChannel.sink.close();
   });

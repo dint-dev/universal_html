@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// ignore_for_file: constant_identifier_names
+
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -44,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 /// Use the WebSocket interface to connect to a WebSocket,
 /// and to send and receive data on that WebSocket.
@@ -177,7 +179,7 @@ class WebSocket extends EventTarget {
   /// This method accepts data of type [Blob], [ByteBuffer], [String], or
   /// [TypedData]. Named variants [sendBlob], [sendByteBuffer], [sendString],
   /// or [sendTypedData], in contrast, only accept data of the specified type.
-  void send(data) {
+  void send(dynamic data) {
     throw UnimplementedError();
   }
 

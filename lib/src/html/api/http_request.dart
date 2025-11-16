@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// ignore_for_file: constant_identifier_names
+
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -44,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 /// A client-side XHR request for getting data from a URL,
 /// formally known as XMLHttpRequest.
@@ -272,7 +274,7 @@ class HttpRequest extends HttpRequestEventTarget {
   /// separated by a comma and a space.
   ///
   /// See: http://www.w3.org/TR/XMLHttpRequest/#the-getresponseheader()-method
-  Map<String, String>? get responseHeaders => _responseHeaders;
+  Map<String, String> get responseHeaders => _responseHeaders;
 
   /// The response in String form or empty String on failure.
   String? get responseText {
@@ -402,16 +404,16 @@ class HttpRequest extends HttpRequestEventTarget {
   ///
   /// * [XMLHttpRequest.send](https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest#send%28%29)
   ///   from MDN.
-  void send([body_OR_data]) {
+  void send([dynamic bodyOrData]) {
     // Read request body
     Uint8List? data;
-    if (body_OR_data != null) {
-      if (body_OR_data is String) {
-        data = Uint8List.fromList(utf8.encode(body_OR_data));
-      } else if (body_OR_data is Uint8List) {
-        data = body_OR_data;
+    if (bodyOrData != null) {
+      if (bodyOrData is String) {
+        data = Uint8List.fromList(utf8.encode(bodyOrData));
+      } else if (bodyOrData is Uint8List) {
+        data = bodyOrData;
       } else {
-        throw ArgumentError.value(body_OR_data);
+        throw ArgumentError.value(bodyOrData);
       }
     }
 
@@ -454,12 +456,15 @@ class HttpRequest extends HttpRequestEventTarget {
       return;
     }
 
-    final httpClient =
-        window.internalWindowController.onChooseHttpClient(_requestUrl!);
+    final httpClient = window.internalWindowController.onChooseHttpClient(
+      _requestUrl!,
+    );
     try {
       // Wait for request
-      final httpRequest =
-          await httpClient.openUrl(_requestMethod!, _requestUrl!);
+      final httpRequest = await httpClient.openUrl(
+        _requestMethod!,
+        _requestUrl!,
+      );
 
       // Was this request aborted while we waited?
       if (_requestId != requestId) {
@@ -597,14 +602,18 @@ class HttpRequest extends HttpRequestEventTarget {
   }) {
     var parts = [];
     data.forEach((key, value) {
-      parts.add('${Uri.encodeQueryComponent(key)}='
-          '${Uri.encodeQueryComponent(value)}');
+      parts.add(
+        '${Uri.encodeQueryComponent(key)}='
+        '${Uri.encodeQueryComponent(value)}',
+      );
     });
     var formData = parts.join('&');
 
     requestHeaders ??= <String, String>{};
-    requestHeaders.putIfAbsent('Content-Type',
-        () => 'application/x-www-form-urlencoded; charset=UTF-8');
+    requestHeaders.putIfAbsent(
+      'Content-Type',
+      () => 'application/x-www-form-urlencoded; charset=UTF-8',
+    );
 
     return request(
       url,
@@ -803,36 +812,48 @@ class HttpRequestEventTarget extends EventTarget implements HttpRequestUpload {
   HttpRequestEventTarget._() : super.internal();
 
   /// Stream of `abort` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onAbort => abortEvent.forTarget(this);
 
   /// Stream of `error` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onError => errorEvent.forTarget(this);
 
   /// Stream of `load` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onLoad => loadEvent.forTarget(this);
 
   /// Stream of `loadend` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onLoadEnd => loadEndEvent.forTarget(this);
 
   /// Stream of `loadstart` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onLoadStart => loadStartEvent.forTarget(this);
 
   /// Stream of `progress` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onProgress => progressEvent.forTarget(this);
 
   /// Stream of `timeout` events handled by this [HttpRequestEventTarget].
+  @override
   Stream<ProgressEvent> get onTimeout => timeoutEvent.forTarget(this);
-
 }
 
 abstract class HttpRequestUpload {
   HttpRequestUpload._();
 
   Stream<ProgressEvent> get onAbort;
+
   Stream<ProgressEvent> get onError;
+
   Stream<ProgressEvent> get onLoad;
+
   Stream<ProgressEvent> get onLoadEnd;
+
   Stream<ProgressEvent> get onLoadStart;
+
   Stream<ProgressEvent> get onProgress;
+
   Stream<ProgressEvent> get onTimeout;
 }

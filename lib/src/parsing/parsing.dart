@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:universal_html/html.dart';
 import 'package:universal_html/html.dart' as universal_html;
+import 'package:universal_html/html.dart';
 
 import 'parsing_impl_browser.dart'
     if (dart.library.html) 'parsing_impl_browser.dart' // Browser
@@ -29,15 +29,9 @@ import 'parsing_impl_browser.dart'
 ///   final document = parseHtmlDocument('<html>...</html>');
 /// }
 /// ```
-HtmlDocument parseHtmlDocument(
-  String content, {
-  Window? window,
-}) {
+HtmlDocument parseHtmlDocument(String content, {Window? window}) {
   window ??= universal_html.window;
-  return impl.parseHtmlDocument(
-    window: window,
-    content: content,
-  );
+  return impl.parseHtmlDocument(window: window, content: content);
 }
 
 /// Parses an [XmlDocument].
@@ -55,9 +49,5 @@ XmlDocument parseXmlDocument(
   String mime = 'text/xml',
 }) {
   window ??= universal_html.window;
-  return impl.parseXmlDocument(
-    window: window,
-    content: content,
-    mime: mime,
-  );
+  return impl.parseXmlDocument(window: window, content: content, mime: mime);
 }

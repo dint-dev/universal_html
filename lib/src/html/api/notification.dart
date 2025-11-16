@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 class Notification extends EventTarget {
   /// Static factory designed to expose `click` events to event
@@ -119,14 +119,7 @@ class Notification extends EventTarget {
     String? lang,
     String? tag,
     String? icon,
-  }) : this._(
-          title,
-          dir: dir,
-          body: body,
-          lang: lang,
-          tag: tag,
-          icon: icon,
-        );
+  }) : this._(title, dir: dir, body: body, lang: lang, tag: tag, icon: icon);
 
   Notification._(
     this.title, {

@@ -40,12 +40,8 @@ HtmlDocument newHtmlDocument({
   );
 }
 
-Navigator newNavigator({
-  required Window window,
-}) {
-  final navigator = Navigator.internal(
-    internalWindow: window,
-  );
+Navigator newNavigator({required Window window}) {
+  final navigator = Navigator.internal(internalWindow: window);
   assert(identical(navigator.internalWindow, window));
   return navigator;
 }

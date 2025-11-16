@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 class DocumentFragment extends Node
     with _ElementOrDocument, _DocumentOrFragment {
@@ -67,7 +67,7 @@ class DocumentFragment extends Node
   }
 
   /// Internal constructor. __Not part of dart:html__.
-  DocumentFragment.internal(Document ownerDocument) : super._(ownerDocument);
+  DocumentFragment.internal(Document super.ownerDocument) : super._();
 
   factory DocumentFragment.svg(
     String input, {
@@ -114,11 +114,9 @@ class DocumentFragment extends Node
     NodeValidator? validator,
     NodeTreeSanitizer? treeSanitizer,
   }) {
-    append(Element.html(
-      html,
-      validator: validator,
-      treeSanitizer: treeSanitizer,
-    ));
+    append(
+      Element.html(html, validator: validator, treeSanitizer: treeSanitizer),
+    );
   }
 
   /// Adds the specified text as a text node after the last child of this
@@ -132,11 +130,7 @@ class DocumentFragment extends Node
   Node internalCloneWithOwnerDocument(Document ownerDocument, bool? deep) {
     final clone = DocumentFragment();
     if (deep != false) {
-      Node._cloneChildrenFrom(
-        ownerDocument,
-        newParent: clone,
-        oldParent: this,
-      );
+      Node._cloneChildrenFrom(ownerDocument, newParent: clone, oldParent: this);
     }
     return clone;
   }
@@ -148,11 +142,9 @@ class DocumentFragment extends Node
   }) {
     html ??= '';
     nodes.clear();
-    append(Element.html(
-      html,
-      validator: validator,
-      treeSanitizer: treeSanitizer,
-    ));
+    append(
+      Element.html(html, validator: validator, treeSanitizer: treeSanitizer),
+    );
   }
 }
 
@@ -164,16 +156,6 @@ abstract class ShadowRoot extends DocumentFragment {
   }
 
   Element? get activeElement;
-
-  @deprecated
-  bool get applyAuthorStyles {
-    throw UnimplementedError();
-  }
-
-  @deprecated
-  set applyAuthorStyles(bool value) {
-    throw UnimplementedError();
-  }
 
   bool? get delegatesFocus;
 
@@ -188,16 +170,6 @@ abstract class ShadowRoot extends DocumentFragment {
   ShadowRoot? get olderShadowRoot;
 
   Element? get pointerLockElement;
-
-  @deprecated
-  bool get resetStyleInheritance {
-    throw UnimplementedError();
-  }
-
-  @deprecated
-  set resetStyleInheritance(bool value) {
-    throw UnimplementedError();
-  }
 
   List<StyleSheet>? get styleSheets;
 

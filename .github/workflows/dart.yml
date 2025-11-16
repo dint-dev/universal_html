@@ -24,7 +24,6 @@ jobs:
         run: dart format --set-exit-if-changed .
   lints:
     name: Analyze source code
-    needs: [format]
     runs-on: ubuntu-slim
     strategy:
       fail-fast: false
@@ -41,7 +40,6 @@ jobs:
         run: dart analyze
   package_health:
     name: Analyze package health
-    needs: [lints]
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v3
@@ -52,7 +50,6 @@ jobs:
         run: dart pub global run pana --exit-code-threshold $PANA_SCORE_MAX_DIFFERENCE
   test:
     name: Run tests
-    needs: [lints]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

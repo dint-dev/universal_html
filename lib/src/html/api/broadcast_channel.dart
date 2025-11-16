@@ -1,4 +1,4 @@
-part of universal_html.internal;
+part of '../../html.dart';
 
 class BroadcastChannel {
   final String name;

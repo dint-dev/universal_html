@@ -1,3 +1,6 @@
+## 2.3.0
+* Fixes various bugs and various DOM APIs.
+
 ## 2.2.7
 * Improves documentation and tests.
 

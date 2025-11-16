@@ -1,5 +1,5 @@
 name: universal_html
-version: 2.2.7
+version: 2.3.0
 description:
   A 'dart:html' that works in all platforms, including Flutter and server-side.
   Eases cross-platform development and HTML / XML processing.

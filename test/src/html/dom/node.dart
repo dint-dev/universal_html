@@ -37,11 +37,9 @@ void _testNode() {
     test('replaceWith', () {
       final e0 = Element.tag('e0')..appendText('e0-text');
       final e1 = Element.tag('e1')..appendText('e1-text');
-      final e2 = Element.tag('e2')..append(
-          Element.tag('e2c1')
-      )..append(
-          Element.tag('e2c2')
-      );
+      final e2 = Element.tag('e2')
+        ..append(Element.tag('e2c1'))
+        ..append(Element.tag('e2c2'));
       final root = Element.tag('sometag')
         ..setAttribute('k', 'v')
         ..append(e0)
@@ -101,9 +99,9 @@ void _testNode() {
         expect(replacement.previousNode, isNull);
         expect(replacement.nextNode, isNotNull);
         expect(
-          root.outerHtml,
-          equals(
-            '<sometag k="v"><e2c1></e2c1>e1-replaced<e2><e2c2></e2c2></e2></sometag>'));
+            root.outerHtml,
+            equals(
+                '<sometag k="v"><e2c1></e2c1>e1-replaced<e2><e2c2></e2c2></e2></sometag>'));
       }
     });
     test('replaceWith when the node has no parent', () {

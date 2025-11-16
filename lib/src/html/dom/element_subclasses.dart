@@ -67,9 +67,9 @@ class AnchorElement extends HtmlElement
     _setAttribute('download', value);
   }
 
-  String? get hreflang => _getAttribute('hreflang');
+  String get hreflang => _getAttribute('hreflang') ?? '';
 
-  set hreflang(String? value) {
+  set hreflang(String value) {
     _setAttribute('hreflang', value);
   }
 
@@ -79,15 +79,15 @@ class AnchorElement extends HtmlElement
     _setAttribute('rel', value);
   }
 
-  String? get target => _getAttribute('target');
+  String get target => _getAttribute('target') ?? '';
 
-  set target(String? value) {
+  set target(String value) {
     _setAttribute('target', value);
   }
 
-  String? get type => _getAttribute('type');
+  String get type => _getAttribute('type') ?? '';
 
-  set type(String? value) {
+  set type(String value) {
     _setAttribute('type', value);
   }
 
@@ -3331,6 +3331,19 @@ class VideoElement extends MediaElement implements CanvasImageSource {
   factory VideoElement() => VideoElement._(window.document);
 
   VideoElement._(Document ownerDocument) : super._(ownerDocument, 'VIDEO');
+
+  String get currentSrc => _getAttribute('currentsrc') ?? '';
+
+  set currentSrc(String value) {
+    _setAttribute('currentsrc', value);
+  }
+
+  num get currentTime =>
+      _getAttributeNum('currenttime', defaultValue: 0.0) ?? 0.0;
+
+  set currentTime(num value) {
+    _setAttributeNum('currenttime', value);
+  }
 
   num get duration => 0;
 

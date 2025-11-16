@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testNode() {
   group('Node:', () {
@@ -123,8 +123,10 @@ void _testNode() {
         ..append(e2);
 
       // Initial tree
-      expect(root.outerHtml,
-          '<sometag k="v"><e0>e0-text</e0><e1>e1-text</e1><e2>e2-text</e2></sometag>');
+      expect(
+        root.outerHtml,
+        '<sometag k="v"><e0>e0-text</e0><e1>e1-text</e1><e2>e2-text</e2></sometag>',
+      );
 
       // Remove child #1 of 'e1'
       {
@@ -134,8 +136,10 @@ void _testNode() {
         expect(removed.parent, isNull);
         expect(removed.nextNode, isNull);
         expect(e1.firstChild, isNull);
-        expect(root.outerHtml,
-            '<sometag k="v"><e0>e0-text</e0><e1></e1><e2>e2-text</e2></sometag>');
+        expect(
+          root.outerHtml,
+          '<sometag k="v"><e0>e0-text</e0><e1></e1><e2>e2-text</e2></sometag>',
+        );
       }
 
       // Remove child #2 of root ('e1')
@@ -145,8 +149,10 @@ void _testNode() {
         expect(e0.nextNode, same(e2));
         expect(e1.parent, isNull);
         expect(e1.nextNode, isNull);
-        expect(root.outerHtml,
-            '<sometag k="v"><e0>e0-text</e0><e2>e2-text</e2></sometag>');
+        expect(
+          root.outerHtml,
+          '<sometag k="v"><e0>e0-text</e0><e2>e2-text</e2></sometag>',
+        );
       }
     });
     test('remove fails when the node has parent', () {
@@ -159,9 +165,11 @@ void _testNode() {
       expect(e.text, '');
       e.appendText('a');
       expect(e.text, 'a');
-      e.append(Element.tag('innerElement')
-        ..appendText('')
-        ..appendText('b'));
+      e.append(
+        Element.tag('innerElement')
+          ..appendText('')
+          ..appendText('b'),
+      );
       expect(e.text, 'ab');
       e.append(Comment('not text'));
       expect(e.text, 'ab');

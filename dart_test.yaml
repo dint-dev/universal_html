@@ -1,5 +1,1 @@
-platforms: [vm, chrome, node]
-
-tags:
-  networking:
-    test_on: "!node"
+platforms: [vm, chrome]

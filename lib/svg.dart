@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// Cross-platform "dart:svg" library.
-library universal_html.svg;
+library;
 
 export 'src/_sdk/svg.dart'
     if (dart.library.svg) 'src/_sdk/svg.dart' // Browser

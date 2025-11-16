@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 abstract class DataTransfer {
   String? dropEffect;
@@ -101,7 +101,7 @@ abstract class DataTransferItemList {
     throw UnimplementedError();
   }
 
-  DataTransferItem add(dynamic data_OR_file, [String? type]) {
+  DataTransferItem add(dynamic dataOrFile, [String? type]) {
     throw UnimplementedError();
   }
 

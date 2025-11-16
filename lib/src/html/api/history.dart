@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 class History extends HistoryBase {
   /// Checks if the State APIs are supported on the current platform.
@@ -131,7 +131,9 @@ class History extends HistoryBase {
 
 abstract class HistoryBase {
   void back();
+
   void forward();
+
   void go(int distance);
 }
 
@@ -167,7 +169,7 @@ class Url with _UrlBase {
 
   Url._(this._uri);
 
-  static String createObjectUrl(dynamic blob_OR_source_OR_stream) {
+  static String createObjectUrl(dynamic blobOrSourceOrStream) {
     throw UnimplementedError();
   }
 

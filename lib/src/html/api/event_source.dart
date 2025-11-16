@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// ignore_for_file: constant_identifier_names
+
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -44,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 abstract class EventSource extends EventTarget {
   /// Static factory designed to expose `error` events to event
@@ -102,17 +104,19 @@ abstract class EventSourceOutsideBrowser implements EventSource {
   ///
   /// You can access [httpClientRequest] if you want to set headers.
   FutureOr<void> Function(
-          EventSourceOutsideBrowser eventSource, io.HttpClientRequest request)?
-      onHttpClientRequest;
+    EventSourceOutsideBrowser eventSource,
+    io.HttpClientRequest request,
+  )? onHttpClientRequest;
 
   /// A callback called when a [HttpClientResponse] arrives (only outside
   /// browsers).
   ///
   /// You can access [httpClientResponse] if you want to access headers.
   FutureOr<void> Function(
-      EventSourceOutsideBrowser eventSource,
-      io.HttpClientRequest request,
-      io.HttpClientResponse response)? onHttpClientResponse;
+    EventSourceOutsideBrowser eventSource,
+    io.HttpClientRequest request,
+    io.HttpClientResponse response,
+  )? onHttpClientResponse;
 
   Duration retryDuration = Duration(seconds: 3);
 }
@@ -122,14 +126,16 @@ class _EventSource extends EventSource implements EventSourceOutsideBrowser {
 
   @override
   FutureOr<void> Function(
-          EventSourceOutsideBrowser eventSource, io.HttpClientRequest request)?
-      onHttpClientRequest;
+    EventSourceOutsideBrowser eventSource,
+    io.HttpClientRequest request,
+  )? onHttpClientRequest;
 
   @override
   FutureOr<void> Function(
-      EventSourceOutsideBrowser eventSource,
-      io.HttpClientRequest request,
-      io.HttpClientResponse response)? onHttpClientResponse;
+    EventSourceOutsideBrowser eventSource,
+    io.HttpClientRequest request,
+    io.HttpClientResponse response,
+  )? onHttpClientResponse;
 
   /// URL of this event source.
   @override
@@ -200,8 +206,9 @@ class _EventSource extends EventSource implements EventSourceOutsideBrowser {
       String? lastEventId;
       while (_readyState != EventSource.CLOSED) {
         // Select HTTP client
-        final httpClient =
-            window.internalWindowController.onChooseHttpClient(_parsedUri!);
+        final httpClient = window.internalWindowController.onChooseHttpClient(
+          _parsedUri!,
+        );
 
         // Create a HTTP request
         final httpRequest = await httpClient.getUrl(_parsedUri!);
@@ -215,10 +222,7 @@ class _EventSource extends EventSource implements EventSourceOutsideBrowser {
           httpRequest.headers.set('Last-Event-ID', currentLastEventId);
         }
 
-        await onHttpClientRequest?.call(
-          this as dynamic,
-          httpRequest,
-        );
+        await onHttpClientRequest?.call(this as dynamic, httpRequest);
 
         // Send the HTTP request
         final httpResponse = await httpRequest.close();
@@ -289,9 +293,7 @@ class _EventSource extends EventSource implements EventSourceOutsideBrowser {
       // Check HTTP status
       final statusCode = httpResponse.statusCode;
       if (statusCode != 200) {
-        throw StateError(
-          'Server returned HTTP status $statusCode',
-        );
+        throw StateError('Server returned HTTP status $statusCode');
       }
 
       // Check HTTP header 'Content-Type'

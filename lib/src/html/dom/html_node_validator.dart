@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 /// A Dart DOM validator generated from Caja whitelists.
 ///
@@ -473,13 +473,21 @@ class _Html5NodeValidator implements NodeValidator {
     return _allowedElements.contains(Element._safeTagName(element));
   }
 
-  static bool _standardAttributeValidator(Element element, String attributeName,
-      String value, _Html5NodeValidator context) {
+  static bool _standardAttributeValidator(
+    Element element,
+    String attributeName,
+    String value,
+    _Html5NodeValidator context,
+  ) {
     return true;
   }
 
-  static bool _uriAttributeValidator(Element element, String attributeName,
-      String value, _Html5NodeValidator context) {
+  static bool _uriAttributeValidator(
+    Element element,
+    String attributeName,
+    String value,
+    _Html5NodeValidator context,
+  ) {
     return context.uriPolicy.allowsUri(value);
   }
 }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library parsing_test;
+library;
 
 import 'package:test/test.dart';
 import 'package:universal_html/html.dart';
@@ -56,14 +56,8 @@ void main() {
         );
 
         expect(document, isA<XmlDocument>());
-        expect(
-          document.childNodes[0].nodeType,
-          Node.DOCUMENT_TYPE_NODE,
-        );
-        expect(
-          document.childNodes[1].nodeType,
-          Node.ELEMENT_NODE,
-        );
+        expect(document.childNodes[0].nodeType, Node.DOCUMENT_TYPE_NODE);
+        expect(document.childNodes[1].nodeType, Node.ELEMENT_NODE);
 
         final docType = document.firstChild!;
         expect(docType.nodeType, Node.DOCUMENT_TYPE_NODE);
@@ -83,14 +77,8 @@ void main() {
         );
 
         expect(document, isA<XmlDocument>());
-        expect(
-          document.childNodes[0].nodeType,
-          Node.DOCUMENT_TYPE_NODE,
-        );
-        expect(
-          document.childNodes[1].nodeType,
-          Node.ELEMENT_NODE,
-        );
+        expect(document.childNodes[0].nodeType, Node.DOCUMENT_TYPE_NODE);
+        expect(document.childNodes[1].nodeType, Node.ELEMENT_NODE);
 
         final docType = document.firstChild!;
         expect(docType.nodeType, Node.DOCUMENT_TYPE_NODE);
@@ -202,10 +190,7 @@ void main() {
       test('&nabla;', () {
         final document = parseXmlDocument('<xml><e k="&nabla;"/></xml>');
         final element = document.firstChild!.firstChild as Element;
-        expect(
-          element.text,
-          contains('Entity \'nabla\' not defined'),
-        );
+        expect(element.text, contains('Entity \'nabla\' not defined'));
       });
     });
 
@@ -249,8 +234,9 @@ void main() {
         expect(element.getAttribute('k'), ' a b c ');
       });
       test('<x k0="v0" k1="v1">abc</x>', () {
-        final document =
-            parseXmlDocument('<xml><x k0="v0" k1="v1">abc</x></xml>');
+        final document = parseXmlDocument(
+          '<xml><x k0="v0" k1="v1">abc</x></xml>',
+        );
         expect(document, isA<XmlDocument>());
         final element = document.firstChild!.firstChild as Element;
         expect(element.tagName, 'x');

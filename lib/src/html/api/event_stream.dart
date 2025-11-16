@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 /// A specialized Stream available to [Element]s to enable event delegation.
 abstract class ElementStream<T extends Event> implements Stream<T> {
@@ -153,8 +153,7 @@ class EventStreamProvider<T extends Event> {
 /// event delegation.
 class _ElementEventStreamImpl<T extends Event> extends _EventStream<T>
     implements ElementStream<T> {
-  _ElementEventStreamImpl(target, eventType, useCapture)
-      : super(target, eventType, useCapture);
+  _ElementEventStreamImpl(super.target, super.eventType, super.useCapture);
 
   @override
   StreamSubscription<T> capture(void Function(T event) onData) =>

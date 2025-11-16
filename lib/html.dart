@@ -12,28 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Cross-platform "dart:html" library.
-///
-/// You can choose from the following libraries:
-///   * `package:universal_html/html.dart`
-///   * `package:universal_html/prefer_sdk/html.dart`
-///   * `package:universal_html/prefer_universal/html.dart`
-///
-/// # Introduction
-///
-/// HTML elements and other resources for web-based applications that need to
-/// interact with the browser and the DOM (Document Object Model).
-///
-/// This library includes DOM element types, CSS styling, local storage,
-/// media, speech, events, and more.
-/// To get started,
-/// check out the [Element] class, the base class for many of the HTML
-/// DOM types.
-///
-/// For information on writing web apps with Dart, see https://webdev.dartlang.org.
-library universal_html;
+/// @nodoc
+library;
 
-export 'src/_sdk/html.dart'
-    if (dart.library.html) 'src/_sdk/html.dart' // Browser
-    if (dart.library.io) 'src/html.dart' // VM
-    if (dart.library.js) 'src/html.dart'; // Node.JS
+export 'universal_html.dart';

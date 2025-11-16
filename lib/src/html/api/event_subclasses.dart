@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// ignore_for_file: constant_identifier_names
+
 /*
 Some source code in this file was adopted from 'dart:html' in Dart SDK. See:
   https://github.com/dart-lang/sdk/tree/master/tools/dom
@@ -44,7 +46,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 class AbortPaymentEvent extends ExtendableEvent {
   factory AbortPaymentEvent(String type, Map eventInitDict) {
@@ -67,13 +69,13 @@ abstract class AnimationEvent extends Event {
 }
 
 class AnimationPlaybackEvent extends Event {
-  AnimationPlaybackEvent(String type) : super.internal(type);
+  AnimationPlaybackEvent(super.type) : super.internal();
 }
 
 class BackgroundFetchedEvent extends Event {
   final List<BackgroundFetchSettledFetch>? fetches = [];
 
-  BackgroundFetchedEvent(String type, Map init) : super.internal(type);
+  BackgroundFetchedEvent(super.type, Map init) : super.internal();
 
   Future updateUI(String title) {
     throw UnimplementedError();
@@ -81,18 +83,17 @@ class BackgroundFetchedEvent extends Event {
 }
 
 class BackgroundFetchEvent extends Event {
-  BackgroundFetchEvent(String type, Map init) : super.internal(type);
+  BackgroundFetchEvent(super.type, Map init) : super.internal();
 
   String? get id => throw UnimplementedError();
 }
 
 class BackgroundFetchFailEvent extends Event {
-  BackgroundFetchFailEvent(String type) : super.internal(type);
+  BackgroundFetchFailEvent(super.type) : super.internal();
 }
 
 abstract class BeforeInstallPromptEvent extends Event {
-  BeforeInstallPromptEvent(String type, [Map? eventInitDict])
-      : super.internal(type);
+  BeforeInstallPromptEvent(super.type, [Map? eventInitDict]) : super.internal();
 
   List<String> get platforms;
 
@@ -104,7 +105,7 @@ abstract class BeforeInstallPromptEvent extends Event {
 class BeforeUnloadEvent extends Event {
   String? returnValue;
 
-  BeforeUnloadEvent._(String type) : super.internal(type);
+  BeforeUnloadEvent._(super.type) : super.internal();
 }
 
 class BlobEvent extends Event {
@@ -114,7 +115,7 @@ class BlobEvent extends Event {
   BlobEvent(String type, [Map? dict])
       : this._(type, data: dict?['data'], timecode: dict?['timecode']);
 
-  BlobEvent._(String type, {this.data, this.timecode}) : super.internal(type);
+  BlobEvent._(super.type, {this.data, this.timecode}) : super.internal();
 }
 
 abstract class CanMakePaymentEvent extends ExtendableEvent {
@@ -150,16 +151,12 @@ class CloseEvent extends Event {
 
   final bool? wasClean;
 
-  CloseEvent.constructor(
-    String type, {
-    this.code,
-    this.reason,
-    this.wasClean,
-  }) : super.internal(type);
+  CloseEvent.constructor(super.type, {this.code, this.reason, this.wasClean})
+      : super.internal();
 }
 
 class CompositionEvent extends Event {
-  CompositionEvent(String type) : super.internal(type);
+  CompositionEvent(super.type) : super.internal();
 }
 
 class CustomEvent extends Event {
@@ -180,11 +177,11 @@ class CustomEvent extends Event {
   }
 
   CustomEvent._(
-    String type, {
-    bool canBubble = true,
-    bool cancelable = true,
+    super.type, {
+    super.canBubble,
+    bool super.cancelable,
     this.detail,
-  }) : super.internal(type, canBubble: canBubble, cancelable: cancelable);
+  }) : super.internal();
 }
 
 class DeviceAcceleration {
@@ -219,12 +216,12 @@ class DeviceOrientationEvent extends Event {
   final num? gamma;
 
   DeviceOrientationEvent.constructor(
-    String type, {
+    super.type, {
     this.absolute,
     this.alpha,
     this.beta,
     this.gamma,
-  }) : super.internal(type);
+  }) : super.internal();
 }
 
 class DeviceRotationRate {
@@ -267,8 +264,11 @@ class ErrorEvent extends Event {
 }
 
 class ExtendableEvent extends Event {
-  ExtendableEvent._(String type, {bool bubbles = true, bool cancelable = false})
-      : super.internal(type, canBubble: bubbles, cancelable: cancelable);
+  ExtendableEvent._(
+    super.type, {
+    bool bubbles = true,
+    bool super.cancelable = false,
+  }) : super.internal(canBubble: bubbles);
 
   void waitUntil(Future f) {
     throw UnimplementedError();
@@ -294,10 +294,7 @@ abstract class FetchEvent extends ExtendableEvent {
 class FocusEvent extends UIEvent {
   final EventTarget? relatedTarget;
 
-  FocusEvent(
-    String type, {
-    this.relatedTarget,
-  }) : super(type);
+  FocusEvent(super.type, {this.relatedTarget});
 }
 
 class HashChangeEvent extends Event {
@@ -305,12 +302,12 @@ class HashChangeEvent extends Event {
   final String newUrl;
 
   HashChangeEvent(
-    String type, {
+    super.type, {
     bool canBubble = true,
     bool cancelable = true,
     required this.oldUrl,
     required this.newUrl,
-  }) : super.internal(type);
+  }) : super.internal();
 
   bool get supported => true;
 }
@@ -341,7 +338,7 @@ class KeyboardEvent extends UIEvent {
   final bool shiftKey;
 
   KeyboardEvent(
-    String type, {
+    super.type, {
     Window? view,
     this.altKey = false,
     int? charCode,
@@ -353,15 +350,10 @@ class KeyboardEvent extends UIEvent {
     this.metaKey = false,
     this.repeat = false,
     this.shiftKey = false,
-    bool canBubble = true,
-    bool cancelable = true,
+    super.canBubble,
+    super.cancelable,
   })  : charCode = charCode ?? -1,
-        keyCode = keyCode ?? -1,
-        super(
-          type,
-          canBubble: canBubble,
-          cancelable: cancelable,
-        );
+        keyCode = keyCode ?? -1;
 
   String? get key => throw UnimplementedError();
 
@@ -387,31 +379,19 @@ class KeyEvent extends KeyboardEvent {
   final EventTarget currentTarget;
 
   KeyEvent(
-    String type, {
+    super.type, {
     required this.currentTarget,
-    int? charCode,
-    bool altKey = false,
-    bool canBubble = true,
-    bool cancelable = true,
-    bool ctrlKey = false,
-    int? keyCode,
-    int? location,
-    bool metaKey = false,
-    bool shiftKey = false,
-    Window? view,
-  }) : super(
-          type,
-          view: view,
-          canBubble: canBubble,
-          cancelable: cancelable,
-          charCode: charCode,
-          keyCode: keyCode,
-          location: location,
-          ctrlKey: ctrlKey,
-          altKey: altKey,
-          shiftKey: shiftKey,
-          metaKey: metaKey,
-        );
+    super.charCode,
+    super.altKey,
+    super.canBubble,
+    super.cancelable,
+    super.ctrlKey,
+    super.keyCode,
+    super.location,
+    super.metaKey,
+    super.shiftKey,
+    super.view,
+  });
 }
 
 class MessageEvent extends Event {
@@ -422,7 +402,7 @@ class MessageEvent extends Event {
   final List<MessagePort> ports;
 
   MessageEvent(
-    String type, {
+    super.type, {
     this.data,
     String? origin,
     String? lastEventId,
@@ -431,7 +411,7 @@ class MessageEvent extends Event {
   })  : lastEventId = lastEventId ?? '',
         origin = origin ?? '',
         ports = messagePorts ?? const [],
-        super.internal(type);
+        super.internal();
 
   String? get suborigin => null;
 }
@@ -463,14 +443,6 @@ class MouseEvent extends UIEvent {
 
   final bool? ctrlKey;
 
-  /// The nonstandard way to access the element that the mouse comes
-  /// from in the case of a `mouseover` event.
-  ///
-  /// This member is deprecated and not cross-browser compatible; use
-  /// relatedTarget to get the same information in the standard way.
-  @deprecated
-  final Node? fromElement;
-
   final int? _layerX;
 
   final int? _layerY;
@@ -494,14 +466,6 @@ class MouseEvent extends UIEvent {
   final num? _screenY;
 
   final bool? shiftKey;
-
-  /// The nonstandard way to access the element that the mouse goes
-  /// to in the case of a `mouseout` event.
-  ///
-  /// This member is deprecated and not cross-browser compatible; use
-  /// relatedTarget to get the same information in the standard way.
-  @deprecated
-  final Node? toElement;
 
   factory MouseEvent(
     String type, {
@@ -533,14 +497,12 @@ class MouseEvent extends UIEvent {
   }
 
   MouseEvent._(
-    String type, {
+    super.type, {
     this.altKey = false,
     this.button = 0,
     this.ctrlKey = false,
     this.metaKey = false,
     this.relatedTarget,
-    this.fromElement,
-    this.toElement,
     this.region,
     int? screenX,
     int? screenY,
@@ -553,10 +515,10 @@ class MouseEvent extends UIEvent {
     int? pageX,
     int? pageY,
     this.shiftKey = false,
-    bool canBubble = true,
-    bool cancelable = true,
-    int detail = 0,
-    Object? view,
+    super.canBubble,
+    super.cancelable,
+    int super.detail = 0,
+    super.view,
   })  : buttons = 0,
         _screenX = screenX,
         _screenY = screenY,
@@ -567,14 +529,7 @@ class MouseEvent extends UIEvent {
         _movementX = movementX,
         _movementY = movementY,
         _pageX = pageX,
-        _pageY = pageY,
-        super(
-          type,
-          canBubble: canBubble,
-          cancelable: cancelable,
-          detail: detail,
-          view: view,
-        );
+        _pageY = pageY;
 
   Point get client => Point(_clientX!, _clientY!);
 
@@ -612,23 +567,20 @@ class NotificationEvent extends ExtendableEvent {
     throw UnimplementedError();
   }
 
-  NotificationEvent.internal({
-    this.action,
-    this.notification,
-    this.reply,
-  }) : super._('Notification');
+  NotificationEvent.internal({this.action, this.notification, this.reply})
+      : super._('Notification');
 }
 
 class PageTransitionEvent extends Event {
-  PageTransitionEvent(String type) : super.internal(type);
+  PageTransitionEvent(super.type) : super.internal();
 }
 
 class PaymentRequestEvent extends Event {
-  PaymentRequestEvent(String type) : super.internal(type);
+  PaymentRequestEvent(super.type) : super.internal();
 }
 
 class PaymentRequestUpdateEvent extends Event {
-  PaymentRequestUpdateEvent(String type) : super.internal(type);
+  PaymentRequestUpdateEvent(super.type) : super.internal();
 }
 
 class PointerEvent extends MouseEvent {
@@ -688,14 +640,12 @@ class PopStateEvent extends Event {
 
   PopStateEvent(String type) : this._(type: type);
 
-  PopStateEvent._({
-    String type = 'popstate',
-    this.state,
-  }) : super.internal(type);
+  PopStateEvent._({String type = 'popstate', this.state})
+      : super.internal(type);
 }
 
 class ProgressEvent extends Event {
-  ProgressEvent(String type, [Map? eventInitDict]) : super.internal(type);
+  ProgressEvent(super.type, [Map? eventInitDict]) : super.internal();
 
   bool? get lengthComputable => null;
 
@@ -705,7 +655,7 @@ class ProgressEvent extends Event {
 }
 
 class PushEvent extends Event {
-  PushEvent(String type, [Map? eventInitDict]) : super.internal(type);
+  PushEvent(super.type, [Map? eventInitDict]) : super.internal();
 
   PushMessageData? get data => null;
 }
@@ -736,7 +686,7 @@ class SecurityPolicyViolationEvent extends Event {
   final String? violatedDirective;
 
   SecurityPolicyViolationEvent.constructor(
-    String type, {
+    super.type, {
     this.blockedUri,
     this.columnNumber,
     this.disposition,
@@ -749,15 +699,15 @@ class SecurityPolicyViolationEvent extends Event {
     this.sourceFile,
     this.statusCode,
     this.violatedDirective,
-  }) : super.internal(type);
+  }) : super.internal();
 }
 
 class SensorErrorEvent extends Event {
-  SensorErrorEvent(String type) : super.internal(type);
+  SensorErrorEvent(super.type) : super.internal();
 }
 
 class SyncEvent extends Event {
-  SyncEvent(String type) : super.internal(type);
+  SyncEvent(super.type) : super.internal();
 
   bool? get lastChance => null;
 
@@ -765,7 +715,7 @@ class SyncEvent extends Event {
 }
 
 class TextEvent extends Event {
-  TextEvent(String type) : super.internal(type);
+  TextEvent(super.type) : super.internal();
 }
 
 class Touch {
@@ -774,10 +724,7 @@ class Touch {
 
   Point get page => Point(radiusX, radiusY);
 
-  Touch({
-    this.radiusX = 0,
-    this.radiusY = 0,
-  });
+  Touch({this.radiusX = 0, this.radiusY = 0});
 }
 
 class TouchEvent extends UIEvent {
@@ -798,7 +745,7 @@ class TouchEvent extends UIEvent {
   final TouchList? touches;
 
   TouchEvent.constructor(
-    String type, {
+    super.type, {
     this.altKey = false,
     this.changedTouches,
     this.ctrlKey = false,
@@ -806,7 +753,7 @@ class TouchEvent extends UIEvent {
     this.shiftKey = false,
     this.targetTouches,
     this.touches,
-  }) : super(type);
+  });
 }
 
 class TouchList extends DelegatingList<Touch> {
@@ -822,7 +769,7 @@ class TouchList extends DelegatingList<Touch> {
 }
 
 class TrackEvent extends Event {
-  TrackEvent(String type) : super.internal(type);
+  TrackEvent(super.type) : super.internal();
 }
 
 class TransitionEvent extends Event {
@@ -837,11 +784,11 @@ class TransitionEvent extends Event {
   }
 
   TransitionEvent.constructor(
-    String type, {
+    super.type, {
     this.elapsedTime,
     this.propertyName,
     this.pseudoElement,
-  }) : super.internal(type);
+  }) : super.internal();
 }
 
 abstract class UIEvent extends Event {
@@ -850,17 +797,13 @@ abstract class UIEvent extends Event {
   final Object? view;
 
   UIEvent(
-    String type, {
+    super.type, {
     this.detail,
     this.sourceCapabilities,
     this.view,
-    bool canBubble = true,
-    bool cancelable = true,
-  }) : super.internal(
-          type,
-          canBubble: canBubble,
-          cancelable: cancelable,
-        );
+    super.canBubble,
+    bool super.cancelable,
+  }) : super.internal();
 }
 
 class WheelEvent extends MouseEvent {
@@ -896,7 +839,7 @@ class WheelEvent extends MouseEvent {
     return WheelEvent._(type, deltaZ: deltaZ);
   }
 
-  WheelEvent._(String type, {this.deltaZ}) : super._(type);
+  WheelEvent._(super.type, {this.deltaZ}) : super._();
 
   int get deltaMode {
     return 0;

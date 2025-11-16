@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 bool _matches(Element element, String selector, String? pseudoElement) {
   if (selector.isEmpty) {
@@ -53,13 +53,17 @@ bool _matches(Element element, String selector, String? pseudoElement) {
   final selectorGroup = css.parseSelectorGroup(selector);
   if (selectorGroup == null) {
     throw DomException._(
-        'invalidSelector', 'Selector could not be parsed: "$selector"');
+      'invalidSelector',
+      'Selector could not be parsed: "$selector"',
+    );
   }
   return _matchesSelectorGroup(element, selectorGroup, null);
 }
 
 bool _matchesNthChildSelector(
-    Element element, css.PseudoClassFunctionSelector selector) {
+  Element element,
+  css.PseudoClassFunctionSelector selector,
+) {
   // Find index of this node
   var index = 0;
   final parent = element.parent;
@@ -143,14 +147,21 @@ bool _matchesNthChildSelector(
 //     2.We try each parent that matches '.b'
 //     3.We match immediate parent for '#a'
 bool _matchesSelector(
-    Element element, css.Selector selector, int index, String? pseudoElement) {
+  Element element,
+  css.Selector selector,
+  int index,
+  String? pseudoElement,
+) {
   final simpleSelectorSequences = selector.simpleSelectorSequences;
   if (simpleSelectorSequences.isEmpty) {
     throw ArgumentError();
   }
   final simpleSelectorSequence = simpleSelectorSequences[index];
   if (!_matchesSimpleSelector(
-      element, simpleSelectorSequence.simpleSelector, pseudoElement)) {
+    element,
+    simpleSelectorSequence.simpleSelector,
+    pseudoElement,
+  )) {
     return false;
   }
 
@@ -208,12 +219,7 @@ bool _matchesSelector(
           return false;
         }
         element = previousElement;
-        if (_matchesSelector(
-          element,
-          selector,
-          index,
-          pseudoElement,
-        )) {
+        if (_matchesSelector(element, selector, index, pseudoElement)) {
           return true;
         }
       }
@@ -237,14 +243,21 @@ bool _matchesSelector(
 }
 
 bool _matchesSelectorGroup(
-    Element element, css.SelectorGroup selectorGroup, String? pseudoElement) {
+  Element element,
+  css.SelectorGroup selectorGroup,
+  String? pseudoElement,
+) {
   final selectors = selectorGroup.selectors;
   if (selectors.isEmpty) {
     throw ArgumentError();
   }
   for (var selector in selectors) {
-    if (_matchesSelector(element, selector,
-        selector.simpleSelectorSequences.length - 1, pseudoElement)) {
+    if (_matchesSelector(
+      element,
+      selector,
+      selector.simpleSelectorSequences.length - 1,
+      pseudoElement,
+    )) {
       return true;
     }
   }
@@ -252,7 +265,10 @@ bool _matchesSelectorGroup(
 }
 
 bool _matchesSimpleSelector(
-    Element element, css.SimpleSelector selector, String? pseudoElement) {
+  Element element,
+  css.SimpleSelector selector,
+  String? pseudoElement,
+) {
   if (selector.isWildcard) {
     return true;
   } else if (selector is css.ElementSelector) {
@@ -279,7 +295,7 @@ bool _matchesSimpleSelector(
     // .className
     //
     final className = element.className;
-    if (className == null || className.isEmpty) return false;
+    if (className.isEmpty) return false;
     final expected = selector.name;
     if (className.contains(' ')) {
       return className.split(' ').contains(expected);

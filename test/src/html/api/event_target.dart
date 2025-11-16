@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of main_test;
+part of '../../../main_test.dart';
 
 void _testEvents() {
   group('events:', () {
-    List<String> registerStepListeners(List<Element> elements,
-        {Element? expectedTarget}) {
+    List<String> registerStepListeners(
+      List<Element> elements, {
+      Element? expectedTarget,
+    }) {
       // The list of steps will be built by listeners
       final steps = <String>[];
 
@@ -60,17 +62,14 @@ void _testEvents() {
       await Future.delayed(const Duration(milliseconds: 10));
 
       // Expect
-      expect(
-        steps,
-        [
-          'e0-capturing',
-          'e1-capturing',
-          'e2-capturing',
-          'e2-bubbling',
-          'e1-bubbling',
-          'e0-bubbling',
-        ],
-      );
+      expect(steps, [
+        'e0-capturing',
+        'e1-capturing',
+        'e2-capturing',
+        'e2-bubbling',
+        'e1-bubbling',
+        'e0-bubbling',
+      ]);
     });
   });
 }

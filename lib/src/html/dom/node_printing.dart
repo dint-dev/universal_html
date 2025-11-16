@@ -44,7 +44,7 @@ The source code adopted from 'dart:html' had the following license:
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-part of universal_html.internal;
+part of '../../html.dart';
 
 const _printingAttributeNamespaces = 2;
 
@@ -98,15 +98,13 @@ void _printAttribute(StringBuffer sb, int flags, String name, String value) {
   var writeFrom = 0;
   for (var i = 0; i < value.length; i++) {
     final codeUnit = value.codeUnitAt(i);
-    String? escape;
-    switch (codeUnit) {
-      case charcode.$ampersand:
-        escape = '&amp;';
-        break;
-      case charcode.$quot:
-        escape = '&quot;';
-        break;
-    }
+    final escape = switch (codeUnit) {
+      charcode.$ampersand => '&amp;',
+      charcode.$quot => '&quot;',
+      charcode.$less_than => '&lt;',
+      charcode.$greater_than => '&gt;',
+      _ => null,
+    };
     if (escape != null) {
       sb.write(value.substring(writeFrom, i));
       sb.write(escape);
@@ -134,21 +132,11 @@ void _printElement(StringBuffer sb, int flags, Element node) {
   sb.write(name);
   final style = node._style;
   if (style != null) {
-    _printAttribute(
-      sb,
-      flags,
-      'style',
-      style.toString(),
-    );
+    _printAttribute(sb, flags, 'style', style.toString());
   }
   var attribute = node._firstAttribute;
   while (attribute != null) {
-    _printAttribute(
-      sb,
-      flags,
-      attribute._qualifiedName,
-      attribute.value,
-    );
+    _printAttribute(sb, flags, attribute._qualifiedName, attribute.value);
     attribute = attribute._next;
   }
   if (node.firstChild == null && node.ownerDocument is XmlDocument) {
